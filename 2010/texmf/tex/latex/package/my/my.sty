@@ -1,0 +1,58 @@
+\NeedsTeXFormat{LaTeX2e}[1999/01/01]
+\ProvidesPackage{my}[2011/12/08]
+
+\RequirePackage{ltxcmds}
+\RequirePackage{xkeyval}
+\RequirePackage{etoolbox}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Declare package options %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% In case of unknown options
+\DeclareOptionX*{%
+	\PackageWarning{my}{Unknown option `\CurrentOption'}%
+}
+
+\ProcessOptionsX[my]
+
+%% Options to pass to packages
+
+%% Packages to call
+% About characters encoding
+\RequirePackage[utf8]{inputenc}
+% About fonts
+\RequirePackage[T1]{fontenc}
+% Latin modern fonts offers more choices
+% WARNING: there is not bold small caps font
+\RequirePackage{lmodern}
+% Add bold fonts for TT and small-caps for Computer Modern
+% WARNING: Not compatible with Latin Modern ('lmodern' package)
+\RequirePackage{bold-extra}
+% About language
+\RequirePackage{babel}
+% Only for number printing
+\RequirePackage{numprint}
+% Add American Mathematical Society extension
+\RequirePackage{amsmath}
+% In order to draw the 'euro' symbol
+\RequirePackage{marvosym}
+% To have right spaces after commands
+\RequirePackage{etoolbox}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+%% New configuration %%
+%%%%%%%%%%%%%%%%%%%%%%%
+% Substitute Computer Modern to Latin Modern for bold small caps
+\DeclareFontSubstitution{T1}{cmr}{bx}{sc}
+% Define paragraphs spacing
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}
+
+%%%%%%%%%%%%%%%%%%
+%% New commands %%
+%%%%%%%%%%%%%%%%%%
+\newcommand{\myeuro}{\leavevmode\unskip\nobreak\thinspace\text{\mvchr{164}}}
+\DeclareUnicodeCharacter{20AC}{\myeuro}
+
+% End of package
+\endinput
