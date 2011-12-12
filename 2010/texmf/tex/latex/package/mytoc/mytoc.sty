@@ -142,9 +142,7 @@
 	\phantomsection%
 	\chapter*{#1}%
 	\markboth{#1}{#1}%
-}{
-	\adjustmtc%
-}
+}{}
 \newenvironment{mychapter+}[2][]{%
 	\cleardoublepage%
 	\phantomsection%
@@ -152,9 +150,7 @@
 	\chapter*{#2}%
 	\label{#1}%
 	\markboth{#2}{#2}%
-}{
-	\adjustmtc%
-}
+}{}
 \newenvironment{mysection}[2][]{%
 	\phantomsection%
 	\section{#2}%
@@ -180,17 +176,13 @@
 \newenvironment{mysubsection-}[1]{%
 	\phantomsection%
 	\subsection*{#1}%
-}{
-	\adjustmtc%
-}
+}{}
 \newenvironment{mysubsection+}[2][]{%
 	\phantomsection%
 	\addcontentsline{toc}{subsection}{#2}%
 	\subsection*{#2}%
 	\label{#1}%
-}{
-	\adjustmtc%
-}
+}{}
 \newenvironment{mysubsubsection}[2][]{%
 	\phantomsection%
 	\subsubsection{#2}%
@@ -199,17 +191,13 @@
 \newenvironment{mysubsubsection-}[1]{%
 	\phantomsection%
 	\subsubsection*{#1}%
-}{
-	\adjustmtc%
-}
+}{}
 \newenvironment{mysubsubsection+}[2][]{%
 	\phantomsection%
 	\addcontentsline{toc}{subsubsection}{#2}%
 	\subsubsection*{#2}%
 	\label{#1}%
-}{
-	\adjustmtc%
-}
+}{}
 \newenvironment{myparagraph}[2][]{%
 	\phantomsection%
 	\paragraph{#2}%
