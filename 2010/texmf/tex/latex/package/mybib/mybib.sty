@@ -1,6 +1,8 @@
 \NeedsTeXFormat{LaTeX2e}[1999/01/01]
 \ProvidesPackage{mybib}[2011/03/28]
 
+\RequirePackage{my}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Declare package options %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -37,7 +39,6 @@
 \fi
 
 %% Packages to call
-\RequirePackage{etoolbox}
 % The biblatex is the best package to make bibliographies
 \if@biblatex
 	\RequirePackage{csquotes}

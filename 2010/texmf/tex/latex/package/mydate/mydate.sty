@@ -1,14 +1,11 @@
 \NeedsTeXFormat{LaTeX2e}[1999/01/01]
 \ProvidesPackage{mydate}[2011/03/28]
 
+\RequirePackage{my}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Declare package options %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Language options
-\newif\if@myenglish \@myenglishfalse
-\DeclareOption{myenglish}{\@myenglishtrue}
-\newif\if@myfrancais \@myfrancaisfalse
-\DeclareOption{myfrancais}{\@myfrancaistrue}
 % In case of unknown options
 \DeclareOption*{%
 	\PackageWarning{mydate}{Unknown option `\CurrentOption'}%
@@ -17,17 +14,15 @@
 \ProcessOptions
 
 %% Options to pass to packages
-\if@myfrancais
+\iflanguage{french}{
 	\PassOptionsToPackage{french}{isodate}
-\fi
-\if@myenglish
+}{}
+\iflanguage{english}{
 	\PassOptionsToPackage{english}{isodate}
-\fi
+}{}
 
 %% Packages to call
-\RequirePackage{etoolbox}
-\RequirePackage{xkeyval}
-\RequirePackage{xspace}
+% Package to display date in a ISO format
 \RequirePackage[iso,printdayon]{isodate}
 
 %%%%%%%%%%%%%%%%%%

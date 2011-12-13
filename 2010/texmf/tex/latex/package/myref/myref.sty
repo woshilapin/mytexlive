@@ -1,14 +1,11 @@
 \NeedsTeXFormat{LaTeX2e}[1999/01/01]
 \ProvidesPackage{myref}[2011/04/29]
 
+\RequirePackage{my}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Declare package options %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Language options
-\newif\if@myenglish \@myenglishfalse
-\DeclareOption{myenglish}{\@myenglishtrue}
-\newif\if@myfrancais \@myfrancaisfalse
-\DeclareOption{myfrancais}{\@myfrancaistrue}
 % To have smart reference with 'varioref' package
 \newif\if@smartref \@smartreffalse
 \DeclareOption{smartref}{\@smartreftrue}
@@ -21,19 +18,15 @@
 
 %% Options to pass to packages
 \if@smartref
-	\if@myenglish
+	\iflanguage{english}{
 		\PassOptionsToPackage{english}{varioref}
-	\fi
-	\if@myfrancais
+	}{}
+	\iflanguage{french}{
 		\PassOptionsToPackage{french}{varioref}
-	\fi
+	}{}
 \fi
 
 %% Packages to call
-\RequirePackage{etoolbox}
-\RequirePackage{xkeyval}
-% The 'suffix' package offers the '\WithSuffix' command to define starred commands
-\RequirePackage{suffix}
 \if@smartref
 	% The 'varioref' produces smart reference with page precision if needed
 	\RequirePackage{varioref}
@@ -60,7 +53,7 @@
 %% New commands %%
 %%%%%%%%%%%%%%%%%%
 % Define some language commands
-\if@myenglish
+\iflanguage{english}{
 	\newcommand{\myref@lang@see}{see}
 	\newcommand{\myref@lang@partname}{part}
 	\newcommand{\myref@lang@chaptername}{\MakeLowercase{\chaptername}}
@@ -71,8 +64,8 @@
 	\newcommand{\myref@lang@tablename}{\MakeLowercase{\tablename}}
 	\newcommand{\myref@lang@equationname}{equation}
 	\newcommand{\myref@lang@enumeratename}{step}
-\fi
-\if@myfrancais
+}{}
+\iflanguage{french}{
 	\newcommand{\myref@lang@see}{voir}
 	\newcommand{\myref@lang@partname}{partie}
 	\newcommand{\myref@lang@chaptername}{\MakeLowercase{\chaptername}}
@@ -83,7 +76,7 @@
 	\newcommand{\myref@lang@tablename}{\MakeLowercase{\tablename}}
 	\newcommand{\myref@lang@equationname}{équation}
 	\newcommand{\myref@lang@enumeratename}{étape}
-\fi
+}{}
 %% To define the reference name
 % The word(s) to put before the number of the reference (like 'section' or 'figure' for example).
 \define@key[my]{ref}{refname}[none]{\def\myref@name{#1}}

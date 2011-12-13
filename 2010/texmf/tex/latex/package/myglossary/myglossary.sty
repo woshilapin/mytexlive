@@ -1,14 +1,11 @@
 \NeedsTeXFormat{LaTeX2e}[1999/01/01]
 \ProvidesPackage{myglossary}[2011/04/29]
 
+\RequirePackage{my}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Declare package options %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Language options
-\newif\if@myenglish \@myenglishfalse
-\DeclareOption{myenglish}{\@myenglishtrue}
-\newif\if@myfrancais \@myfrancaisfalse
-\DeclareOption{myfrancais}{\@myfrancaistrue}
 % To have smart reference with 'varioref' package
 \newif\if@acronym \@acronymfalse
 \DeclareOption{acronym}{\@acronymtrue}
@@ -20,24 +17,20 @@
 \ProcessOptions
 
 %% Options to pass to packages
-\if@myenglish
+\iflanguage{english}{
 	\PassOptionsToPackage{xindy={language=english,codepage=utf8}}{glossaries}
 	\PassOptionsToPackage{english}{translator}
-\fi
-\if@myfrancais
+}{}
+\iflanguage{french}{
 	\PassOptionsToPackage{xindy={language=french,codepage=utf8}}{glossaries}
 	\PassOptionsToPackage{french}{translator}
-\fi
+}{}
 \if@acronym
 	% To add the acronym glossary
 	\PassOptionsToPackage{acronym=true}{glossaries}
 \fi
 
 %% Packages to call
-% To obtain the '\AtEndPreamble' command
-\RequirePackage{etoolbox}
-% The 'suffix' package offers the '\WithSuffix' command to define starred commands
-\RequirePackage{suffix}
 % To improve the glossary
 \RequirePackage[toc=true,style=altlist]{glossaries}
 % Improve the bookmarks in the PDF

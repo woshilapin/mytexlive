@@ -1,15 +1,11 @@
 \NeedsTeXFormat{LaTeX2e}[1999/01/01]
 \ProvidesPackage{mytodo}[2011/04/29]
 
-\RequirePackage{xkeyval}
+\RequirePackage{my}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Declare package options %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Language options
-\newif\if@myenglish \@myenglishfalse
-\DeclareOption{myenglish}{\@myenglishtrue}
-\newif\if@myfrancais \@myfrancaisfalse
-\DeclareOption{myfrancais}{\@myfrancaistrue}
 % Detect if the draft option is enabled
 \newif\if@draft \@draftfalse
 \DeclareOption{draft}{\@drafttrue}
@@ -23,9 +19,6 @@
 %% Options to pass to packages
 
 %% Packages to call
-\RequirePackage{etoolbox}
-% The 'suffix' package offers the '\WithSuffix' command to define starred commands
-\RequirePackage{suffix}
 % For additionnal colors
 \RequirePackage{mycolor}
 % To produce a left bar in margin
@@ -44,16 +37,16 @@
 %% New commands %%
 %%%%%%%%%%%%%%%%%%
 % Define some language commands
-\if@myenglish
+\iflanguage{english}{
 	\newcommand{\mytodo@lang@todosname}{List of \emph{Todos}}
 	\newcommand{\mytodo@lang@sectionname}{Section}
 	\newcommand{\mytodo@lang@todo}{Incomplete}
-\fi
-\if@myfrancais
+}{}
+\iflanguage{french}{
 	\newcommand{\mytodo@lang@todosname}{Liste des \emph{À faire}}
 	\newcommand{\mytodo@lang@sectionname}{Section}
 	\newcommand{\mytodo@lang@todo}{Incomplet}
-\fi
+}{}
 %% To define a list of "todos"
 % Define a command to draw a dotted line in the 'list of "todos"'
 \newcommand{\l@todo}{\@dottedtocline{1}{0.5em}{0.5em}}

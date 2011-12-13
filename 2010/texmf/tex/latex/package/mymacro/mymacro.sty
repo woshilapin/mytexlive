@@ -1,14 +1,11 @@
 \NeedsTeXFormat{LaTeX2e}[1999/01/01]
 \ProvidesPackage{mymacro}[2011/03/28]
 
+\RequirePackage{my}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Declare package options %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Language options
-\newif\if@myenglish \@myenglishfalse
-\DeclareOption{myenglish}{\@myenglishtrue}
-\newif\if@myfrancais \@myfrancaisfalse
-\DeclareOption{myfrancais}{\@myfrancaistrue}
 % In case of unknown options
 \DeclareOption*{%
 	\PackageWarning{mymacro}{Unknown option `\CurrentOption'}%
@@ -19,8 +16,6 @@
 %% Options to pass to packages
 
 %% Packages to call
-\RequirePackage{etoolbox}
-\RequirePackage{xkeyval}
 \RequirePackage{xspace}
 % Only for number printing
 \RequirePackage{numprint}
@@ -39,7 +34,7 @@
 % To write a name
 % The optional argument is for prefix on names (like 'van der' in 'van der Walls')
 \newcommand{\myname}[2][]{%
-	\if@myfrancais
+	\iflanguage{french}{%
 		\textsc{%
 			\ifstrempty{#1}%
 				{%
@@ -48,14 +43,14 @@
 				}%
 			\makefirstuc{\MakeLowercase{#2}}%
 		}%
-	\else
+	}{%
 		\ifstrempty{#1}%
 			{%
 			}{%
 				\MakeLowercase{#1}\ %
 			}%
 		\MakeUppercase{#2}%
-	\fi
+	}%
 }
 % To print numbers (see 'numprint' package)
 \newcommand{\mynum}[2][]{\ifstrempty{#1}{\numprint{#2}}{\numprint[#1]{#2}}}
