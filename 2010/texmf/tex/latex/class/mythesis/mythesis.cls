@@ -30,7 +30,7 @@
 \newif\if@myreview \@myreviewfalse
 \DeclareOption{myreview}{\@myreviewtrue}
 
-\ProcessOptions
+\ProcessOptions\relax
 \PassOptionsToClass{fleqn}{book}
 \PassOptionsToClass{12pt}{book}
 \PassOptionsToClass{a4paper}{book}
