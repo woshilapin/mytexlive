@@ -18,6 +18,7 @@
 \ProcessOptionsX[my]
 
 %% Options to pass to packages
+\PassOptionToPackage{greek}{babel}
 
 %% Packages to call
 % About characters encoding
@@ -36,8 +37,6 @@
 \RequirePackage{numprint}
 % Add American Mathematical Society extension
 \RequirePackage{amsmath}
-% In order to draw the 'euro' symbol
-\RequirePackage{marvosym}
 % To have right spaces after commands
 \RequirePackage{etoolbox}
 
@@ -53,8 +52,7 @@
 %%%%%%%%%%%%%%%%%%
 %% New commands %%
 %%%%%%%%%%%%%%%%%%
-\newcommand{\myeuro}{\leavevmode\unskip\nobreak\thinspace\text{\mvchr{164}}}
-\DeclareUnicodeCharacter{20AC}{\myeuro}
+\DeclareUnicodeCharacter{20AC}{\textgreek{\euro}}
 
 % End of package
 \endinput
