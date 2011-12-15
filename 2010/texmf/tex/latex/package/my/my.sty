@@ -18,7 +18,7 @@
 \ProcessOptionsX[my]
 
 %% Options to pass to packages
-\PassOptionToPackage{greek}{babel}
+\PassOptionsToPackage{greek,german,english,french}{babel}
 
 %% Packages to call
 % About characters encoding
@@ -39,10 +39,39 @@
 \RequirePackage{amsmath}
 % To have right spaces after commands
 \RequirePackage{etoolbox}
+% About links in the final PDF document
+\ltx@ifpackageloaded{hyperref}{}{
+	\RequirePackage[dvips]{hyperref}
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%
 %% New configuration %%
 %%%%%%%%%%%%%%%%%%%%%%%
+% Configuration of hyperref package
+\hypersetup{%
+	breaklinks=true,%
+	citecolor=green,%
+	colorlinks=true,%
+	filecolor=magenta,%
+	hypertexnames=true,%
+	linkcolor=gray,%
+	naturalnames=true,%
+	nesting=false,% Does not compile with 'true'
+	pageanchor=true,%
+	pdfnewwindow=true,%
+	pdfcenterwindow=true,%
+	pdfdisplaydoctitle=true,%
+	pdffitwindow=true,%
+	pdfhighlight=/I,%
+	pdfnonfullscreenpagemode=UseOutlines,%
+	pdfpagelabels=true,%
+	pdfpagelayout=OneColumn,%
+	pdfpagemode=UseOutlines,%
+	pdfstartview={FitH},%
+	%pdfview={FitB},% Should not be used to have correct links
+	unicode=true,%
+	urlcolor=red%
+}%
 % Substitute Computer Modern to Latin Modern for bold small caps
 \DeclareFontSubstitution{T1}{cmr}{bx}{sc}
 % Define paragraphs spacing
