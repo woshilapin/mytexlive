@@ -1,0 +1,16 @@
+*.aux
+*.cls
+*.dvi
+*.glo
+*.gls
+*.hd
+*.idx
+*.ilg
+*.ind
+*.log
+*.out
+*.pdf
+*.ps
+*.sty
+*.toc
+.*.swp
