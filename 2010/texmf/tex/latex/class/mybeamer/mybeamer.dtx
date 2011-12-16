@@ -1,0 +1,392 @@
+% \iffalse meta-comment
+%
+% Copyright (C) 2011 by Jean SIMARD
+%
+% This file may be distributed and/or modified under the conditions of the 
+%LaTeX Project Public License, either version 1.2 of this license or (at your 
+%option) any later version.  The latest version of this license is in:
+%
+% http://www.latex-project.org/lppl.txt
+%
+% and version 1.2 or later is part of all distributions of LaTeX version 
+%1999/12/01 or later.
+%
+% \fi
+
+% \iffalse
+%<*driver>
+\ProvidesFile{mybeamer.dtx}
+%</driver>
+%<class>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+%<class>\ProvidesClass{mybeamer}
+%<*class>
+	[2011/12/14 v1.0 Beamer presentation]
+%</class>
+%<*driver>
+\documentclass[french]{ltxdoc}
+\usepackage{holtxdoc}[2008/08/11]
+\usepackage{my}
+\usepackage{mymacro}
+\usepackage{hyperref}
+\usepackage{mycolor}
+\usepackage[smartref]{myref}
+\usepackage{myfloat}
+\usepackage{tikz}
+\EnableCrossrefs
+\CodelineIndex 
+\RecordChanges
+\begin{document}
+\DocInput{mybeamer.dtx}
+\end{document}
+%</driver>
+% \fi
+%
+% \CheckSum{0}
+%
+%% \CharacterTable
+%%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%%   Lower-case  \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%%   Digits    \0\1\2\3\4\5\6\7\8\9
+%%   Exclamation   \!   Double quote  \"   Hash (number) \#
+%%   Dollar    \$   Percent     \%   Ampersand   \&
+%%   Acute accent  \'   Left paren  \(   Right paren   \)
+%%   Asterisk    \*   Plus      \+   Comma     \,
+%%   Minus     \-   Point     \.   Solidus     \/
+%%   Colon     \:   Semicolon   \;   Less than   \<
+%%   Equals    \=   Greater than  \>   Question mark \?
+%%   Commercial at \@   Left bracket  \[   Backslash   \\
+%%   Right bracket \]   Circumflex  \^   Underscore  \_
+%%   Grave accent  \`   Left brace  \{   Vertical bar  \|
+%%   Right brace   \}   Tilde     \~}
+%
+% \changes{v1.0}{2011/12/14}{Initial version}
+%
+% \GetFileInfo{mybeamer.dtx}
+%
+% \DoNotIndex{\begin,\end,\\}
+%
+% \title{The \xclass{mybeamer} class\\a nice presentation with 
+%\xclass{beamer}\thanks{This document corresponds to the 
+%\xclass{mybeamer}~\fileversion, dated~\filedate.}}
+% \author{Jean 
+%\myname{Simard}\\\href{mailto:juste.lapin@gmail.com}{\xemail{juste.lapin@gmail.com}}}
+%
+% \maketitle
+%
+% \begin{abstract}
+%   In order to provide default configuration of \xclass{beamer} class, the 
+%\xclass{mybeamer} class is defining a default theme and some useful commands 
+%and environments to create a complete slide presentation.
+% \end{abstract}
+% \tableofcontents
+%
+% \section{Introduction}
+% The \xclass{mybeamer} class is a \xclass{beamer} based class to create a 
+%default configuration.
+% It adds few theme configuration and a progress bar on the bottom of each 
+%slide in the presentation.
+%
+% \section{Usage}
+% The \xclass{mybeamer} class does not really define new commands and new 
+%environments for the user.
+% It mainly declare a new ``look'' for the slide presentation, based on the 
+%\xclass{beamer} class.
+% The theme is coloured with a palette on white and red.
+%
+% \DescribeMacro{\myinsertprogressbar}
+% \cs{myinsertprogressbar} is mainly defined for use in the predefined theme of 
+%the \xclass{mybeamer} class.
+% It allows to draw a progress bar which take the whole width of the slide and 
+%looks like the \myref{fig-LookOfTheProgressBar}.
+% \begin{figure}
+% \makeatletter
+% \newdimen\progressbar@currentbarlength
+% \newdimen\progressbar@framenumberrectangle
+% \newdimen\progressbar@titlerectangle
+% \newdimen\progressbar@leftbar
+% \newcount\progressbar@tmpresult
+% \newcount\progressbar@numer
+% \newcount\progressbar@denom
+% \newcount\progressbar@barlength
+% \progressbar@framenumberrectangle=\textwidth
+% \progressbar@titlerectangle=\textwidth
+% \advance\progressbar@framenumberrectangle by -0.9cm
+% \advance\progressbar@titlerectangle by -1.1cm
+% \progressbar@barlength=110
+% \progressbar@leftbar=\progressbar@titlerectangle
+% \advance\progressbar@leftbar by -\progressbar@barlength mm
+% \def\inserttotalframenumber{36}
+% \def\insertframenumber{12}
+% \def\inserttitle{Title of the presentation}
+% \ifnum\inserttotalframenumber=1\else
+% \progressbar@numer=\insertframenumber
+% \advance\progressbar@numer by -1
+% \progressbar@denom=\inserttotalframenumber
+% \advance\progressbar@denom by -1
+% \progressbar@tmpresult=\progressbar@barlength
+% \multiply\progressbar@tmpresult by \progressbar@numer
+% \divide\progressbar@tmpresult by \progressbar@denom
+% \progressbar@currentbarlength=\progressbar@tmpresult mm
+% \begin{tikzpicture}
+% \shade[top color=white, bottom color=white!80!myred] (0, 0) rectangle  
+(\textwidth, 0.6cm);
+% \shade[left color=white,right color=white!70!myred] (.5\textwidth, 0.2cm) 
+%rectangle (\textwidth, 0.22cm);
+% \draw (\progressbar@framenumberrectangle, 0.25cm) node [anchor=mid west, 
+%draw=white!70!myred, fill=white] 
+%{\sf\tiny\color{myred!70!white}\insertframenumber~/~\inserttotalframenumber};
+% \draw (\progressbar@titlerectangle, 0.32cm) node [anchor=south east] 
+%{\sf\scriptsize\color{white!70!myred}\inserttitle};
+% \fill (\progressbar@leftbar, 0.12cm) [fill=white, rounded corners=0.1cm] 
+%rectangle (\progressbar@titlerectangle, 0.3cm);
+% \ifnum\insertframenumber=1\else
+% \shade[left color=myred!25!white, right color=myred!50!white, rounded 
+%corners=0.1cm] (\progressbar@leftbar, 0.12cm) rectangle 
+%++(\progressbar@currentbarlength, 0.2cm);
+% \fi
+% \draw (\progressbar@leftbar, 0.11cm) [draw=white!70!myred, rounded 
+%corners=0.1cm] rectangle ++(\progressbar@barlength mm, 0.2cm);
+% \end{tikzpicture}
+% \mycaption[fig-LookOfTheProgressBar]{Look of the progress bar}
+% \makeatother
+% \end{figure}
+%
+% \section{Implementation}
+% \subsection{Initialization}
+% Load \xpackage{my} package to load default configuration.
+%    \begin{macrocode}
+\RequirePackageWithOptions{my}[2011/12/08]
+%    \end{macrocode}
+%
+% Moreover, we will load the \xclass{beamer} class.
+% Some default options are loaded.
+% \begin{itemize}
+%   \item \xoption{fleqn} place all equations one the left of page (other 
+%possibility is the center)
+%   \item \xoption{xcolor=pst} to make \xpackage{xcolor} aware of the fact that 
+%we probably need the PSTricks package
+% \end{itemize}
+%    \begin{macrocode}
+\ExecuteOptions{fleqn,xcolor=pst}
+\LoadClassWithOptions{beamer}[2010/06/21]
+%    \end{macrocode}
+%
+% No option is declared for this class.
+% A warning is output for each non-declared option called.
+%    \begin{macrocode}
+\DeclareOptionX*{%
+  \ClassWarning{mybeamer}{Unknown option `\CurrentOption'}%
+}
+\ProcessOptions\relax
+%    \end{macrocode}
+%
+% Some useful packages are loaded here.
+% \begin{description}
+%   \item[\xpackage{tikz}] is used to draw the progress bar
+%   \item[\xpackage{mycolor}] for a bundle of personal colors
+% \end{description}
+%    \begin{macrocode}
+\RequirePackage{tikz}
+\RequirePackage{mycolor}
+%    \end{macrocode}
+%
+% \subsection{The progress bar}
+% Some dimensions variables\dots{}
+%    \begin{macrocode}
+  \newdimen\progressbar@currentbarlength
+  \newdimen\progressbar@framenumberrectangle
+  \newdimen\progressbar@titlerectangle
+  \newdimen\progressbar@leftbar
+%    \end{macrocode}
+% \dots{} and counter variables are defined to draw the progress bar.
+%    \begin{macrocode}
+  \newcount\progressbar@tmpresult
+  \newcount\progressbar@numer
+  \newcount\progressbar@denom
+  \newcount\progressbar@barlength
+%    \end{macrocode}
+%
+% The dimensions (defined in the previous lines) are now initialized.
+% The progress bar will take the whole width of the page with little borders.
+%    \begin{macrocode}
+  \progressbar@framenumberrectangle=\paperwidth
+  \progressbar@titlerectangle=\paperwidth
+
+  \advance\progressbar@framenumberrectangle by -0.9cm
+  \advance\progressbar@titlerectangle by -1.1cm
+
+  \progressbar@barlength=115 % (in millimeters)
+  \progressbar@leftbar=\progressbar@titlerectangle
+  \advance\progressbar@leftbar by -\progressbar@barlength mm
+%    \end{macrocode}
+%
+% \begin{macro}{\myinsertprogressbar}
+% Here, the progress bar command is defined with the help of \xpackage{tikz} 
+%package.
+% The progress bar is drawn depending on the number of the current page and the 
+%total number of pages.
+%    \begin{macrocode}
+  \def\myinsertprogressbar{
+%    \end{macrocode}
+% To begin, we define all the dimensions which are changing on each slide 
+%(dimensions which depends on the number of the current page).
+%    \begin{macrocode}
+    \ifnum\inserttotalframenumber=1\else
+    \progressbar@numer=\insertframenumber
+    \advance\progressbar@numer by -1
+    \progressbar@denom=\inserttotalframenumber
+    \advance\progressbar@denom by -1
+    \progressbar@tmpresult=\progressbar@barlength
+    \multiply\progressbar@tmpresult by \progressbar@numer
+    \divide\progressbar@tmpresult by \progressbar@denom
+    \progressbar@currentbarlength=\progressbar@tmpresult mm
+%    \end{macrocode}
+%
+% The \texttt{beamercolorbox} allow user to define new box in the 
+%\xclass{beamer} class.
+% The progress bar is insert in a \texttt{beamercolorbox}.
+% Moreover, the progress bar is defined with the help of the \xpackage{tikz} 
+%package (in a \texttt{tikzpicture} environment).
+%    \begin{macrocode}
+    \begin{beamercolorbox}{progressbar primary}
+      \begin{tikzpicture}
+        \shade[top color=bg, bottom color=bg!80!fg]%
+          (0, 0) rectangle  (\paperwidth, 0.6cm);
+        \shade[left color=bg,right color=bg!70!fg]%
+          (.5\paperwidth, 0.2cm) rectangle (\paperwidth, 0.22cm);
+        \draw (\progressbar@framenumberrectangle, 0.21cm) node%
+          [anchor=mid west, draw=bg!70!fg, fill=bg]
+          {%
+            \color{structure.fg!70!bg}%
+            \insertframenumber~/~\inserttotalframenumber%
+          };
+        \draw (\progressbar@titlerectangle, 0.32cm) node%
+          [anchor=south east] {\color{bg!70!fg}\inserttitle};
+        \fill (\progressbar@leftbar, 0.12cm)%
+          [fill=bg, rounded corners=0.1cm]%
+          rectangle (\progressbar@titlerectangle, 0.3cm);
+        \ifnum\insertframenumber=1\else
+        \shade[left color=progressbar primary.fg!25!bg,%
+          right color=progressbar primary.fg!50!bg,%
+          rounded corners=0.1cm] (\progressbar@leftbar, 0.12cm)
+          rectangle ++(\progressbar@currentbarlength, 0.2cm);
+        \fi
+        \draw (\progressbar@leftbar, 0.11cm)%
+          [draw=bg!70!fg, rounded corners=0.1cm]%
+          rectangle ++(\progressbar@barlength mm, 0.2cm);
+      \end{tikzpicture}
+    \end{beamercolorbox}
+    \fi
+  }
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsection{The theme}
+% The theme of the \xclass{mybeamer} class use some of the default theme of the 
+%\xclass{beamer} class and enhance them.
+% The used theme is \xoption{CambridgeUS} with the inner theme 
+%\xoption{rectangle}.
+%    \begin{macrocode}
+  \usetheme{CambridgeUS}
+  \useinnertheme{rectangles}
+%    \end{macrocode}
+%
+% The title page theme is totally redefined.
+% Thin lines are separating the title (on the top) from the author and 
+%institute (in the middle) and from the date (on the bottom).
+% Progress bar is insert on the bottom border of the title page.
+%    \begin{macrocode}
+  \defbeamertemplate*{title page}{progressbar theme}{%
+    \pgfdeclarehorizontalshading{separationtitlepagelineshading}%
+      {0.5pt}%
+      {color(0cm)=(bg);%
+      color(0.5\textwidth)=(structure.fg); color(\textwidth)=(bg)}%
+
+    \makeatletter%
+    \begin{center}%
+      \textbf{\textcolor{structure.fg}\large\inserttitle}%
+
+      \pgfuseshading{separationtitlepagelineshading}%
+      \vskip\baselineskip%
+      \footnotesize\insertauthor\\[\baselineskip]%
+      \ifx\insertinstitute\@empty%
+      \else%
+        \tiny\insertinstitute\\[\baselineskip]%
+      \fi%
+      \insertlogo%
+      \vskip\baselineskip%
+      \pgfuseshading{separationtitlepagelineshading}%
+      \vfill%
+      \footnotesize  %
+      \insertdate%
+    \end{center}%
+    \makeatother%
+  }
+%    \end{macrocode}
+%
+% The footline theme is also redefined with the progress bar.
+%    \begin{macrocode}
+  \defbeamertemplate*{footline}{progressbar theme}{%
+    \begin{beamercolorbox}%
+        [wd=\paperwidth,ht=0.6cm,dp=0ex]%
+        {progressbar in head/foot}%
+      \myinsertprogressbar%
+    \end{beamercolorbox}%
+  }
+%    \end{macrocode}
+%
+% The headline theme is displaying the main section and subsection of the 
+%current slide.
+% These informations are output on one line (not too much space).
+%    \begin{macrocode}
+  \defbeamertemplate*{headline}{split theme}{%
+    \leavevmode%
+    \begin{beamercolorbox}%
+        [wd=.5\paperwidth,ht=2.5ex,dp=1.125ex]%
+        {section in head/foot}%
+      \insertsectionnavigationhorizontal{.5\paperwidth}%
+        {\hskip0pt plus1filll}{}%
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}%
+        [wd=.5\paperwidth,ht=2.5ex,dp=1.125ex]%
+        {subsection in head/foot}%
+      \insertsubsectionnavigationhorizontal{.5\paperwidth}%
+        {}%
+        {\hskip0pt plus1filll}%
+    \end{beamercolorbox}%
+  }
+%    \end{macrocode}
+%
+% All new theme are activated for the current presentation.
+%    \begin{macrocode}
+  \setbeamertemplate{title page}[progressbar theme]
+  \setbeamertemplate{headline}[infolines theme]
+  \setbeamertemplate{footline}[progressbar theme]
+  \setbeamertemplate{navigation symbols}{}
+%    \end{macrocode}
+%
+% Some colors are changed in order to have a more ``red coloured'' theme.
+%    \begin{macrocode}
+  \setbeamercolor{progressbar primary}%
+    {fg=myred}
+  \setbeamercolor{structure}%
+    {fg=myred}
+  \setbeamercolor{block title}%
+    {fg=white,bg=myred}
+  \setbeamercolor{block body}%
+    {bg=light-black}
+  \setbeamercolor{example text}%
+    {fg=white,bg=myred}
+  \setbeamercolor{section in head/foot}%
+    {parent=palette primary,fg=black}
+  \setbeamercolor{subsection in head/foot}%
+    {parent=palette primary,fg=myred}
+  \setbeamercolor{alerted text}%
+    {fg=myred}
+%    \end{macrocode}
+%
+%  \PrintChanges
+%  \PrintIndex
+%
+% \Finale
+\endinput
