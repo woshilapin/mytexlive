@@ -1,0 +1,178 @@
+% \iffalse meta-comment
+%
+% Copyright (C) 2011 by Jean SIMARD
+%
+% This file may be distributed and/or modified under the conditions of the 
+%LaTeX Project Public License, either version 1.2 of this license or (at your 
+%option) any later version.  The latest version of this license is in:
+%
+% http://www.latex-project.org/lppl.txt
+%
+% and version 1.2 or later is part of all distributions of LaTeX version 
+%1999/12/01 or later.
+%
+% \fi
+
+% \iffalse
+%<package>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+%<package>\ProvidesPackage{my}
+%<package>  [2011/12/17 v1.0 Default LaTeX2e configuration]
+%<*driver>
+\documentclass[english]{ltxdoc}
+\usepackage{holtxdoc}[2008/08/11]
+\usepackage{my}
+\usepackage{mymacro}
+\usepackage{hyperref}
+\EnableCrossrefs
+\CodelineIndex 
+\RecordChanges
+\begin{document}
+\DocInput{my.dtx}
+\end{document}
+%</driver>
+% \fi
+%
+% \CheckSum{0}
+%
+%% \CharacterTable
+%%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%%   Lower-case  \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%%   Digits    \0\1\2\3\4\5\6\7\8\9
+%%   Exclamation   \!   Double quote  \"   Hash (number) \#
+%%   Dollar    \$   Percent     \%   Ampersand   \&
+%%   Acute accent  \'   Left paren  \(   Right paren   \)
+%%   Asterisk    \*   Plus      \+   Comma     \,
+%%   Minus     \-   Point     \.   Solidus     \/
+%%   Colon     \:   Semicolon   \;   Less than   \<
+%%   Equals    \=   Greater than  \>   Question mark \?
+%%   Commercial at \@   Left bracket  \[   Backslash   \\
+%%   Right bracket \]   Circumflex  \^   Underscore  \_
+%%   Grave accent  \`   Left brace  \{   Vertical bar  \|
+%%   Right brace   \}   Tilde     \~}
+%
+% \changes{v1.0}{2011/12/17}{Initial version}
+%
+% \GetFileInfo{my.dtx}
+%
+% \DoNotIndex{\begin,\end,\\}
+%
+% \title{The \xpackage{my} package\\a bundle of default 
+%initialization\thanks{This document corresponds to the 
+%\xpackage{my}~\fileversion, %dated~\filedate.}}
+% \author{Jean 
+%\myname{Simard}\\\href{mailto:juste.lapin@gmail.com}{\xemail{juste.lapin@gmail.com}}}
+%
+% \maketitle
+%
+% \begin{abstract}
+% The \xpackage{my} package makes all default initialization for any \LaTeXe\ 
+%document. For example, load \xpackage{inputenc}, \xpackage{fontenc} and 
+%\xpackage{babel} packages.
+% \end{abstract}
+% \tableofcontents
+%
+% \section{Introduction}
+% In every \LaTeXe\ document, there is a lot of initialization that should be 
+%done. For example, encoding of the file must be loaded (\xpackage{inputenc} 
+%package) and the font encoding (\xpackage{fontenc} package).
+%
+% Moreover, some configuration packages are needed for different purposes. The 
+%font is changed with \xpackage{lmodern} package, the language of the document 
+%is defined with \xpackage{babel} package and each mathematical notations are 
+%changed with the \xpackage{amsmath} package.
+%
+% \section{Usage}
+% The \xclass{my} package does not really define new commands and new 
+%environments for the user.
+% It mainly declares an initialization to begin a \LaTeXe\ document.
+%
+% \StopEventually{%
+%   \PrintChanges
+%   \PrintIndex
+% }
+%
+% \section{Implementation}
+% \subsection{Initialization}
+% First of all, some default packages are loaded which will be used for 
+%creating different new commands. These packages are loaded before anything 
+%else.
+% \begin{itemize}
+% \item\xpackage{multido} to create loops
+% \item\xpackage{xkeyval} to define extended options for packages and commands
+% \item\xpackage{suffix} to create commands with stars or other characters at 
+%the end
+% \item\xpackage{ltxcmds} is useful to check what files are loaded (and other 
+%useful stuff)
+% \item\xpackage{etoolbox} furnish an important number of development commands
+% \end{itemize}
+%    \begin{macrocode}
+\RequirePackage{multido}
+\RequirePackage{xkeyval}
+\RequirePackage{suffix}
+\RequirePackage{ltxcmds}
+\RequirePackage{etoolbox}
+%    \end{macrocode}
+%
+% All global options are assigned to the current package.
+%    \begin{macrocode}
+\ExecuteOptions{\CurrentOption}
+%    \end{macrocode}
+%
+% No option is declared for this class.
+% A warning is output for each non-declared option called.
+%    \begin{macrocode}
+\DeclareOptionX*{%
+  \ClassWarning{my}{Unknown option `\CurrentOption'}%
+}
+\ProcessOptionsX*
+%    \end{macrocode}
+%
+% \subsection{Loading packages}
+% There is a few default packages that are loaded in \xpackage{my} package.
+% \begin{itemize}
+% \item\xpackage{inputenc} allow only \xoption{utf8} encoding for \LaTeXe\ 
+%files
+% \item\xpackage{fontenc} defines the font encoding to \xoption{T1}
+% \item\xpackage{lmodern} loads the latin modern font
+% \item\xpackage{amsmath} loads default configuration for mathematical 
+%notations
+% \item\xpackage{babel} loads the language specifications
+% \item\xpackage{footmisc} with \xoption{bottom} always put footnote at the 
+%bottom of the page (sometimes, images could be placed behind)
+% \end{itemize}
+%    \begin{macrocode}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{lmodern}
+\RequirePackage{amsmath}
+\RequirePackage{babel}
+\RequirePackage[bottom]{footmisc}
+%    \end{macrocode}
+%
+% \subsection{Default configuration for \LaTeXe\ document}
+% \xpackage{lmodern} does not have font for small caps bold font. This line 
+%configure \myemph{Computer Modern} instead of \myemph{Latin modern}.
+%    \begin{macrocode}
+\DeclareFontSubstitution{T1}{cmr}{bx}{sc}
+%    \end{macrocode}
+%
+% Default distances for paragraphs are changed. For \LaTeXe, paragraphs sould 
+%be indented on the first line with no vertical space between paragraphs. I 
+%find that no indentation with vertical space between paragraphs is a better 
+%look.
+%    \begin{macrocode}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}
+%    \end{macrocode}
+%
+% Finally, attach the unicode \texttt{20AC} for euro symbol € to the correct 
+%symbol which can be find in Greek fonts.
+%    \begin{macrocode}
+\DeclareFontEncoding{LGR}{}{}
+\DeclareFontSubstitution{LGR}{cmr}{m}{n}
+\DeclareErrorFont{LGR}{cmr}{m}{n}{10}
+\DeclareUnicodeCharacter{20AC}{{\fontencoding{LGR}\selectfont\char"18\relax}}
+%    \end{macrocode}
+%
+% \Finale
+\endinput
