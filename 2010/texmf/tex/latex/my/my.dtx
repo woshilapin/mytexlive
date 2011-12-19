@@ -18,10 +18,11 @@
 %<package>\ProvidesPackage{my}
 %<package>  [2011/12/17 v1.0 Default LaTeX2e configuration]
 %<*driver>
-\documentclass[english]{ltxdoc}
+\documentclass[french,english]{ltxdoc}
 \usepackage{holtxdoc}[2008/08/11]
 \usepackage{my}
-\usepackage{mymacro}
+\usepackage[smarttab]{myfloat}
+\usepackage[smartref]{myref}
 \usepackage{hyperref}
 \EnableCrossrefs
 \CodelineIndex 
@@ -32,7 +33,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{0}
+% \CheckSum{114}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -54,7 +55,12 @@
 %
 % \GetFileInfo{my.dtx}
 %
-% \DoNotIndex{\begin,\end,\\}
+% \DoNotIndex{\begin,\end,\\,\ }
+% \DoNotIndex{\RequirePackage}
+% \DoNotIndex{\ClassError,\ClassWarning,\ClassInfo}
+% \DoNotIndex{\PackageError,\PackageWarning,\PackageInfo}
+% \DoNotIndex{\DeclareOption,\ExecuteOptions,\CurrentOption,\ProcessOptions}
+% \DoNotIndex{\DeclareOptionX,\ProcessOptionsX}
 %
 % \title{The \xpackage{my} package\\a bundle of default 
 %initialization\thanks{This document corresponds to the 
@@ -68,6 +74,8 @@
 % The \xpackage{my} package makes all default initialization for any \LaTeXe\ 
 %document. For example, load \xpackage{inputenc}, \xpackage{fontenc} and 
 %\xpackage{babel} packages.
+%
+% Moreover this package define a lot of useful macros.
 % \end{abstract}
 % \tableofcontents
 %
@@ -81,10 +89,142 @@
 %is defined with \xpackage{babel} package and each mathematical notations are 
 %changed with the \xpackage{amsmath} package.
 %
+% With the default configuration, numerous macros are defined to print names, 
+%numbers, Latin abbreviations\dots{}
+%
 % \section{Usage}
-% The \xclass{my} package does not really define new commands and new 
-%environments for the user.
-% It mainly declares an initialization to begin a \LaTeXe\ document.
+% The \xclass{my} package mainly define a default configuration for \LaTeXe\ 
+%documents. Some useful macros are also defined and described in this section.
+%
+% \subsection{Basic macros}
+% \DescribeMacro{\myemph}
+% \xpackage{my} package define a lot of macros that are already defined by 
+%existing \LaTeXe\ macros in order to have the possibility to change them. For 
+%example, \cs{myemph} is defining the \cs{emph} command.
+%
+% \DescribeMacro{\mycopyright}
+% \DescribeMacro{\myregistered}
+% \DescribeMacro{\mytrademark}
+% The three macros \cs{mycopyright}, \cs{myregistered} and \cs{mytrademark} are 
+%defined for the symbols \mycopyright, \myregistered and \mytrademark. These 
+%symbols can probably be printed with the \textsc{utf-8} symbol directly into 
+%the text of the document.
+%
+% \subsection{Latin abbreviations}
+% \DescribeMacro{\myafortiori}
+% \DescribeMacro{\myapriori}
+% \DescribeMacro{\mycf}
+% \DescribeMacro{\myeg}
+% \DescribeMacro{\myie}
+% \DescribeMacro{\myetc}
+% \DescribeMacro{\myetal}
+% Some Latin abbreviations are defined mainly to be used in French or English 
+%document.  The \myref{tab-LatinAbbreviations} show what are these 
+%abbreviations.
+% \begin{mytable}
+% \mycaption[tab-LatinAbbreviations]{Latin abbreviations}
+% \begin{mytabular}{^L-L-L}
+% \mytoprule
+% \myrowstyle{\bfseries}
+% Command        & Abbreviation & In Latin                  \\
+% \mymiddlerule[\heavyrulewidth]
+% |\myafortiori| & \myafortiori & --                        \\
+% |\myapriori|   & \myapriori   & --                        \\
+% |\mycf|        & \mycf        & \textit{confer}           \\
+% |\myeg|        & \myeg        & \textit{exempli gratia}   \\
+% |\myie|        & \myie        & \textit{in extenso}       \\
+% |\myetc|       & \myetc       & \textit{et cetera desunt} \\
+% |\myetal|      & \myetal      & \textit{et alii}          \\
+% \mybottomrule
+% \end{mytabular}
+% \end{mytable}
+%
+% \subsection{Advanced macros}
+% \begin{declcs}{mynum}
+% \oarg{unit}
+% \marg{number}
+% \end{declcs}
+% \DescribeMacro{\mynum}
+% \npstyleenglish
+% \cs{mynum} macro is defined to print numbers, possibly with unit.  
+%\meta{number} is the number to be print. \meta{unit} is the possibly unit 
+%which can be appened with the right space between the unit and number 
+%(depending on the locale). See the \myref{tab-ExamplesOfUseOfMynum} for 
+%examples.
+% \begin{mytable}
+% \mycaption[tab-ExamplesOfUseOfMynum]{Examples of use of \cs{mynum}}
+% \begin{mytabular}{^L-L}
+% \mytoprule
+% \myrowstyle{\bfseries}
+% Command               & Result              \\
+% \mymiddlerule[\heavyrulewidth]
+% |\mynum{12}|          & \mynum{12}          \\
+% |\mynum{12503}|       & \mynum{12503}       \\
+% |\mynum[mm]{13}|      & \mynum[mm]{13}      \\
+% |$\mynum{15}$|        & $\mynum{15}$        \\
+% |$\mynum[kg]{69531}$| & $\mynum[kg]{69531}$ \\
+% \mybottomrule
+% \end{mytabular}
+% \end{mytable}
+%
+% \begin{declcs}{myname}
+% \oarg{prefix}
+% \marg{name}
+% \end{declcs}
+% \DescribeMacro{\myname}
+% \cs{myname} macro is defined to print family names. \meta{name} is the main 
+%part of the name like in \myname{Simard}. \meta{name} will be upper case 
+%except for French which will have the first letter upper case and the other 
+%letters will be small upper case. The \meta{prefix} is for prefix in family 
+%names like in ``\myname[de la]{Fontaine}'' (or in French 
+%``\begin{otherlanguage}{french}\myname[de la]{Fontaine}\end{otherlanguage}'').  
+%The \myref{tab-ExampleOfTheMynameMacro} show some examples of the use of 
+%\cs{myname} macro.
+% \begin{mytable}
+% \mycaption[tab-ExampleOfTheMynameMacro]{Example of the \cs{myname} command}
+% \begin{mytabular}{^L->{\selectlanguage{english}}L->{\selectlanguage{french}}L}
+% \mytoprule
+% \myrowstyle{\bfseries}
+% Command                 & Result                & Result in French      \\
+% \mymiddlerule[\heavyrulewidth]
+% |\myname{Turing}|       & \myname{Turing}       & \myname{Turing}       \\
+% |\myname{turing}|       & \myname{turing}       & \myname{turing}       \\
+% |\myname{TuRiNg}|       & \myname{TuRiNg}       & \myname{TuRiNg}       \\
+% |\myname[de]{Gaulle}| & \myname[de]{Gaulle} & \myname[de]{Gaulle} \\
+% |\myname[DE]{GAULLE}| & \myname[DE]{GAULLE} & \myname[DE]{GAULLE} \\
+% \mybottomrule
+% \end{mytabular}
+% \end{mytable}
+%
+% \begin{declcs}{begin}|{myquote}|
+% \oarg{language}\\
+% \dots{}\\
+% |\end{myquote}|
+% \end{declcs}
+% \DescribeEnv{myquote}
+% A \texttt{myquote} environment has been defined to make citations in every 
+%languages. \meta{language} defines the language in which the citation should 
+%be done. If the language is different of the current document, the text is 
+%printed in italic. For example, this is a first citation
+% \begin{myquote}
+% Science is what we understand well enough to explain to a computer. Art is 
+%everything else we do.
+% \end{myquote}
+% and another one in French
+% \begin{myquote}[french]
+% Oui, au lieu de poursuivre les Goths de l'Est, ils vont nous poursuivre nous, 
+%qui sommes des Gaulois de l'Ouest. Ils ont perdu le Nord…
+% \end{myquote}
+%
+% \subsection{Mathematical macros}
+% \begin{declcs}{mynorm}
+% \oarg{type}
+% \marg{element}
+% \end{declcs}
+% \DescribeMacro{\mynorm}
+% \cs{mynorm} is available to describe the mathematical norm of an element like 
+%$\mynorm{x}$. Specific norms can be obtain thanks to \meta{type} argument 
+%like |\mynorm[\infty]{x}| for $\mynorm[\infty]{x}$.
 %
 % \StopEventually{%
 %   \PrintChanges
@@ -133,12 +273,16 @@
 % \item\xpackage{inputenc} allow only \xoption{utf8} encoding for \LaTeXe\ 
 %files
 % \item\xpackage{fontenc} defines the font encoding to \xoption{T1}
-% \item\xpackage{lmodern} loads the latin modern font
+% \item\xpackage{lmodern} loads the \myemph{Latin modern} font
 % \item\xpackage{amsmath} loads default configuration for mathematical 
 %notations
 % \item\xpackage{babel} loads the language specifications
 % \item\xpackage{footmisc} with \xoption{bottom} always put footnote at the 
 %bottom of the page (sometimes, images could be placed behind)
+% \item\xpackage{xspace} useful to have finishing commands with a space without 
+%suffixing it with a backslash and a space
+% \item\xpackage{mfirstuc} to make only the first letter of word upper case
+% \item\xpackage{numprint} specific to print numbers
 % \end{itemize}
 %    \begin{macrocode}
 \RequirePackage[utf8]{inputenc}
@@ -147,6 +291,9 @@
 \RequirePackage{amsmath}
 \RequirePackage{babel}
 \RequirePackage[bottom]{footmisc}
+\RequirePackage{xspace}
+\RequirePackage{mfirstuc}
+\RequirePackage{numprint}
 %    \end{macrocode}
 %
 % \subsection{Default configuration for \LaTeXe\ document}
@@ -171,8 +318,174 @@
 \DeclareFontEncoding{LGR}{}{}
 \DeclareFontSubstitution{LGR}{cmr}{m}{n}
 \DeclareErrorFont{LGR}{cmr}{m}{n}{10}
-\DeclareUnicodeCharacter{20AC}{{\fontencoding{LGR}\selectfont\char"18\relax}}
+\DeclareUnicodeCharacter{20AC}{%
+  {\fontencoding{LGR}\selectfont\char"18\relax}%
+}
 %    \end{macrocode}
+%
+% \begin{macro}{\myemph}
+% Define a new macro for the \cs{emph} macro.
+%    \begin{macrocode}
+\newrobustcmd{\myemph}[1]{\emph{#1}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\mycopyright}
+% Define a new macro for the \mycopyright symbol. This macro has the 
+%\cs{xspace} command at end in order to put it in a text without a following 
+%backslash to have a a space.
+%    \begin{macrocode}
+\newrobustcmd{\mycopyright}{\copyright\xspace}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\myregistered}
+% Define a new macro for the \myregistered symbol. This macro has the 
+%\cs{xspace} command at end.
+%    \begin{macrocode}
+\newrobustcmd{\myregistered}{\textregistered\xspace}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\mytrademark}
+% Define a new macro for the \mytrademark symbol. This macro has the 
+%\cs{xspace} command at end.
+%    \begin{macrocode}
+\newrobustcmd{\mytrademark}{\texttrademark\xspace}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsection{Latin abbreviations}
+% \begin{macro}{\myafortiori}
+% Define a new macro for the \myafortiori Latin abbreviations. This macro has 
+%the \cs{xspace} command at end.
+%    \begin{macrocode}
+\newrobustcmd{\myafortiori}{\textit{a fortiori}\xspace}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\myapriori}
+% Define a new macro for the \myapriori Latin abbreviation. This macro has the 
+%\cs{xspace} command at end.
+%    \begin{macrocode}
+\newrobustcmd{\myapriori}{\textit{a priori}\xspace}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\mycf}
+% Define a new macro for the \mycf Latin abbreviation. This macro has the 
+%\cs{xspace} command at end.
+%    \begin{macrocode}
+\newrobustcmd{\mycf}{\textit{c.f.}\xspace}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\myeg}
+% Define a new macro for the \myeg Latin abbreviation. This macro has the 
+%\cs{xspace} command at end.
+%    \begin{macrocode}
+\newrobustcmd{\myeg}{\textit{e.g.}\xspace}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\myie}
+% Define a new macro for the \myie Latin abbreviation. This macro has the 
+%\cs{xspace} command at end.
+%    \begin{macrocode}
+\newrobustcmd{\myie}{\textit{i.e.}\xspace}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\myetc}
+% Define a new macro for the \myetc Latin abbreviation. This macro has the 
+%\cs{xspace} command at end.
+%    \begin{macrocode}
+\newrobustcmd{\myetc}{\textit{etc.}\xspace}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\myetal}
+% Define a new macro for the \myetal Latin abbreviation. This macro has the 
+%\cs{xspace} command at end.
+%    \begin{macrocode}
+\newrobustcmd{\myetal}{\textit{et al.}\xspace}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsection{Advanced macros}
+% \begin{macro}{\mynum}
+% This macro use the \cs{numprint} macro from the \xpackage{numprint} package.
+%    \begin{macrocode}
+\newrobustcmd{\mynum}[2][]{%
+  \ifstrempty{#1}{%
+    \numprint{#2}%
+  }{%
+    \numprint[#1]{#2}%
+  }%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\myname}
+% This macro use the \xpackage{mfirstuc} package to always have the first 
+%letter of family name upper case. Moreover, \cs{MakeLowercase} and 
+%\cs{MakeUppercase} are used to be sure of the case of family names.
+%    \begin{macrocode}
+\newrobustcmd{\myname}[2][]{%
+  \iflanguage{french}{%
+    \textsc{%
+      \ifstrempty{#1}%
+        {%
+        }{%
+          \MakeLowercase{#1}\ %
+        }%
+      \makefirstuc{\MakeLowercase{#2}}%
+    }%
+  }{%
+    \ifstrempty{#1}%
+      {%
+      }{%
+        \MakeLowercase{#1}\ %
+      }%
+    \MakeUppercase{#2}%
+  }%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{environment}{myquote}
+% \texttt{myquote} environment uses \cs{languagename} macro to test if the 
+%current language of the document is the same than the citation. The 
+%|myquotechangelanguage| boolean flag is used to test if the language of the 
+%quote is the same as the current language of the document.
+%    \begin{macrocode}
+\newbool{myquotechangelanguage}
+\newrobustcmd{\myquote}[1][default]{%
+  \ifstrequal{#1}{default}{}{%
+    \booltrue{myquotechangelanguage}%
+    \begin{otherlanguage}{#1}%
+    \it%
+  }%
+  \begin{quote}%
+}
+\def\endmyquote{%
+  \end{quote}%
+  \ifbool{myquotechangelanguage}{%
+    \end{otherlanguage}%
+    \boolfalse{myquotechangelanguage}%
+  }{}%
+}
+%    \end{macrocode}
+% \end{environment}
+%
+% \subsection{Mathematical macros}
+% \begin{macro}{mynorm}
+% The norm of a mathematical element only used already existing macros defined 
+%in \LaTeXe.
+%    \begin{macrocode}
+\newrobustcmd{\mynorm}[2][]{\left\| #2 \right\|_{#1}}
+%    \end{macrocode}
+% \end{macro}
 %
 % \Finale
 \endinput
