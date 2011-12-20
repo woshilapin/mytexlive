@@ -33,7 +33,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{114}
+% \CheckSum{145}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -127,7 +127,7 @@
 % \mytoprule
 % \myrowstyle{\bfseries}
 % Command        & Abbreviation & In Latin                  \\
-% \mymiddlerule[\heavyrulewidth]
+% \mymiddlerule
 % |\myafortiori| & \myafortiori & --                        \\
 % |\myapriori|   & \myapriori   & --                        \\
 % |\mycf|        & \mycf        & \textit{confer}           \\
@@ -157,7 +157,7 @@
 % \mytoprule
 % \myrowstyle{\bfseries}
 % Command               & Result              \\
-% \mymiddlerule[\heavyrulewidth]
+% \mymiddlerule
 % |\mynum{12}|          & \mynum{12}          \\
 % |\mynum{12503}|       & \mynum{12503}       \\
 % |\mynum[mm]{13}|      & \mynum[mm]{13}      \\
@@ -166,6 +166,19 @@
 % \mybottomrule
 % \end{mytabular}
 % \end{mytable}
+%
+% \begin{declcs}{mytextsc}
+% \oarg{option}
+% \marg{text}
+% \end{declcs}
+% \DescribeMacro{\mytextsc}
+% With Latin Modern font, small caps are not possible when using a sans serif 
+%family. The \cs{mytextsc} is fixing this problem by using upper case with a 
+%smaller size. This macro is providing an optionnal argument to make the word 
+%``all upper case'', ``all small case'' or ``all small case with the first 
+%letter upper case''. As an example in sans serif font family, |\textsc{hello}| 
+%is producing \textsf{\textsc{hello}} but |\mytextsc{hello}| is producing 
+%\textsf{\mytextsc{hello}}.
 %
 % \begin{declcs}{myname}
 % \oarg{prefix}
@@ -186,12 +199,13 @@
 % \mytoprule
 % \myrowstyle{\bfseries}
 % Command                 & Result                & Result in French      \\
-% \mymiddlerule[\heavyrulewidth]
+% \mymiddlerule
 % |\myname{Turing}|       & \myname{Turing}       & \myname{Turing}       \\
 % |\myname{turing}|       & \myname{turing}       & \myname{turing}       \\
 % |\myname{TuRiNg}|       & \myname{TuRiNg}       & \myname{TuRiNg}       \\
-% |\myname[de]{Gaulle}| & \myname[de]{Gaulle} & \myname[de]{Gaulle} \\
-% |\myname[DE]{GAULLE}| & \myname[DE]{GAULLE} & \myname[DE]{GAULLE} \\
+% |\myname[de]{Gaulle}|   & \myname[de]{Gaulle}   & \myname[de]{Gaulle}   \\
+% |\myname[DE]{GAULLE}|   & \myname[DE]{GAULLE}   & \myname[DE]{GAULLE}   \\
+% |\sf\myname{KnutH}|     & \sf\myname{KnutH}     & \sf\myname{KnutH}     \\
 % \mybottomrule
 % \end{mytabular}
 % \end{mytable}
@@ -282,6 +296,7 @@
 % \item\xpackage{xspace} useful to have finishing commands with a space without 
 %suffixing it with a backslash and a space
 % \item\xpackage{mfirstuc} to make only the first letter of word upper case
+% \item\xpackage{relsize} to change font size relatively to current font size
 % \item\xpackage{numprint} specific to print numbers
 % \end{itemize}
 %    \begin{macrocode}
@@ -293,16 +308,11 @@
 \RequirePackage[bottom]{footmisc}
 \RequirePackage{xspace}
 \RequirePackage{mfirstuc}
+\RequirePackage{relsize}
 \RequirePackage{numprint}
 %    \end{macrocode}
 %
 % \subsection{Default configuration for \LaTeXe\ document}
-% \xpackage{lmodern} does not have font for small caps bold font. This line 
-%configure \myemph{Computer Modern} instead of \myemph{Latin modern}.
-%    \begin{macrocode}
-\DeclareFontSubstitution{T1}{cmr}{bx}{sc}
-%    \end{macrocode}
-%
 % Default distances for paragraphs are changed. For \LaTeXe, paragraphs sould 
 %be indented on the first line with no vertical space between paragraphs. I 
 %find that no indentation with vertical space between paragraphs is a better 
@@ -426,21 +436,49 @@
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\mytextsc}
+% The \cs{mytextsc} is testing the font family and if it is sans serif family 
+%(\xoption{lmss}), it changes for a smaller font thanks to the 
+%\xpackage{relsize} package.
+%    \begin{macrocode}
+\define@choicekey[my]{my}{myscstyle}[\my@textsc@uservalue\my@textsc@numin]{up,low,first}[low]{}
+\newrobustcmd{\mytextsc}[2][myscstyle=low]{%
+  \setkeys[my]{my}{#1}%
+  \ifdefstring{\f@family}{lmss}{%
+    \ifcase\my@textsc@numin\relax%
+      {\textsc{\MakeUppercase{#2}}}%
+    \or%
+      {\textsmaller[2]{\MakeUppercase{#2}}}%
+    \or%
+      {\textsmaller[2]{\MakeUppercase{\textlarger[2]#2}}}%
+    \fi%
+  }{%
+    \ifcase\my@textsc@numin\relax%
+      {\MakeUppercase{#2}}%
+    \or%
+      {\textsc{\MakeLowercase{#2}}}%
+    \or%
+      {\textsc{\makefirstuc{\MakeLowercase{#2}}}}%
+    \fi%
+  }%
+}
+%    \end{macrocode}
+% \end{macro}
+%
 % \begin{macro}{\myname}
 % This macro use the \xpackage{mfirstuc} package to always have the first 
 %letter of family name upper case. Moreover, \cs{MakeLowercase} and 
-%\cs{MakeUppercase} are used to be sure of the case of family names.
+%\cs{MakeUppercase} are used to be sure of the case of family names. It used 
+%the \cs{mytextsc} macro for French small caps.
 %    \begin{macrocode}
 \newrobustcmd{\myname}[2][]{%
   \iflanguage{french}{%
-    \textsc{%
-      \ifstrempty{#1}%
-        {%
-        }{%
-          \MakeLowercase{#1}\ %
-        }%
-      \makefirstuc{\MakeLowercase{#2}}%
-    }%
+    \ifstrempty{#1}%
+      {%
+      }{%
+        \mytextsc[myscstyle=low]{#1}\ %
+      }%
+      \mytextsc[myscstyle=first]{#2}%
   }{%
     \ifstrempty{#1}%
       {%
