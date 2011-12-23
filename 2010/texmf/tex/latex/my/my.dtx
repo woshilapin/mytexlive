@@ -33,7 +33,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{145}
+% \CheckSum{165}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -308,7 +308,6 @@
 \RequirePackage[bottom]{footmisc}
 \RequirePackage{xspace}
 \RequirePackage{mfirstuc}
-\RequirePackage{relsize}
 \RequirePackage{numprint}
 %    \end{macrocode}
 %
@@ -442,15 +441,28 @@
 %\xpackage{relsize} package.
 %    \begin{macrocode}
 \define@choicekey[my]{my}{myscstyle}[\my@textsc@uservalue\my@textsc@numin]{up,low,first}[low]{}
+\newcounter{myfontsize}
+\newrobustcmd{\mytextsmaller}[2][1]{%
+  \defcounter{myfontsize}{\f@size}%
+  \addtocounter{myfontsize}{-#1}%
+  {\fontsize{\value{myfontsize}}{\f@baselineskip}\selectfont#2}%
+  \addtocounter{myfontsize}{#1}%
+}
+\newrobustcmd{\mytextlarger}[2][1]{%
+  \defcounter{myfontsize}{\f@size}%
+  \addtocounter{myfontsize}{#1}%
+  {\fontsize{\value{myfontsize}}{\f@baselineskip}\selectfont#2}%
+  \addtocounter{myfontsize}{-#1}%
+}
 \newrobustcmd{\mytextsc}[2][myscstyle=low]{%
   \setkeys[my]{my}{#1}%
   \ifdefstring{\f@family}{lmss}{%
     \ifcase\my@textsc@numin\relax%
       {\textsc{\MakeUppercase{#2}}}%
     \or%
-      {\textsmaller[2]{\MakeUppercase{#2}}}%
+      {\mytextsmaller[2]{\MakeUppercase{#2}}}%
     \or%
-      {\textsmaller[2]{\MakeUppercase{\textlarger[2]#2}}}%
+      {\mytextsmaller[2]{\MakeUppercase{\mytextlarger[2]#2}}}%
     \fi%
   }{%
     \ifcase\my@textsc@numin\relax%
