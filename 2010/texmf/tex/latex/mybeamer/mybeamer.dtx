@@ -40,7 +40,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{165}
+% \CheckSum{231}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -121,7 +121,8 @@
 % \advance\progressbar@leftbar by -\progressbar@barlength mm
 % \def\inserttotalframenumber{36}
 % \def\insertframenumber{12}
-% \def\inserttitle{Title of the presentation}
+% \def\insertshortauthor{J. \myname{Simard}}
+% \def\insertshorttitle{Title of the presentation}
 % \ifnum\inserttotalframenumber=1\else
 % \progressbar@numer=\insertframenumber
 % \advance\progressbar@numer by -1
@@ -139,8 +140,10 @@
 % \draw (\progressbar@framenumberrectangle, 0.25cm) node [anchor=mid west, 
 %draw=white!70!myred, fill=white] 
 %{\sf\tiny\color{myred!70!white}\insertframenumber~/~\inserttotalframenumber};
-% \draw (\progressbar@titlerectangle, 0.32cm) node [anchor=south east] 
-%{\sf\scriptsize\color{white!70!myred}\inserttitle};
+% \draw (\progressbar@leftbar, 0.32cm) node
+%[anchor=south west] {\sf\tiny\color{white!70!myred}\insertshortauthor};
+% \draw (\progressbar@titlerectangle, 0.32cm) node%
+%[anchor=south east] {\sf\tiny\color{white!70!myred}\insertshorttitle};
 % \fill (\progressbar@leftbar, 0.12cm) [fill=white, rounded corners=0.1cm] 
 %rectangle (\progressbar@titlerectangle, 0.3cm);
 % \ifnum\insertframenumber=1\else
@@ -269,8 +272,10 @@
             \color{structure.fg!70!bg}%
             \insertframenumber~/~\inserttotalframenumber%
           };
+        \draw (\progressbar@leftbar, 0.32cm) node%
+          [anchor=south west] {\sf\tiny\color{bg!70!fg}\insertshortauthor};
         \draw (\progressbar@titlerectangle, 0.32cm) node%
-          [anchor=south east] {\color{bg!70!fg}\inserttitle};
+          [anchor=south east] {\sf\tiny\color{bg!70!fg}\insertshorttitle};
         \fill (\progressbar@leftbar, 0.12cm)%
           [fill=bg, rounded corners=0.1cm]%
           rectangle (\progressbar@titlerectangle, 0.3cm);
@@ -290,14 +295,31 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \subsection{The theme}
-% The theme of the \xclass{mybeamer} class use some of the default theme of the 
-%\xclass{beamer} class and enhance them.
-% The used theme is \xoption{CambridgeUS} with the inner theme 
-%\xoption{rectangle}.
+% \subsection{The title page}
+% The title page has been redefined. Some important informations are added to 
+%the five default (title, date, author, logo and institute). First of all, a 
+%\cs{school} is defined.
 %    \begin{macrocode}
-  \usetheme{CambridgeUS}
-  \useinnertheme{rectangles}
+\def\school{\@dblarg\beamer@school}
+\long\def\beamer@school[#1]#2{%
+  \def\beamer@temp{#2}%
+  \ifx\beamer@temp\@empty
+    \def\insertschool{}
+  \else
+    \def\insertschool{\def\inst{\beamer@instinst}\def\and{\beamer@andinst}#2}%
+  \fi
+ \def\beamer@shortschool{#1}}
+\school{}
+\def\beamer@instinst#1{{\donotcoloroutermaths$^{#1}$}\ignorespaces}
+\def\beamer@andinst{\\[1em]}
+
+\newcommand\insertshortschool[1][]{%
+  {%
+    \let\thanks=\@gobble%
+    \def\inst{\beamer@instother}\def\and{\beamer@andother}%
+    \beamer@setupshort{#1}%
+    \beamer@insertshort{\beamer@shortschool}%
+  }}
 %    \end{macrocode}
 %
 % The title page theme is totally redefined.
@@ -318,11 +340,14 @@
       \pgfuseshading{separationtitlepagelineshading}%
       \vskip\baselineskip%
       \footnotesize\insertauthor\\[\baselineskip]%
+      \ifx\insertschool\@empty%
+      \else%
+        \scriptsize\insertschool\\[\baselineskip]%
+      \fi%
       \ifx\insertinstitute\@empty%
       \else%
-        \tiny\insertinstitute\\[\baselineskip]%
+        \scriptsize\insertinstitute\\[\baselineskip]%
       \fi%
-      \insertlogo%
       \vskip\baselineskip%
       \pgfuseshading{separationtitlepagelineshading}%
       \vfill%
@@ -331,6 +356,16 @@
     \end{center}%
     \makeatother%
   }
+%    \end{macrocode}
+%
+% \subsection{The theme}
+% The theme of the \xclass{mybeamer} class use some of the default theme of the 
+%\xclass{beamer} class and enhance them.
+% The used theme is \xoption{CambridgeUS} with the inner theme 
+%\xoption{rectangle}.
+%    \begin{macrocode}
+  \usetheme{CambridgeUS}
+  \useinnertheme{rectangles}
 %    \end{macrocode}
 %
 % The footline theme is also redefined with the progress bar.
