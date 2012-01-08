@@ -139,7 +139,7 @@
 %rectangle (\textwidth, 0.22cm);
 % \draw (\progressbar@framenumberrectangle, 0.25cm) node [anchor=mid west, 
 %draw=white!70!myred, fill=white] 
-%{\sf\tiny\color{myred!70!white}\insertframenumber~/~\inserttotalframenumber};
+%{\sf\tiny\color{myred!70!white}\insertframenumber/\inserttotalframenumber};
 % \draw (\progressbar@leftbar, 0.32cm) node
 %[anchor=south west] {\sf\tiny\color{white!70!myred}\insertshortauthor};
 % \draw (\progressbar@titlerectangle, 0.32cm) node%
@@ -270,7 +270,7 @@
           [anchor=mid west, draw=bg!70!fg, fill=bg]
           {%
             \color{structure.fg!70!bg}%
-            \insertframenumber~/~\inserttotalframenumber%
+            \insertframenumber/\inserttotalframenumber%
           };
         \draw (\progressbar@leftbar, 0.32cm) node%
           [anchor=south west] {\sf\tiny\color{bg!70!fg}\insertshortauthor};
