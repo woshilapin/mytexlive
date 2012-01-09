@@ -40,7 +40,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{231}
+% \CheckSum{232}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -170,6 +170,17 @@
 \RequirePackageWithOptions{my}[2011/12/08]
 %    \end{macrocode}
 %
+% The \xoption{trans} is declared and if called, transfered to \xclass{beamer}
+% class.
+% A warning is output for each non-declared option called.
+%    \begin{macrocode}
+\DeclareOptionX{trans}{\PassOptionsToClass{trans}{beamer}}
+\DeclareOptionX*{%
+  \ClassWarning{mybeamer}{Unknown option `\CurrentOption'}%
+}
+\ProcessOptionsX\relax
+%    \end{macrocode}
+%
 % Moreover, we will load the \xclass{beamer} class.
 % Some default options are loaded.
 % \begin{itemize}
@@ -179,17 +190,7 @@
 %we probably need the PSTricks package
 % \end{itemize}
 %    \begin{macrocode}
-\ExecuteOptions{fleqn,xcolor=pst}
-\LoadClass{beamer}[2010/06/21]
-%    \end{macrocode}
-%
-% No option is declared for this class.
-% A warning is output for each non-declared option called.
-%    \begin{macrocode}
-\DeclareOptionX*{%
-  \ClassWarning{mybeamer}{Unknown option `\CurrentOption'}%
-}
-\ProcessOptions\relax
+\LoadClass[fleqn,xcolor=pst]{beamer}[2010/06/21]
 %    \end{macrocode}
 %
 % Some useful packages are loaded here.
