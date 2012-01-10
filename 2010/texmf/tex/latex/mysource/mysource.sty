@@ -29,16 +29,16 @@
 %%%%%%%%%%%%%%%%%%%%%%%
 % Set words depending of the language
 \if@myenglish
-	\def\lang@listofcodesname{Sources codes}
-	\def\lang@code{source\xspace}
-	\def\lang@Code{Source\xspace}
+	\def\mysource@lang@listofcodesname{Sources codes}
+	\def\mysource@lang@code{source\xspace}
+	\def\mysource@lang@Code{Source\xspace}
 \fi
 \if@myfrancais
-	\def\lang@listofcodesname{Codes sources}
-	\def\lang@code{source\xspace}
-	\def\lang@Code{Source\xspace}
+	\def\mysource@lang@listofcodesname{Codes sources}
+	\def\mysource@lang@code{source\xspace}
+	\def\mysource@lang@Code{Source\xspace}
 \fi
-\renewcommand{\lstlistingname}{\lang@Code}
+\renewcommand{\lstlistingname}{\mysource@lang@Code}
 % Options for 'listings' (default for C language)
 \lstset{%
 	language={[ANSI]C},%
@@ -60,7 +60,7 @@
 	% Break each too long line with an Carriage Return character
 	prebreak=\textbackslash%
 }
-\labelformat{mysource}{\mysource@lang@code~#1}
+\labelformat{mySource}{\mysource@lang@code~#1}
 
 %%%%%%%%%%%%%%%%%%
 %% New commands %%
