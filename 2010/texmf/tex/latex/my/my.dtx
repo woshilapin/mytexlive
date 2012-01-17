@@ -33,7 +33,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{165}
+% \CheckSum{166}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -251,20 +251,23 @@
 %creating different new commands. These packages are loaded before anything 
 %else.
 % \begin{itemize}
-% \item\xpackage{multido} to create loops
 % \item\xpackage{xkeyval} to define extended options for packages and commands
 % \item\xpackage{suffix} to create commands with stars or other characters at 
 %the end
 % \item\xpackage{ltxcmds} is useful to check what files are loaded (and other 
 %useful stuff)
 % \item\xpackage{etoolbox} furnish an important number of development commands
+% \item\xpackage{fltpoint} to calculate with fixed point numbers
+% \item\xpackage{multido} to create loops (must be loaded after 
+%\xpackage{fltpoint})
 % \end{itemize}
 %    \begin{macrocode}
-\RequirePackage{multido}
 \RequirePackage{xkeyval}
 \RequirePackage{suffix}
 \RequirePackage{ltxcmds}
 \RequirePackage{etoolbox}
+\RequirePackage{fltpoint}
+\RequirePackage{multido}
 %    \end{macrocode}
 %
 % All global options are assigned to the current package.
