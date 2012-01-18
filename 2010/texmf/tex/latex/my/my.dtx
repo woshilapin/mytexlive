@@ -300,7 +300,8 @@
 %suffixing it with a backslash and a space
 % \item\xpackage{mfirstuc} to make only the first letter of word upper case
 % \item\xpackage{relsize} to change font size relatively to current font size
-% \item\xpackage{numprint} specific to print numbers
+% \item\xpackage{numprint} specific to print numbers (\xoption{autolanguage} 
+%option choose the right locale)
 % \end{itemize}
 %    \begin{macrocode}
 \RequirePackage[utf8]{inputenc}
@@ -311,7 +312,7 @@
 \RequirePackage[bottom]{footmisc}
 \RequirePackage{xspace}
 \RequirePackage{mfirstuc}
-\RequirePackage{numprint}
+\RequirePackage[autolanguage]{numprint}
 %    \end{macrocode}
 %
 % \subsection{Default configuration for \LaTeXe\ document}
