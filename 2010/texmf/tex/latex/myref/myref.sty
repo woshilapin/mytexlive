@@ -35,19 +35,21 @@
 %%%%%%%%%%%%%%%%%%%%%%%
 %% New configuration %%
 %%%%%%%%%%%%%%%%%%%%%%%
-\labelformat{part}{\myref@lang@partname~#1}
-\labelformat{chapter}{\myref@lang@chaptername~#1}
-\labelformat{section}{\myref@lang@sectionname~#1}
-\labelformat{subsection}{\myref@lang@subsectionname~#1}
-\labelformat{subsubsection}{\myref@lang@subsubsectionname~#1}
-\labelformat{figure}{\myref@lang@figurename~#1}
-\labelformat{subfigure}{\myref@lang@figurename~\thefigure#1}
-\labelformat{table}{\myref@lang@tablename~#1}
-\labelformat{subtable}{\myref@lang@tablename~\thetable#1}
-\labelformat{equation}{\myref@lang@equationname~#1}
-\labelformat{enumi}{\myref@lang@enumeratename~#1}
-\labelformat{enumii}{\myref@lang@enumeratename~#1}
-\labelformat{enumiii}{\myref@lang@enumeratename~#1}
+\if@smartref
+	\labelformat{part}{\myref@lang@partname~#1}
+	\labelformat{chapter}{\myref@lang@chaptername~#1}
+	\labelformat{section}{\myref@lang@sectionname~#1}
+	\labelformat{subsection}{\myref@lang@subsectionname~#1}
+	\labelformat{subsubsection}{\myref@lang@subsubsectionname~#1}
+	\labelformat{figure}{\myref@lang@figurename~#1}
+	\labelformat{subfigure}{\myref@lang@figurename~\thefigure#1}
+	\labelformat{table}{\myref@lang@tablename~#1}
+	\labelformat{subtable}{\myref@lang@tablename~\thetable#1}
+	\labelformat{equation}{\myref@lang@equationname~#1}
+	\labelformat{enumi}{\myref@lang@enumeratename~#1}
+	\labelformat{enumii}{\myref@lang@enumeratename~#1}
+	\labelformat{enumiii}{\myref@lang@enumeratename~#1}
+\fi
 
 %%%%%%%%%%%%%%%%%%
 %% New commands %%
@@ -100,9 +102,9 @@
 	\setkeys[my]{ref}{#1}%
 	\ifmy@ref@refsee%
 		\if@smartref%
-			(\myref@seename\xspace{\myref@font\vref{#2}})%
+			(\myref@seename\space{\myref@font\vref{#2}})%
 		\else%
-			(\myref@seename\xspace{\myref@font\myref@name}~\ref{#2})%
+			(\myref@seename\space{\myref@font\myref@name}~\ref{#2})%
 		\fi%
 	\else%
 		\if@smartref%
