@@ -481,22 +481,22 @@
 	\global\let\pslegend@text\relax%
 }
 % Create a barplot
-\newcommand\mybarplot[2][]{%
-	\ifstrempty{#1}%
-		{\readpsbardata[header=true]{\data}{files/#2}}%
-		{\readpsbardata[header=true,#1]{\data}{files/#2}}%
-	\ifstrempty{#1}%
-	{\psbarchart[chartstyle=cluster,barcolsep=0.16,barsep=0]{\data}}%
-	{\psbarchart[chartstyle=cluster,barcolsep=0.16,barsep=0,#1]{\data}}%
+\def\mybarplot{\pst@object{mybarplot}}
+\def\mybarplot@i#1{%
+	\bgroup%
+	\use@par%
+	\readpsbardata{\data}{files/#1}%
+	\psbarchart[chartstyle=cluster,barcolsep=0.16,barsep=0.025]{\data}%
+	\egroup%
 }
 % Create a boxplot
-\newcommand\myboxplot[2][]{%
-	\ifstrempty{#1}%
-		{\readpsbardata[header=true]{\data}{files/#2}}%
-		{\readpsbardata[header=true,#1]{\data}{files/#2}}%
-	\ifstrempty{#1}%
-	{\psbarchart[chartstyle=boxplot,barcolsep=0.16,barsep=0]{\data}}%
-	{\psbarchart[chartstyle=boxplot,barcolsep=0.16,barsep=0,#1]{\data}}%
+\def\myboxplot{\pst@object{myboxplot}}
+\def\myboxplot@i#1{%
+	\bgroup%
+	\use@par%
+	\readpsbardata[header=true]{\data}{files/#1}%
+	\psbarchart[chartstyle=boxplot,barcolsep=0.16,barsep=0.025]{\data}%
+	\egroup%
 }
 %
 \resetOptions
