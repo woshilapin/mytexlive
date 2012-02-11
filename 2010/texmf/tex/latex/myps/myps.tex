@@ -123,6 +123,30 @@
 \@namedef{mygraph*}{\mygraph}
 \@namedef{endmygraph*}{\endmygraph}
 
+\def\myboxgraph{\pst@object{myboxgraph}}
+\def\myboxgraph@i(#1,#2){%
+	\@ifnextchar[{\myboxgraph@ii({#1},{#2})}{\myboxgraph@ii({#1},{#2})[1]}%]
+}
+\def\myboxgraph@ii(#1,#2)[#3]#4(#5,#6)#7{%
+	\psset{llx=-2.5em,lly=-4.5ex,urx=0em,ury=0ex}
+	\use@par%
+	\mygraph[%
+	xAxisLabel={#4},%
+	xAxisLabelPos={c,-4ex},%
+	yAxisLabel={#7},%
+	yAxisLabelPos={-2.5em,c},%
+	Dy={#3},%
+	labels=y,%
+	ticks=y,%
+	yticksize={0 #2},%
+	ticklinestyle=dashed]{->}(0,0)(0,0)(#1,#5){#2}{#6}
+}
+\def\endmyboxgraph{%
+	\endmygraph%
+	\ignorespaces
+}
+\@namedef{myboxgraph*}{\myboxgraph}
+\@namedef{endmyboxgraph*}{\endboxmygraph}
 
 % Create an additionnal 'chartstyle'
 % cluster, stack, block, boxplot
