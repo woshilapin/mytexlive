@@ -103,6 +103,27 @@
 \@namedef{myps*}{\myps}
 \@namedef{endmyps*}{\endmyps}
 
+\def\mygraph{\pst@object{mygraph}}
+\def\mygraph@i{\pst@getarrows\mygraph@ii}
+\def\mygraph@ii(#1,#2){%
+	\catcode`\!=12\relax%
+	\@ifnextchar({\mygraph@iii(#1,#2)}{\mygraph@iii(0,0)(#1,#2)}%)
+}
+\def\mygraph@iii(#1,#2)(#3,#4){%
+	\@ifnextchar({\mygraph@iv(#1,#2)(#3,#4)}{\mygraph@iv(#1,#2)(#1,#2)(#3,#4)}%)
+}
+\def\mygraph@iv(#1,#2)(#3,#4)(#5,#6)#7#8{%
+	\psgraph(#1,#2)(#3,#4)(#5,#6){#7}{#8}%
+	\use@par%
+}
+\def\endmygraph{%
+	\endpsgraph%
+	\ignorespaces%
+}
+\@namedef{mygraph*}{\mygraph}
+\@namedef{endmygraph*}{\endmygraph}
+
+
 % Create an additionnal 'chartstyle'
 % cluster, stack, block, boxplot
 \def\psset@@chartstyle#1#2\@nil#3{%
