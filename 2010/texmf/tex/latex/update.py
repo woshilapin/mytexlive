@@ -20,11 +20,11 @@ for rep_name in os.listdir(path):
 		if os.access(ins_filename, os.F_OK):
 			ins_file = open(ins_filename, mode='r')
 			for line in ins_file:
-				print(line)
 				if '\\file{' in line:
-					out_filename = re.sub(r'^.*\\file{([a-z.]*)}.*', r'\1', line).strip(' \t\n\r')
+					out_filename = re.sub(r'^.*\\file{([a-z.-]*)}.*', r'\1', line).strip(' \t\n\r')
 					if not ( os.access(out_filename, os.F_OK) and file_time(out_filename) >= file_time(ins_filename) and file_time(out_filename) >= file_time(dtx_filename) ):
 						subprocess.check_call(["latex", ins_filename])
+						pass
 		pdf_filename = dtx_filename[:-3] + "pdf"
 		if os.access(dtx_filename, os.F_OK):
 			if not ( os.access(pdf_filename, os.F_OK) and file_time(pdf_filename) >= file_time(dtx_filename) ):
