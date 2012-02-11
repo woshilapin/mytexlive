@@ -78,8 +78,13 @@
 %%%%%%%%%%%%%%%%%%
 % Define a master command for 'pspicture'
 % This command introduce a border frame for draft compilation
-\def\myps(#1,#2)(#3,#4){%
+\def\myps{\pst@object{myps}}
+\def\myps@i(#1,#2){%
+	\@ifnextchar({\myps@ii(#1,#2)}{\myps@ii(0,0)(#1,#2)}%)
+}
+\def\myps@ii(#1,#2)(#3,#4){%
 	\pspicture(#1,#2)(#3,#4)%
+	\use@par
 	\def\my@ne{#1}%
 	\def\mytw@{#2}%
 	\def\mythr@@{#3}%
@@ -93,7 +98,10 @@
 	}{%
 	}%
 	\endpspicture%
+	\ignorespaces%
 }
+\@namedef{myps*}{\myps}
+\@namedef{endmyps*}{\endmyps}
 
 % Create an additionnal 'chartstyle'
 % cluster, stack, block, boxplot
