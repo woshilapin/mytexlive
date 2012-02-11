@@ -339,6 +339,19 @@
 						/xcenter xoffset1 xoffset2 add 2 div def
 						/xmidoffset1 xcenter xoffset1 sub 2 div xoffset1 add def
 						/xmidoffset2 xoffset2 xcenter sub 2 div xcenter add def
+						/xbar1 xoffset1 def
+						/xbar2 xoffset2 def
+						/ybar1 fquartile def
+						/ybar2 lquartile def
+						ybar1 ybar2 ne {  % if ybar1 == ybar2, don't stroke a path
+							newpath
+							barstyles barcount get cvx exec
+						} if
+						\pst@number{\myps@medianwidth} setlinewidth
+						newpath
+						xoffset1 mediane moveto
+						xoffset2 mediane lineto
+						stroke
 						\pst@number{\myps@whiskerwidth} setlinewidth
 						newpath
 						xmidoffset1 fdecile moveto
@@ -360,19 +373,6 @@
 							xcenter lquartile lineto
 							stroke
 						} if
-						/xbar1 xoffset1 def
-						/xbar2 xoffset2 def
-						/ybar1 fquartile def
-						/ybar2 lquartile def
-						ybar1 ybar2 ne {  % if ybar1 == ybar2, don't stroke a path
-							newpath
-							barstyles barcount get cvx exec
-						} if
-						\pst@number{\myps@medianwidth} setlinewidth
-						newpath
-						xoffset1 mediane moveto
-						xoffset2 mediane lineto
-						stroke
 						/barcount barcount 1 add def
 					} for
 					/barcount 0 def
