@@ -399,22 +399,17 @@
 % #5 is the legend for y axis
 % #6 is the sep on y axis
 \def\myaxes{%
-	\@ifnextchar[{\my@ps@axes@i}{\my@ps@axes@i[]}
+	\@ifnextchar[{\my@ps@axes@i}{\my@ps@axes@i[]}%]
 }
 \def\my@ps@axes@i[#1](#2,#3)#4(#5,#6){%
 	\@ifnextchar[%
 		{\my@ps@axes@ii[#1](#2,#3)#4(#5,#6)}%
 		{%
 			\my@ps@axes@ii[#1](#2,#3)#4(#5,#6)[]%
-		}%
+		}%]
 }
 \def\my@ps@axes@ii[#1](#2,#3)#4(#5,#6)[#7]#8{%
 	% For legend
-	\gdef\my@ps@legendminx{#2}%
-	\gdef\my@ps@legendmaxx{#3}%
-	\gdef\my@ps@legendminy{#5}%
-	\gdef\my@ps@legendmaxy{#6}%
-	\gdef\my@ps@legend{\myand{}}%
 	\ifstrempty{#7}%
 		{%
 			\ifstrempty{#1}%
@@ -460,24 +455,30 @@
 		}%
 }
 
-% To separate each element of legend
-\def\myand{\hspace{\stretch{1}}\xspace}
 % To define one element of the legend
 \def\myleg#1#2{%
-	\psframebox*[fillcolor=#2,framearc=0.25,framesep=1pt]{\textcolor{#2}{x}}
-	\xspace%
-	#1%
+	\psframebox*[fillcolor=#2,framearc=0.25,framesep=1pt,shadow=false]{\textcolor{#2}{x}}~#1\hspace{1em}%
 }
 % Print the legend
-\def\mylegend#1{%
-	\uput{0pt}[45](0,\my@ps@legendmaxy){%
-		\parbox{\my@ps@legendmaxx\psxunit}{%
-			\centering%
-			% No '%' at end of line !!! This is important to take into accound the last '\myand'
-			\myand#1\myand
-			\vspace{\pslabelsep}
+\def\mylegend{\pst@object{mylegend}}
+\def\mylegend@i{%
+	\@ifnextchar<{\mylegend@ii}{\mylegend@ii<lt>}%
+}
+\def\mylegend@ii<#1>#2{%
+	\bgroup%
+	\use@par%
+	\pslegend[#1]{#2}
+	\egroup
+}
+\def\pslegend@iii[#1](#2){%
+	\rput[#1](#2){%
+		\parbox{\pst@dimc}{%
+		\psframebox[style=legendstyle]{%
+			\pslegend@text%
 		}%
 	}%
+	}%
+	\global\let\pslegend@text\relax%
 }
 % Create a barplot
 \newcommand\mybarplot[2][]{%
@@ -504,4 +505,3 @@
 %
 %% END: myps.tex
 \endinput
-
