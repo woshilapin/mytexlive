@@ -40,7 +40,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{232}
+% \CheckSum{246}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -175,6 +175,13 @@
 % A warning is output for each non-declared option called.
 %    \begin{macrocode}
 \DeclareOptionX{trans}{\PassOptionsToClass{trans}{beamer}}
+\DeclareOptionX{8pt}{\PassOptionsToClass{8pt}{beamer}}
+\DeclareOptionX{9pt}{\PassOptionsToClass{9pt}{beamer}}
+\DeclareOptionX{10pt}{\PassOptionsToClass{10pt}{beamer}}
+\DeclareOptionX{11pt}{\PassOptionsToClass{11pt}{beamer}}
+\DeclareOptionX{12pt}{\PassOptionsToClass{12pt}{beamer}}
+\DeclareOptionX{13pt}{\PassOptionsToClass{13pt}{beamer}}
+\DeclareOptionX{14pt}{\PassOptionsToClass{14pt}{beamer}}
 \DeclareOptionX*{%
   \ClassWarning{mybeamer}{Unknown option `\CurrentOption'}%
 }
@@ -190,7 +197,7 @@
 %we probably need the PSTricks package
 % \end{itemize}
 %    \begin{macrocode}
-\LoadClass[fleqn,xcolor=pst]{beamer}[2010/06/21]
+\LoadClass[fleqn,dvips,xcolor=pst]{beamer}[2010/06/21]
 %    \end{macrocode}
 %
 % Some useful packages are loaded here.
