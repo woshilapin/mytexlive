@@ -33,7 +33,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{166}
+% \CheckSum{172}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -52,6 +52,8 @@
 %%   Right brace   \}   Tilde     \~}
 %
 % \changes{v1.0}{2011/12/17}{Initial version}
+% \changes{v1.01}{2012/01/11}{Fix the \cs{textsc} command (remove 
+%\cs{mytextsc})}
 %
 % \GetFileInfo{my.dtx}
 %
@@ -167,18 +169,18 @@
 % \end{mytabular}
 % \end{mytable}
 %
-% \begin{declcs}{mytextsc}
+% \begin{declcs}{textsc}
 % \oarg{option}
 % \marg{text}
 % \end{declcs}
-% \DescribeMacro{\mytextsc}
+% \DescribeMacro{\textsc}
 % With Latin Modern font, small caps are not possible when using a sans serif 
-%family. The \cs{mytextsc} is fixing this problem by using upper case with a 
-%smaller size. This macro is providing an optionnal argument to make the word 
-%``all upper case'', ``all small case'' or ``all small case with the first 
-%letter upper case''. As an example in sans serif font family, |\textsc{hello}| 
-%is producing \textsf{\textsc{hello}} but |\mytextsc{hello}| is producing 
-%\textsf{\mytextsc{hello}}.
+%family. This new \cs{textsc} macro is fixing this problem by using upper case 
+%with a smaller size. This macro is providing an optionnal argument to make the 
+%word ``all upper case'', ``all small case'' or ``all small case with the first 
+%letter upper case''. As an example, the new |\textsf{\textsc{hello}}| is 
+%producing \textsf{\textsc{hello}} but the original |\textsf{\textsc{hello}}| 
+%is producing \textsc{hello}.
 %
 % \begin{declcs}{myname}
 % \oarg{prefix}
@@ -260,6 +262,7 @@
 % \item\xpackage{fltpoint} to calculate with fixed point numbers
 % \item\xpackage{multido} to create loops (must be loaded after 
 %\xpackage{fltpoint})
+% \item\xpackage{pst-fp} to access fixed point numbers
 % \end{itemize}
 %    \begin{macrocode}
 \RequirePackage{xkeyval}
@@ -268,6 +271,7 @@
 \RequirePackage{etoolbox}
 \RequirePackage{fltpoint}
 \RequirePackage{multido}
+\ifx\PSTFPloaded\endinput\else   \input pst-fp.tex\fi
 %    \end{macrocode}
 %
 % All global options are assigned to the current package.
@@ -439,30 +443,27 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\mytextsc}
-% The \cs{mytextsc} is testing the font family and if it is sans serif family 
+% \begin{macro}{\textsc}
+% The \cs{textsc} is testing the font family and if it is sans serif family 
 %(\xoption{lmss}), it changes for a smaller font thanks to the 
 %\xpackage{relsize} package.
+% It redefined the \LaTeXe\ command for \cs{textsc}.
 %    \begin{macrocode}
 \define@choicekey[my]{my}{myscstyle}[\my@textsc@uservalue\my@textsc@numin]{up,low,first}[low]{}
-\newcounter{myfontsize}
 \newrobustcmd{\mytextsmaller}[2][1]{%
-  \defcounter{myfontsize}{\f@size}%
-  \addtocounter{myfontsize}{-#1}%
-  {\fontsize{\value{myfontsize}}{\f@baselineskip}\selectfont#2}%
-  \addtocounter{myfontsize}{#1}%
+	\pstFPsub{\myfontsize}{\f@size}{#1}%
+	{\fontsize{\myfontsize}{\f@baselineskip}\selectfont #2}%
 }
 \newrobustcmd{\mytextlarger}[2][1]{%
-  \defcounter{myfontsize}{\f@size}%
-  \addtocounter{myfontsize}{#1}%
-  {\fontsize{\value{myfontsize}}{\f@baselineskip}\selectfont#2}%
-  \addtocounter{myfontsize}{-#1}%
+	\pstFPadd{\myfontsize}{\f@size}{#1}%
+	{\fontsize{\myfontsize}{\f@baselineskip}\selectfont#2}%
 }
-\newrobustcmd{\mytextsc}[2][myscstyle=low]{%
+\let\oldtextsc\textsc
+\renewrobustcmd{\textsc}[2][myscstyle=low]{%
   \setkeys[my]{my}{#1}%
   \ifdefstring{\f@family}{lmss}{%
     \ifcase\my@textsc@numin\relax%
-      {\textsc{\MakeUppercase{#2}}}%
+      {\oldtextsc{\MakeUppercase{#2}}}%
     \or%
       {\mytextsmaller[2]{\MakeUppercase{#2}}}%
     \or%
@@ -472,9 +473,9 @@
     \ifcase\my@textsc@numin\relax%
       {\MakeUppercase{#2}}%
     \or%
-      {\textsc{\MakeLowercase{#2}}}%
+      {\oldtextsc{\MakeLowercase{#2}}}%
     \or%
-      {\textsc{\makefirstuc{\MakeLowercase{#2}}}}%
+      {\oldtextsc{\makefirstuc{\MakeLowercase{#2}}}}%
     \fi%
   }%
 }
@@ -485,16 +486,16 @@
 % This macro use the \xpackage{mfirstuc} package to always have the first 
 %letter of family name upper case. Moreover, \cs{MakeLowercase} and 
 %\cs{MakeUppercase} are used to be sure of the case of family names. It used 
-%the \cs{mytextsc} macro for French small caps.
+%the previously redefined \cs{textsc} macro for French small caps.
 %    \begin{macrocode}
 \newrobustcmd{\myname}[2][]{%
   \iflanguage{french}{%
     \ifstrempty{#1}%
       {%
       }{%
-        \mytextsc[myscstyle=low]{#1}\ %
+        \textsc[myscstyle=low]{#1}\ %
       }%
-      \mytextsc[myscstyle=first]{#2}%
+      \textsc[myscstyle=first]{#2}%
   }{%
     \ifstrempty{#1}%
       {%
