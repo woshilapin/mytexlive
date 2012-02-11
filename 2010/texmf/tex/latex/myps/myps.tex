@@ -21,9 +21,6 @@
 \let\PSTricksMyPSLoaded\endinput
 %
 % Requires some packages
-\RequirePackage{ifdraft}
-\RequirePackage{fltpoint}
-\RequirePackage{mycolor}
 \ifx\PSTricksLoaded\endinput\else \RequirePackage{pstricks} \fi
 \ifx\PSTricksAddLoaded\endinput\else \RequirePackage{pstricks-add} \fi
 \ifx\PSTplotLoaded\endinput\else  \RequirePackage{pst-plot} \fi
@@ -38,12 +35,15 @@
 \ifx\PSTBlurLoaded\endinput\else  \RequirePackage{pst-blur} \fi
 \ifx\PSTcoilsLoaded\endinput\else  \RequirePackage{pst-coil} \fi
 \ifx\GradientLoaded\endinput\else  \RequirePackage{pst-grad} \fi
+\RequirePackage{ifdraft}
+\RequirePackage{mycolor}
 %
 \def\fileversion{0.1}
 \def\filedate{2011/07/29}
 \message{`myps' v\fileversion, \filedate\space (dr,hv)}
 %
 \edef\PstAtCode{\the\catcode`\@} \catcode`\@=11\relax
+\AtBeginDocument{\shorthandoff{!}}
 \SpecialCoor
 \pst@addfams{myps}
 %
