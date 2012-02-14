@@ -43,7 +43,6 @@
 \message{`myps' v\fileversion, \filedate\space (dr,hv)}
 %
 \edef\PstAtCode{\the\catcode`\@} \catcode`\@=11\relax
-\AtBeginDocument{\shorthandoff{!}}
 \SpecialCoor
 \pst@addfams{myps}
 %
@@ -83,8 +82,8 @@
 	\@ifnextchar({\myps@ii(#1,#2)}{\myps@ii(0,0)(#1,#2)}%)
 }
 \def\myps@ii(#1,#2)(#3,#4){%
+	\use@par\relax%
 	\pspicture(#1,#2)(#3,#4)%
-	\use@par
 	\def\my@ne{#1}%
 	\def\mytw@{#2}%
 	\def\mythr@@{#3}%
@@ -113,8 +112,8 @@
 	\@ifnextchar({\mygraph@iv(#1,#2)(#3,#4)}{\mygraph@iv(#1,#2)(#1,#2)(#3,#4)}%)
 }
 \def\mygraph@iv(#1,#2)(#3,#4)(#5,#6)#7#8{%
+	\use@par\relax%
 	\psgraph(#1,#2)(#3,#4)(#5,#6){#7}{#8}%
-	\use@par%
 }
 \def\endmygraph{%
 	\endpsgraph%
@@ -128,9 +127,8 @@
 	\@ifnextchar[{\myboxgraph@ii({#1},{#2})}{\myboxgraph@ii({#1},{#2})[1]}%]
 }
 \def\myboxgraph@ii(#1,#2)[#3]#4(#5,#6)#7{%
-	\psset{llx=-2.5em,lly=-4.5ex,urx=0em,ury=0ex}
-	\use@par%
-	\mygraph[%
+	\psset{llx=-2.5em,lly=-4.5ex,urx=0em,ury=0ex}%
+	\psset{%
 	xAxisLabel={#4},%
 	xAxisLabelPos={c,-4ex},%
 	yAxisLabel={#7},%
@@ -139,7 +137,9 @@
 	labels=y,%
 	ticks=y,%
 	yticksize={0 #2},%
-	ticklinestyle=dashed]{->}(0,0)(0,0)(#1,#5){#2}{#6}
+	ticklinestyle=dashed}
+	\use@par\relax%
+	\mygraph{->}(0,0)(0,0)(#1,#5){#2}{#6}%
 }
 \def\endmyboxgraph{%
 	\endmygraph%
@@ -460,13 +460,15 @@
 	\psframebox*[fillcolor=#2,framearc=0.25,framesep=1pt,shadow=false]{\textcolor{#2}{x}}~#1\hspace{1em}%
 }
 % Print the legend
-\def\mylegend{\pst@object{mylegend}}
+\def\mylegend{%
+	\pst@object{mylegend}%
+}
 \def\mylegend@i{%
 	\@ifnextchar<{\mylegend@ii}{\mylegend@ii<lt>}%
 }
 \def\mylegend@ii<#1>#2{%
 	\bgroup%
-	\use@par%
+	\use@par\relax%
 	\pslegend[#1]{#2}
 	\egroup
 }
@@ -484,18 +486,20 @@
 \def\mybarplot{\pst@object{mybarplot}}
 \def\mybarplot@i#1{%
 	\bgroup%
-	\use@par%
+	\psset{chartstyle=cluster,barcolsep=0.16,barsep=0.025}
+	\use@par\relax%
 	\readpsbardata{\data}{files/#1}%
-	\psbarchart[chartstyle=cluster,barcolsep=0.16,barsep=0.025]{\data}%
+	\psbarchart{\data}%
 	\egroup%
 }
 % Create a boxplot
 \def\myboxplot{\pst@object{myboxplot}}
 \def\myboxplot@i#1{%
 	\bgroup%
-	\use@par%
-	\readpsbardata[header=true]{\data}{files/#1}%
-	\psbarchart[chartstyle=boxplot,barcolsep=0.16,barsep=0.025]{\data}%
+	\psset{header=true,chartstyle=boxplot,barcolsep=0.16,barsep=0.025}
+	\use@par\relax%
+	\readpsbardata{\data}{files/#1}%
+	\psbarchart{\data}%
 	\egroup%
 }
 %
