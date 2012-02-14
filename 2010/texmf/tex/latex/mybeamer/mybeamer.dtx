@@ -40,7 +40,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{248}
+% \CheckSum{251}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -133,25 +133,25 @@
 % \divide\progressbar@tmpresult by \progressbar@denom
 % \progressbar@currentbarlength=\progressbar@tmpresult mm
 % \begin{tikzpicture}
-% \shade[top color=white, bottom color=white!80!myred] (0, 0) rectangle  
+% \shade[top color=white, bottom color=white!80!myblue] (0, 0) rectangle  
 %(\textwidth, 0.6cm);
-% \shade[left color=white,right color=white!70!myred] (.5\textwidth, 0.2cm) 
+% \shade[left color=white,right color=white!70!myblue] (.5\textwidth, 0.2cm) 
 %rectangle (\textwidth, 0.22cm);
 % \draw (\progressbar@framenumberrectangle, 0.25cm) node [anchor=mid west, 
-%draw=white!70!myred, fill=white] 
-%{\sf\tiny\color{myred!70!white}\insertframenumber/\inserttotalframenumber};
+%draw=white!70!myblue, fill=white] 
+%{\sf\tiny\color{myblue!70!white}\insertframenumber/\inserttotalframenumber};
 % \draw (\progressbar@leftbar, 0.32cm) node
-%[anchor=south west] {\sf\tiny\color{white!70!myred}\insertshortauthor};
+%[anchor=south west] {\sf\tiny\color{white!70!myblue}\insertshortauthor};
 % \draw (\progressbar@titlerectangle, 0.32cm) node%
-%[anchor=south east] {\sf\tiny\color{white!70!myred}\insertshorttitle};
+%[anchor=south east] {\sf\tiny\color{white!70!myblue}\insertshorttitle};
 % \fill (\progressbar@leftbar, 0.12cm) [fill=white, rounded corners=0.1cm] 
 %rectangle (\progressbar@titlerectangle, 0.3cm);
 % \ifnum\insertframenumber=1\else
-% \shade[left color=myred!25!white, right color=myred!50!white, rounded 
+% \shade[left color=myblue!25!white, right color=myblue!50!white, rounded 
 %corners=0.1cm] (\progressbar@leftbar, 0.11cm) rectangle 
 %++(\progressbar@currentbarlength, 0.2cm);
 % \fi
-% \draw (\progressbar@leftbar, 0.11cm) [draw=white!70!myred, rounded 
+% \draw (\progressbar@leftbar, 0.11cm) [draw=white!70!myblue, rounded 
 %corners=0.1cm] rectangle ++(\progressbar@barlength mm, 0.2cm);
 % \end{tikzpicture}
 % \mycaption[fig-LookOfTheProgressBar]{Look of the progress bar}
@@ -278,7 +278,7 @@
         \draw (\progressbar@framenumberrectangle, 0.21cm) node%
           [anchor=mid west, draw=bg!70!fg, fill=bg]
           {%
-            \color{myred!70!bg}%
+            \color{structure.fg!70!bg}%
             \insertframenumber/\inserttotalframenumber%
           };
         \draw (\progressbar@leftbar, 0.32cm) node%
@@ -420,22 +420,17 @@
 %
 % Some colors are changed in order to have a more ``red coloured'' theme.
 %    \begin{macrocode}
-  \setbeamercolor{progressbar primary}%
-    {fg=myred}
-  \setbeamercolor{structure}%
-    {fg=myred}
-  \setbeamercolor{block title}%
-    {fg=white,bg=myred}
-  \setbeamercolor{block body}%
-    {bg=black!20}
-  \setbeamercolor{example text}%
-    {fg=white,bg=myred}
-  \setbeamercolor{section in head/foot}%
-    {parent=palette primary,fg=black}
-  \setbeamercolor{subsection in head/foot}%
-    {parent=palette primary,fg=myred}
-  \setbeamercolor{alerted text}%
-    {fg=myred}
+  \setbeamercolor{progressbar primary}{fg=myblue}
+  \setbeamercolor{structure}{fg=myblue}
+  \setbeamercolor{block title}{fg=white,bg=myblue}
+  \setbeamercolor{block body}{bg=black!20}
+  \setbeamercolor{section in head/foot}{parent=palette primary,fg=black}
+  \setbeamercolor{subsection in head/foot}{parent=palette primary,fg=myblue}
+  \setbeamercolor{alerted text}{fg=myred}
+  \setbeamercolor{block title alerted}{fg=white,bg=myred!75}
+  \setbeamercolor{block body alerted}{bg=black!10}
+  \setbeamercolor{block title example}{fg=black!10,bg=mygreen}
+  \setbeamercolor{block body example}{bg=black!10}
 %    \end{macrocode}
 %
 % \Finale
