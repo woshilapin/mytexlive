@@ -78,6 +78,7 @@
 % - short -> 28th march 2011
 % - long -> monday, 28th march 2011 (is not working with 'isodate' !)
 \define@choicekey[my]{date}{datestyle}[\mydate@uservalue\mydate@numin]{resume,short,long}[short]{\def\mydate@style{#1}}
+\setkeys[my]{date}{datestyle={short}}
 %% Define a key about the separator in a 'resume' style date
 \define@key[my]{date}{datesep}[-]{\def\mydate@sep{#1}}
 \setkeys[my]{date}{datesep={-}}
