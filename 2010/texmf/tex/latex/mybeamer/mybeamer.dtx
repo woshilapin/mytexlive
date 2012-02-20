@@ -40,7 +40,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{252}
+% \CheckSum{256}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -95,7 +95,7 @@
 %environments for the user.
 % It mainly declare a new ``look'' for the slide presentation, based on the 
 %\xclass{beamer} class.
-% The theme is coloured with a palette on white and red.
+% The theme is coloured with a palette on white and blue.
 %
 % \DescribeMacro{\myinsertprogressbar}
 % \cs{myinsertprogressbar} is mainly defined for use in the predefined theme of 
@@ -170,11 +170,13 @@
 \RequirePackageWithOptions{my}[2011/12/08]
 %    \end{macrocode}
 %
-% The \xoption{trans} is declared and if called, transfered to \xclass{beamer}
-% class.
+% The \xoption{trans}, \xoption{handout} and \xoption{notes} are declared and 
+%if called, transfered to \xclass{beamer} class.
 % A warning is output for each non-declared option called.
 %    \begin{macrocode}
 \DeclareOptionX{trans}{\PassOptionsToClass{trans}{beamer}}
+\DeclareOptionX{handout}{\PassOptionsToClass{handout}{beamer}}
+\DeclareOptionX{notes}{\PassOptionsToClass{notes}{beamer}}
 \DeclareOptionX{8pt}{\PassOptionsToClass{8pt}{beamer}}
 \DeclareOptionX{9pt}{\PassOptionsToClass{9pt}{beamer}}
 \DeclareOptionX{10pt}{\PassOptionsToClass{10pt}{beamer}}
@@ -418,20 +420,24 @@
   \setbeamertemplate{navigation symbols}{}
 %    \end{macrocode}
 %
-% Some colors are changed in order to have a more ``red coloured'' theme.
+% Some colors are changed in order to have a more ``blue coloured'' theme.
 %    \begin{macrocode}
   \setbeamercolor{frametitle}{fg=myblue}
   \setbeamercolor{progressbar primary}{fg=myblue}
   \setbeamercolor{structure}{fg=myblue}
-  \setbeamercolor{block title}{fg=white,bg=myblue}
-  \setbeamercolor{block body}{bg=black!20}
   \setbeamercolor{section in head/foot}{parent=palette primary,fg=black}
   \setbeamercolor{subsection in head/foot}{parent=palette primary,fg=myblue}
   \setbeamercolor{alerted text}{fg=myred}
+%    \end{macrocode}
+%
+%  Change the colors for the different kind of blocks.
+%    \begin{macrocode}
+  \setbeamercolor{block title}{fg=white,bg=myblue}
+  \setbeamercolor{block body}{fg=black,bg=black!10}
   \setbeamercolor{block title alerted}{fg=white,bg=myred!75}
-  \setbeamercolor{block body alerted}{bg=black!10}
-  \setbeamercolor{block title example}{fg=black!10,bg=mygreen}
-  \setbeamercolor{block body example}{bg=black!10}
+  \setbeamercolor{block body alerted}{fg=black,bg=black!10}
+  \setbeamercolor{block title example}{fg=white,bg=mygreen}
+  \setbeamercolor{block body example}{fg=black,bg=black!10}
 %    \end{macrocode}
 %
 % \Finale
