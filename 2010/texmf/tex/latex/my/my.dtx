@@ -33,7 +33,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{172}
+% \CheckSum{184}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -377,7 +377,13 @@
 % Define a new macro for the \myafortiori Latin abbreviations. This macro has 
 %the \cs{xspace} command at end.
 %    \begin{macrocode}
-\newrobustcmd{\myafortiori}{\textit{a fortiori}\xspace}
+\newrobustcmd{\myafortiori}{%
+  \iflanguage{french}{%
+    \textit{a fortiori}%
+  }{%
+    a fortiori%
+  }\xspace%
+}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -385,7 +391,13 @@
 % Define a new macro for the \myapriori Latin abbreviation. This macro has the 
 %\cs{xspace} command at end.
 %    \begin{macrocode}
-\newrobustcmd{\myapriori}{\textit{a priori}\xspace}
+\newrobustcmd{\myapriori}{%
+  \iflanguage{french}{%
+    \textit{a priori}%
+  }{%
+    a priori%
+  }\xspace%
+}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -393,7 +405,13 @@
 % Define a new macro for the \mycf Latin abbreviation. This macro has the 
 %\cs{xspace} command at end.
 %    \begin{macrocode}
-\newrobustcmd{\mycf}{\textit{c.f.}\xspace}
+\newrobustcmd{\mycf}{%
+  \iflanguage{french}{%
+    \textit{c.f.}%
+  }{%
+    c.f.%
+  }\xspace%
+}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -401,7 +419,13 @@
 % Define a new macro for the \myeg Latin abbreviation. This macro has the 
 %\cs{xspace} command at end.
 %    \begin{macrocode}
-\newrobustcmd{\myeg}{\textit{e.g.}\xspace}
+\newrobustcmd{\myeg}{%
+  \iflanguage{french}{%
+    \textit{e.g.}%
+  }{%
+    e.g.%
+  }\xspace%
+}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -409,7 +433,13 @@
 % Define a new macro for the \myie Latin abbreviation. This macro has the 
 %\cs{xspace} command at end.
 %    \begin{macrocode}
-\newrobustcmd{\myie}{\textit{i.e.}\xspace}
+\newrobustcmd{\myie}{%
+  \iflanguage{french}{%
+    \textit{i.e.}%
+  }{%
+    i.e.%
+  }\xspace%
+}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -417,7 +447,13 @@
 % Define a new macro for the \myetc Latin abbreviation. This macro has the 
 %\cs{xspace} command at end.
 %    \begin{macrocode}
-\newrobustcmd{\myetc}{\textit{etc.}\xspace}
+\newrobustcmd{\myetc}{%
+  \iflanguage{french}{%
+    \textit{etc.}%
+  }{%
+    etc.%
+  }\xspace%
+}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -425,7 +461,27 @@
 % Define a new macro for the \myetal Latin abbreviation. This macro has the 
 %\cs{xspace} command at end.
 %    \begin{macrocode}
-\newrobustcmd{\myetal}{\textit{et al.}\xspace}
+\newrobustcmd{\myetal}{%
+  \iflanguage{french}{%
+    \textit{et al.}%
+  }{%
+    et al.%
+  }\xspace%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\myvs}
+% Define a new macro for the \myvs Latin abbreviation. This macro has the 
+%\cs{xspace} command at end.
+%    \begin{macrocode}
+\newrobustcmd{\myvs}{%
+  \iflanguage{french}{%
+    \textit{vs.}%
+  }{%
+    vs.%
+  }\xspace%
+}
 %    \end{macrocode}
 % \end{macro}
 %
