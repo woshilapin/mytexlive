@@ -40,7 +40,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{256}
+% \CheckSum{275}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -418,6 +418,17 @@
   \setbeamertemplate{headline}[infolines theme]
   \setbeamertemplate{footline}[progressbar theme]
   \setbeamertemplate{navigation symbols}{}
+%    \end{macrocode}
+%
+% Make sub item with an empty square instead of a fill square.
+%    \begin{macrocode}
+  \defbeamertemplate{itemize item}{squarem}
+    {\tiny\raise.5ex\hbox{\donotcoloroutermaths$\blacksquare$}}
+  \defbeamertemplate{itemize subitem}{squarem}
+    {\tiny\raise.4ex\hbox{\donotcoloroutermaths$\square$}}
+  \defbeamertemplate{itemize subsubitem}{squarem}
+    {\tiny\raise.3ex\hbox{\donotcoloroutermaths$\blacksquare$}}
+  \setbeamertemplate{items}[squarem]
 %    \end{macrocode}
 %
 % Some colors are changed in order to have a more ``blue coloured'' theme.
