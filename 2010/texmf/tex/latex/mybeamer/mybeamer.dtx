@@ -40,7 +40,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{275}
+% \CheckSum{277}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -170,10 +170,11 @@
 \RequirePackageWithOptions{my}[2011/12/08]
 %    \end{macrocode}
 %
-% The \xoption{trans}, \xoption{handout} and \xoption{notes} are declared and 
-%if called, transfered to \xclass{beamer} class.
+% The \xoption{dvips}, \xoption{trans}, \xoption{handout} and \xoption{notes} 
+%are declared and if called, transfered to \xclass{beamer} class.
 % A warning is output for each non-declared option called.
 %    \begin{macrocode}
+\DeclareOptionX{dvips}{\PassOptionsToClass{dvips}{beamer}}
 \DeclareOptionX{trans}{\PassOptionsToClass{trans}{beamer}}
 \DeclareOptionX{handout}{\PassOptionsToClass{handout}{beamer}}
 \DeclareOptionX{notes}{\PassOptionsToClass{notes}{beamer}}
