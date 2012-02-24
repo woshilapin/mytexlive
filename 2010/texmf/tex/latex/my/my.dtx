@@ -125,18 +125,18 @@
 %abbreviations.
 % \begin{mytable}
 % \mycaption[tab-LatinAbbreviations]{Latin abbreviations}
-% \begin{mytabular}{^L-L-L}
+% \begin{mytabular}{^L->{\selectlanguage{english}}L->{\selectlanguage{french}}L-L}
 % \mytoprule
 % \myrowstyle{\bfseries}
-% Command        & Abbreviation & In Latin                  \\
+% Command        & In English   & In French    & In Latin                  \\
 % \mymiddlerule
-% |\myafortiori| & \myafortiori & --                        \\
-% |\myapriori|   & \myapriori   & --                        \\
-% |\mycf|        & \mycf        & \textit{confer}           \\
-% |\myeg|        & \myeg        & \textit{exempli gratia}   \\
-% |\myie|        & \myie        & \textit{in extenso}       \\
-% |\myetc|       & \myetc       & \textit{et cetera desunt} \\
-% |\myetal|      & \myetal      & \textit{et alii}          \\
+% |\myafortiori| & \myafortiori & \myafortiori & --                        \\
+% |\myapriori|   & \myapriori   & \myapriori   & --                        \\
+% |\mycf|        & \mycf        & \mycf        & \textit{confer}           \\
+% |\myeg|        & \myeg        & \myeg        & \textit{exempli gratia}   \\
+% |\myie|        & \myie        & \myie        & \textit{in extenso}       \\
+% |\myetc|       & \myetc       & \myetc       & \textit{et cetera desunt} \\
+% |\myetal|      & \myetal      & \myetal      & \textit{et alii}          \\
 % \mybottomrule
 % \end{mytabular}
 % \end{mytable}
@@ -180,7 +180,11 @@
 %word ``all upper case'', ``all small case'' or ``all small case with the first 
 %letter upper case''. As an example, the new |\textsf{\textsc{hello}}| is 
 %producing \textsf{\textsc{hello}} but the original |\textsf{\textsc{hello}}| 
-%is producing \textsc{hello}.
+%is producing \textsc{hello} (look at the serif which should not be here).
+% The \meta{option} can only take the argument |myscstyle| which can have three 
+%different values: |low| (only small caps), |up| (only upper case with no small 
+%caps) and |first| (the first letter is upper case and the others are in small 
+%caps).
 %
 % \begin{declcs}{myname}
 % \oarg{prefix}
