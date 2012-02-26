@@ -1,0 +1,12 @@
+pst-3d.tex --------
+1.11 2010/02/14  - trailing space in \psAffinTransform
+1.10 2010/02/13  - created a pro file
+                 - add macro \pstAffinTransform
+1.00 2005/09/08	 - using the extended pst-xkey instead of the old pst-key package;
+                 - creating a dtx file
+                 - new \LaTeX\ wrapper file to load pstricks.sty first (hv)
+0.90 2001/02/16  - First public release. (tvz)
+
+
+pst-3d.pro --------
+0.01 2010/02/13  - first public version

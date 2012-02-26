@@ -1,0 +1,92 @@
+\section {Choix du point de vue}
+\begin{center}
+\psset{lightsrc=10 20 30,SphericalCoor,viewpoint=50 30 20}
+\begin{pspicture}(-5,-4)(10,7)
+\definecolor{bleuciel}{rgb}{0.78,0.84,0.99}
+\psSolid[object=cube,fillcolor=bleuciel,a=2,action=draw*]%%
+%\psSolid[object=cubemaillage,fillcolor=bleuciel,a=2]%%
+\psSolid[object=grille,base=0 8 0 10,action=draw]%%
+\psSolid[object=grille,base=0 7 0 10,action=draw,RotY=90](0,0,7)%
+\psSolid[object=grille,base=0 8 0 7,action=draw,RotX=-90](0,0,7)%
+\psSolid[object=cube,fillcolor=bleuciel,a=1,action=draw*](0.5,0.5,0.5)%
+\psSolid[object=grille,base=-1 1 -1 1,action=draw,linecolor=blue](0,0,1)%
+\psSolid[object=grille,base=-1 1 -1 1,action=draw,RotY=90,linecolor=blue](1,0,0)%
+\psSolid[object=grille,base=-1 1 -1 1,action=draw,RotX=-90,linecolor=blue](0,1,0)%
+\axesIIID(1,1,1)(8,10,7)
+\pstVerb{/dV 12 def % distance V
+         /dE 6 def % distance écran
+         /Kc dV dE sub dV div def
+         /Theta 60 def
+         /Phi 30 def
+         /xV dV Phi cos mul Theta  cos mul def
+         /yV dV Phi cos mul Theta  sin mul def
+         /zV dV Phi sin mul def
+         /xE Kc xV mul def
+         /yE Kc yV mul def
+         /zE Kc zV mul def
+         }%
+\psPoint(xV,yV,zV){V}
+\psPoint(xE,yE,zE){E}
+\psPoint(xV,yV,0){Vp}
+% 5 distance écran
+%\psPoint(dE Theta  cos mul Phi cos div dE Theta  sin mul Phi cos div 0){Vq}
+\psPoint(xV,0,0){Vx}
+\psPoint(0,yV,0){Vy}
+\psPoint(0,0,zV){Vz}
+\psdot(V)
+{\psset{linestyle=dashed,linecolor=red}
+\psline(V)(Vp)\psline(Vx)(Vp)\psline(Vy)(Vp)\psline(V)(Vz)\psline(V)(O)\psline(Vp)(O)}
+\psSolid[object=grille,base=-5 5 -3 3,action=draw,RotX=-60,linecolor=red](xE,yE,zE)%
+\psTransformPoint[RotX=-60](-5 -3 0)(xE,yE,zE){A}
+\psTransformPoint[RotX=-60](-5 3 0)(xE,yE,zE){B}
+\psTransformPoint[RotX=-60](5 3 0)(xE,yE,zE){C}
+\psTransformPoint[RotX=-60](5 -3 0)(xE,yE,zE){D}
+\pspolygon[fillstyle=vlines,hatchcolor=yellow!50,hatchwidth=0.02,hatchsep=0.04](A)(B)(C)(D)
+\PointEcran(1,1,1){S1}
+\psPoint(1,1,1){s1}
+\psline(s1)(S1)(V)
+%
+\PointEcran(1,1,-1){S2}
+\psPoint(1,1,-1){s2}
+\psline(s2)(S2)(V)
+%
+\PointEcran(-1,1,-1){S3}
+\psPoint(-1,1,-1){s3}
+\psline(s3)(S3)(V)
+%
+\PointEcran(-1,1,1){S4}
+\psPoint(-1,1,1){s4}
+\psline(s4)(S4)(V)
+%
+\PointEcran(1,-1,-1){S5}
+\psPoint(1,-1,-1){s5}
+\psline(s5)(S5)(V)
+%
+\PointEcran(1,-1,1){S6}
+\psPoint(1,-1,1){s6}
+\psline(s6)(S6)(V)
+%
+\PointEcran(-1,-1,1){S7}
+\psPoint(-1,-1,1){s7}
+\psline(s7)(S7)(V)
+%
+\psset{linecolor=red,fillstyle=vlines,hatchsep=0.04,hatchwidth=0.02}
+\pspolygon[hatchcolor=red!60](S1)(S2)(S3)(S4)
+\pspolygon[,hatchcolor=red!60](S1)(S2)(S5)(S6)
+\pspolygon[hatchcolor=red!10](S1)(S4)(S7)(S6)
+\psdots(s1)(s2)(s3)(s4)(s5)(s6)(s7)(S1)(S2)(S3)(S4)(S5)(S6)(S7)
+%
+\uput[45](V){$V$}
+\end{pspicture}
+\end{center}
+Les coordonnées de l'objet, ici le cube bleuté, sont données dans le
+repère $Oxyz$.  Les coordonnées du point de vue ($V$), sont données
+dans ce même repère, soit en coordonnées sphériques, avec l'option
+\texttt{[SphericalCoor]}, soit en coordonnées cartésiennes qui
+est l'option par défaut.
+
+Exemple : \texttt{[SphericalCoor,viewpoint=50 30 20]}
+
+L'écran est placé perpendiculairement à la direction $OV$, à une
+distance de $V$ : \texttt{[Decran=50]} (valeur par défaut), cette
+valeur peut être positive ou négative.

@@ -1,0 +1,14 @@
+\section {Un pliant}
+\bgroup
+\psset{lightsrc=50 10 30}
+
+\psset{SphericalCoor,viewpoint=50 60 10,Decran=50}
+\begin{pspicture*}(-6,-2)(6,10)
+\psframe*(-6,-2)(6,10)
+\psSolid[object=grille,base=-4 4 -4 4,action=draw**,ngrid=4,linecolor=red]%
+\psSolid[object=new,RotX=90,RotZ=0,hue=0 0.1 0.8 1,hollow,incolor=yellow!50,
+    sommets= (sommets_agu.dat) run,linewidth=0.5\pslinewidth,,unit=15,
+    faces={(faces_agu.dat) run}]%
+\end{pspicture*}
+
+\egroup

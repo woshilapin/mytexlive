@@ -1,0 +1,500 @@
+%% $Id: pst-electricfield-docFR.tex 357 2010-07-04 14:13:27Z herbert $
+\documentclass[11pt,english,french,BCOR10mm,DIV12,bibliography=totoc,parskip=false,smallheadings
+    headexclude,footexclude,oneside]{pst-doc}
+\usepackage[latin1]{inputenc}
+\usepackage{pst-electricfield}
+
+\usepackage{pst-electricfield}
+\let\pstEFfv\fileversion
+\usepackage{pst-func}
+\usepackage{pst-exa}% only when running pst2pdf
+%\let\PSTexample\LTXexample        % when not running pst2pdf
+%\let\endPSTexample\endLTXexample  % when not running pst2pdf
+
+\usepackage{esint}
+
+\lstset{pos=t,language=PSTricks,
+    morekeywords={psElectricfield,psEquipotential},basicstyle=\footnotesize\ttfamily}
+\newcommand\Cadre[1]{\psframebox[fillstyle=solid,fillcolor=black,linestyle=none,framesep=0]{#1}}
+%
+\begin{document}
+
+\title{\texttt{pst-electricfield}}
+\subtitle{Electric field lines of charges; v.\pstEFfv}
+\author{Juergen Gilg\\ Manuel Luque\\Patrice Megret\\Herbert Vo\ss}
+%\docauthor{Juergen Gilg\\Manuel Luque\\Herbert Vo\ss}
+\date{\today}
+\maketitle
+
+
+\begin{abstract}
+Le package \texttt{pst-electricfield} a pour objet de tracer l'allure des lignes de champ et des 
+équipotentielles d'un ensemble de charges ponctuelles. Ce package est né d'une discussion sur le 
+tracé des lignes de champ et des équipotentielles avec PStricks sur
+\url{http://www.tug.org/pipermail/pstricks/}. Différentes méthodes sont possibles et ont été 
+utilisées lors de cet échange, elles seront exposées dans cette documentation.
+
+Pour ce package, le tracé des lignes de champ a été modélisé avec la méthode d'Euler qui permet 
+d'une part une précision satisfaisante et d'autre part une grande rapidité du tracé. La résolution 
+numérique\footnote{L'algorithme a été adapté de celui utilisé dans la commande 
+\textsf{$\backslash$psplotImp} du package \textsf{pst-func}.} de l'équation implicite du potentiel 
+$V(x,y)=\Sigma V_i$ a permis le tracé des équipotentielles, ce calcul est le plus long. Le package 
+comprend deux commandes, l'une pour le tracé des lignes de champ et l'autre celui des équipotentielles, 
+on pourra ne peut pas être pénalisé par la durée des calculs si on se limite au tracé des lignes de champ.
+
+Chaque charge est caractérisée par sa valeur $q_i$ et sa position $(x_i,y_i)$. Le choix du nombre de 
+charges est quelconque, la durée des calculs pour le tracé des équipotentielles augmente avec ce nombre.
+\end{abstract}
+
+\section{Méthode proposée par Patrice Mégret}
+Utilisation du package \LPack{pst-func} et de la commande \Lcs{psplotImp}\verb+[options](x1,y1)(x2,y2)+ 
+pour tracer les lignes de champ \textbf{et} les équipotentielles. Comment déduire la fonction 
+implicite permettant le tracé des lignes de champ à partir de l'expression du potentiel ?
+
+
+
+
+
+Le théorème de Gauss indique que le flux électrique à travers une surface fermée $S$ et défini par la relation:
+\begin{equation}\label{pm-eq-a}
+\psi = \oiint\limits_S \vec{D} \cdot \vec{u}_n \mathrm{d} S = Q
+\end{equation} 
+est égal à la charge réelle $Q$ à l'intérieur de $S$. Il en résulte qu'en dehors des charges ($Q=0$), le flux électrique est conservatif.
+
+Un tube de flux est un tube qui est bâti sur des lignes de déplacement électrique $\vec{D}$ et en dehors des charges le flux entrant dans ce tube est égal au flux sortant vu la conservation du flux.
+
+En suivant un tube à flux constant, on suit donc aussi une ligne de champ $\vec{D}$ et c'est cette démarche qui sera utilisée pour trouver les expressions implicites des lignes de champ dans des configurations géométriques simples. 
+
+Dans notre cas, nous nous limiterons à des charges ponctuelles et les lignes de déplacement électrique seront donc identiques aux lignes de champ électrique vu l'absence de polarisation.   
+
+
+Pour une charge ponctuelle $q$, placée à l'origine du système de coordonnées, le champ électrique et le potentiel sont donnés par:
+\begin{equation}\label{pm-eq-b}
+\vec{E} = \frac{1}{4 \pi \varepsilon_0 \varepsilon_r} q \frac{\vec{r}}{|\vec{r}|^3}
+\end{equation}
+\begin{equation}\label{pm-eq-c}
+V = \frac{1}{4 \pi \varepsilon_0 \varepsilon_r} \frac{q}{r} 
+\end{equation}
+
+Le flux au travers une calotte sphérique de surface $S$ et dont le demi-angle d'ouverture est $\theta$, est alors simplement égal:
+\begin{equation}\label{pm-eq-d}
+\psi = \varepsilon_0 \varepsilon_r E S = \frac{1}{2} q (1 -\cos\theta) 
+\end{equation} 
+car $S= 2\pi r^2 (1 - \cos\theta)$ et en vertu de (\ref{pm-eq-a}) $4 \pi r^2 \varepsilon_0 \varepsilon_r E =q$.
+
+\begin{center}
+\begin{pspicture}(-3,-3)(3,3)
+%\psgrid
+\psdot[dotscale=2](0,0)
+\uput[-135](0,0){$q$}
+\psaxes[labels=none,ticks=none]{->}(0,0)(-2.5,-2.5)(2.5,2.5)[$x$,-90][$y$,0]
+\pswedge(0,0){2}{-30}{30}
+\psarc{->}(0,0){1}{0}{30}
+\rput(1.2,0.2){$\theta$}
+\rput(2.2,0.7){$S$}
+\end{pspicture}
+\end{center}
+
+Pour trouver une expression implicite des lignes de champ, il suffit d'exprimer la constance du flux, ce qui s'écrit:
+\begin{equation}\label{pm-eq-e}
+\psi(x,y) = \frac{1}{2} q (1 -\cos\theta) = \mathrm{cte}
+\end{equation}
+On voit tout de suite que les lignes de champ correspondent à $\theta=\mathrm{cte}$, elles sont donc bien radiales.
+ 
+Ainsi, pour les lignes de champ dans le plan $xy$, on a simplement en repassant aux coordonnées cartésiennes:
+\begin{equation}\label{pm-eq-f}
+\frac{x}{\sqrt{x^2+y^2}} = \mathrm{cte}
+\end{equation}
+
+Pour les équipotentielles, la relation (\ref{pm-eq-c}) est déjà sous la forme implicite et il suffit d'exprimer $V=\mathrm{cte}$, ce qui donne:
+\begin{equation}\label{pm-eq-g}
+\frac{1}{\sqrt{x^2+y^2}} = \mathrm{cte}
+\end{equation}
+
+La figure suivante montre les lignes de champ et les équipotentielles pour une charge ponctuelle en $(0,0)$. On constate bien que les équations implicites donnent des lignes de champ radiales et des équipotentielles circulaires, orthogonales aux lignes de champ. 
+
+\begin{center}
+\begin{pspicture*}(-5,-5)(5,5)
+\psframe*[linecolor=green!20](-5,-5)(5,5)
+\psgrid[subgriddiv=0,gridcolor=lightgray,griddots=10]
+\psElectricfield[Q={[1 0 0]}]
+\psEquipotential[Q={[1 0 0]}](-5,-5)(5,5)
+\multido{\r=-1+0.1}{20}{%
+\psplotImp[linestyle=solid,linecolor=blue](-6,-6)(6,6){%
+x y 2 exp x 2 exp add sqrt div \r \space sub}}
+\multido{\r=0.0+0.1}{10}{%
+\psplotImp[linestyle=solid,linecolor=red](-6,-6)(6,6){%
+x 2 exp y 2 exp add sqrt 1 exch div \r \space sub}}
+\end{pspicture*}
+\end{center}
+
+
+\begin{verbatim}
+%% lignes de champ
+\multido{\r=-1+0.1}{20}{%
+\psplotImp[linestyle=solid,linecolor=blue](-6,-6)(6,6){%
+x y 2 exp x 2 exp add sqrt div \r \space sub}}
+
+%% équipotentielles
+\multido{\r=0.0+0.1}{10}{%
+\psplotImp[linestyle=solid,linecolor=red](-6,-6)(6,6){%
+x 2 exp y 2 exp add sqrt 1 exch div \r \space sub}}
+\end{verbatim}
+
+
+
+Nous allons maintenant généraliser à une distribution de charges ponctuelles en \textbf{ligne}.  Soit un ensemble de charges ponctuelles $q_i$ localisées aux points $(x_i,0)$. 
+\begin{center}
+\begin{pspicture}(0,-3)(12,3)
+%\psgrid
+\psset{dotscale=2}
+\dotnode(0,0){NA}\nput{-45}{NA}{$q_1$}
+\dotnode(2,0){NB}\nput{-90}{NB}{$q_2$}
+\dotnode(5,0){NC}\nput{-90}{NC}{$q_n$}
+\dotnode[linecolor=red](4,2){ND}\nput{90}{ND}{$P(x,y)$}
+\ncline{NA}{ND}\naput{$r_1,\theta_1$}
+\ncline{NB}{ND}\nbput{$r_2,\theta_2$}
+\ncline{NC}{ND}\nbput{$r_n,\theta_n$}
+\psaxes[labels=none,ticks=none]{->}(0,0)(0,-2.5)(11,2.5)[$x$,-90][$y$,0]
+\psarc{->}(5,0){0.7}{0}{116.5}
+\rput(6,0.5){$\theta_n$}
+\dotnode[linecolor=blue](4,-2){NE}
+\nccurve[ncurv=2,linecolor=green!40!black]{ND}{NE}
+\end{pspicture}
+\end{center}
+
+La symétrie de ce problème est cylindrique; il suffit donc d'étudier les lignes de champ et le potentiel dans le demi-plan $xy$ et par rotation autour de l'axe $x$, on a la solution complète. 
+
+Par rotation autour de l'axe $x$, la ligne de champ qui passe par le point $P$ engendre un tube de flux dont le flux passant par une surface couvercle quelconque passant par $P(x,y)$ et coupant l'axe $x$ au delà de la dernière charge (cette surface coupe le plan $xy$ selon l'arc en vert) vaut à partir de (\ref{pm-eq-d}):
+\begin{equation}\label{pm-eq-h}
+\psi = \frac{1}{2} \sum_{i=1}^{n} q_i (1 -\cos\theta_i) 
+\end{equation} 
+
+Les lignes de champ s'obtiennent simplement en exprimant $\psi = \mathrm{cte}$, soit en coordonnées cartésiennes:
+\begin{equation}\label{pm-eq-i}
+\sum_{i=1}^{n} q_i \frac{x-x_i}{\sqrt{(x-x_i)^2+y^2}} = \mathrm{cte}
+\end{equation} 
+
+Pour le potentiel, la solution est triviale:
+\begin{equation}\label{pm-eq-j}
+\sum_{i=1}^{n} \frac{q_i}{\sqrt{(x-x_i)^2+y^2}} = \mathrm{cte}
+\end{equation} 
+
+\begin{center}
+\begin{pspicture*}(-5,-5)(5,5)
+\psframe*[linecolor=green!20](-5,-5)(5,5)
+\psgrid[subgriddiv=0,gridcolor=lightgray,griddots=10]
+\psElectricfield[Q={[1 -2 0][-1 2 0]}]
+\psEquipotential[Q={[1 -2 0][-1 2 0]},Vmin=-2,Vmax=2,stepV=0.25](-5,-5)(5,5)
+\multido{\r=-2+0.2}{20}{%
+\psplotImp[linestyle=solid,linecolor=red](-6,-6)(6,6){%
+x 2 add dup 2 exp y 2 exp add sqrt div 1 mul 
+x -2 add dup 2 exp y 2 exp add sqrt div -1 mul add 
+\r \space sub}}
+\multido{\r=-0.5+0.1}{10}{%
+\psplotImp[linestyle=solid,linecolor=blue](-6,-6)(6,6){%
+x 2 add 2 exp y 2 exp add sqrt 1 exch div 1 mul 
+x -2 add 2 exp y 2 exp add sqrt 1 exch div -1 mul add 
+\r \space sub}}
+\end{pspicture*}
+\end{center}
+
+\begin{verbatim}
+%% lignes de champ 
+\multido{\r=-2+0.2}{20}{%
+\psplotImp[linestyle=solid,linecolor=red](-6,-6)(6,6){%
+x 2 add dup 2 exp y 2 exp add sqrt div 1 mul 
+x -2 add dup 2 exp y 2 exp add sqrt div -1 mul add 
+\r \space sub}}
+%% équipotentielles
+\multido{\r=-0.5+0.1}{10}{%
+\psplotImp[linestyle=solid,linecolor=blue](-6,-6)(6,6){%
+x 2 add 2 exp y 2 exp add sqrt 1 exch div 1 mul 
+x -2 add 2 exp y 2 exp add sqrt 1 exch div -1 mul add 
+\r \space sub}}
+\end{verbatim}
+
+
+L'exemple ci-dessus correspond à une charge $+1$ en $(-2,0)$ et une charge $-1$ en $(2,0)$ et montre la superposition des résultats par la méthode des fonctions implicites et celle de l'intégration directe. La correspondance est parfaite, mais la méthode des fonctions implicites est plus lente et est limitée à un problème à symétrie cylindrique (charges en ligne).  
+
+
+
+
+
+\newpage
+\section{Méthode proposée par Gilg Juergen}
+Utilisation du package \LPack{pstricks-add} et de la commande \Lcs{psplotDiffEqn} pour tracer les lignes de champ \textbf{et} les équipotentielles.
+
+Soit le système de charges ponctuelles $\{q_1, \,\ldots, \,q_n\}$ et leurs vecteurs position $\{\vec{r}_1, \,\ldots, \,\vec{r}_n\}$.
+\begin{equation*}
+\vec{r}_1=\begin{pmatrix}
+x_1\\y_1
+\end{pmatrix},\,\ldots,\,
+\vec{r}_n=\begin{pmatrix}
+x_n\\y_n
+\end{pmatrix};\,
+\vec{r}=\begin{pmatrix}
+x\\y
+\end{pmatrix}
+\end{equation*}
+Le principe de superposition nous donne le champ résultant en un point $M$ défini par $\overrightarrow{r}(M)$ :
+\begin{equation}
+\vec{E} = \frac{1}{4 \pi \varepsilon_0 \varepsilon_r} \sum\limits_{i=1}^n q_i \frac{\vec{r} - \vec{r}_i}{|\vec{r} - \vec{r}_i|^3}
+\end{equation}
+Expression des composantes vectorielles :
+\begin{equation}
+\vec{E} =\begin{pmatrix}
+E_x\\E_y
+\end{pmatrix}=
+ \frac{1}{4 \pi \varepsilon_0 \varepsilon_r} \sum\limits_{i=1}^n  \frac{q_i}{\sqrt{(x-x_i)^2+(y-y_i)^2}^3}\begin{pmatrix}
+   x-x_i\\y-y_i
+ \end{pmatrix}
+\end{equation}
+ou
+\begin{align*}
+E_x&=\frac{1}{4 \pi \varepsilon_0 \varepsilon_r} \sum\limits_{i=1}^n  \frac{q_i(x-x_i)}{\sqrt{(x-x_i)^2+(y-y_i)^2}^3}\\
+E_y&=\frac{1}{4 \pi \varepsilon_0 \varepsilon_r} \sum\limits_{i=1}^n  \frac{q_i(y-y_i)}{\sqrt{(x-x_i)^2+(y-y_i)^2}^3}
+\end{align*}
+Les lignes de champs sont tangentes \`{a} $\vec{E}$.
+\begin{equation*}
+\frac{\text{d}y}{\text{d}x}=\frac{E_y}{E_x}
+\end{equation*}
+C'est une \'{e}quation différentielle d'ordre 1.
+
+Utilisons la commande : \verb!\psplotDiffEqn! pour dessiner les lignes de champ.
+\begin{verbatim}
+\pstVerb{%
+/q1 1 def
+/q2 -0.5 q1 mul def
+/xA 1.8 def
+}
+
+\multido{\rx=-250+10.2}{50}{%
+\psplotDiffEqn[%
+linewidth=0.25pt,%
+linecolor=red,%
+varsteptol=.001,%
+method=rk4,%
+algebraic,
+plotpoints=200%
+]{-20}{20}{\rx}{%
+(q1*(y[0])/(sqrt((x+xA)^2+(y[0])^2))^3+q2*(y[0])/(sqrt((x-xA)^2+(y[0])^2))^3)%
+/%
+(q1*(x+xA)/(sqrt((x+xA)^2+(y[0])^2))^3+q2*(x-xA)/(sqrt((x-xA)^2+(y[0])^2))^3)%
+}%
+}
+\pscircle*(!xA 0){0.25}\pscircle*(!xA neg 0){0.25}
+\end{verbatim}
+
+Le potentiel :
+\begin{equation}
+\vec{E}=\begin{pmatrix}
+E_x\\E_y
+\end{pmatrix}=-\text{grad}\, V=-\nabla V =-\begin{pmatrix}
+\frac{\partial V}{\partial x}\\[4pt]
+\frac{\partial V}{\partial y}
+\end{pmatrix}
+\end{equation}
+ou
+\begin{align*}
+E_x=-\frac{\partial V}{\partial x}\\
+E_y=-\frac{\partial V}{\partial y}
+\end{align*}
+
+\textbf{Équipotentielles}
+\begin{equation*}
+V=\text{Cste}
+\end{equation*}
+Les équipotentielles sont orthogonales aux lignes de champ.
+\begin{equation*}
+\frac{\text{d}y}{\text{d}x}=-\frac{E_x}{E_y}
+\end{equation*}
+C'est une \'{e}quation différentielle d'ordre 1. On utilise encore : \verb!\psplotDiffEqn! pour 
+tracer les équipotentielles.
+\begin{verbatim}
+\pstVerb{%
+/q1 1 def
+/q2 1 q1 mul def
+/xA 3.25 def
+}
+\multido{\rx=-4.1+0.75}{20}{%
+\psplotDiffEqn[%
+linewidth=0.85pt,%
+linecolor=blue,%
+varsteptol=.00001,%
+method=rk4,%
+algebraic,
+plotpoints=300%
+]{-6}{6}{\rx}{%
+-((q1*(x+xA)/(sqrt((x+xA)^2+(y[0])^2))^3+q2*(x-xA)/(sqrt((x-xA)^2+(y[0])^2))^3))
+/
+(q1*(y[0])/(sqrt((x+xA)^2+(y[0])^2))^3+q2*(y[0])/(sqrt((x-xA)^2+(y[0])^2))^3)%
+}%
+}
+\end{verbatim}
+Le fichier d'expérimentation est ici : \url{http://tug.org/mailman/htdig/pstricks/2010/007468.html}
+
+C'est une méthode simple, mais qui n'est pas facilement généralisable, ce qui a motivé l'élaboration de ce package.
+
+\section{Les lignes de champ}
+Elles se tracent avec la commande : \verb+\psElectricfield[options]+, les paramètres sont les suivants :
+\begin{enumerate}
+  \item Les charges, les coordonnées de leurs positions et le nombre de lignes partant ou aboutissant sur 
+  chacune d'elles sont introduites par le même paramètre 
+    $\mathsf{Q=\{[q_1\, x_1\, y_1\, N_1] [q_2\, x_2\, y_2\, N_2]\ldots[q_i\, x_i\, y_i\, N_i]\ldots [q_n\, x_n\, y_n\, N_n]\}}$. 
+    Le nombre de lignes est optionnel, s'il n'y a rien, on prend par défaut \textsf{N=19}, ce qui correspond à 
+    360/18=20\degres{} entre deux lignes partant(ou aboutissant) de(sur) chaque charge.
+  \item La couleur et l'épaisseur des lignes se règlent avec les paramètres usuels de PStricks : \Lkeyword{linecolor} 
+  et \Lkeyword{linewidth}.
+  \item Le nombre de points de chaque ligne \textsf{points=400} et le pas du tracé \textsf{Pas=0.025}, ce sont les 
+  valeurs par défaut qu'il vous appartient de modifier, si elles ne vous donnent pas satisfaction.
+  \item La position des flèches sur une ligne de champ peut être ajustée avec le paramètre \textsf{posArrow=0.25}, 
+  qui représente la fraction du nombre de points de la ligne à partir de la charge.
+  \item Par défaut le rayon des charges est proportionnel à la valeur de $|q|$. Si on souhaite désactiver cette 
+  relation, il suffit de positionner le booléen \textsf{chargeradius} à \textsf{false} : \textsf{chargeradius=false}. Le rayon de la charge est lié à \textsf{runit}, c'est donc cette valeur qu'il faudra modifier pour agrandir ou diminuer ce rayon.
+\end{enumerate}
+\section{Les équipotentielles}
+Elles se tracent avec la commande : \Lcs{psEquipotential}[options](xmin,ymin)(xmax,ymax)+. Les options 
+de charge comprennent 
+les mêmes paramètres \textsf{Q} que pour les lignes de champ, il est inutile d'indiquer~\textsf{N}.
+\begin{enumerate}
+  \item Il faut prévoir les valeurs maximale et minimale du potentiel : \textsf{Vmax=3} et \textsf{Vmin=-1} : valeurs par défaut.
+  \item L'intervalle entre deux valeurs de potentiel \textsf{stepV=0.5}, ce qui déterminera le nombre d'équipotentielles.
+  \item La couleur et l'épaisseur des équipotentielles se règlent avec les paramètres usuels de PStricks : \textsf{linecolor} et \textsf{linewidth}.
+  \item Le paramètre \textsf{stepFactor=0.67} fixe la largeur du pas du balayage horizontal et vertical du domaine choisi, 
+  \textsf{(xmin,ymin)(xmax,ymax)}, lors de la résolution numérique de $\mathsf{V(x,y)=Cste}$, il détermine la continuité du tracé.
+  \item Pour dessiner une équipotentielle particulière, par exemple $V=0$, il suffit de donner la même valeur à 
+  \textsf{Vmax=0} et \textsf{Vmin=0} et de choisir une couleur différente des autres.
+\end{enumerate}
+
+\clearpage
+\section{Exemples}
+
+\begin{PSTexample}[pos=t]
+\begin{pspicture*}(-6,-6)(6,6)
+\psframe*[linecolor=lightgray!50](-6,-6)(6,6)
+\psgrid[subgriddiv=0,gridcolor=gray,griddots=10]
+\psElectricfield[Q={[-1 -2 2][1 2 2][-1 2 -2][1 -2 -2]},linecolor=red]
+\psEquipotential[Q={[-1 -2 2][1 2 2][-1 2 -2][1 -2 -2]},linecolor=blue](-6.1,-6.1)(6.1,6.1)
+\psEquipotential[Q={[-1 -2 2][1 2 2][-1 2 -2][1 -2 -2]},linecolor=green,linewidth=2\pslinewidth,Vmax=0,Vmin=0](-6.1,-6.1)(6.1,6.1)
+\end{pspicture*}
+\end{PSTexample}
+
+\begin{PSTexample}[pos=t]
+\begin{pspicture*}(-6,-6)(6,6)
+\psframe*[linecolor=lightgray!50](-6,-6)(6,6)
+\psgrid[subgriddiv=0,gridcolor=gray,griddots=10]
+\psElectricfield[Q={[-1 -2 2 false][1 2 2 false][-1 2 -2 false][1 -2 -2 false]},radius=1.5pt,linecolor=red]
+\psEquipotential[Q={[-1 -2 2][1 2 2][-1 2 -2][1 -2 -2]},linecolor=blue](-6,-6)(6,6)
+\psEquipotential[Q={[-1 -2 2][1 2 2][-1 2 -2][1 -2 -2]},linecolor=green,linewidth=2\pslinewidth,Vmax=0,Vmin=0](-6.1,-6.1)(6.1,6.1)
+\end{pspicture*}
+\end{PSTexample}
+
+
+\begin{PSTexample}[pos=t]
+\begin{pspicture*}(-5,-5)(5,5)
+\psframe*[linecolor=lightgray!40](-5,-5)(5,5)
+\psgrid[subgriddiv=0,gridcolor=lightgray,griddots=10]
+\psElectricfield[Q={[-1 -3 1][1 1 -3][-1 2 2]},N=9,linecolor=red,points=1000,posArrow=0.1,Pas=0.015]
+\psEquipotential[Q={[-1 -3 1][1 1 -3][-1 2 2]},linecolor=blue](-6,-6)(6,6)
+\psEquipotential[Q={[-1 -3 1][1 1 -3][-1 2 2]},linecolor=green,Vmin=-5,Vmax=-5,linewidth=2\pslinewidth](-6,-6)(6,6)
+\end{pspicture*}
+\end{PSTexample}
+
+
+
+\begin{PSTexample}[pos=t,vsep=5mm]
+\psset{unit=0.75cm}
+\begin{pspicture*}(-5,-5)(5,5)
+\psframe*[linecolor=green!20](-5,-5)(5,5)
+\psgrid[subgriddiv=0,gridcolor=lightgray,griddots=10]
+\psElectricfield[Q={[1 -2 0][-1 2 0]},linecolor=red]
+\psEquipotential[Q={[1 -2 0][-1 2 0]},linecolor=blue](-5,-5)(5,5)
+\psEquipotential[Q={[1 -2 0][-1 2 0]},linecolor=green,Vmin=0,Vmax=0](-5,-5)(5,5)
+\end{pspicture*}
+\end{PSTexample}
+
+\begin{PSTexample}[pos=t,vsep=5mm]
+\psset{unit=0.75cm}
+\begin{pspicture*}(-5,-5)(5,5)
+\psframe*[linecolor=green!20](-5,-5)(5,5)
+\psgrid[subgriddiv=0,gridcolor=lightgray,griddots=10]
+\psElectricfield[Q={[1 -2 0][1 2 0]},linecolor=red,N=15,points=500]
+\psEquipotential[Q={[1 -2 0][1 2 0]},linecolor=blue,Vmin=0,Vmax=20,stepV=2](-5,-5)(5,5)
+\psEquipotential[Q={[1 -2 0][1 2 0]},linecolor=green,Vmin=9,Vmax=9](-5,-5)(5,5)
+\end{pspicture*}
+\end{PSTexample}
+
+\begin{PSTexample}[pos=t,vsep=5mm]
+\psset{unit=0.75cm}
+\begin{pspicture*}(-10,-5)(6,5)
+\psframe*[linecolor=lightgray!40](-10,-5)(6,5)
+\psgrid[subgriddiv=0,gridcolor=lightgray,griddots=10]
+\psElectricfield[Q={[600 -60 0 false][-4 0 0] },N=50,points=500,runit=0.8]
+\psEquipotential[Q={[600 -60 0 false][-4 0 0]},linecolor=blue,Vmax=100,Vmin=50,stepV=2](-10,-5)(6,5)
+\psframe*(-10,-5)(-9.5,5)
+\rput(0,0){\textcolor{white}{\large$-$}}
+\multido{\rA=4.75+-0.5}{20}{\rput(-9.75,\rA){\textcolor{white}{\large$+$}}}
+\end{pspicture*}
+\end{PSTexample}
+
+\begin{PSTexample}[pos=t,vsep=5mm]
+\psset{unit=0.75cm}
+\begin{pspicture*}(-5,-5)(5,5)
+\psframe*[linecolor=green!20](-6,-5)(6,5)
+\psgrid[subgriddiv=0,gridcolor=lightgray,griddots=10]
+\psElectricfield[Q={[1 -2 -2][1 -2 2][1 2 2][1 2 -2]},linecolor={[HTML]{006633}}]
+\psEquipotential[Q={[1 -2 -2][1 -2 2][1 2 2][1 2 -2]},Vmax=15,Vmin=0,stepV=1,linecolor=blue](-6,-6)(6,6)
+\end{pspicture*}
+\end{PSTexample}
+
+\begin{PSTexample}[pos=t,vsep=5mm]
+\psset{unit=0.75cm}
+\begin{pspicture*}(-5,-5)(5,5)
+\psframe*[linecolor=green!20](-5,-5)(5,5)
+\psgrid[subgriddiv=0,gridcolor=lightgray,griddots=10]
+\psElectricfield[Q={[1 2 0][1 1 1.732][1 -1 1.732][1 -2 0][1 -1 -1.732][1 1 -1.732]},linecolor=red]
+\psEquipotential[Q={[1 2 0][1 1 1.732 12][1 -1 1.732][1 -2 0][1 -1 -1.732][1 1 -1.732]},linecolor=blue,Vmax=50,Vmin=0,stepV=5](-5,-5)(5,5)
+\end{pspicture*}
+\end{PSTexample}
+
+\begin{PSTexample}[pos=t,vsep=5mm]
+\psset{unit=0.75cm}
+\begin{pspicture*}(-5,-5)(5,5)
+\psframe*[linecolor=green!20](-5,-5)(5,5)
+\psgrid[subgriddiv=0,gridcolor=lightgray,griddots=10]
+\psElectricfield[Q={[1 2 0][1 1 1.732][1 -1 1.732][1 -2 0][1 -1 -1.732][1 1 -1.732][-1 0 0]},linecolor=red]
+\psEquipotential[Q={[1 2 0][1 1 1.732 12][1 -1 1.732][1 -2 0][1 -1 -1.732][1 1 -1.732][-1 0 0]},Vmax=40,Vmin=-10,stepV=5,linecolor=blue](-5,-5)(5,5)
+\end{pspicture*}
+\end{PSTexample}
+
+\begin{PSTexample}[pos=t,vsep=5mm]
+\psset{unit=0.75cm}
+\begin{pspicture*}(-6,-5)(6,5)
+\psframe*[linecolor=green!20](-6,-5)(6,5)
+\psgrid[subgriddiv=0,gridcolor=lightgray,griddots=10]
+\psElectricfield[Q={[1 -4 0][1 -2 0 12][1 0 0][1 2 0][1 4 0]},linecolor=red]
+\psEquipotential[Q={[1 -4 0][1 -2 0][1 0 0][1 2 0][1 4 0]},linecolor=blue,Vmax=30,Vmin=0,stepV=2](-7,-5)(7,5)
+\end{pspicture*}
+\end{PSTexample}
+
+
+\clearpage
+\section{Liste des arguments optionnel pour \texttt{pst-electricfield}}
+
+\xkvview{family=pst-electricfield,columns={key,type,default}}
+
+\nocite{*}
+\bgroup
+\raggedright
+\bibliographystyle{plain}
+\bibliography{pst-electricfield-doc}
+\egroup
+
+
+\printindex
+
+
+
+
+\end{document}

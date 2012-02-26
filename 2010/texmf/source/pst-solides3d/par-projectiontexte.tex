@@ -1,0 +1,779 @@
+\section {Projection de texte}
+
+La macro \verb+\psProjection+ permet également la projection de chaînes
+de caractères, que ce soit sur un plan quelconque ou sur une face de
+solide déjà construit, ou sur un plan parallèle à une face de solide
+déjà construit.
+
+
+\subsection {Les paramètres et les options}
+
+L'objet transmis est~: \Cadre{\texttt{object=texte}}. Il y a ensuite
+$3$ paramètres \Cadre{\texttt{[text]}} qui définit la chaine à afficher,
+\Cadre{\texttt{[fontsize]}}, qui donne la taille de la fonte en
+points (rappelons qu'une taille de 28,45~pts correspond à 1~cm), et
+enfin \Cadre{\texttt{[pos]}}, qui définit la position
+du texte par rapport au point visé. Par défaut le texte est centré sur
+l'origine du plan.
+
+Ce dernier paramètre nécessite un peu d'explications. Considérons la
+chaîne de caractères \texttt{petit texte} représentée ci-dessous.
+\begin{center}
+\begin{pspicture}(-5,-2)(5,2)
+\rput(0,0){\psframebox[linestyle=none,fillstyle=solid,
+   fillcolor=yellow!50,framesep=0pt]{\phantom{\timesnormal petit texte}}}
+\rput(0,0){\rnode[lb]{A}{\rnode[rb]{B}{\rnode[rt]{C}{%
+    \rnode[lt]{D}{\rnode[l]{E}{\rnode[r]{F}{%
+    \rnode[t]{G}{\rnode[b]{H}{\timesnormal petit texte}}}}}}}}}
+%\psset{nodesep=5pt}
+\ncline{A}{B}\ncline{B}{C}\ncline{C}{D}\ncline{D}{A}
+\pnode({A}){A'}
+\pnode({B}){B'}
+\pnode({C}){C'}
+\pnode({D}){D'}
+\pnode({E}){E'}
+\pnode({F}){F'}
+\pnode({G}){G'}
+\pnode({H}){H'}
+\rput(A){\pnode(0,\baselineskip){B1}}
+\rput(B){\pnode(0,\baselineskip){B2}}
+\psdots(A')(B')(C')(D')(E')(F')(G')(H')(B1)(B2)(0,0)
+\psline(B1)(B2)
+\pnode(! \GetCenter{A} A.x 0.5 sub A.y 0.5 sub){A1}
+\ncline{->}{A}{A1}
+\uput[dl](A1){\texttt{dl}}
+\pnode(! \GetCenter{B1} B1.x 0.5 sub B1.y){B1l}
+\ncline{->}{B1}{B1l}
+\uput[l](B1l){\texttt{bl}}
+\pnode(! \GetCenter{E} E.x 0.5 sub E.y){El}
+\ncline{->}{E}{El}
+\uput[l](El){\texttt{cl}}
+\pnode(! \GetCenter{D} D.x 0.5 sub D.y 0.5 add){Dl}
+\ncline{->}{D}{Dl}
+\uput[ul](Dl){\texttt{ul}}
+\pnode(! \GetCenter{G} G.x G.y 0.5 add){Gu}
+\ncline{->}{G}{Gu}
+\uput[u](Gu){\texttt{uc}}
+\pnode(! \GetCenter{H} H.x H.y 0.5 sub){Hd}
+\ncline{->}{H}{Hd}
+\uput[d](Hd){\texttt{dc}}
+\pnode(! \GetCenter{C} C.x 0.5 add C.y 0.5 add){Cr}
+\ncline{->}{C}{Cr}
+\uput[ur](Cr){\texttt{ur}}
+\pnode(! \GetCenter{B} B.x 0.5 add B.y 0.5 sub){Br}
+\ncline{->}{B}{Br}
+\uput[dr](Br){\texttt{dr}}
+\pnode(! \GetCenter{B2} B2.x 0.5 add B2.y){B2r}
+\ncline{->}{B2}{B2r}
+\uput[r](B2r){\texttt{br}}
+\pnode(! \GetCenter{F} F.x 0.5 add F.y){Fr}
+\ncline{->}{F}{Fr}
+\uput[r](Fr){\texttt{cr}}
+\end{pspicture}
+\end{center}
+
+Nous avons $4$~lignes horizontales de références~: la ligne
+inférieure \verb+(d)own+, la ligne de base \verb+(b)aseline+, la
+ligne médiane, ou ligne centrale \verb+(c)enter+, et la ligne
+supérieure \verb+(u)p+.
+
+Il y a également $4$~lignes de référence sur l'axe vertical~: la ligne
+de gauche \verb+(l)eft+, la ligne de base \verb+(b)aseline+, la ligne
+centrale \verb+(c)enter+ et la ligne de droite \verb+(r)ight+. Dans le
+cas d'une chaîne de caractère, les $2$ lignes verticales \verb+l+ et
+\verb+b+ sont confondues.
+
+L'intersection de ces $4$ lignes horizontales avec ces $4$ lignes
+verticales nous donne $16$~points appelés
+\verb+dl+,
+\verb+bl+,
+\verb+cl+,
+\verb+ul+,
+\verb+db+,
+\verb+bb+,
+\verb+cb+,
+\verb+ub+,
+\verb+dc+,
+\verb+bc+,
+\verb+cc+,
+\verb+uc+,
+\verb+dr+,
+\verb+br+,
+\verb+cr+,
+\verb+ur+.
+
+Parmi ceux-ci, $4$~sont considérés comme \textsl {points
+intérieurs\/}~: \verb+bb+, \verb+bc+, \verb+cb+ et \verb+cc+.
+
+Lorsque le paramètre \verb+[pos]+ de \verb+\psProjection+ est affecté à
+l'un de ces $4$~points, cela signifie que ce dernier doit être
+positionné au point d'origine du plan de projection.
+
+Lorsque le paramètre \verb+[pos]+ de \verb+\psProjection+ est affecté à
+l'un des $12$~points restant, cela indique une direction dans laquelle
+doit être positionné le texte par rapport au point d'origine du plan
+de projection.
+
+Par exemple, \verb+\psProjection[...,pos=uc](0,0,0)+ indique que le
+texte doit être centré par rapport au point $(0,0,0)$ et affiché
+au-dessus.
+
+
+
+%% Le plan doit être défini par son origine
+%% \Cadre{$\mathtt{(x_0ny_0,z_0)}$} et la normale
+%% \Cadre{\texttt{[normal=1 0 0 90]}}. Pour les particularités
+%% de la définition de la normale, car il y a trois façons de le faire !
+%% Tous les détails sont dans la partie \Cadre{\texttt{``Choisir un plan
+%%     par son origine et une normale''}} de la documentation de
+%% \texttt{doc-psProjection}.
+
+%% La taille de la fonte doit être fixée en points avec l'option
+%% . .
+
+
+\subsection {Exemples de projetés sur un plan quelconque}
+
+\subsubsection {Exemple 1 : projection sur Oxy, avec l'option \texttt{pos=bc}}
+
+\begin{LTXexample}[width=8cm]
+\begin{pspicture}(-4,-1.5)(4,1.5)
+\psset{lightsrc=10 0 10,SphericalCoor=true,
+   viewpoint=50 -90 90,Decran=50}
+\psSolid[object=grille,normal=0 0 1,
+   base=-4 4 -1 1,
+   action=draw]%
+\psProjection[object=texte,
+   fontsize=20,linecolor=red,
+   pos=bc,
+   text=j'aimerais tant voir Syracuse,
+   normal=0 0 1]%
+\axesIIID(0,0,0)(4,2,1)
+\end{pspicture}
+\end{LTXexample}
+
+
+\subsubsection{Exemple 2 : projection Oxy, texte centré}
+
+\begin{LTXexample}[width=8cm]
+\begin{pspicture}(-4,-1.5)(4,1.5)
+\psset{lightsrc=10 0 10,SphericalCoor=true,
+   viewpoint=50 -90 90,Decran=50}
+\psSolid[object=grille,normal=0 0 1,
+   base=-4 4 -1 1,
+   action=draw]%
+\psProjection[object=texte,
+   fontsize=20,linecolor=red,
+   text= L'île de Pâques et Kairouan,
+   normal=0 0 1]%
+\axesIIID(0,0,0)(4,2,1)
+\end{pspicture}
+\end{LTXexample}
+
+\subsubsection {Exemple 3 : projection Oxy,  avec différentes options \texttt{pos=dl, etc.}}
+
+\begin{center}
+\psset{unit=.8}
+\begin{pspicture}(-4,-1.5)(4,1.5)
+\psset{lightsrc=10 0 10,SphericalCoor=true,viewpoint=50 -90 90,Decran=50}
+\psSolid[object=grille,normal=0 0 1,
+   base=-10 10 -1 1,
+   action=draw]%
+\psProjection[object=texte,
+   fontsize=20,linecolor=red,
+   text=Et les grands oiseaux qui s'amusent,
+   pos=dl,
+   normal=0 0 1]%
+\axesIIID(0,0,0)(8,1,1)
+\rput(0,-1.5){\Cadre{\texttt{[pos=dl]}}}
+\end{pspicture}
+\end{center}
+
+\begin{center}
+\psset{unit=.8}
+\begin{pspicture}(-4,-1.5)(4,1.5)
+\psset{lightsrc=10 0 10,SphericalCoor=true,viewpoint=50 -90 90,Decran=50}
+\psSolid[object=grille,normal=0 0 1,
+   base=-10 10 -1 1,
+   action=draw]%
+\psProjection[object=texte,
+   fontsize=20,linecolor=red,
+   text= A glisser l'aile sous le vent.,
+   pos=dr,
+   normal=0 0 1]%
+\axesIIID(0,0,0)(8,1,1)
+\rput(0,-1.5){\Cadre{\texttt{[pos=dr]}}}
+\end{pspicture}
+\end{center}
+
+\begin{center}
+\psset{unit=.8}
+\begin{pspicture}(-4,-1.5)(4,1.5)
+\psset{lightsrc=10 0 10,SphericalCoor=true,viewpoint=50 -90 90,Decran=50}
+\psSolid[object=grille,normal=0 0 1,
+   base=-10 10 -1 1,
+   action=draw]%
+\psProjection[object=texte,
+   fontsize=20,linecolor=red,
+   text=Avant que ma jeunesse s'use,
+   pos=ur,
+   normal=0 0 1]%
+\axesIIID(0,0,0)(8,1,1)
+\rput(0,-1.5){\Cadre{\texttt{[pos=ur]}}}
+\end{pspicture}
+\end{center}
+
+\begin{center}
+\psset{unit=.8}
+\begin{pspicture}(-4,-1.5)(4,1.5)
+\psset{lightsrc=10 0 10,SphericalCoor=true,viewpoint=50 -90 90,Decran=50}
+\psSolid[object=grille,normal=0 0 1,
+   base=-10 10 -1 1,
+   action=draw]%
+\psProjection[object=texte,
+   fontsize=20,linecolor=red,
+   text=Et que mes printemps soient partis,
+   pos=ul,
+   normal=0 0 1]%
+\axesIIID(0,0,0)(8,1,1)
+\rput(0,-1.5){\Cadre{\texttt{[pos=ul]}}}
+\end{pspicture}
+\end{center}
+
+\begin{center}
+\psset{unit=.8}
+\begin{pspicture}(-4,-1.5)(4,1.5)
+\psset{lightsrc=10 0 10,SphericalCoor=true,viewpoint=50 -90 90,Decran=50}
+\psSolid[object=grille,normal=0 0 1,
+   base=-10 10 -1 1,
+   action=draw]%
+\psProjection[object=texte,
+   fontsize=20,linecolor=red,
+   text=J'aimerais tant voir Syracuse,
+   pos=uc,
+   normal=0 0 1]%
+\axesIIID(0,0,0)(8,1,1)
+\rput(0,-1.5){\Cadre{\texttt{[pos=uc]}}}
+\end{pspicture}
+\end{center}
+
+\begin{center}
+\psset{unit=.8}
+\begin{pspicture}(-4,-1.5)(4,1.5)
+\psset{lightsrc=10 0 10,SphericalCoor=true,viewpoint=50 -90 90,Decran=50}
+\psSolid[object=grille,normal=0 0 1,
+   base=-10 10 -1 1,
+   action=draw]%
+\psProjection[object=texte,
+   fontsize=20,linecolor=red,
+   text=Pour m'en souvenir à Paris.,
+   pos=dc,
+   normal=0 0 1]%
+\axesIIID(0,0,0)(8,1,1)
+\rput(0,-1.5){\Cadre{\texttt{[pos=dc]}}}
+\end{pspicture}
+\end{center}
+
+\subsubsection {Exemple 4 : projection Oxy avec rotation du texte}
+
+\begin{LTXexample}[width=8cm]
+\begin{pspicture}(-4,-3)(4,3)
+\psset{lightsrc=10 0 10,SphericalCoor=true,
+   viewpoint=50 -90 90,Decran=50}
+\psSolid[object=grille,normal=0 0 1,
+   base=-4 4 -3 3,
+   action=draw]%
+\psProjection[object=texte,
+   fontsize=28.45,linecolor=gray!50,
+   text=Tournez manèges,
+   normal=0 0 1]%
+\psProjection[object=texte,
+   fontsize=28.45,linecolor=red,
+   text=Tournez manèges,
+   normal=0 0 1 60]%
+\axesIIID(0,0,0)(4,3,1)
+\end{pspicture}
+\end{LTXexample}
+La rotation du texte s'introduit dans la normale \Cadre{\texttt{normal=0 0 1 60}}.
+
+\subsubsection{Exemple 5 : positionnement du texte en un point quelconque}
+
+\begin{LTXexample}[width=8cm]
+\begin{pspicture}(-4,-3)(4,3)
+\psset{SphericalCoor=true,viewpoint=50 -90 90,
+   Decran=50}
+\psSolid[object=grille,normal=0 0 1,
+   base=-4 4 -3 3]%
+\psPoint(0,0,0){O}
+\psPoint(-2,-2,0){O1}
+\psPoint(2,2,0){O2}
+\psset{fontsize=28.45,normal=0 0 1}
+\psProjection[object=texte,
+   linecolor=green,
+   text=ici](-2,-2,0)
+\psProjection[object=texte,
+   linecolor=red,
+   text=ou]%
+\psProjection[object=texte,
+   linecolor=blue,
+   text=là](2,2,0)
+\psdots[dotsize=0.2](O)(O1)(O2)
+\axesIIID(0,0,0)(4,4,1)
+\end{pspicture}
+\end{LTXexample}
+
+\subsection{Exemples de projections sur une face d'un solide}
+
+\subsubsection {Méthode}
+
+Le solide doit être mémorisé avec l'option générale
+\Cadre{\texttt{\psset{solidmemory}}}. La première chose à faire est de
+repérer les numéros des faces du solide
+avec l'option \Cadre{\texttt{[numfaces=all]}}.
+\begin{LTXexample}[width=8cm]
+\psset{SphericalCoor,viewpoint=50 20 30,Decran=100}
+\begin{pspicture}(-4,-4)(4,4)
+\psframe(-4,-4)(4,4)
+\psSolid[object=cube,a=2,action=draw,
+   linecolor=red,numfaces=all]%
+\axesIIID(1,1,1)(2,2,2)
+\end{pspicture}
+\end{LTXexample}
+Puis d'afficher le texte sur la face choisie, ici on affiche
+\Cadre{\texttt{A}} sur la face de numéro $0$ \Cadre{\texttt{no=0}}~:
+\begin{verbatim}
+\psset{fontsize=100,
+   no=0,
+   solidname=A1}
+\psProjection[object=texte,linecolor=red,text=A]
+\end{verbatim}
+\begin{LTXexample}[width=8cm]
+\psset{SphericalCoor,viewpoint=50 20 30,Decran=50}
+\begin{pspicture}(-3,-4)(4,5)
+\psset{unit=0.5}
+\psSolid[object=cube,a=8,action=draw,linecolor=red]%
+\psset{solidmemory}
+\psSolid[object=cube,a=8,
+   name=A1,
+   action=none](0,0,0)
+\psset{fontsize=100,
+   no=0,
+   solidname=A1}
+\psProjection[object=texte,linecolor=red,text=A]%
+\psset{fontsize=100,
+   no=1,
+   solidname=A1}
+\psProjection[object=texte,linecolor=red,text=B]%
+\psset{fontsize=100,
+   no=4,
+   solidname=A1}
+\psProjection[object=texte,linecolor=red,text=E]%
+\axesIIID(4,4,4)(6,6,6)
+\end{pspicture}
+\end{LTXexample}
+
+\subsubsection {Rotation du texte avec l'option \texttt{phi}}
+
+\begin{LTXexample}[width=8cm]
+\psset{SphericalCoor,viewpoint=50 20 30,Decran=50}
+\psset{unit=0.5}
+\begin{pspicture}(-3,-4)(4,5)
+\psSolid[object=cube,a=8,action=draw,linecolor=red]%
+\psset{solidmemory}
+\psSolid[object=cube,a=8,
+   name=A1,
+   action=none](0,0,0)
+\psset{fontsize=200,
+   no=0,
+   solidname=A1}
+\psProjection[object=texte,linecolor=gray,text=A]%
+\psset{phi=90}
+\psProjection[object=texte,linecolor=red,text=A]%
+\axesIIID(4,4,4)(6,6,6)
+\end{pspicture}
+\end{LTXexample}
+
+
+\subsection{Exemples de projections sur différentes faces d'un solide}
+
+\definecolor{rose}{rgb}{1,0.75,0.74}
+
+\def\JuangJie{%
+\begin{pspicture}(-3.5,-2)(3.5,4)
+\psframe[fillcolor=cyan!50,fillstyle=solid](-3.5,-2)(3.5,4)
+\psSolid[object=cylindre,r=8,h=0.2,ngrid=1 36,action=draw**,hue=0.5 0.6]%
+\psSolid[object=cube,a=8,h=0.2,ngrid=1 36,action=draw**,color1=magenta!50,color2=red!20,color3=yellow!50,color4=green!50,
+fcol=0 (color1) 1 (color2) 2 (color3) 3 (color4) 4(White)](0,0,4.2)%
+\psset{solidmemory}
+\psSolid[object=cube,a=8,
+   name=A1,
+   action=none](0,0,4.2)%
+\psset{fontsize=30,
+   phi=-90,
+   no=0,
+   solidname=A1}
+\psProjection[object=texte,text=poème](-3,0,8)%
+\psset{fontsize=30,
+   phi=-90,
+   no=0,
+   solidname=A1}
+\psProjection[object=texte,text=de ](-2,0,8)%
+\psset{fontsize=55,
+   phi=-90,
+   no=0,
+   solidname=A1}
+\psProjection[object=texte,linecolor=red,text=Juang Jie ](0,0,8)%
+\psset{fontsize=28.45,pos=bc,
+   phi=180,
+   no=4,
+   solidname=A1}
+\psProjection[object=texte,text={Dans ma jeunesse,}](4,0,7)%
+\psset{fontsize=20,pos=bc,
+   phi=180,
+   no=4,
+   solidname=A1}
+\psProjection[object=texte,text=j'écoutais le son de la pluie](4,0,6)%
+\psset{fontsize=20,pos=bc,
+   phi=180,
+   no=4,
+   solidname=A1}
+\psProjection[object=texte,text=dans les maisons de plaisir](4,0,5)%
+\psset{fontsize=20,pos=bc,
+   phi=180,
+   no=4,
+   solidname=A1}
+\psProjection[object=texte,text=les tentures frissonnaient](4,0,4)%
+\psset{fontsize=20,pos=bc,
+   phi=180,
+   no=4,
+   solidname=A1}
+\psProjection[object=texte,text=sous la lumière rouge](4,0,3)%
+\psset{fontsize=20,pos=bc,
+   phi=180,
+   no=4,
+   solidname=A1}
+\psProjection[object=texte,text=des candélabres](4,0,2)%
+\psset{fontsize=25,
+   phi=90,pos=bc,
+   no=1,
+   solidname=A1}
+\psProjection[object=texte,text=Dans mon âge mûr](0,4,7)%
+\psset{fontsize=20,
+   phi=90,pos=bc,
+   no=1,
+   solidname=A1}
+\psProjection[object=texte,text=j'ai écouté le son de la pluie](0,4,6)%
+\psset{fontsize=18,
+   phi=90,pos=bc,
+   no=1,
+   solidname=A1}
+\psProjection[object=texte,text={en voyage, à bord d'un bateau}](0,4,5)%
+\psset{fontsize=20,
+   phi=90,pos=bc,
+   no=1,
+   solidname=A1}
+\psProjection[object=texte,text=les nuages pesaient bas](0,4,4)%
+\psset{fontsize=20,
+   phi=90,pos=bc,
+   no=1,
+   solidname=A1}
+\psProjection[object=texte,text=sur l'immensité du fleuve](0,4,3)%
+\psset{fontsize=20,pos=bc,
+   phi=90,
+   no=1,
+   solidname=A1}
+\psProjection[object=texte,text=une oie sauvage ](0,4,2)%
+\psset{fontsize=20,pos=bc,
+   phi=90,
+   no=1,
+   solidname=A1}
+\psProjection[object=texte,text=séparée de ses soeurs](0,4,1)%
+\psset{fontsize=20,pos=bc,
+   phi=90,
+   no=2,
+   solidname=A1}
+\psProjection[object=texte,text=appelait dans le vent d'ouest](-4,0,7)%
+\psset{fontsize=20,pos=bc,
+   phi=90,
+   no=2,
+   solidname=A1}
+\psProjection[object=texte,text={Aujourd'hui,}](-4,0,6)%
+\psset{fontsize=20,pos=bc,
+   phi=90,
+   no=2,
+   solidname=A1}
+\psProjection[object=texte,text=j'écoute le son de la pluie](-4,0,5)%
+\psset{fontsize=20,pos=bc,
+   phi=90,
+   no=2,
+   solidname=A1}
+\psProjection[object=texte,text=sous le charme](-4,0,4)%
+\psset{fontsize=20,pos=bc,
+   phi=90,
+   no=2,
+   solidname=A1}
+\psProjection[object=texte,text=d'un ermitage monastique](-4,0,3)%
+\psset{fontsize=20,pos=bc,
+   phi=90,
+   no=2,
+   solidname=A1}
+\psProjection[object=texte,text=Ma tête est chenue](-4,0,2)%
+\psset{fontsize=20,pos=bc,
+   phi=90,
+   no=2,
+   solidname=A1}
+\psProjection[object=texte,text=chagrins et bonheurs](-4,0,1)%
+\psset{fontsize=20,
+   phi=90,pos=bc,
+   no=3,
+   solidname=A1}
+\psProjection[object=texte,text=séparations et retrouvailles](0,-4,7)%
+\psset{fontsize=20,
+   phi=90,pos=bc,
+   no=3,
+   solidname=A1}
+\psProjection[object=texte,text=tout est vanité](0,-4,6)%
+\psset{fontsize=20,
+   phi=90,pos=bc,
+   no=3,
+   solidname=A1}
+\psProjection[object=texte,text={Dehors, sur les marches}](0,-4,5)%
+\psset{fontsize=20,
+   phi=90,pos=bc,
+   no=3,
+   solidname=A1}
+\psProjection[object=texte,text=les gouttes tambourinent](0,-4,4)%
+\psset{fontsize=20,
+   phi=90,pos=bc,
+   no=3,
+   solidname=A1}
+\psProjection[object=texte,text= jusqu'à l'aube](0,-4,3)%
+\psset{fontsize=20,pos=bc,
+   phi=90,
+   no=3,
+   solidname=A1}
+\psProjection[object=texte,text=Juang Jie ](0,-4,1)%
+\composeSolid
+\end{pspicture}}
+
+\def\MollyBloom{%
+\psset{SphericalCoor,visibility}
+\psSolid[object=grille,normal=0 0 1,linecolor=red,
+   base=-8 10 -8 8,
+   action=draw*]%
+\psProjection[object=texte,
+   fontsize=25,
+   text=le monologue de Molly,
+   pos=bc,
+   normal=0 0 1 -90](-5,0,0)
+\psProjection[object=texte,
+   fontsize=25,
+   text=dans Ulysse de James Joyce,
+   pos=bc,
+   normal=0 0 1](1,-5,0)
+\psSolid[object=grille,RotX=90,RotZ=-90,ngrid=1,
+   base= -8 8 -0.5 0.5,action=draw*,fillcolor=yellow!50](10,0,0.5)
+\psSolid[object=grille,RotX=-90,RotZ=-90,ngrid=1,
+   base= -8 8 -0.5 0.5,action=draw*,fillcolor=rose](10,0,0.5)
+\psProjection[object=texte,
+   fontsize=20,
+   text=O cet effrayant torrent tout au fond O et la mer écarlate,
+   pos=cc,
+   normal=-1 0 0](10,0,0.5)
+\psSolid[object=grille,RotY=90,RotZ=-90,ngrid=1,
+   base= -0.5 0.5 -8 8,action=draw*,fillcolor=yellow!50](0,7,0.5)
+\psSolid[object=grille,RotY=-90,RotZ=-90,ngrid=1,
+   base= -0.5 0.5 -8 8,action=draw*,fillcolor=rose](0,7,0.5)
+\psProjection[object=texte,
+   fontsize=20,
+   text=les ruelles bizarres les maisons roses et bleues et jaunes,
+   pos=cc,
+   normal=0 -1 0](0,7,0.5)
+\psSolid[object=grille,RotY=90,RotZ=-90,ngrid=1,
+   base= -0.5 0.5 -9 9,action=draw*,fillcolor=rose](1,-8,0.5)
+\psSolid[object=grille,RotY=-90,RotZ=-90,ngrid=1,
+   base= -0.5 0.5 -9 9,action=draw*,fillcolor=yellow!50](1,-8,0.5)
+\psProjection[object=texte,
+   fontsize=20,
+   text=quelquefois comme du feu et les glorieux couchers de soleil et,
+   pos=cc,
+   normal=0 1 0 180](1,-8,0.5)
+\psSolid[object=grille,RotX=90,RotZ=-90,ngrid=1,
+   base= -7 8 -0.5 0.5,action=draw*,fillcolor=rose](-8,0,0.5)
+\psSolid[object=grille,RotX=-90,RotZ=-90,ngrid=1,
+   base= -7 8 -0.5 0.5,action=draw*,fillcolor=yellow!50](-8,0,0.5)
+\psProjection[object=texte,
+   fontsize=20,
+   text=les figuiers dans les jardins de l'Alameda et toutes,
+   pos=cc,
+   normal=1 0 0 90](-8,-0.5,0.5)
+\psSolid[object=grille,RotX=90,RotZ=-90,ngrid=1,
+   base= -7 6 -0.5 0.5,action=draw*,fillcolor=yellow!50](8,0,0.5)
+\psSolid[object=grille,RotX=-90,RotZ=-90,ngrid=1,
+   base= -7 6 -0.5 0.5,action=draw*,fillcolor=rose](8,0,0.5)
+\psProjection[object=texte,
+   fontsize=20,
+   text=et les roseraies et les jasmins et les géraniums,
+   pos=cc,
+   normal=-1 0 0](8,0.5,0.5)
+\psSolid[object=grille,RotY=90,RotZ=-90,ngrid=1,
+   base= -0.5 0.5 -7 7,action=draw*,fillcolor=rose](1,-6,0.5)
+\psSolid[object=grille,RotY=-90,RotZ=-90,ngrid=1,
+   base= -0.5 0.5 -7 7,action=draw*,fillcolor=yellow!50](1,-6,0.5)
+\psProjection[object=texte,
+   fontsize=20,
+   text=et les cactus de Gibraltar quand j'étais jeune fille,
+   pos=cc,
+   normal=0 1 0 180](1,-6,0.5)
+\psSolid[object=grille,RotY=90,RotZ=-90,ngrid=1,
+   base= -0.5 0.5 -7 5,action=draw*,fillcolor=yellow!50](1,5,0.5)
+\psSolid[object=grille,RotY=-90,RotZ=-90,ngrid=1,
+   base= -0.5 0.5 -7 5,action=draw*,fillcolor=rose](1,5,0.5)
+\psProjection[object=texte,
+   fontsize=20,
+   text=quand j'ai mis la rose dans mes cheveux,
+   pos=cc,
+   normal=0 -1 0](0,5,0.5)
+\psSolid[object=grille,RotX=90,RotZ=-90,ngrid=1,
+   base= -5 6 -0.5 0.5,action=draw*,fillcolor=rose](-6,0,0.5)
+\psSolid[object=grille,RotX=-90,RotZ=-90,ngrid=1,
+   base= -5 6 -0.5 0.5,action=draw*,fillcolor=yellow!50](-6,0,0.5)
+\psProjection[object=texte,
+   fontsize=20,
+   text=et une Fleur de la montagne oui ,
+   pos=cc,
+   normal=1 0 0 90](-6,0,0.5)
+\psSolid[object=grille,RotX=90,RotZ=-90,ngrid=1,
+   base= -5 4 -0.5 0.5,action=draw*,fillcolor=yellow!50](6,0,0.5)
+\psSolid[object=grille,RotX=-90,RotZ=-90,ngrid=1,
+   base= -5 4 -0.5 0.5,action=draw*,fillcolor=rose](6,0,0.5)
+\psProjection[object=texte,
+   fontsize=20,
+   text= comme les filles Andalouses,
+   pos=cc,
+   normal=-1 0 0](6,0.5,0.5)
+\psSolid[object=grille,RotY=90,RotZ=-90,ngrid=1,
+   base= -0.5 0.5 -4 5,action=draw*,fillcolor=rose](1,-4,0.5)
+\psSolid[object=grille,RotY=-90,RotZ=-90,ngrid=1,
+   base= -0.5 0.5 -4 5,action=draw*,fillcolor=yellow!50](1,-4,0.5)
+\psProjection[object=texte,
+   fontsize=20,
+   text=ou en mettrai-je une rouge oui,
+   pos=cc,
+   normal=0 1 0 180](1.5,-4,0.5)
+\psSolid[object=grille,RotY=90,RotZ=-90,ngrid=1,
+   base= -0.5 0.5 -4 3,action=draw*,fillcolor=yellow!50](1,4,0.5)
+\psSolid[object=grille,RotY=-90,RotZ=-90,ngrid=1,
+   base= -0.5 0.5 -4 3,action=draw*,fillcolor=rose](1,4,0.5)
+\psProjection[object=texte,
+   fontsize=20,
+   text=sous le mur mauresque,
+   pos=cc,
+   normal=0 -1 0](0.5,4,0.5)
+\psSolid[object=grille,RotX=90,RotZ=-90,ngrid=1,
+   base= -4 4 -0.5 0.5,action=draw*,fillcolor=rose](-3,0,0.5)
+\psSolid[object=grille,RotX=-90,RotZ=-90,ngrid=1,
+   base= -4 4 -0.5 0.5,action=draw*,fillcolor=yellow!50](-3,0,0.5)
+\psProjection[object=texte,
+   fontsize=20,
+   text=et comme il m'a embrassée,
+   pos=cc,
+   normal=1 0 0 90](-3,0,0.5)
+\psSolid[object=grille,RotX=-90,RotZ=-90,ngrid=1,
+   base= -4 2 -0.5 0.5,action=draw*,fillcolor=rose](4,0,0.5)
+\psSolid[object=grille,RotX=90,RotZ=-90,ngrid=1,
+   base= -4 2 -0.5 0.5,action=draw*,fillcolor=yellow!50](4,0,0.5)
+\psProjection[object=texte,
+   fontsize=20,
+   text=je me suis dit après,
+   pos=cc,
+   normal=-1 0 0](4,1,0.5)
+\psSolid[object=grille,RotY=90,RotZ=-90,ngrid=1,
+   base= -0.5 0.5 -0.5 4,action=draw*,fillcolor=rose](0,-2,0.5)
+\psSolid[object=grille,RotY=-90,RotZ=-90,ngrid=1,
+   base= -0.5 0.5 -0.5 4,action=draw*,fillcolor=yellow!50](0,-2,0.5)
+\psProjection[object=texte,
+   fontsize=20,
+   text=tout aussi bien,
+   pos=cc,
+   normal=0 1 0 180](1.75,-2,0.5)
+\psSolid[object=grille,RotY=90,RotZ=-90,ngrid=1,
+   base= -0.5 0.5 -1.5 2,action=draw*,fillcolor=yellow!50](1,3,0.5)
+\psSolid[object=grille,RotY=-90,RotZ=-90,ngrid=1,
+   base= -0.5 0.5 -1.5 2,action=draw*,fillcolor=rose](1,3,0.5)
+\psProjection[object=texte,
+   fontsize=20,
+   text=et alors je,
+   pos=cc,
+   normal=0 -1 0](1.25,3,0.5)
+\psSolid[object=grille,RotX=90,RotZ=-90,ngrid=1,
+   base= -3 2 -0.5 0.5,action=draw*,fillcolor=rose](-0.5,0,0.5)
+\psSolid[object=grille,RotX=-90,RotZ=-90,ngrid=1,
+   base= -3 2 -0.5 0.5,action=draw*,fillcolor=yellow!50](-0.5,0,0.5)
+\psProjection[object=texte,
+   fontsize=20,
+   text=lui qu'un autre,
+   pos=cc,
+   normal=1 0 0 90](-0.5,0.5,0.5)}
+
+
+Nous projetons un poème, vers après vers, sur 4 faces d'un cube.
+Il est nécessaire de passer l'option \Cadre{solidmemory} au début des
+commandes. On définit ensuite le cube, il est mémorisé avec
+\Cadre{name=A1} et ici il n'est pas dessiné \Cadre{action=none}:
+\begin{verbatim}
+\psset{solidmemory}
+\psSolid[object=cube,a=8,name=A1,action=none](0,0,4.2)%
+\end{verbatim}
+Le numéro de chaque face ayant été repéré dans un essai préalable avec
+l'option \Cadre{numfaces=all}, l'orientation du texte choisie
+avec, par exemple, \Cadre{phi=-90} la commande suivante :
+\begin{verbatim}
+\psset{fontsize=30,phi=-90,no=0,solidname=A1}
+\psProjection[object=texte,text=poème](-3,0,8)%
+\end{verbatim}
+écrit le mot \texttt{poème} sur la face \texttt{0}, avec une fonte de
+taille \Cadre{30~pts}, au point de coordonnées  \Cadre{(-3,0,8)}.
+
+Le plan où s'écrit le texte est parallèle à la face du cube choisie,
+avec l'orientation liée à la normale à la face du cube, mais
+ce texte peut appartenir à un autre plan dont l'origine est fixée par les coordonnées.
+
+Par défaut, si la face n'est pas visible le texte reste caché. En
+écrivant \Cadre{visibility} dans les options, le texte apparaîtra
+même s'il est caché comme dans l'exemple suivant.
+
+On n'oubliera pas d'écrire à la fin des commandes d'écriture des
+textes\Cadre{$\backslash$composeSolid}, pour que tous ces tracés
+soient pris en compte.
+Toute autre commande de \texttt{PStricks} aura le même effet et
+\verb+composeSolid+ sera superflu.
+
+\begin{center}
+\psset{SphericalCoor,viewpoint=40 20 30,Decran=16}
+\JuangJie
+\psset{viewpoint=40 110 30,Decran=16}
+\JuangJie
+\end{center}
+\begin{center}
+\psset{SphericalCoor,viewpoint=40 200 30,Decran=16}
+\JuangJie
+\psset{viewpoint=40 290 30,Decran=16}
+\JuangJie
+\end{center}
+
+
+\begin{center}
+\begin{pspicture}(-8,-6)(8,3)
+\psset{lightsrc=-15 -9 5}
+\psframe(-8,-6)(8,3)
+\psset{viewpoint=20 -150 30,Decran=11}\MollyBloom
+\end{pspicture}
+\end{center}
+\begin{center}
+\begin{pspicture}(-8,-6)(8,7)
+\psset{lightsrc=0 0 3}
+\psframe(-8,-6)(8,7)
+\psset{viewpoint=6 -150 90,Decran=2.8}\MollyBloom
+\end{pspicture}
+\end{center}

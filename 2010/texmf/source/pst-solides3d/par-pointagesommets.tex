@@ -1,0 +1,52 @@
+\section {Pointage et numérotation des sommets}
+
+Une option permet de pointer les sommets et/ou de les numéroter soit
+globalement, soit individuellement.
+\begin{itemize}
+  \item \texttt{[show=all]} pointe tous les sommets ;
+  \item \texttt{[num=all]} numérote tous les sommets ;
+  \item \texttt{[show=0 1 2 3]} pointe les sommets \texttt{[0,1,2 et 3]} ;
+  \item \texttt{[num=0 1 2 3]} numérote les sommets \texttt{[0,1,2 et 3]}.
+\end{itemize}
+%
+\begin{multicols}{2}
+\psset{unit=0.5}
+\setlength{\columnseprule}{1pt}
+\centerline{
+\begin{pspicture}(-5,-5)(5,5)
+\psframe(-5,-5)(5,5)
+\psset{Decran=20}
+\psSolid[
+   action=draw,
+   object=cube,
+   RotZ=30,
+   show=all,num=all,
+]%
+\end{pspicture}}
+\begin{verbatim}
+\psSolid[action=draw,
+   object=cube,RotZ=30,
+   show=all,num=all,
+       ]%
+\end{verbatim}
+\columnbreak
+\centerline{
+\begin{pspicture}(-5,-5)(5,5)
+\psframe(-5,-5)(5,5)
+\psset{Decran=20}
+\psSolid[action=draw,
+   object=cube,
+   RotZ=30,
+   show=0 1 2 3,
+   num=0 1 2 3,
+]%
+\end{pspicture}}
+\begin{verbatim}
+\psSolid[object=cube,
+   RotZ=30,action=draw,
+   show=0 1 2 3,
+   num=0 1 2 3,
+   ]%
+\end{verbatim}
+\end{multicols}
+%\newpage

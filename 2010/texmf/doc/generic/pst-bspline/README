@@ -1,0 +1,11 @@
+%% Package pst-Bspline
+%%
+%% Michael Sharpe <msharpe@ucsd.edu>
+%%
+%% Version 1.4, 2010/10/14
+%%
+%% License: Free
+
+This package draws uniform, cubic Bspline curves, open and closed, based on a sequence of Bspline control points. There is also code which permits drawing the open or closed cubic Bspline curve interplating a sequence of points. This version adds a \thickBspline macro.
+
+The .tex and .sty files should be installed in a folder searched by TeX. All documentation is in pst-bspline-doc.pdf.

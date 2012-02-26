@@ -1,0 +1,67 @@
+----- pst-plot.tex
+1.38  2012-02-23  - added \strut for the x/y axis user labels
+1.37  2012-01-10  - fix bug with \psgraph and axesstyle=none
+1.36  2011-12-04  - add the dot specification for the outliners
+                    of \psBoxPlot 
+1.35  2011-11-29  - fix bug with different axes units for LSM 
+1.34  2011-11-07  - fix bug with special values in \psBoxplot 
+1.33  2011-11-02  - fix bug with x|ylabelsep 
+1.32  2011-10-31  - take values Ox and Oy into account for 
+                    plot styles LineToXAxis and LineToYAxis
+1.31  2011-10-24  - fixed bug with \psBoxplot
+1.30  2011-07-20  - added new optional arguments xlabelsep
+                    and ylabelsep for setting labels on the
+                    x/y axis
+1.29  2011-04-13  - added macro \psNewton
+1.28  2011-03-22  - added rot option for \psx|ytick
+1.27  2011-02-20  - fixed bug with trailing spaces when inside
+                    psgraph \psclip is used with \psgrid
+                  - new options grid, gridparas, and gridcoor
+                    to use \psgrid inside psgraph (experimental)
+                  - change behaviour of setting yMaxValue
+1.26  2011-01-24  - added \psCoordinates for drawing the coordinates
+                    of a given point
+                  - added \psFixpoint for visualizing the fixpoint
+                    iteration
+1.25  2010-12-14  - added \pslegend and style legendstyle for the
+                    psgraph environment
+1.24  2010-11-14  - fix bug: replaced psk@ticks with psk@labels 
+1.23  2010-10-21  - add option plotNoX to choose any column as x value 
+1.22  2010-10-02  - fix bug with wrong color for the axes when using
+                    subticks  
+1.21  2010-09-28  - fix bug with psgraph and the ! optional argument  
+1.20  2010-09-09  - new optional arguments for setting a variable  
+                    linewidth and variable color for plotstyle curve
+1.19  2010-08-17  - moved option method from pstricks-add into this
+                    package to fix a problem with \psplot 
+1.18  2010-08-15  - added plotstyle ybar
+                  - added optional arguments xLabels, yLabels,
+                    xLabelsRot, and yLabelsRot
+                  - added plotstyle xvalues
+1.17  2010-06-22  - fix bug with global setting of arguments in \readdata
+1.16  2010-05-14  - allow origin when x axis is not crossing the y axis
+1.15  2010-04-29  - fixed bug with double definition of tickstyle
+1.14  2010-04-24  - allow labels=x|y|all|none for polar plots
+1.13  2010-04-15  - for log labels take care the different font size
+                    for base and exponent
+1.12  2010-04-05  - fix bug with axes style frame and linestyle
+                    in macro \psxs@@axes 
+1.11  2010-03-15  - use always \psset[package]{...} 
+1.10  2010-02-11  - trigLabels also for the y axis 
+                  - first version with pst-xkey and own 
+                    documentation (hv) 
+1.04  2009-06-08  - fix new bug with \ifdim\nA pt, use now 
+                    \def\pst@minusZero{-0}
+1.03  2009-06-01  - fix bug with \ifdim\nA pt, must be sp 
+1.02  2008-11-24  - add PostScript variable ps@Exit for exit the loop
+		    for \psplot and \psparametricplot
+		  - add new names \psparametricplot, \psdataplot,...
+		    the old names still work
+1.01  2008-01-26  - make negative Dx/Dy work (hv) 
+1.00  2007-06-26  - added two new line style LineToXaxis/LineToYaxis (hv) 
+
+
+----- pst-plot.sty
+1.00 2011-06-05  - allow use of ancient version from 1997 (hv) 
+     2008-12-12 first version (hv) 
+

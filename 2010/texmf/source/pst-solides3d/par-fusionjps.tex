@@ -1,0 +1,762 @@
+\def\grille{% quadrillage du plan Oxy
+    \psPoint(-5,-5,0){S1}
+    \psPoint(-5,5,0){S2}
+    \psPoint(5,5,0){S3}
+    \psPoint(5,-5,0){S4}
+\pspolygon*[linecolor=gray!20](S1)(S2)(S3)(S4)
+\multido{\ix=-5+1}{11}{%
+    \psPoint(\ix\space,-5,0){A}
+    \psPoint(\ix\space,5,0){B}
+    \psline(A)(B)}
+\multido{\iy=-5+1}{11}{%
+    \psPoint(-5,\iy\space,0){A}
+    \psPoint(5,\iy\space,0){B}
+    \psline(A)(B)}
+    \psPoint(0,0,0){O}
+    \psPoint(5,0,0){X}
+    \psPoint(0,5,0){Y}
+    \psPoint(0,0,8){Z}
+    \psline[arrowsize=0.3,arrowinset=0.2,linecolor=blue]{->}(O)(X)
+    \psline[arrowsize=0.3,arrowinset=0.2,linecolor=blue]{->}(O)(Y)
+    \psline[arrowsize=0.3,arrowinset=0.2,linecolor=blue]{->}(O)(Z)
+    \uput[r](X){\textcolor{blue}{$x$}}\uput[u](Y){\textcolor{blue}{$y$}}%
+    \uput[r](Z){\textcolor{blue}{$z$}}\uput[u](O){\textcolor{blue}{$O$}}}
+
+
+\section{Fusion avec le code jps}
+
+On peut également opérer la fusion de solides en passant directement
+par le code jps.
+Le calcul des parties cachées est effectué par les routines du code
+\texttt{PostScript} du fichier \texttt{solides.pro}, mais les lignes
+de code sont ``encapsulées'' dans un environnement \texttt{pspicture}
+grâce à la commande \verb+\codejps{code ps}+.
+
+\subsection{Le code \texttt{jps}}
+
+\subsubsection{Le choix de l'objet}
+
+\begin{itemize}
+  \item \textsf{[section] n newanneau} : choix de l'anneau cylindrique défini par sa section, coordonnées des sommets dans le plan $Oyz$.
+  \item \textsf{2\textvisiblespace 1.5\textvisiblespace 6\textvisiblespace [4\textvisiblespace 16]\textvisiblespace newcylindre} : choix du cylindre vertical avec comme caractéristiques :
+  \begin{itemize}
+    \item \texttt{rayon=1.5} ;
+    \item \texttt{z0=2} est la position du centre de la base inférieure sur l'axe $\mathsf{Oz}$ ;
+    \item \texttt{z1=6} est la position du centre de la base supérieure sur l'axe $\mathsf{Oz}$ ;
+    \item \texttt{[4 16]} : le cylindre est découpé verticalement en 4 morceaux et horizontalement en 16 secteurs.
+  \end{itemize}
+  \end{itemize}
+
+\subsubsection{Les transformations}
+
+\begin{itemize}
+  \item \texttt{\{-1\textvisiblespace 2\textvisiblespace 5\textvisiblespace translatepoint3d\} solidtransform} : l'objet préalablement sélectionné subit une translation au point de coordonnées $\mathsf{(x=-1,y=2,z=5)}$.
+  \item \texttt{\{90\textvisiblespace 0\textvisiblespace 45\textvisiblespace rotateOpoint3d\} solidtransform} : l'objet préalablement sélectionné subit une rotation autour des axes $\mathsf{(Ox,Oy,Oz)}$, dans cet ordre,
+  de 90$^\mathsf{o}$ autour de $\mathsf{(Ox)}$ suivie d'une rotation de 45$^\mathsf{o}$ autour de $\mathsf{(Oz)}$.
+\end{itemize}
+
+\subsubsection{Le choix de la couleur de l'objet}
+
+\begin{itemize}
+  \item dup (jaune) outputcolors : l'objet de couleur jaune éclairé en lumière blanche.
+\end{itemize}
+\subsubsection{La fusion des objets}
+\begin{itemize}
+  \item Elle se fait avec l'instruction \texttt{solidfuz}.
+\end{itemize}
+
+\subsubsection{Le dessin des objets}
+\begin{itemize}
+  \item Le tracé a trois options :
+  \begin{itemize}
+    \item \texttt{drawsolid} : tracé des arêtes uniquement, les arêtes cachées sont en pointillés ;
+    \item \texttt{drawsolid*} : tracé et remplissage des solides dans l'ordre de leur programmation (option peu intéressante à priori), avec le dessin des arêtes cachées
+    en pointillés~;
+    \item \texttt{drawsolid**} : tracé et remplissage des solides avec l'algorithme du peintre : seules les parties vues par l'observateur
+    sont dessinées.
+  \end{itemize}
+\end{itemize}
+\begin{center}
+\psset{lightsrc=50 -50 50,SphericalCoor=true,viewpoint=40 16 32,Decran=40}
+\psset{unit=0.4}
+\begin{minipage}{0.3\linewidth}
+\begin{pspicture}(-6,-5)(6,7)
+\psframe*[linecolor=gray!40](-6,-5)(6,7)
+\codejps{
+% solide 1
+ /tour {
+    -6 1.5 6 [4 16] newcylindre
+    dup (jaune) outputcolors
+    } def
+% solide 2
+ /anneau {
+    [4 -1 4 1 3 1 3 -1] 24 newanneau
+   {0 0 -1 translatepoint3d} solidtransform
+    dup (orange) outputcolors
+    } def
+% fusion
+    tour anneau solidfuz
+    drawsolid}
+\end{pspicture}
+\end{minipage}
+\hfill
+\begin{minipage}{0.3\linewidth}
+\begin{pspicture}(-6,-5)(6,7)
+\psframe*[linecolor=gray!40](-6,-5)(6,7)
+\codejps{
+% solide 1
+ /tour {
+    -6 1.5 6 [4 16] newcylindre
+    dup (jaune) outputcolors
+    } def
+% solide 2
+ /anneau {
+    [4 -1 4 1 3 1 3 -1] 24 newanneau
+   {0 0 -1 translatepoint3d} solidtransform
+    dup (orange) outputcolors
+    } def
+% fusion
+    tour anneau solidfuz
+    drawsolid*}
+\end{pspicture}
+\end{minipage}
+\hfill
+\begin{minipage}{0.3\linewidth}
+\begin{pspicture}(-6,-5)(6,7)
+\psframe*[linecolor=gray!40](-6,-5)(6,7)
+\codejps{
+% solide 1
+ /tour {
+    -6 1.5 6 [4 16] newcylindre
+    dup (jaune) outputcolors
+    } def
+% solide 2
+ /anneau {
+    [4 -1 4 1 3 1 3 -1] 24 newanneau
+   {0 0 -1 translatepoint3d} solidtransform
+    dup (orange) outputcolors
+    } def
+% fusion
+    tour anneau solidfuz
+    drawsolid**}
+\psPoint(0,0,8){Z}
+\psPoint(0,0,6){Z'}
+\psline[arrowsize=0.3,arrowinset=0.2]{->}(Z')(Z)
+\uput[u](Z){$z$}
+\end{pspicture}
+\end{minipage}
+\end{center}
+\lstset{language=PostScript}
+\begin{lstlisting}
+\psset{lightsrc=50 -50 50,SphericalCoor=true,viewpoint=50 20 50,Decran=50}
+\begin{pspicture}(-6,-2)(6,8)
+\psframe(-6,-2)(6,8)
+\codejps{
+% solide 1
+ /tour {
+    -6 1.5 6 [4 16] newcylindre
+    dup (jaune) outputcolors
+    } def
+% solide 2
+ /anneau {
+    [4 -1 4 1 3 1 3 -1] 24 newanneau
+   {0 0 -1 translatepoint3d} solidtransform
+    dup (orange) outputcolors
+    } def
+% fusion
+    tour anneau solidfuz
+    drawsolid**}
+\end{pspicture}
+\end{lstlisting}
+
+\newpage
+
+\subsection{Un ion chlorure}
+
+\begin{minipage}{6cm}
+\setlength{\columnseprule}{1pt}
+\begin{pspicture}(-3,-4)(3,4)
+\psset{lightsrc=100 -50 -10,lightintensity=3,viewpoint=200 20 10,Decran=20,SphericalCoor}
+\psframe(-3,-3)(3,3)
+{\psset{linewidth=0.5\pslinewidth}
+\codejps{
+/Cl {9.02  [18 16] newsphere
+ {-90 0 0 rotateOpoint3d} solidtransform
+ dup (Green) outputcolors} def
+/Cl1 { Cl {10.25 10.25 10.25 translatepoint3d} solidtransform } def
+/Cl2 { Cl {10.25 -10.25 10.25 translatepoint3d} solidtransform } def
+/Cl3 { Cl {-10.25 -10.25 10.25 translatepoint3d} solidtransform } def
+/Cl4 { Cl {-10.25 10.25 10.25 translatepoint3d} solidtransform } def
+/Cl5 { Cl {10.25 10.25 -10.25 translatepoint3d} solidtransform } def
+/Cl6 { Cl {10.25 -10.25 -10.25 translatepoint3d} solidtransform } def
+/Cl7 { Cl {-10.25 -10.25 -10.25 translatepoint3d} solidtransform } def
+/Cl8 { Cl {-10.25 10.25 -10.25 translatepoint3d} solidtransform } def
+/Cs {8.38  [18 16] newsphere
+ dup (White) outputcolors} def
+%
+/Cl12{ Cl1 Cl2 solidfuz} def
+/Cl123{ Cl12 Cl3 solidfuz} def
+/Cl1234{ Cl123 Cl4 solidfuz} def
+/Cl12345{ Cl1234 Cl5 solidfuz} def
+/Cl123456{ Cl12345 Cl6 solidfuz} def
+/Cl1234567{ Cl123456 Cl7 solidfuz} def
+/Cl12345678{ Cl1234567 Cl8 solidfuz} def
+/C_Cs { Cl12345678 Cs solidfuz} def
+C_Cs  drawsolid**}}%
+%\psSolid[object=cube,a=20.5,action=draw,linestyle=dashed]%
+\psPoint(0,0,0){P}
+\psPoint(10.25,10.25,10.25){Cl1}
+\psPoint(10.25,-10.25,10.25){Cl2}
+\psPoint(-10.25,-10.25,10.25){Cl3}
+\psPoint(-10.25,10.25,10.25){Cl4}
+\psPoint(10.25,10.25,-10.25){Cl5}
+\psPoint(10.25,-10.25,-10.25){Cl6}
+\psPoint(-10.25,-10.25,-10.25){Cl7}
+\psPoint(-10.25,10.25,-10.25){Cl8}
+\pspolygon[linestyle=dashed](Cl1)(Cl2)(Cl3)(Cl4)
+\pspolygon[linestyle=dashed](Cl5)(Cl6)(Cl7)(Cl8)
+\psline[linestyle=dashed](Cl2)(Cl6)
+\psline[linestyle=dashed](Cl3)(Cl7)
+\psline[linestyle=dashed](Cl1)(Cl5)
+\psline[linestyle=dashed](Cl4)(Cl8)
+\pcline[offset=0.5]{<->}(Cl2)(Cl1)
+\aput{:U}{a}
+\pcline[offset=0.5]{<->}(Cl6)(Cl2)
+\aput{:U}{a}
+\end{pspicture}
+\end{minipage}
+\hfill
+\begin{minipage}{14cm}
+\footnotesize
+\begin{verbatim}
+\codejps{
+/Cl {9.02  [12 8] newsphere
+ {-90 0 0 rotateOpoint3d} solidtransform
+ dup (Green) outputcolors} def
+/Cl1 { Cl {10.25 10.25 10.25 translatepoint3d} solidtransform } def
+/Cl2 { Cl {10.25 -10.25 10.25 translatepoint3d} solidtransform } def
+/Cl3 { Cl {-10.25 -10.25 10.25 translatepoint3d} solidtransform } def
+/Cl4 { Cl {-10.25 10.25 10.25 translatepoint3d} solidtransform } def
+/Cl5 { Cl {10.25 10.25 -10.25 translatepoint3d} solidtransform } def
+/Cl6 { Cl {10.25 -10.25 -10.25 translatepoint3d} solidtransform } def
+/Cl7 { Cl {-10.25 -10.25 -10.25 translatepoint3d} solidtransform } def
+/Cl8 { Cl {-10.25 10.25 -10.25 translatepoint3d} solidtransform } def
+/Cs {8.38  [12 8] newsphere
+ dup (White) outputcolors} def
+/Cl12{ Cl1 Cl2 solidfuz} def
+/Cl123{ Cl12 Cl3 solidfuz} def
+/Cl1234{ Cl123 Cl4 solidfuz} def
+/Cl12345{ Cl1234 Cl5 solidfuz} def
+/Cl123456{ Cl12345 Cl6 solidfuz} def
+/Cl1234567{ Cl123456 Cl7 solidfuz} def
+/Cl12345678{ Cl1234567 Cl8 solidfuz} def
+/C_Cs { Cl12345678 Cs solidfuz} def
+C_Cs  drawsolid**}
+\end{verbatim}
+\end{minipage}
+
+On définit l'ion chlorure $\mathrm{Cl^-}$ :
+\begin{verbatim}
+/Cl {9.02  [12 8] newsphere
+ {-90 0 0 rotateOpoint3d} solidtransform
+ dup (Green) outputcolors} def
+\end{verbatim}
+que l'on recopie aux sommets du cube :
+\begin{verbatim}
+/Cl1 { Cl {10.25 10.25 10.25 translatepoint3d} solidtransform } def
+/Cl2 { Cl {10.25 -10.25 10.25 translatepoint3d} solidtransform } def
+/Cl3 { Cl {-10.25 -10.25 10.25 translatepoint3d} solidtransform } def
+/Cl4 { Cl {-10.25 10.25 10.25 translatepoint3d} solidtransform } def
+/Cl5 { Cl {10.25 10.25 -10.25 translatepoint3d} solidtransform } def
+/Cl6 { Cl {10.25 -10.25 -10.25 translatepoint3d} solidtransform } def
+/Cl7 { Cl {-10.25 -10.25 -10.25 translatepoint3d} solidtransform } def
+/Cl8 { Cl {-10.25 10.25 -10.25 translatepoint3d} solidtransform } def
+\end{verbatim}
+Puis l'ion césium $\mathrm{Cs^+}$, placé au centre :
+\begin{verbatim}
+/Cs {8.38  [12 8] newsphere
+ dup (White) outputcolors} def
+\end{verbatim}
+Ensuite on fusionne deux par deux les différentes sphères.
+
+\subsection{Un prototype de véhicule}
+\begin{center}
+\psset{lightsrc=100 0 100,viewpoint=25 10 10,Decran=30}
+\begin{pspicture}(-6,-4)(6,8)
+\pstVerb{/Pneu {
+   /m {90 4 div} bind def
+   /Scos {m cos 2 m mul cos add 3 m mul cos add} bind def
+   /Z0 {h 4 div} bind def
+   /c {Z0 Scos div} bind def
+   /Z1 {Z0 c m cos mul add} bind def
+   /Z2 {Z1 c m 2 mul cos mul add} bind def
+   /R1 {R c m sin mul sub} bind def
+   /R2 {R1 c m 2 mul sin mul sub} bind def
+   /R3 {R2 c m 3 mul sin mul sub} bind def
+   R h 4 div neg % 1
+   R h 4 div % 2
+   R1 Z1 % 3
+   R2 Z2 % 4
+   R3 h 2 div % 5
+   r h 2 div  % 6
+   r h 2 div neg  % 7
+   R3 h 2 div neg % 8
+   R2 Z2 neg % 9
+   R1 Z1 neg % 10
+   } def}%
+\grille
+\codejps{
+/roue12 {
+% solide 1
+    /R 2 def /r 1 def /h 1 def
+    [Pneu] 36 newanneau
+     {90 0 90 rotateOpoint3d} solidtransform
+     {3 4 2 translatepoint3d} solidtransform
+     dup (White) outputcolors
+% solide 2
+    [Pneu] 36 newanneau
+    {90 0 90 rotateOpoint3d} solidtransform
+   {-3 4 2 translatepoint3d} solidtransform
+    dup (White) outputcolors
+% fusion
+    solidfuz } def
+/axe12{
+0 0.1 6 [4 16] newcylindre
+{90 0 90 rotateOpoint3d} solidtransform
+{-3 4 2  translatepoint3d} solidtransform
+dup (White) outputcolors
+} def
+/roue12axes {
+roue12 axe12 solidfuz } def
+/roue34 {
+% solide 3
+   /R 1.5 def /r 1 def /h 1 def
+    [Pneu] 36 newanneau
+    {90 0 110 rotateOpoint3d} solidtransform
+   {3 -4 1.5 translatepoint3d} solidtransform
+    dup (White) outputcolors
+% solide 4
+    [Pneu] 36 newanneau
+   {90 0 110 rotateOpoint3d} solidtransform
+   {-3 -4 1.5 translatepoint3d} solidtransform
+    dup (White) outputcolors
+% fusion
+    solidfuz } def
+/axe34{
+0 0.1 6  [16 16] newcylindre
+{90 0 90 rotateOpoint3d} solidtransform
+{-3 -4 1.5  translatepoint3d} solidtransform
+dup (White) outputcolors
+} def
+/roue34axes34 {
+roue34 axe34 solidfuz } def
+/roues {roue34axes34 roue12axes solidfuz} def
+/chassis {
+0 1 8  [4 16] newcylindre
+{100 0 0 rotateOpoint3d} solidtransform
+{0 4 2.5  translatepoint3d} solidtransform
+dup (White) outputcolors
+} def
+roues chassis solidfuz
+    drawsolid**}
+\psPoint(0,0,2.7){Z'}
+\psline[arrowsize=0.3,arrowinset=0.2,linecolor=blue]{->}(Z')(Z)
+\end{pspicture}
+\end{center}
+Il faut opérer en plusieurs étapes en fusionnant les solides deux par deux.
+\begin{itemize}
+  \item On fusionne d'abord les deux roues avant \texttt{roue12}:
+  \begin{verbatim}
+/roue12 {
+% solide 1
+    /R 2 def /r 1 def /h 1 def
+    [Pneu] 36 newanneau
+     {90 0 90 rotateOpoint3d} solidtransform
+     {3 4 2 translatepoint3d} solidtransform
+     dup (White) outputcolors
+% solide 2
+    [Pneu] 36 newanneau
+    {90 0 90 rotateOpoint3d} solidtransform
+   {-3 4 2 translatepoint3d} solidtransform
+    dup (White) outputcolors
+% fusion
+    solidfuz } def
+  \end{verbatim}
+  \item Puis ces deux roues et leur axe :
+  \begin{verbatim}
+/axe12{
+0 0.1 6  [4 16] newcylindre
+{90 0 90 rotateOpoint3d} solidtransform
+{-3 4 2  translatepoint3d} solidtransform
+dup (White) outputcolors
+} def
+/roue12axes {
+roue12 axe12 solidfuz } def
+\end{verbatim}
+  \item On opère de même pour les roues arrière et leur axe :
+  \begin{verbatim}
+/roue34 {
+% solide 3
+   /R 1.5 def /r 1 def /h 1 def
+    [Pneu] 36 newanneau
+    {90 0 110 rotateOpoint3d} solidtransform
+   {3 -4 1.5 translatepoint3d} solidtransform
+    dup (White) outputcolors
+% solide 4
+    [Pneu] 36 newanneau
+   {90 0 110 rotateOpoint3d} solidtransform
+   {-3 -4 1.5 translatepoint3d} solidtransform
+    dup (White) outputcolors
+% fusion
+    solidfuz } def
+/axe34{
+0 0.1 6 [16 16] newcylindre
+{90 0 90 rotateOpoint3d} solidtransform
+{-3 -4 1.5  translatepoint3d} solidtransform
+dup (White) outputcolors
+} def
+/roue34axes34 {
+roue34 axe34 solidfuz } def
+/roues {roue34axes34 roue12axes solidfuz} def
+\end{verbatim}
+
+\item La dernière étape consiste à fusionner les deux solides ainsi
+  obtenus avec le semblant de chassis~:
+\begin{verbatim}
+/chassis {
+0 1 8  [4 16] newcylindre
+{100 0 0 rotateOpoint3d} solidtransform
+{0 4 2.5  translatepoint3d} solidtransform
+dup (White) outputcolors
+} def
+roues chassis solidfuz
+    drawsolid**}
+\end{verbatim}
+\end{itemize}
+
+\subsection{Une roue ou bien une station spatiale !}
+
+\begin{center}
+\begin{pspicture}(-6,-5)(6,6)
+\psset{lightsrc=50 -50 50,viewpoint=40 50 60,Decran=60,linewidth=0.5\pslinewidth}
+%\psframe*[linecolor=black](-6,-5)(6,5)
+\codejps{
+ /rayon0 {
+     1 0.2 6 [4 16] newcylindre
+     {90 0 0 rotateOpoint3d} solidtransform
+      dup (White) outputcolors
+   } def
+36 36 360 {
+    /angle exch def
+  /rayon1 {
+     1 0.2 6  [4 16] newcylindre
+     {90 0 angle rotateOpoint3d} solidtransform
+      dup (White) outputcolors
+   } def
+  /rayons {rayon0 rayon1 solidfuz} def
+  /rayon0 rayons def
+  } for
+ /moyeu { -2 1 2  [4 10] newcylindre dup (jaune) outputcolors} def
+ /rayonsmoyeu {rayons  moyeu solidfuz} def
+ /pneu {2 7 [18 36] newtore dup (White) outputcolors} def
+ /ROUE {pneu rayonsmoyeu solidfuz} def
+  ROUE  drawsolid**}
+\end{pspicture}
+\end{center}
+On définit d'abord le premier rayon :
+\begin{verbatim}
+ /rayon0 {
+     1 0.2 6 [4 16] newcylindre
+     {90 0 0 rotateOpoint3d} solidtransform
+      dup (White) outputcolors
+   } def
+\end{verbatim}
+Puis dans une boucle on fusionne tous les rayons de la roue :
+\begin{verbatim}
+36 36 360 {
+    /angle exch def
+  /rayon1 {
+     1 0.2 6  [4 16] newcylindre
+     {90 0 angle rotateOpoint3d} solidtransform
+      dup (White) outputcolors
+   } def
+  /rayons {rayon0 rayon1 solidfuz} def
+  /rayon0 rayons def
+  } for
+\end{verbatim}
+Ensuite, on dessine le moyeu et la circonférence (pneu) de la roue pour enfin fusionner l'ensemble :
+\begin{verbatim}
+ /moyeu { -0.5 1 0.5  [4 10] newcylindre dup (White) outputcolors} def
+ /rayonsmoyeu {rayons  moyeu solidfuz} def
+ /pneu {2 7 [18 36] newtore dup (jaune) outputcolors} def
+ /ROUE {pneu rayonsmoyeu solidfuz} def
+  ROUE  drawsolid**
+\end{verbatim}
+
+\subsection{Intersection de deux cylindres}
+
+\begin{center}
+\begin{pspicture}(-6,-5)(6,5)
+\psset{lightsrc=50 -50 50,viewpoint=100 -30 40,Decran=100,linewidth=0.5\pslinewidth}
+%\psframe*[linecolor=black](-6,-5)(6,5)
+\codejps{
+ /cylindre1 {
+     -6 2 6 [36 36] newcylindrecreux %newcylindre
+     {90 0 0 rotateOpoint3d} solidtransform
+      dup (White) (White) inoutputcolors
+   } def
+ /cylindre2 {
+     -6 2 6 [36 36] newcylindrecreux% newcylindre
+     {90 0 90 rotateOpoint3d} solidtransform
+      dup (White) (White) inoutputcolors
+   } def
+ /UnionCylindres {cylindre1 cylindre2 solidfuz} def
+  UnionCylindres  drawsolid**}
+\end{pspicture}
+\end{center}
+\begin{verbatim}
+\codejps{
+ /cylindre1 {
+     -6 2 6 [36 36] newcylindrecreux %newcylindre
+     {90 0 0 rotateOpoint3d} solidtransform
+      dup (White) (White) inoutputcolors
+   } def
+ /cylindre2 {
+     -6 2 6 [36 36] newcylindrecreux% newcylindre
+     {90 0 90 rotateOpoint3d} solidtransform
+      dup (White) (White) inoutputcolors
+   } def
+ /UnionCylindres {cylindre1 cylindre2 solidfuz} def
+  UnionCylindres  drawsolid**}
+\end{verbatim}
+
+\subsection{Intersection d'une sphère et d'un cylindre}
+
+Dans cette partie on dessine en utilisant
+\verb+\psSolid[object=courbe]+ le contour de l'intersection.
+\begin{center}
+\psset{unit=0.5,lightsrc=50 -50 50,SphericalCoor=true,viewpoint=100 0 0,Decran=110,linewidth=0.5\pslinewidth}
+\begin{pspicture}(-5,-6)(5,6)
+\defFunction{F}(t){t cos dup mul 5 mul}{t cos t sin mul 5 mul}{t sin 5 mul}
+\codejps{%
+   /cylindre1 {
+       -5 2.5 5 [36 36] newcylindre
+       {2.5 0 0 translatepoint3d} solidtransform
+        dup (White) outputcolors
+   } def
+   /sphere1 {
+        5 [36 72] newsphere
+        dup (White) outputcolors
+   } def
+   /CS {cylindre1 sphere1 solidfuz} def
+   CS drawsolid**}
+\psPoint(0,0,0){O}
+\psSolid[object=courbe,
+   function=F,
+   range=0 360,
+   linecolor=red,linewidth=4\pslinewidth]
+%% \makeatletter
+%% \parametricplot[linecolor=red,linewidth=2\pslinewidth]{0}{360}{%
+%%    \tx@optionssolides
+%%     SolidesDict begin
+%%     t cos dup mul 5 mul % x
+%%     t cos t sin mul 5 mul % y
+%%     t sin 5 mul % z
+%%    3dto2d cm_1 exch cm_1 exch
+%%    end}
+%% \makeatother
+\end{pspicture}
+\end{center}
+\begin{verbatim}
+\codejps{%
+   /cylindre1 {
+       -5 2.5 5 [36 36] newcylindre
+       {2.5 0 0 translatepoint3d} solidtransform
+        dup (White) outputcolors
+   } def
+   /sphere1 {
+        5 [36 72] newsphere
+        dup (White) outputcolors
+   } def
+   /CS {cylindre1 sphere1 solidfuz} def
+   CS drawsolid**}
+\psPoint(0,0,0){O}
+\psSolid[object=courbe,
+   function=F,
+   range=0 360,
+   linecolor=red,linewidth=4\pslinewidth]
+\end{verbatim}
+
+\subsection{Réunion de deux anneaux}
+
+\begin{center}
+\begin{pspicture}(-5,-4)(3,3)
+\psset{lightsrc=50 50 50,viewpoint=40 50 60,Decran=30}
+\psframe(-5,-4)(3,3)
+\codejps{
+ /anneau1 {1 7 [12 36] newtore
+ {0 0 0 translatepoint3d} solidtransform
+ dup (White) outputcolors} def
+ /anneau2 {1 7 [12 36] newtore
+ {90 0 0 rotateOpoint3d} solidtransform
+ {7 0 0 translatepoint3d} solidtransform
+ dup (White) outputcolors} def
+ /collier {anneau1 anneau2 solidfuz} def
+  collier  drawsolid**}
+\end{pspicture}
+\end{center}
+
+
+\begin{verbatim}
+\codejps{
+ /anneau1 {1 7 [9 18] newtore
+ {0 0 0 translatepoint3d} solidtransform
+ dup (White) outputcolors} def
+ /anneau2 {1 7 [9 18] newtore
+ {90 0 0 rotateOpoint3d} solidtransform
+ {7 0 0 translatepoint3d} solidtransform
+ dup (White) outputcolors} def
+ /collier {anneau1 anneau2 solidfuz} def
+  collier  drawsolid**}
+\end{verbatim}
+
+\subsection{La molécule de méthane : modèle en bois}
+
+\begin{center}
+\begin{pspicture}(-4,-4)(4,5)
+\psset{lightsrc=50 50 10,lightintensity=2,viewpoint=100 50 20,Decran=30,SphericalCoor=true}
+\psset{linecolor={[cmyk]{0,0.72,1,0.45}},linewidth=0.5\pslinewidth}
+\psframe[fillstyle=solid,fillcolor=green!20](-4,-4)(4,5)
+\pstVerb{/hetre {0.764 0.6 0.204 setrgbcolor} def
+         /chene {0.568 0.427 0.086 setrgbcolor} def
+         /bois {0.956 0.921 0.65 setrgbcolor} def
+         }%
+\codejps{
+ /H1 {
+ 2  [18 16] newsphere
+ {-90 0 0 rotateOpoint3d} solidtransform
+ {0 10.93 0 translatepoint3d} solidtransform
+ dup (hetre) outputcolors} def
+  /L1 {
+     0 0.25 10  [12 10] newcylindre
+     {-90 0 0 rotateOpoint3d} solidtransform
+      dup (bois) outputcolors
+   } def
+/HL1{ H1 L1  solidfuz} def
+/HL2 { HL1 {0 0 -109.5 rotateOpoint3d} solidtransform } def
+/HL3 { HL2 {0 -120 0 rotateOpoint3d} solidtransform } def
+/HL4 { HL2 {0 120 0 rotateOpoint3d} solidtransform } def
+ /C {3  [18 16] newsphere
+  {90 0 0 rotateOpoint3d} solidtransform
+   dup (chene) outputcolors} def
+/HL12 { HL1 HL2 solidfuz} def
+/HL123 { HL12 HL3 solidfuz} def
+/HL1234 { HL123 HL4 solidfuz} def
+/methane { HL1234 C solidfuz} def
+  methane  drawsolid**}
+\end{pspicture}
+\end{center}
+
+\begin{verbatim}
+\pstVerb{/hetre {0.764 0.6 0.204 setrgbcolor} def
+         /chene {0.568 0.427 0.086 setrgbcolor} def
+         /bois {0.956 0.921 0.65 setrgbcolor} def
+         }%
+\codejps{
+ /H1 {
+ 2  [18 16] newsphere
+ {-90 0 0 rotateOpoint3d} solidtransform
+ {0 10.93 0 translatepoint3d} solidtransform
+ dup (hetre) outputcolors} def
+  /L1 {
+     0 0.25 10  [12 10] newcylindre
+     {-90 0 0 rotateOpoint3d} solidtransform
+      dup (bois) outputcolors
+   } def
+/HL1{ H1 L1  solidfuz} def
+/HL2 { HL1 {0 0 -109.5 rotateOpoint3d} solidtransform } def
+/HL3 { HL2 {0 -120 0 rotateOpoint3d} solidtransform } def
+/HL4 { HL2 {0 120 0 rotateOpoint3d} solidtransform } def
+ /C {3  [18 16] newsphere
+  {90 0 0 rotateOpoint3d} solidtransform
+   dup (chene) outputcolors} def
+/HL12 { HL1 HL2 solidfuz} def
+/HL123 { HL12 HL3 solidfuz} def
+/HL1234 { HL123 HL4 solidfuz} def
+/methane { HL1234 C solidfuz} def
+  methane  drawsolid**}
+\end{verbatim}
+
+\subsection{L'ion thiosulfate}
+\input \datapath S2O3
+On définit d'abord les deux atomes de soufre placés sur l'axe $Oz$. $\mathrm{S_1}$ est placé en $O$.
+\begin{verbatim}
+\codejps{
+/Soufre1 {3.56  [20 16] newsphere
+ dup (Yellow) outputcolors} def
+/Soufre2 {3.56  [20 16] newsphere
+ {0 0.000 20.10 translatepoint3d} solidtransform
+ dup (Yellow) outputcolors} def
+\end{verbatim}
+Puis la liaison simple \textsf{S-O} avec la convention suivante : c'est un cylindre avec une moitié rouge -celle qui est liée à \textsf{O}, et l'autre
+jaune -celle du côté de \textsf{S}.
+\begin{verbatim}
+/LiaisonR {
+     7.5 0.5 15  [10 10] newcylindre
+      dup (Red) outputcolors
+   } def
+/LiaisonY {
+     0 0.5 7.5  [10 10] newcylindre
+      dup (Yellow) outputcolors
+   } def
+/Liaison{LiaisonR LiaisonY solidfuz} def
+\end{verbatim}
+L'atome d'oxygène, sa liaison, puis la mise en position de l'ensemble :
+\begin{verbatim}
+/Ox {2.17  [20 16] newsphere
+     {0 0 15 translatepoint3d} solidtransform
+     dup (Red) outputcolors} def
+/LO { Liaison Ox solidfuz} def
+/LO1 { LO  {0 -109.5 0 rotateOpoint3d} solidtransform } def
+/LOx1 { LO1  {0 0 120 rotateOpoint3d} solidtransform } def
+% fin liaison simple S-O
+\end{verbatim}
+La liaison double double \textsf{S=O}, on se sert de la liaison simple définie précédemment et on la duplique
+en la décalant suivant l'axe $Ox$ de 0,75~cm.
+\begin{verbatim}
+% Liaison double S=O
+/LiaisonD1 {Liaison {-0.75 0 0 translatepoint3d} solidtransform} def
+/LiaisonD2 {Liaison {0.75 0 0 translatepoint3d} solidtransform} def
+/LiaisonDD { LiaisonD1 LiaisonD2 solidfuz} def
+\end{verbatim}
+On lie cette liaison double avec l'atome d'\textsf{O} :
+\begin{verbatim}
+/LiaisonDOx {LiaisonDD Ox solidfuz} def
+\end{verbatim}
+et par deux rotations successives on positionne les deux liaisons \textsf{=O} :
+\begin{verbatim}
+/LiaisonDOx1 {LiaisonDOx {0 -109.5 0 rotateOpoint3d} solidtransform } def
+/LiaisonDOx2 {LiaisonDOx1 {0  0 -120 rotateOpoint3d} solidtransform } def
+\end{verbatim}
+L'étape suivante consiste à fusionner ces deux liaisons :
+\begin{verbatim}
+/LO12 { LiaisonDOx1 LiaisonDOx2 solidfuz} def
+/LO123 {LO12 LOx1 solidfuz} def
+\end{verbatim}
+On passe ensuite à la liaison simple \textsf{S-S} :
+\begin{verbatim}
+% liaison simple S-S
+/L4 { 0 0.5 20.10  [16 10] newcylindre
+      dup (Yellow) outputcolors
+    } def
+\end{verbatim}
+Que l'on fusionne avec les deux atomes \textsf{S-S} :
+\begin{verbatim}
+/S1L4{ Soufre1 L4 solidfuz} def
+/S1S2L4{ S1L4 Soufre2 solidfuz} def
+\end{verbatim}
+La dernière étape consiste à fusionner \textsf{S-S} et les trois \textsf{O} déjà munis de leur liaisons :
+\begin{verbatim}
+/S2O3 { S1S2L4 LO123 solidfuz} def
+S2O3  drawsolid**}
+\end{verbatim}

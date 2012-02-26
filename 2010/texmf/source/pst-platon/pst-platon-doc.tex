@@ -1,0 +1,265 @@
+%% $Id: pst-platon-doc.tex 208 2009-12-25 08:54:53Z herbert $
+\documentclass[11pt,english,BCOR10mm,DIV12,bibliography=totoc,parskip=false,smallheadings
+    headexclude,footexclude,oneside]{pst-doc}
+\usepackage[utf8]{inputenc}
+\usepackage{pst-platon}
+
+\let\pstFV\fileversion
+\lstset{language=PSTricks,basicstyle=\footnotesize\ttfamily}
+%
+\def\bgImage{\psset{psscale=2}\psIcosahedron%[Frame=false,Viewpoint=-1 0.5 1.2]}
+}
+\title{\texttt{pst-platon}}
+\subtitle{A PSTricks package for drawing platonic solids; v.\pstFV}
+\author{Manuel Luque \\ Herbert Vo\ss}
+\docauthor{}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+A platonic solid is a convex polyhedron that is a regular polygon.
+The faces of a platonic solid are congruent regular polygons, 
+with the same number of faces meeting at each vertex. 
+All edges are congruent, as are its vertices and angles.
+There exists five platonic solids.
+\end{abstract}
+
+\vfill
+\clearpage
+
+
+\tableofcontents
+
+\newpage
+
+\section{The optional Arguments}
+\subsection{\nxLkeyword{PstPicture}}
+With \Lkeyset{PstPicture=true} (default) the image is set into a \Lenv{pspicture} environment, which 
+reserves some space. The correct bounding box depends to the viewpoint. With setting of \Lkeyset{PstPicture=false}
+you can set the image inside your own \Lenv{pspicture} environment with other coordinates. All
+solids areplaced relative to the origin of the coordinate system. Use \Lcs{rput} to place the
+platonic solid elsewhere.
+
+\begin{LTXexample}[pos=t,rframe=]
+\begin{pspicture}[showgrid=true](-1,-2)(10,5)
+\psTetrahedron[PstPicture=false]
+\rput(2,2){\psTetrahedron[PstPicture=false,Viewpoint=1 1.2 0.5]}
+\psset{unit=1.3}
+\rput(5,3){\psTetrahedron[PstPicture=false,Frame=false,Viewpoint=-1 0.5 2]}
+\end{pspicture}
+\end{LTXexample}
+
+\subsection{\nxLkeyword{Frame}}
+
+With \Lkeyset{Frame=true} (default) the unique cube with a=1 is printed with
+dotted lines.
+
+\begin{LTXexample}[width=7cm,rframe=]
+\psTetrahedron 
+\psTetrahedron[Frame=false] 
+\end{LTXexample}
+
+\clearpage
+
+\subsection{\nxLkeyword{Viewpoint}}
+
+With \Lkeyword{Viewpoint} the three dimensional view point from which the 
+solid is seen can be set. The default is \verb=1 1 1=.
+
+\begin{LTXexample}[width=10.5cm,rframe=,wide]
+\psTetrahedron
+\psTetrahedron[Viewpoint=-1 1 .5]
+\psTetrahedron[Viewpoint=0.4 -1 .5] 
+\end{LTXexample}
+
+\subsection{\nxLkeyword{faceName}}
+
+With \Lkeyword{faceName} the name of the faces can be set with setting
+it to one of the macros \Lcs{Alph} (default), \Lcs{alph}, \Lcs{arabic},
+\Lcs{Roman}, and \Lcs{roman}.
+
+\begin{LTXexample}[width=10.5cm,rframe=,wide]
+\psHexahedron%
+\psHexahedron[faceName=\alph]% 
+\psHexahedron[faceName=\Roman] 
+\end{LTXexample}
+
+
+\subsection{\nxLkeyword{faceNameFont}}
+
+With \Lkeyword{faceNameFont} the font for the face name can be set.
+Any valid \LaTeX\ command is possible.
+
+\begin{LTXexample}[width=10.5cm,rframe=,wide]
+\psHexahedron%
+\psHexahedron[faceNameFont=\Huge]% 
+\psHexahedron[faceNameFont=\Huge\sffamily] 
+\end{LTXexample}
+
+\subsection{\nxLkeyword{psscale}}
+
+The solids can be magnified by the keyword \Lkeyword{psscale}
+which is preset to 1.
+
+\begin{LTXexample}[width=8cm,rframe=]
+\psOctahedron[Frame=false]
+\psOctahedron[Frame=false,psscale=2]
+\end{LTXexample}
+
+\subsection{Colors}
+The faces are defined by the colors of type A or B with 
+\begin{verbatim}
+\newcommand\colorTypeA{%
+\definecolor{ColorA}{cmyk}{0.1,0.1,0.05,0}
+\definecolor{ColorB}{cmyk}{0.15,0.15,0.05,0}
+...
+}
+\newcommand\colorTypeB{%
+\definecolor{ColorA}{cmyk}{0.1,0.2,0.1,0}
+\definecolor{ColorB}{cmyk}{0.15,0.2,0.15,0}
+...
+}
+\end{verbatim}
+
+New types can be definied in the same way and then set by the keyword \Lkeyword{colorType}=\Larga{type}.
+
+\begin{LTXexample}[width=5cm,rframe=]
+\newcommand\colorTypeC{%
+  \colorlet{ColorA}{red}
+  \colorlet{ColorB}{green}
+  \colorlet{ColorC}{blue}
+  \definecolor{ColorD}{rgb}{0.55,0.2,0.15}
+}
+\psTetrahedron[colorType=C]
+\end{LTXexample}
+
+
+\section{The Platonic Solids}
+There are the five platonic solids with the macronames 
+\Lcs{psTetrahedron}, \Lcs{psHexahedron}, \Lcs{psOctahedron}, \Lcs{psDodecahedron}, 
+and \Lcs{psIcosahedron}.
+
+
+\subsection{Tetrahedron}
+
+\begin{LTXexample}[width=5cm,rframe=]
+\psTetrahedron
+\end{LTXexample}
+
+\begin{LTXexample}[width=5cm,rframe=]
+\psTetrahedron[Viewpoint=1 1.2 0.5]
+\end{LTXexample}
+
+\begin{LTXexample}[width=5cm,rframe=]
+\psTetrahedron[Frame=false,Viewpoint=0.7 -0.5 -0.8]
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t,rframe=]
+\psTetrahedron[Frame=false,Viewpoint=1 1.2 0.7] 
+\psTetrahedron[Frame=false,Viewpoint=-1 0.5 2] 
+\psTetrahedron[Frame=false,Viewpoint=0.7 -0.5 -0.8]
+\end{LTXexample}
+
+\subsection{Hexahedron}
+\begin{LTXexample}[width=5cm,rframe=]
+\psHexahedron
+\end{LTXexample}
+
+\begin{LTXexample}[width=5cm,rframe=]
+\psHexahedron[Viewpoint=1 1.2 0.5]
+\end{LTXexample}
+
+\begin{LTXexample}[width=5cm,rframe=]
+\psHexahedron[Frame=false,Viewpoint=0.7 -0.5 -0.8]
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t,rframe=]
+\psHexahedron[Frame=false,Viewpoint=1 1.2 0.7] 
+\psHexahedron[Frame=false,Viewpoint=-1 0.5 2] 
+\psHexahedron[Frame=false,Viewpoint=0.7 -0.5 -0.8]
+\end{LTXexample}
+
+
+\subsection{Octahedron}
+\begin{LTXexample}[width=5cm,rframe=]
+\psOctahedron
+\end{LTXexample}
+
+\begin{LTXexample}[width=5cm,rframe=]
+\psOctahedron[Viewpoint=1 1.2 0.5]
+\end{LTXexample}
+
+\begin{LTXexample}[width=5cm,rframe=]
+\psOctahedron[Frame=false,Viewpoint=0.7 -0.5 -0.8]
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t,rframe=]
+\psset{psscale=2}
+\psOctahedron[Frame=false,Viewpoint=1 1.2 0.7] 
+\psOctahedron[Frame=false,Viewpoint=-1 0.5 2] 
+\psOctahedron[Frame=false,Viewpoint=0.7 -0.5 -0.8]
+\end{LTXexample}
+
+\clearpage
+\subsection{Dodecahedron}
+\begin{LTXexample}[width=5cm,rframe=]
+\psDodecahedron
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t,rframe=]
+\psDodecahedron[Viewpoint=-0.5 0.9 0.9]
+\psDodecahedron[Viewpoint=-0.5 0.7 -1.2]
+\psDodecahedron[Viewpoint=0.5 -0.7 -0.5]
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t,rframe=]
+\psDodecahedron[Frame=false,Viewpoint=-0.2 0.2 0.2]
+\psDodecahedron[Frame=false,Viewpoint=-0.707 -0.707 -1]
+\psDodecahedron[Frame=false,Viewpoint=0.6 -0.7 -0.5]
+\end{LTXexample}
+
+\subsection{Isocahedron}
+
+\begin{LTXexample}[width=5cm,rframe=]
+\psIcosahedron
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t,rframe=]
+\psIcosahedron[Viewpoint=1 1.2 0.5]
+\psIcosahedron[Viewpoint=-1 1.2 0.5]
+\psIcosahedron[Viewpoint=-1 -1.2 0.5]
+\psIcosahedron[Viewpoint=1 -1.2 0.5]
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t,rframe=]
+\psIcosahedron[Frame=false,Viewpoint=0.5 -1 1]
+\psIcosahedron[Frame=false,Viewpoint=-1 0.5 1.2]
+\psIcosahedron[Frame=false,Viewpoint=0.7 -0.5 -0.8]
+\psIcosahedron[Frame=false,Viewpoint=-0.7 -0.7 -0.2]
+\end{LTXexample}
+
+
+
+\section{List of all optional arguments for \texttt{pst-platon}}
+
+\xkvview{family=pst-platon,columns={key,type,default}}
+
+
+
+
+
+\nocite{*}
+\bgroup
+\RaggedRight
+\bibliographystyle{plain}
+\bibliography{pst-platon-doc}
+\egroup
+
+\printindex
+
+
+
+\end{document}
+

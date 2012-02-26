@@ -1,0 +1,133 @@
+%% $Id: pst-func-doc.tex 599 2011-11-03 19:38:28Z herbert $
+\documentclass[11pt,english,BCOR10mm,DIV12,bibliography=totoc,parskip=false,
+   smallheadings, headexclude,footexclude,oneside]{pst-doc}
+\usepackage[utf8]{inputenc}
+\usepackage{pst-tools}
+\let\pstToolsFV\fileversion
+\renewcommand\bgImage{}
+
+\lstset{language=PSTricks,
+    morekeywords={psPrintValue},basicstyle=\footnotesize\ttfamily}
+%
+\begin{document}
+
+\title{\texttt{pst-tools}}
+\subtitle{Helper functions; v.\pstToolsFV}
+\author{Herbert Vo\ss}
+\docauthor{}
+\date{\today}
+\maketitle
+
+\tableofcontents
+\psset{unit=1cm}
+
+
+\section{\Lcs{psPrintValue}}\label{sec:printValue}
+This macro allows to \Index{print} single values of a math function. It has the syntax
+
+\begin{BDef}
+\Lcs{psPrintValue}\OptArgs\Largb{PostScript code}\\
+\Lcs{psPrintValue}\OptArg{algebraic,\ldots}\Largb{x value, algebraic code}
+\end{BDef}
+
+Important is the fact, that \Lcs{psPrintValue} works on \PS\ side. For \TeX\ it is only a box of
+zero dimension. This is the reason why you have to put it into a box, which reserves horizontal
+space.
+
+There are the following valid options for \Lcs{psPrintValue}:
+
+\noindent\medskip
+\begin{tabularx}{\linewidth}{@{}l|>{\ttfamily}l>{\ttfamily}lX@{}}
+\textrm{name} & \textrm{value}  & \textrm{default}\\\hline
+\Lkeyword{PSfont}        & PS font name & Times & only valid \PS font names are possible, e.g. 
+    \Lps{Times-Roman}, \Lps{Helvetica}, \Lps{Courier}, \Lps{AvantGard}, \Lps{Bookman}\\
+\Lkeyword{fontscale} & <number>     & 10     & the font scale in pt\\
+\Lkeyword{valuewidth} & <number>     & 10     & the width of the string for the converted 
+    real number; if it is too small, no value is printed\\
+\Lkeyword{decimals}  & <number>     & -1     & the number of printed decimals, a negative value
+    prints all possible digits.\\ 
+\Lkeyword{xShift}  & <number>     & 0     & the x shift in pt for the output, relative to the current point.\\ 
+\Lkeyword{algebraic}  & <boolean>     & false     & function in algebraic notation.\\ 
+\end{tabularx}
+
+\begin{center}
+\psset{fontscale=12}
+\makebox[2em]{x(deg)} \makebox[5em]{$\sin x$} \makebox[4em]{$\cos x$}\hspace{1em}
+\makebox[5em]{$\sqrt x$}\makebox[7em]{$\sin x+\cos x$}\makebox[6em]{$\sin^2 x+\cos^2 x$}\\[3pt]
+\multido{\iA=0+10}{18}{
+  \makebox[1em]{\iA}
+  \makebox[5em]{\psPrintValue[PSfont=Helvetica,xShift=-10]{\iA\space sin}}
+  \makebox[4em][r]{\psPrintValue[PSfont=Courier,fontscale=10,decimals=3,xShift=-20]{\iA\space cos}}\hspace{1em}
+  \makebox[5em]{\psPrintValue[dot,valuewidth=15,linecolor=blue,PSfont=AvantGarde]{\iA\space sqrt}}
+  \makebox[7em]{\psPrintValue[PSfont=Times-Italic]{\iA\space dup sin exch cos add}}
+  \makebox[6em]{\psPrintValue[PSfont=Palatino-Roman]{\iA\space dup sin dup mul exch cos dup mul add}}\\}
+\end{center}
+
+\bigskip
+
+\begin{lstlisting}
+\psset{fontscale=12}
+\makebox[2em]{x(deg)} \makebox[5em]{$\sin x$} \makebox[4em]{$\cos x$}\hspace{1em}
+\makebox[5em]{$\sqrt x$}\makebox[7em]{$\sin x+\cos x$}\makebox[6em]{$\sin^2 x+\cos^2 x$}\\[3pt]
+\multido{\iA=0+10}{18}{
+  \makebox[1em]{\iA}
+  \makebox[5em]{\psPrintValue[PSfont=Helvetica,xShift=-10]{\iA\space sin}}
+  \makebox[4em][r]{\psPrintValue[PSfont=Courier,fontscale=10,decimals=3,xShift=-20]{\iA\space cos}}\hspace{1em}
+  \makebox[5em]{\psPrintValue[dot,valuewidth=15,linecolor=blue,PSfont=AvantGarde]{\iA\space sqrt}}
+  \makebox[7em]{\psPrintValue[PSfont=Times-Italic]{\iA\space dup sin exch cos add}}
+  \makebox[6em]{\psPrintValue[PSfont=Palatino-Roman]{\iA\space dup sin dup mul exch cos dup mul add}}\\}
+\end{lstlisting}
+
+With enabled \Lkeyword{algebraic} option there must be two arguments, separated by a comma.
+The first one is the x value as a number, which can also be PostScript code, which leaves a
+number on the stack. The second part is the function described in algebraic notation.
+Pay attention, in algebraic notation angles must be in radian and not degrees.
+
+\begin{center}
+\psset{algebraic, fontscale=12}% All functions now in algebraic notation
+\makebox[2em]{x(deg)} \makebox[5em]{$\sin x$} \makebox[4em]{$\cos x$}\hspace{1em}
+\makebox[5em]{$\sqrt x$}\makebox[7em]{$\sin x+\cos x$}\makebox[6em]{$\sin^2 x+\cos^2 x$}\\[3pt]
+\multido{\rA=0+0.1}{18}{\makebox[1em]{\rA}
+  \makebox[5em]{\psPrintValue[PSfont=Helvetica,xShift=-10]{\rA, sin(x)}}
+  \makebox[4em][r]{\psPrintValue[PSfont=Courier,fontscale=10,decimals=3,xShift=-20]{\rA,cos(x)}}\hspace{1em}
+  \makebox[5em]{\psPrintValue[dot,valuewidth=15,linecolor=blue,PSfont=AvantGarde]{\rA,sqrt(x)}}
+  \makebox[7em]{\psPrintValue[PSfont=Times-Italic]{\rA,sin(x)+cos(x)}}
+  \makebox[6em]{\psPrintValue[PSfont=Palatino-Roman]{\rA,sin(x)^2+cos(x)^2}}\\}
+\end{center}
+
+\bigskip
+
+\begin{lstlisting}
+\psset{algebraic, fontscale=12}% All functions now in algebraic notation
+\makebox[2em]{x(deg)} \makebox[5em]{$\sin x$} \makebox[4em]{$\cos x$}\hspace{1em}
+\makebox[5em]{$\sqrt x$}\makebox[7em]{$\sin x+\cos x$}\makebox[6em]{$\sin^2 x+\cos^2 x$}\\[3pt]
+\multido{\rA=0+0.1}{18}{\makebox[1em]{\rA}
+  \makebox[5em]{\psPrintValue[PSfont=Helvetica,xShift=-10]{\rA, sin(x)}}
+  \makebox[4em][r]{\psPrintValue[PSfont=Courier,fontscale=10,decimals=3,xShift=-20]{\rA,cos(x)}}\hspace{1em}
+  \makebox[5em]{\psPrintValue[dot,valuewidth=15,linecolor=blue,PSfont=AvantGarde]{\rA,sqrt(x)}}
+  \makebox[7em]{\psPrintValue[PSfont=Times-Italic]{\rA,sin(x)+cos(x)}}
+  \makebox[6em]{\psPrintValue[PSfont=Palatino-Roman]{\rA,sin(x)^2+cos(x)^2}}\\}
+\end{lstlisting}
+
+\clearpage
+\section{List of all optional arguments for \texttt{pst-tools}}
+
+\xkvview{family=pst-tools,columns={key,type,default}}
+
+
+
+
+\bgroup
+\raggedright
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{pst-tools-doc}
+\egroup
+
+\printindex
+
+
+
+\end{document}
+
+

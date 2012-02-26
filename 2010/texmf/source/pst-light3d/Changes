@@ -1,0 +1,17 @@
+pst-light3d.pro --------
+0.01  2004-09-29 first CTAN version
+
+
+pst-light3d.tex --------
+0.11  2004-09-29 first CTAN version
+
+
+pst-light3d.sty --------
+      2006-01-20 add a line for loading pst-light3d.pro
+      2004-09-29 first CTAN version
+
+
+pst-light3d-doc.tex --------
+      2007-08-13 use package showexpl for the examples
+                 instead of the obsolete pst-example
+    

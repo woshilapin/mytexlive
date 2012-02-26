@@ -1,0 +1,18 @@
+            ----------------------------------------------------
+            | pst-blur: PSTricks package for "blurred" shadows |
+            |                                                  |
+            |          Version 2.00 (September 08, 2005)       |
+            |          Martin Giese <giese@ira.uka.de>         |
+	    |          Herbert Voss <voss@pstricks.de>         |
+            ----------------------------------------------------
+
+  * Run "tex" on pst-blur.ins and copy pst-blur.tex and pst-blur.sty
+in one of your TeX input directories
+
+  * Install pst-blur.pro in one of your DVI to PostScript converter input
+directories
+
+  * Run "latex" on pst-blur.dtx to generate the documentation
+
+--
+For Martin Giese and Herbert Voss (updated September 09, 2005)

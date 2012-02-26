@@ -1,0 +1,32 @@
+%% Package `pst-spectra.tex'
+%%
+%% Arnaud Schmittbuhl, 2005, 2006
+%%
+
+LICENCE
+-------
+
+This program can be redistributed and/or modified under the terms
+of the LaTeX Project Public License Distributed from CTAN
+archives in directory macros/latex/base/lppl.txt.
+
+
+INSTALLATION
+------------
+
+Save the files
+
+pst-spectra.sty
+pst-spectra.tex
+pst-spectra.pro
+
+in any place, where TeX/LaTeX or any other TeX program will find it.
+The pro file should go into $TEXMF$/dvips/pstricks/.
+
+pst-spectra uses the extended version of the keyval package. So
+be sure that you
+- have installed xkeyval with the special pst-xkey
+  (CTAN: tex-archive/macros/latex/contrib/xkeyval/)
+- do not load another package after pst-spectra, which loads
+  the old keyval.sty or pst-key.tex
+

@@ -1,0 +1,145 @@
+\section{Les paramètres de \texttt{pst-solid}}
+
+\begin{longtable}{|>{\bfseries\ttfamily\color{blue}}l|c|m{10cm}|}
+  \hline
+  \multicolumn{1}{|c|}{\textbf{Paramètre}}&
+  \multicolumn{1}{c|}{\textbf{Défaut}}&
+  \multicolumn{1}{c|}{\textbf{Signification}} \\ \hline\hline
+\endfirsthead
+\hline
+  \multicolumn{1}{|c|}{\textbf{Paramètre}}&
+  \multicolumn{1}{c|}{\textbf{Défaut}}&
+  \multicolumn{1}{c|}{\textbf{Signification}} \\ \hline\hline
+\endhead
+\multicolumn{3}{|r|}{\textit{Suite à la page suivante}}\\ \hline
+\endfoot
+\multicolumn{3}{|r|}{\textit{Fin de la table}}\\ \hline
+\endlastfoot
+viewpoint&10 10 10&coordonnées du point de vue\\\hline
+SphericalCoor&false&coordonnées du point de vue en mode sphérique si \texttt{SphericalCoor}\\\hline
+a&2&arête du cube, rayon de la sphère circonscrite aux polyèdres réguliers, l'une des arêtes du parallélépipède\\\hline
+r&2&rayon du cylindre et de la sphère\\\hline
+h&6&hauteur du cylindre, cône, tronc de cône, du prisme\\ \hline
+r0&1.5&rayon intérieur du tore\\ \hline
+r1&4&rayon moyen du tore\\ \hline
+phi&0&latitude pour découper la calotte sphérique vers la bas\\ \hline
+theta&90&latitude pour découper la calotte sphérique vers le haut\\ \hline
+a,b et c& 4& les 3 arêtes du parallélépipède\\ \hline
+base&-1 -1 1 -1 0 1&coordonnées d'un triangle, base triangulaire par défaut\\ \hline
+axe&0 0 1&axe du prisme\\ \hline
+action&draw**&utilise l'algorithme du peintre pour tracer le solide sans les arêtes cachées et avec coloration des
+faces\\ \hline
+lightsrc&20 30 50&coordonnées cartésiennes de la source lumineuse\\ \hline
+lightintensity&2&intensité de la source de lumière\\ \hline
+ngrid&n1 n2& permet à l'utilisateur de spécifier la finesse du maillage pour le solide considéré\\ \hline
+mode&0&permet de passer du maillage prédéfini le plus grossier \texttt{[mode=0]} au maillage prédéfini
+le plus fin \texttt{mode=4}\\ \hline
+grid& true& si l'option \texttt{[grid]} est écrite, alors les lignes du maillage ne sont pas tracées\\ \hline
+biface&true& dessine la face intérieure, si on ne souhaite représenter que l'extérieur, écrire alors : \texttt{[biface]} \\ \hline
+algebraic&false&permet si \texttt{algebraic=true} (écrire alors : \texttt{[algebraic]}) de donner l'expression algébrique de
+l'équation de la surface, le package \texttt{pstricks-add} doit être chargé dans le préambule. \\ \hline
+fillcolor&white&permet de spécifier la couleur souhaitée pour les faces externes du solide.\\ \hline
+incolor&green&permet de spécifier la couleur souhaitée pour les faces intérieures du solide.\\ \hline
+hue& &permet de spécifier le dégradé de couleurs pour les faces extérieures du solide.\\ \hline
+fcol&&permet de spécifier dans l'ordre :
+ le numéro de la facette de 0 à n-1, pour n facettes ;
+ la couleur de la facette : fcol=0 (Apricot) 1 (Aquamarine) etc. \\ \hline
+rm&&permet de supprimer des facettes visibles : \texttt{rm=1 2 8} supprime les facettes 1, 2 et 8  \\ \hline
+show&&permet de pointer les sommets : \texttt{show=0 1 2 3} pointe les sommets \texttt{0,1,2 et 3}, \texttt{show=all} pointe tous les sommets.\\ \hline
+num&&permet de numéroter les sommets : \texttt{num=0 1 2 3} numérote les sommets \texttt{0,1,2 et 3}, \texttt{num=all} numérote tous les sommets.\\ \hline
+name&&nom attribué à un solide\\ \hline
+solidname&&nom du solide activé\\ \hline
+RotX&0&angle de rotation du solide autour de $Ox$ en degrés\\ \hline
+RotY&0&angle de rotation du solide autour de $Oy$ en degrés\\ \hline
+RotZ&0&angle de rotation du solide autour de $Oz$ en degrés\\ \hline
+hollow&false& dessine l'intérieur des solides creux : cylindre, cône, tronc de cône et
+prisme\\ \hline
+decal&-2&permet de faire subir un décalage
+des sommets dans le paramètre \texttt{base}\\ \hline
+axesboxed& false& cette option permet de tracer un quadrillage 3D et les axes de façon semi-automatique, car il convient de placer à la main
+   les bornes de $z$, écrire \texttt{[axesboxed]}\\ \hline
+Zmin&$-4$& valeur minimale de $z$\\ \hline
+Zmax&$4$& valeur maximale de $z$\\ \hline
+QZ&$0$&permet de décaler verticalement le repère de la valeur choisie\\ \hline
+spotX&dr&permet de placer, si le choix fait par défaut n'est pas satisfaisant, les valeurs des graduations sur l'axe des $x$ autour de l'extrémité de la graduation.\\ \hline
+spotY&dl&``idem''\\ \hline
+spotZ&l&``idem''\\ \hline
+resolution&36&nombre  de points lors du tracé d'une courbe\\ \hline
+range&-4 4 & limites pour les fonctions numériques\\ \hline
+function& f &nom attribué à une fonction \\ \hline
+path&\texttt{newpath 0 0 moveto}& le chemin à projeter\\ \hline
+normal&0 0 1& normale à la surface à définir\\ \hline
+text&& texte à projeter\\ \hline
+visibility&false& si ``false'' le texte appliqué une face cachée n'est pas affiché\\ \hline
+\end{longtable}
+
+\begin{tabular}{|>{\bfseries\ttfamily\color{blue}}l|c|m{10cm}|}\hline
+tracelignedeniveau&false& tracé d'une ligne de niveau\\ \hline
+hauteurlignedeniveau&0&valeur de $z$ pour la ligne de niveau\\ \hline
+linewidthlignedeniveau&1&largeur en points\\ \hline
+couleurlignedeniveau& & couleur de la ligne de niveau\\ \hline
+\end{tabular}
+\section{Les poèmes}
+Dans ma jeunesse, j'écoutais le son de la pluie dans les maisons de plaisir ;
+
+les tentures frissonnaient sous la lumière rouge des candélabres.
+
+Dans mon âge mûr, j'ai écouté le son de la pluie en voyage, à bord d'un bateau ;
+
+les nuages pesaient bas sur l'immensité du fleuve ;
+
+une oie sauvage séparée de ses soeurs appelait dans le vent d'ouest.
+
+Aujourd'hui, j'écoute le son de la pluie sous le charme d'un ermitage monastique.
+
+Ma tête est chenue, chagrins et bonheurs, séparations et retrouvailles - tout est vanité.
+
+Dehors, sur les marches, les gouttes tambourinent jusqu'à l'aube.
+
+\begin{flushleft} Juang Jie dans \textit{Les idées de autres} de Simon Leys\end{flushleft}
+
+ O cet effrayant torrent tout au fond
+
+O et la mer la mer écarlate quelquefois comme du feu
+
+Et les glorieux couchers de soleil
+
+Et les figuiers dans les jardins de l'Alameda
+
+Et toutes les ruelles bizarres
+
+Et les maisons roses et bleues et jaunes
+
+Et les roseraies et les jasmins et les géraniums
+
+Et les cactus de Gibraltar quand j'étais jeune fille
+
+Et une Fleur de la montagne oui
+
+Quand j'ai mis la rose dans mes cheveux comme les filles Andalouses
+
+Ou en mettrai-je une rouge oui
+
+Et comme il m'a embrassée sous le mur mauresque
+
+Je me suis dit après tout aussi bien lui qu'un autre
+
+Et alors je lui ai demandé avec les yeux de demander encore oui
+
+Et alors il m'a demandé si je voulais oui
+
+Dire oui ma fleur de la montagne
+
+Et d'abord je lui ai mis mes bras autour de lui oui
+
+Et je l'ai attiré sur moi pour qu'il sente mes seins tout parfumés oui
+
+Et son coeur battait comme un fou
+
+Et oui j'ai dit oui
+
+Je veux bien Oui.
+
+\begin{flushleft}
+Monologue de \textit{Molly Bloom} dans \textit{Ulysse} de James Joyce
+\end{flushleft}

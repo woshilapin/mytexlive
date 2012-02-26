@@ -1,0 +1,271 @@
+%-------------------------------------------------------------------
+%   Map2d-doc Dec.05,2003 - rev.0.92  by  M. Luque, G. Matarazzo
+%-------------------------------------------------------------------
+\documentclass[a4paper]{article}
+\usepackage{pstricks,pst-map2d,url}
+\usepackage[T1]{fontenc}
+
+\usepackage{ragged2e,xspace}
+\def\PST{\texttt{PSTricks}\xspace}
+\def\PS{\texttt{PostScript}\xspace}
+
+\pagestyle{empty}
+ \title{The \PstMapTwoDPackage{} package\\A PSTricks package for Geographical Projections}
+ \author{Manuel \textsc{Luque}
+         \mbox{\texttt{<Mluque5130.aol.com>}}\\
+         et\\
+         Giuseppe \textsc{Matarazzo} \mbox{\texttt{<joematara@hotmail.com>}}}
+ \date{Version 0.96\\ 19 février 2004\\
+       {\small Documentation révisée le 19 février 2004}}
+\newcommand{\PstMapTwoDPackage}{`\textsf{pst-map2d}'}
+\newcommand\Parameter[1]{\colorbox{black}{\textcolor{white}{#1}}}
+\psset{level=4,limiteL=190,path=../data}
+
+\begin{document}
+ \maketitle
+ \begin{abstract}
+ Nous sommes fix\'es pour objectif de repr\'esenter à l'aide PSTricks, diverses
+ projections cartographiques du globe terrestre. Cette extension \PstMapTwoDPackage{} concerne
+ les projections planes (Mercator, Lambert, cylindrique etc.). Un deuxi\`eme
+ package \textsf{pst-map3d} traite de la repr\'esentation en trois dimensions
+ du globe terrestre avec plusieurs fonctionnalit\'es qui rendent son
+ utilisation agr\'eable (tout au moins nous l'esp\'erons).
+
+ Diff\'erentes possibilit\'es  permettant de choisir le niveau du
+ d\'etail et les trac\'es possibles (villes, fronti\`eres, rivi\`eres etc.), vont
+ \^etre d\'etaill\'ees dans la suite du document.
+ \end{abstract}
+\tableofcontents
+\section{Les sources\label{sources}}
+\subsection{Pour la partie math\'ematique}
+\begin{enumerate}
+  \item Henri \textsc{Bouasse} : G\'eographie math\'ematique (1919), Delagrave.
+  \item \url{http://mathworld.wolfram.com/topics/MapProjections.html}
+\end{enumerate}
+\subsection{Les donn\'ees}
+GLOBE Binaries DECODING : World Public Domain Dbase :
+ F.Pospeschil, A.Rivera (1999)
+
+\url{ftp://ftp.blm.gov/pub/gis/wdbprg.zip}
+
+Elles ont \'et\'e converties sous forme de tableau PostScript, en
+degr\'es,
+gr\^ ace à un petit programme en pascal (de Giuseppe Matarazzo) qui
+fait partie de la distribution.
+\subsection{Le pr\'ecurseur en postscript}
+Bill \textsc{Casselman} :
+\url{http://www.math.ubc.ca/~cass/graphics/text/www/}
+
+Dont le chapitre 8 a inspir\'e la r\'ealisation du programme pour PSTricks.
+Il traite des transformations non linéaires et donne divers exemples dont
+les projections planes de la mappemonde. C'est un très beau travail !
+\section{Les diff\'erents types de projections et le niveau de d\'etail}
+\subsection{Les différents types de projections}
+Il y a, pour l'instant, 6 types de projections, lesquelles se paramètrent de
+la manière suivante :
+\begin{center}
+\renewcommand\arraystretch{2}
+\begin{tabular}{|lcr|c|}\hline
+\multicolumn{3}{|c|}{paramètre}&type de projection\\ \hline
+type&=&1& Mercator\\ \hline
+type&=&2 & Lambert\\ \hline
+type&=&3 & simple\\ \hline
+type&=&4 & Sanson-Flamsteed\\ \hline
+type&=&5 & cylindrical\\ \hline
+type&=&6 & Babinet\\ \hline
+type&=&7 & Collignon\\ \hline
+type&=&8 & Bonne\\ \hline
+\end{tabular}
+\end{center}
+\subsection{Les  cinq niveaux des d\'etails}
+\begin{center}
+\begin{tabular}{|lcr|c|}\hline
+\multicolumn{3}{|c|}{niveau de détail}& caractèristique\\ \hline
+level&=&1& très détaillé\\ \hline
+level&=&2 & détaillé\\ \hline
+level&=&3 & assez détaillé\\ \hline
+level&=&4 & moyennement détaillé\\ \hline
+level&=&5 & très schématique\\ \hline
+\end{tabular}
+\end{center}
+\subsection{Les options}
+On ne tracera, par défaut, que le contours des côtes.
+\begin{itemize}
+\item \Parameter{ilimiteL=180} : est la valeur absolue par défaut, en degrés, de
+la longitude $(\pm 180)$.
+\item \Parameter{increment=10} : est la valeur par défaut, en degrés, de l'écart angulaire entre deux
+méridiens ou parallèles. On pourra donc fixer une valeur plus petite dans le cas
+d'un zoom.
+\item  \Parameter{MapFillColor=0.99 0.95 0.7 } : permet de choisir la couleur de remplissage des continents,
+ en mode RGB.
+\item  \Parameter{borders=true} : on dessine les frontières des pays.
+\item \Parameter{rivers=true} : permet de dessiner les fleuves et les rivières.
+\item \Parameter{city=true} : marque les capitales et les principales villes.
+\item \Parameter{capital=true} : on ne positionne que les capitales.
+\item \Parameter{maillage=false} : permet de supprimer les parallèles et les
+méridiens.
+\item \Parameter{Fill=false} : les surfaces ne sont pas coloriées.
+\item \Parameter{USA=true}, \Parameter{MEX=true},
+\Parameter{AUS=true} dessinent respectivement les états des
+\textsc{USA}, du Mexique et de l'Australie.
+\end{itemize}
+\section{Mode d'emploi}
+\subsection{Projection de Mercator}
+L'utilisation de la commande est très simple :
+\Parameter{$\backslash$WorldMap[maillage=false]} dessine la projection
+de Mercator, sans les parallèles et les méridiens. Par défaut, c'est le
+niveau de détail le plus élevé et la projection type Mercator qui ont été choisis :
+\Parameter{[type=1,level=1]}. On jouera sur les unités
+afin d'adapter le dessin aux dimensions souhaitées, avec par exemple~:
+\begin{verbatim}
+\psset{linewidth=0.75\pslinewidth}
+{\psset{xunit=0.5,yunit=0.5}
+\begin{pspicture}*(-9,-9)(10,9)
+\WorldMap[maillage=false]
+\end{pspicture}}
+\end{verbatim}
+qui permet d'obtenir la projection de Mercator suivante :
+\begin{center}
+\psset{linewidth=0.75\pslinewidth}
+{\psset{xunit=0.5,yunit=0.5}
+\psset{MapFillColor=0.5 0.8 0.5}
+\begin{pspicture}*(-9,-9)(10,9)
+\WorldMap[maillage=false]
+\end{pspicture}}
+\end{center}
+Le script suivant dessine la projection de Mercator, en mode paysage :
+\begin{verbatim}
+\hbox{\hspace{-3cm}%
+\begin{pspicture}*(-9,-9)(9,10)
+\rput{90}(0,0){\WorldMap[city=true,borders=true]}
+\end{pspicture}}
+\end{verbatim}
+\hbox{\hspace{-3cm}%
+\begin{pspicture}*(-9,-9)(9,10)
+\rput{90}(0,0){\WorldMap[city=true,borders=true,USA=true,AUS=true,MEX=true]}
+\end{pspicture}}
+\subsection{Projection de Lambert}
+\begin{center}
+{\psset{xunit=0.75,yunit=0.75}
+\begin{pspicture}(-9,-4.5)(9.5,4.5)
+\WorldMap[type=2,city=true]
+\end{pspicture}}
+\end{center}
+\subsection{Projection simple}
+\begin{center}
+\begin{pspicture}(-3,-9)(3,10)
+\rput{90}(0,0){%
+\WorldMap[type=3,maillage=true]}
+\end{pspicture}
+\end{center}
+\subsection{Projection Sanson-Flamsteed}
+\begin{center}
+\psset{xunit=0.75,yunit=0.75}
+\begin{pspicture}(-5,-5)(8,5)
+\WorldMap[type=4]
+\end{pspicture}
+\end{center}
+\subsection{Projection cylindrique}
+\hbox{\hspace{-3cm}
+\begin{pspicture}*(-9,-9)(9.5,9)
+\WorldMap[type=5]
+\end{pspicture}}
+\subsection{Projection de Babinet}
+\begin{center}
+{\psset{xunit=0.75,yunit=0.75}
+\begin{pspicture}(-9,-9)(10,9)
+\WorldMap[type=6]
+\end{pspicture}}
+\end{center}
+\subsection{Projection de Collignon}
+\begin{center}
+{\psset{xunit=0.75,yunit=0.75}
+\begin{pspicture}(-9,-9)(10,9)
+\WorldMap[type=7]
+\end{pspicture}}
+\end{center}
+\subsection{Projection de Bonne}
+On peut choisir la latitude et la longitude de référence avec les
+paramètres : \Parameter{latitude0=45} et \Parameter{longitude0=0},
+qui sont les valeurs par défaut.
+\begin{center}
+\begin{pspicture}(-7,-10)(7,3)
+\WorldMap[type=8]
+\end{pspicture}
+\end{center}
+\section{Comment faire un zoom sur un pays ou une région donnée}
+Il n'a pas été prévu de commande particulière, mais la procédure
+suivante :
+\begin{enumerate}
+  \item Placer un \verb+\psgrid+ après le tracé de la carte, puis
+  repérer les coordonnées des deux sommets opposés du rectangle
+  dans lequel sera inclus la région souhaitée.
+\psset{level=1}
+\begin{center}
+\psset{linewidth=0.5\pslinewidth}
+\psset{xunit=0.75,yunit=0.75}
+\begin{pspicture}*(-9,-9)(10,9)
+\WorldMap[rivers=true,city=true,USA=true,maillage=false]
+\psgrid(-8,-8)(9,8)
+\psframe[linewidth=0.5mm,linecolor=red](-6.5,1)(-3,3)
+\end{pspicture}
+\end{center}
+  \item Par exemple, si nous choisissons de représenter les
+  \'Etats-Unis les coordonnées des coins bas-gauche et haut-droit
+  seront : \verb+(-6.5,1)(-3,3)+
+
+  L'agrandissement sera obtenu en changeant d'unité, un zoom $\times4$ s'obtiendra avec :
+  \verb+\psset{xunit=4,yunit=4}+. Finalement la
+  commande s'écrira :
+\begin{verbatim}
+\begin{center}
+\psset{xunit=4,yunit=4}% zoom 4*
+\psset{linewidth=1.25\pslinewidth}
+\begin{pspicture}*(-6.5,1)(-3,3)
+\WorldMap[rivers=true,city=true,USA=true]
+\end{pspicture}
+\end{center}
+\end{verbatim}
+\begin{center}
+\psset{xunit=4,yunit=4}% zoom 4*
+\psset{linewidth=1.25\pslinewidth}
+\begin{pspicture}*(-6.5,1)(-3,3)
+\WorldMap[rivers=true,city=true,USA=true,maillage=true]
+\end{pspicture}
+\end{center}
+\end{enumerate}
+\section{Téléchargement des fichiers}
+Le fichier des données (\texttt{wdb.zip}) est sur : \url{http://melusine.eu.org/syracuse/mluque/mappemonde/}
+
+ Si vous
+n'avez pas lu le fichier \verb+A LIRE+, la compilation a du mal se
+passer. Il faut en effet indiquer le chemin des données dans la
+variable \verb+path+. Cette variable contient le chemin des
+données sur mon disque dur :
+
+\verb+path=C:/mappemonde/wdb+
+
+Il faut donc avant le \verb+\begin{document}+, indiquer celui qui
+correspond à votre configuration avec une commande du type :
+
+\verb+\psset{path=C:/mappemonde/wdb}+
+
+ ou bien le modifier
+directement dans le fichier \verb+pst-map2d.tex+.
+
+Il est prévu la création d'un CR-ROM contenant toutes données, il
+sera gravé et fourni gratuitement par Giuseppe à tous ceux qui lui
+en feront la demande.
+
+
+\nocite{*}
+\bgroup
+\RaggedRight
+\bibliographystyle{plain}
+\bibliography{PSTricks}
+\egroup
+
+
+
+
+\end{document}

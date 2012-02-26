@@ -1,0 +1,865 @@
+%% $Id: pst-tree-doc.tex 133 2009-09-17 05:53:56Z herbert $
+\documentclass[11pt,english,BCOR10mm,DIV12,bibliography=totoc,parskip=false,smallheadings
+    headexclude,footexclude,oneside]{pst-doc}
+\usepackage[utf8]{inputenc}
+\usepackage{pst-tree}
+\let\pstTreeFV\fileversion
+\lstset{pos=t,language=PSTricks,
+    morekeywords={psGammaDist,psChiIIDist,psTDist,psFDist,psBetaDist,psPlotImpl},basicstyle=\footnotesize\ttfamily}
+%
+\begin{document}
+
+\title{\texttt{pst-tree}}
+\subtitle{Nodes and Trees; v.\pstTreeFV}
+\author{Timothy Van Zandt\\Herbert Vo\ss}
+\docauthor{Herbert Vo\ss}
+\date{\today}
+\maketitle
+
+\tableofcontents
+
+\clearpage% 
+
+\begin{abstract}
+The node and node connections are perfect tools for making trees, but
+positioning the nodes using \Lcs{rput} would be rather tedious.\footnote{%
+Unless you have a computer program that generates the coordinates.}
+The file \nxLPack{pst-tree.tex}/\nxLPack{pstree.sty} contains a high-level interface for
+making trees.
+
+It should be noted that the correct result is not guaranteed with every \Lprog{dvips} driver.
+This package was written for Rokicki's\index{Rokicki} 
+\Lprog{dvips} programme, which is practically part of every \TeX{}
+distribution.
+
+%\vfill
+%Thanks to: Lars Kotthoff, Geoff Mercer
+\end{abstract}
+
+\clearpage
+
+% ---------------------
+
+\section{Overview}
+
+
+The tree commands are
+\begin{BDef}
+\Lcs{pstree}\Largb{<root>}\Largb{<successors>}
+\end{BDef}
+
+\begin{BDef}
+\begin{tabular}{@{}l@{\kern30pt}l}
+\TeX\ version & \LaTeX\ version\\
+\Lcs{psTree}\Largb{<root>} & \LBEG{psTree}\Largb{root}\\
+\qquad<successors>         & \qquad<successors> \\  
+\Lcs{endpsTree}            & \LEND{psTree} 
+\end{tabular}
+\end{BDef}
+
+
+These do the same thing, but just have different syntax. \Lcs{psTree} is the ``long'' version.
+These macros make a box that encloses all the nodes, and whose baseline passes
+through the center of the root.
+Most of the nodes has a variant for use within a tree and are called tree nodes (see Section~\ref{treenodes}).
+
+Trees and tree nodes are called \emph{\Index{tree objects}}. The \Larg{root} of a tree
+should be a single tree object, and the \Larg{successors} should be one or more
+tree objects. Here is an example with only nodes:
+\begin{LTXexample}[pos=l]
+  \pstree[radius=3pt]{\Toval{root}}{\TC* \TC* \TC* \TC*}
+\end{LTXexample}
+There is no difference between a terminal node and a root node, other than
+their position in the \Lcs{pstree}\Largb{} command.
+  
+Here is an example where a tree is included in the list of successors, and
+hence becomes \Index{subtree}:
+\begin{LTXexample}[pos=l]
+  \pstree[radius=3pt]{\Tp}{%
+    \TC*
+    \pstree{\TC}{\TC* \TC*}
+    \TC*}
+\end{LTXexample}
+
+
+\section{Tree Nodes}\label{treenodes}
+
+In each case, the name of the tree node is
+formed by omitting "`node"' from the end of the name and adding "T" at the
+beginning. For example, \Lcs{psovalnode} becomes \Lcs{Toval}. Here is the list of such
+tree nodes:
+\begin{BDef}
+\LcsStar{Tp}\OptArgs\\
+\LcsStar{Tc}\OptArgs\Largb{dim}\\
+\LcsStar{TC}\OptArgs\\
+\LcsStar{Tf}\OptArgs\\
+\LcsStar{Tdot}\OptArgs\\
+\LcsStar{Tr}\OptArgs\Largb{stuff}\\
+\LcsStar{TR}\OptArgs\Largb{stuff}\\
+\LcsStar{Tcircle}\OptArgs\Largb{stuff}\\
+\LcsStar{TCircle}\OptArgs\Largb{stuff}\\
+\LcsStar{Toval}\OptArgs\Largb{stuff}\\
+\LcsStar{Tdia}\OptArgs\Largb{stuff}\\
+\LcsStar{Ttri}\OptArgs\Largb{stuff}
+\end{BDef}
+
+The syntax of a tree node is the same as of its corresponding ``normal'' node,
+except that:
+\begin{itemize}
+  \item There is always an optional argument for setting graphics parameters,
+  even if the original node did not have one;
+  \item There is no argument for specifying the name of the node;
+  \item There is never a coordinate argument for positioning the node; and
+  \item To set the reference point with \Lcs{Tr}, set the \Lkeyword{ref} parameter.
+\end{itemize}
+
+Figure~\ref{allnodes} gives a reminder of what the nodes look like.
+
+\begin{figure}[!htb]
+\begin{LTXexample}
+  \small
+  \psset{armB=1cm, levelsep=3cm, treesep=-3mm, angleB=-90, angleA=90, nodesepA=3pt}
+  \def\s#1{#1~{\tt\string#1}}\def\b#1{#1{\tt\string#1}}\def\psedge#1#2{\ncangle{#2}{#1}}
+  \psTree[treenodesize=1cm]{\Toval{Tree nodes}}
+    \s\Tp\Tc{.5}~{\tt\string\Tc} \s\TC
+    \psTree[levelsep=4cm,armB=2cm]{\Tp[edge=\ncline]}
+      \b\Tcircle \s\Tdot
+      \TCircle[radius=1.2]{\tt\string\TCircle}
+      \Tn \b\Toval \b\Ttri \b\Tdia
+    \endpsTree
+    \s\Tf \b\Tr \b\TR
+  \endpsTree
+\end{LTXexample}
+\caption{The tree nodes.}\label{allnodes}
+\end{figure}
+
+The difference between \Lcs{Tr} and \Lcs{TR} (variants of \Lcs{rnode} and \Lcs{Rnode},
+respectively) is important with trees. Usually, you want to use \Lcs{TR} with
+vertical trees because the baselines of the text in the nodes line up
+horizontally. For example:
+\begin{LTXexample}[pos=l]
+   $
+   \pstree[nodesepB=3pt]{\Tcircle{X}}{%
+     \TR{\tilde{\tilde{X}}}
+     \TR{x}
+     \TR{y}}
+   $
+\end{LTXexample}
+Compare with this example, which uses \Lcs{Tr}:
+\begin{LTXexample}[pos=l]
+   $
+   \pstree[nodesepB=3pt]{\Tcircle{X}}{%
+     \Tr{\tilde{\tilde{X}}}
+     \Tr{x}
+     \Tr{y}}
+   $
+\end{LTXexample}
+
+There is also a null tree node: 
+\begin{BDef}
+\Lcs{Tn}
+\end{BDef}
+It is meant to be just a place holder. Look at the tree in Figure
+page~\pageref{allnodes}. The bottom row has a node missing in the middle.
+\Lcs{Tn}\Largb{} was used for this missing node. 
+
+There is also a special tree node that doesn't have a ``normal'' version and
+that can't be used as the root node of a whole tree:
+\begin{BDef}
+\LcsStar{Tfan}\OptArgs 
+\end{BDef}
+This draws a triangle whose base is \Lkeyword{fansize} %=\makeatletter\psk@fansize\makeatother
+and whose opposite corner is the predecessor node, adjusted by the value of
+\Lkeyword{nodesepA} and \Lkeyword{offsetA}.
+For example:
+\begin{LTXexample}[pos=l]
+  \pstree[dotstyle=oplus,dotsize=8pt,nodesep=2pt]{\Tcircle{11}}{%
+      \Tdot
+      \pstree{\Tfan}{\Tdot}
+      \pstree{\Tdot}{\Tfan[linestyle=dashed]}}
+\end{LTXexample}
+
+
+
+
+\section{Tree orientation}
+
+Trees can grow down, up, right or left, depending on the \Lkeyword{treemode=}
+\Lkeyval{D}, \Lkeyval{U}, \Lkeyval{R}, or \Lkeyval{L} parameter.
+
+Here is what the previous example looks like when it grows to the right:
+
+\begin{LTXexample}[pos=l,width=0.4\linewidth]
+  \pstree[dotstyle=oplus,dotsize=8pt,
+    nodesep=2pt,treemode=R]
+    {\Tcircle{11}}{%
+      \Tdot
+      \pstree{\Tfan}{\Tdot}
+      \pstree{\Tdot}{\Tfan[linestyle=dashed]}}
+\end{LTXexample}
+
+
+You can change the \Lkeyword{treemode} in the middle of the tree.
+For example, here is a tree that grows up, and that has a subtree which grows
+to the left:
+
+\begin{LTXexample}[pos=l,width=0.4\linewidth]
+  \footnotesize
+  \pstree[treemode=U,dotstyle=otimes,dotsize=8pt,nodesep=2pt]
+    {\Tdot}{%
+      \pstree[treemode=L]{\Tdot}{\Tcircle{1} \Tcircle{2}}
+      \pstree{\Tdot}{\Tcircle{3} \Tcircle{4}}}
+\end{LTXexample}
+
+Since you can change a tree's orientation, it can make sense to include a tree
+(<treeB>) as a root node (of <treeA>). This makes a single logical tree, whose
+root is the root of <treeB>, and that has successors going off in different
+directions, depending on whether they appear as a successor to <treeA> or to
+<treeB>.
+
+\begin{LTXexample}[pos=l,width=0.4\linewidth]
+  \pstree{\pstree[treemode=L]{\Tcircle{root}}{\Tr{B}}}{%
+    \Tr{A1}
+    \Tr{A2}}
+\end{LTXexample}
+
+%%DG: to do
+
+On a semi-related theme, note that any node that creates an LR-box can contain
+a tree. However, nested trees of this kind are not related in any way to the
+rest of the tree. Here is an example:
+
+\begin{LTXexample}[pos=l,width=0.4\linewidth]
+  \psTree{\Tcircle{%
+            \pstree[treesep=0.4,levelsep=0.6,
+                    nodesepB=-6pt]{\Tdot}{%
+              \TR{a} \TR{b}}}}
+    \TC
+    \TC
+  \endpsTree
+\end{LTXexample}
+
+When the tree grows up or down, the successors are lined up from left to right
+in the order they appear in \Lcs{pstree}. When the tree grows to the left or
+right, the successors are lined up from top to bottom. As an afterthought, you
+might want to flip the order of the nodes. The keyword \Lkeyword{treeflip}=\true/\false
+let's you do this. For example:
+
+\begin{LTXexample}[pos=l,width=0.4\linewidth]
+\footnotesize
+\pstree[treemode=U,dotstyle=otimes,dotsize=8pt,
+  nodesep=2pt,treeflip=true]{\Tdot}{%
+    \pstree[treemode=R]{\Tdot}{\Tcircle{1} \Tcircle{2}}
+    \pstree{\Tdot}{\Tcircle{3} \Tcircle{4}}}
+\end{LTXexample}
+Note that I still have to go back and change the \Lkeyword{treemode} of the subtree
+that used to grow to the left.
+
+
+\section{The distance between successors}
+
+The distance between successors is set by the key \Lkeyword{treesep}.
+The rest of this section describes ways to fine-tune the spacing between
+successors.
+You can change the method for calculating the distance between subtrees by
+setting the  \Lkeyword{treefit}=\Lkeyval{tight}/\Lkeyval{loose}
+parameter. Here are the two methods:
+\begin{description}
+  \item[\Lkeyval{tight}] When \Lkeyset{treefit=tight}, which is the default, \Lkeyword{treesep} is
+  the minimum distance between each of the levels of the subtrees.
+  \item[\Lkeyval{loose}] When \Lkeyset{treefit=loose}, \Lkeyword{treesep} is the distance between the
+  subtrees' bounding boxes. Except when you have large intermediate nodes, the
+  effect is that the horizontal distance (or vertical distance, for horizontal
+  trees) between all the terminal nodes is the same (even when they are on
+  different levels).\footnote{%
+  When all the terminal nodes are on the same level, and the intermediate
+  nodes are not wider than the base of their corresponding \Index{subtree}s, then
+  there is no difference between the two methods.}
+\end{description}
+
+Compare:
+\begin{center}
+\tabcolsep=1cm
+\begin{tabular}{cc}
+  \psset{radius=2pt}
+  \pstree{\TC*}{%
+    \TC
+    \pstree{\TC*}{%
+      \pstree{\Tc{3pt}}{\TC \TC}
+      \TC*}}
+  &
+  \psset{radius=2pt}
+  \pstree[treefit=loose]{\TC*}{%
+    \TC
+    \pstree{\TC*}{%
+      \pstree{\Tc{3pt}}{\TC \TC}
+      \TC*}}
+\end{tabular}
+\end{center}
+
+With \Lkeyset{treefit=loose}, trees take up more space, but sometimes the structure
+of the tree is emphasized.
+
+
+%Another (orthogonal) way to highlight the structure of the tree is by setting
+%\begin{Ex}
+%  \Par{xtreesep=dim}
+%\end{Ex}
+%to a positive value. The effect is that adjacent nodes with different parents
+%are farther apart than adjacent nodes with the same parent.\footnote{%
+%When \p{treefit=tight}, the minimum distance between levels other than the top
+%of the subtrees is increased by \p{xtreesep}. When \p{treefit=loose}, the
+%minimum distance between subtrees is increased by \p{xtreesep}}.
+
+%This would have no effect in the previous two examples, but compare the
+%spacing between the two subtrees in
+%\begin{LTXexample}
+%  \psTree[radius=2pt,levelsep=1.5,xtreesep=.25cm] \TC* \\
+%    \pstree{\TC*}{\TC* \TC*}
+%    \pstree{\TC*}{\TC* \TC*}
+%  \endpsTree
+%\end{LTXexample}
+%with the spacing in
+%\begin{LTXexample}
+%  \psTree[radius=2pt,levelsep=1.5] \TC* \\
+%    \pstree{\TC*}{\TC* \TC*}
+%    \pstree{\TC*}{\TC* \TC*}
+%  \endpsTree
+%\end{LTXexample}
+
+Sometimes you want the spacing between the centers of the nodes to be regular
+even though the nodes have different sizes. If you set \Lkeyword{treenodesize}
+to a non-negative value, then PSTricks sets the width (or height+depth for
+vertical trees) to \Lkeyword{treenodesize}, \emph{for the purpose of calculating the
+distance between successors}.
+
+
+For example, ternary trees look nice when they are symmetric, as in the
+following example:
+
+\begin{LTXexample}[pos=l,width=0.4\linewidth]
+  \pstree[nodesepB=-8pt,treenodesize=.85]{\Tc{3pt}}{%
+    \TR{$x=y$}
+    \TR{$x_1=y_1$}
+    \TR{$x_{11}=y_{11}$}}%$
+\end{LTXexample}
+
+Compare with this example, where the spacing varies with the size of the
+nodes:
+
+\begin{LTXexample}[pos=l,width=0.4\linewidth]
+  \pstree[nodesepB=-8pt]{\Tc{3pt}}{%
+    \TR{$x=y$}
+    \TR{$x_1=y_1$}
+    \TR{$x_{11}=y_{11}$}}%$
+\end{LTXexample}
+
+Finally, if all else fails, you can adjust the distance between two successors 
+by inserting \Lcs{tspace}\Largb{length} between them:
+
+\begin{LTXexample}[pos=l,width=0.4\linewidth]
+  \pstree{\Tc{3pt}}{%
+    \Tdia{foo}
+    \tspace{-0.5}
+    \Toval{and}
+    \Ttri{bar}}
+\end{LTXexample}
+
+\section{Spacing between the root and successors}
+
+The distance between the center lines of the tree levels is \Lkeyword{levelsep}.
+If you want the spacing between levels to vary with the size of the levels,
+use the * convention. Then \Lkeyword{levelsep} is the distance between the bottom of
+one level and the top of the next level (or between the sides of the two
+levels, for horizontal trees).
+
+Note: PSTricks has to write some information to your \Lext{aux} file if using
+\LaTeX, or to \Lcs{jobname}.pst otherwise, in order to calculate the spacing.
+You have to run your input file a few times before PSTricks gets the spacing
+right.
+
+
+
+%%DG: to do
+%You are most likely to want to set \p{varlevelsep} to "true" in horizontal
+trees. Compare the following example:
+
+\begin{LTXexample}
+  \def\psedge#1#2{\ncdiagg[nodesep=3pt,angleA=180,armA=0]{#2}{#1}}
+  \pstree[treemode=R,levelsep=*1cm]{\Tr{George Alexander Kopf VII}}{%
+      \pstree{\Tr{Barry Santos}}{\Tr{James Kyle} \Tr{Ann Ada}}
+      \pstree{\Tr{Terri Maloney}}{\Tr{Uwe Kopf} \Tr{Vera Kan}}}
+\end{LTXexample}
+
+with this one, were the spacing between levels is fixed:
+
+\begin{LTXexample}
+  \def\psedge#1#2{\ncdiagg[nodesep=3pt,angleA=180,armA=0]{#2}{#1}}
+  \pstree[treemode=R,levelsep=3cm]{\Tr{George Alexander Kopf VII}}{%
+      \pstree{\Tr{Barry Santos}}{\Tr{James Kyle} \Tr{Ann Ada}}
+      \pstree{\Tr{Terri Maloney}}{\Tr{Uwe Kopf} \Tr{Vera Kan}}}
+\end{LTXexample}
+
+%The center of the root node of a tree is positioned above the midpoint between
+%the centers of the two outer successors. If you want the root to be positioned
+%drectly above one of the successors, put the command
+%  \Mac  \treecenter
+%right \emph{after} that successor. For example:
+%\begin{LTXexample}
+%  \def\myfan#1{\Tfan[fillstyle=solid,fillcolor=#1]\treecenter}%
+%    \pstree{\Tcircle{$x_2$}}{%
+%      \pstree{\Tcircle{$x_1$}}{%
+%        \pstree{\Tcircle{$x_0$}}{\myfan{black}}
+%        \myfan{gray}}
+%      \myfan{white}}
+%\end{LTXexample}
+
+%Here is another interesting example:
+%\begin{example}
+%  \def\psedge{\ncangle[angleA=0,angleB=90]}
+%  \pstree[treesep=10pt]{\Tcircle[name=after]{$x_0$}}{%
+%    \Tfan[fillstyle=solid,fillcolor=black]
+%    \treecenter
+%    \pstree{\Tcircle{$x_1$}}{\Tfan[fillstyle=solid,fillcolor=darkgray]}
+%    \pstree{\Tcircle{$x_2$}}{\Tfan[fillstyle=solid,fillcolor=gray]}
+%    \pstree{\Tcircle{$x_3$}}{\Tfan[fillstyle=solid,fillcolor=lightgray]}
+%    \pstree{\Tcircle{$x_4$}}{\Tfan[fillstyle=solid,fillcolor=white]}}
+%\end{example}
+
+
+\section{Edges}
+
+Right after you use a tree node command, \Lcs{pssucc} is equal to the name of the
+node, and \Lcs{pspred} is equal to the name of the node's predecessor. Therefore,
+you can draw a line between the node and its predecessor by inserting, for
+example,
+
+\begin{lstlisting}[style=syntax]
+\ncline{\pspred}{\pssucc}
+\end{lstlisting}
+
+To save you the trouble of doing this for every node, each tree node executes
+\begin{lstlisting}[style=syntax]
+  \psedge{\pspred}{\pssucc}
+\end{lstlisting}
+The default definition of \Lcs{psedge} is \Lcs{ncline}, but you can redefine it as
+you please with \Lcs{def} or \LaTeX's \Lcs{renewcommand}.
+
+For example, here I use \Lcs{ncdiag}, with \Lkeyword{armA}=0, to get all the node
+connections to emanate from the same point in the predecessor. \LaTeX{} users can instead type:
+\begin{lstlisting}[style=syntax]
+\renewcommand{\psedge}{\ncdiag[armA=0,angleB=180,armB=1cm]}
+\end{lstlisting}
+
+
+\begin{LTXexample}[pos=l,width=0.4\linewidth]
+  \def\psedge{\ncdiag[armA=0,angleB=180,armB=1cm]}
+  \pstree[treemode=R,levelsep=3.5cm,framesep=2pt]{\Tc{6pt}}{%
+      \small \Tcircle{K} \Tcircle{L} \Tcircle{M} \Tcircle{N}}
+\end{LTXexample}
+
+Here is an example with \Lcs{ncdiagg}. Note the use of a negative \Lkeyword{armA} value
+so that the corners of the edges are vertically aligned, even though the nodes
+have different sizes:
+
+\begin{LTXexample}
+$
+\def\psedge#1#2{\ncdiagg[angleA=180,armA=1cm,nodesep=4pt]{#2}{#1}}
+% Or: \renewcommand{\psedge}[2]{ ... }
+\pstree[treemode=R, levelsep=5cm]{\Tc{3pt}}{%
+  \Tr{z_1\leq y}  \Tr{z_1<y\leq z_2}   \Tr{z_2<y\leq x}   \Tr{x<y}
+}
+$
+\end{LTXexample}
+
+Another way to define \Lcs{psedge}\Largb{} is with the \Lkeyword{edge}
+parameter. Be sure to enclose the value in braces "{}" if it contains commas
+or other parameter delimiters. This gets messy if your command is long, and
+you can't use arguments like in the preceding example, but for simple changes
+it is useful. For example, if I want to switch between a few node connections
+frequently, I might define a command for each node connection, and then use
+the \Lkeyword{edge} parameter.
+
+\begin{LTXexample}[pos=l,width=0.4\linewidth]
+  \def\dedge{\ncline[linestyle=dashed]}
+  \pstree[treemode=U,radius=2pt]{\Tc{3pt}}{%
+    \TC*[edge=\dedge]
+    \pstree{\Tc{3pt}}{\TC*[edge=\dedge] \TC*}
+    \TC*}
+\end{LTXexample}
+
+You can also set \Lkeyset{edge=none} to suppress the node connection.
+
+If you want to draw a node connection between two nodes that are not direct
+predecessor and successor, you have to give the nodes a name that you can
+refer to, using the \Lkeyword{name} parameter. For example, here I connect two nodes
+on the same level:
+
+\begin{LTXexample}[pos=l,width=0.4\linewidth]
+  \pstree[nodesep=3pt,radius=2pt]{\Toval{nature}}{%
+    \pstree{\Tc[name=top]{3pt}}{\TC* \TC*}
+    \pstree{\Tc[name=bot]{3pt}}{\TC* \TC*}}
+   \ncline[linestyle=dashed]{top}{bot}
+\end{LTXexample}
+
+We conclude with the more examples.
+
+\begin{LTXexample}[pos=l,width=0.4\linewidth]
+  \def\psedge{\nccurve[angleB=180, nodesepB=3pt]}
+  \pstree[treemode=R, treesep=1.5, levelsep=3.5]%
+    {\Toval{root}}{\Tr{X} \Tr{Y} \Tr{Z}}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=l,width=0.4\linewidth]
+  \pstree[nodesepB=3pt, arrows=->, xbbl=15pt,
+    xbbr=15pt, levelsep=2.5cm]{\Tdia{root}}{%
+    $
+    \TR[edge={\ncbar[angle=180]}]{x}
+    \TR{y}
+    \TR[edge=\ncbar]{z}
+    $}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=l,width=0.4\linewidth]
+  \psset{armB=1cm, levelsep=3cm, treesep=1cm,
+    angleB=-90, angleA=90, arrows=<-, nodesepA=3pt}
+  \def\psedge#1#2{\ncangle{#2}{#1}}
+  \pstree[radius=2pt]{\Ttri{root}}{\TC* \TC* \TC* \TC*}
+\end{LTXexample}
+
+
+
+\section{Edge and node labels}
+
+Right after a node, an edge has typically been drawn, and you can attach
+labels using \Lcs{ncput}, \Lcs{tlput}, etc.
+With \Lcs{tlput}, \Lcs{trput}, \Lcs{taput}, and \Lcs{tbput}, you can align the labels
+vertically or horizontally, just like the nodes. This can look nice, at least
+if the slopes of the node connections are not too different.
+
+\begin{LTXexample}[pos=l,width=0.4\linewidth]
+  \pstree[radius=2pt]{\Tp}{%
+    \psset{tpos=.6}
+    \TC* \tlput{k}
+    \pstree{\Tc{3pt} \tlput[labelsep=3pt]{r}}{%
+      \TC* \tlput{j}
+      \TC* \trput{i}}
+    \TC* \trput{m}}
+\end{LTXexample}
+
+Within trees, the \Lkeyword{tpos} parameter measures this distance from the
+predecessor to the successor, whatever the orientation of the true.
+(Outside of trees it measures the distance from the top to bottom or left to
+right nodes.)
+
+PSTricks also sets \Lkeyset{shortput=tab} within trees. This is a special
+\Lkeyword{shortput} option that should not be used outside of trees. It implements
+the following abbreviations, which depend of the orientation of the true:
+
+\begin{center}
+\begin{tabular}{ccc}
+ & \multicolumn{2}{c}{Short for:}\\
+  \emph{Char.} & \emph{Vert.} & \emph{Horiz.}\\[2pt]
+  \textasciicircum & \Lcs{tlput} & \Lcs{taput} \\
+  \textunderscore & \Lcs{trput} & \Lcs{tbput}
+\end{tabular}
+\end{center}
+(The scheme is reversed if \Lkeyset{treeflip=true}.)
+
+\begin{LTXexample}[pos=l,width=0.4\linewidth]
+  \psset{tpos=.6}
+  \pstree[treemode=R, thistreesep=1cm,
+    thislevelsep=3cm,radius=2pt]{\Tc{3pt}}{%
+    \pstree[treemode=U, xbbr=20pt]{\Tc{3pt}^{above}}{%
+      \TC*^{left}
+      \TC*_{right}}
+    \TC*^{above}
+    \TC*_{below}}
+\end{LTXexample}
+
+You can change the character abbreviations with
+
+
+\begin{BDef}
+\Lcs{MakeShortTab}\Largb{<char1>}\Largb{<char2>}
+\end{BDef}
+
+The \verb+\n*put+ commands can also give good results:
+
+\begin{LTXexample}[pos=l,width=0.4\linewidth]
+  \psset{npos=.6,nrot=:U}
+  \pstree[treemode=R, thistreesep=1cm,
+    thislevelsep=3cm]{\Tc{3pt}}{%
+    \Tc{3pt}\naput{above}
+    \Tc*{2pt}\naput{above}
+    \Tc*{2pt}\nbput{below}}
+\end{LTXexample}
+
+You can put labels on the nodes using \Lcs{nput}. However, \Lcs{pstree} won't take
+these labels into account when calculating the bounding boxes.
+
+There is a special node label option for trees that does keep track of the
+bounding boxes:
+\begin{BDef}
+\Lnotation{\texttildelow}\OptArg*{*}\OptArgs\Largb{stuff}
+\end{BDef}
+Call this a ``tree node label''.
+
+Put a tree node label right after the node to which it applies, before any
+node connection labels (but node connection labels, including the short forms,
+can follow a tree node label). The label is positioned directly below the node
+in vertical trees, and similarly in other trees. For example:
+
+
+\begin{LTXexample}
+  \pstree[radius=2pt]{\Tc{3pt}\nput{45}{\pssucc}{root}}{%
+    \TC*~{$h$} \TC*~{$i$} \TC*~{$j$} \TC*~{$k$}}
+\end{LTXexample}
+
+Note that there is no ``long form'' for this tree node label. However, you can
+change the single character used to delimit the label with
+\begin{BDef}
+\Lcs{MakeShortTnput}\Largb{<char1>}
+\end{BDef}
+If you find it confusing to use a single character, you can also use a command
+sequence. E.g.,
+
+\begin{lstlisting}[style=syntax]
+\MakeShortTnput{\tnput}
+\end{lstlisting}
+
+You can have multiple labels, but each successive label is positioned relative
+to the bounding box that includes the previous labels. Thus, the order in
+which the labels are placed makes a difference, and not all combinations will
+produce satisfactory results.
+
+You will probably find that the tree node label works well for terminal nodes,
+without your intervention. However, you can control the tree node labels be
+setting several parameters.
+
+To position the label on any side of the node ("l"eft, "r"ight, "a"bove or
+"b"elow), set:  \Lkeyword{tnpos}=\Lkeyval{l}/\Lkeyval{r}/\Lkeyval{a}/\Lkeyval{b}
+
+\begin{LTXexample}[pos=l,width=0.4\linewidth]
+\psframebox{%
+  \pstree{\Tc{3pt}~[tnpos=a,tndepth=0pt,radius=4pt]{root}}{%
+    \TC*~[tnpos=l]{$h$}
+    \TC*~[tnpos=r]{$i$}}}
+\end{LTXexample}
+
+When you leave the argument empty, which is the default, PSTricks chooses the
+label position is automatically.
+
+To change the distance between the node and the label, set \Lkeyword{tnsep} to a dimension
+When you leave the argument empty, which is the default, PSTricks uses the
+value of \Lkeyword{labelsep}. When the value is negative, the distance is measured
+from the center of the node.
+
+When labels are positioned below a node, the label is given a minimum height
+of \Lkeyword{tnheight}.
+Thus, if you add labels to several nodes that are horizontally aligned, and if
+either these nodes have the same depth or \Lkeyword{tnsep} is negative, and if the
+height of each of the labels is no more than \Lkeyword{tnheight}, then the labels
+will also be aligned by their baselines. The default is \nxLcs{ht}\Lcs{strutbox}, which
+in most \TeX{} formats is the height of a typical line of text in the current
+font. Note that the value of \Lkeyword{tnheight} is not evaluated until it is used.
+
+The positioning is similar for labels that go below a node. The label is given
+a minimum \emph{depth} of \Lkeyword{tndepth}.
+For labels positioned above or below, the horizontal reference point of the
+label, i.e., the point in the label directly above or below the center of the
+node, is set by the \Lkeyword{href} parameter.
+
+When labels are positioned on the left or right, the right or left edge of the
+label is positioned distance \Lkeyword{tnsep} from the node. The vertical point that
+is aligned with the center of the node is set by \Lkeyword{tnyref}.
+When you leave this empty, \Lkeyword{vref} is used instead. Recall that \Lkeyword{vref}
+gives the vertical \emph{distance} from the baseline. Otherwise, the
+\Lkeyword{tnyref} parameter works like the \Lkeyword{yref} parameter, giving the fraction of
+the distance from the bottom to the top of the label.
+
+\section{Details}
+
+PSTricks does a pretty good job of positioning the nodes and creating a box
+whose size is close to the true bounding box of the tree. However, PSTricks
+does not take into account the node connections or labels when calculating the
+bounding boxes, except the tree node labels.
+
+If, for this or other reasons, you want to fine tune the bounding box of the
+nodes, you can set the following parameters to a dimension:
+
+\begin{tabular}{@{}l l @{}}
+\emph{name} & \emph{default}\\\hline
+\Lkeyword{bbl}   &  0pt\\
+\Lkeyword{bbr}&  0pt\\
+\Lkeyword{bbh}&  0pt\\
+\Lkeyword{bbd}&  0pt\\
+\Lkeyword{xbbl}&  0pt\\
+\Lkeyword{xbbr}&  0pt\\
+\Lkeyword{xbbh}&  0pt\\
+\Lkeyword{xbbd}&  0pt
+\end{tabular}
+
+The "`x"' versions increase the bounding box by <dim>, and the others set the
+bounding box to the dimension. There is one parameter for each direction from the
+center of the node, \textbf{l}eft, \textbf{r}ight, \textbf{h}eight, and
+\textbf{d}epth.
+
+These parameters affect trees and nodes, and subtrees that switch directions,
+but not subtrees that go in the same direction as their parent tree (such
+subtrees have a profile rather than a bounding box, and should be adjusted by
+changing the bounding boxes of the constituent nodes).
+
+Save any fiddling with the bounding box until you are otherwise finished with
+the tree.
+
+You can see the bounding boxes by setting the \Lkeyword{showbbox}=\true/\false
+parameter to \true. To see the bounding boxes of all the nodes in a tree, you
+have to set this parameter before the tree.
+
+In the following example, the labels stick out of the bounding box:
+
+\begin{LTXexample}[pos=l,width=0.4\linewidth]
+\psset{tpos=.6,showbbox=true}
+\pstree[treemode=U]{\Tc{5pt}}{%
+    \TR{foo}^{left}
+    \TR{bar}_{right}}
+\end{LTXexample}
+
+Here is how we fix it:
+
+\begin{LTXexample}[pos=l,width=0.4\linewidth]
+\psset{tpos=.6,showbbox=true}
+\pstree[treemode=U,xbbl=8pt,xbbr=14pt]{\Tc{5pt}}{%
+    \TR{foo}^{left}
+    \TR{bar}_{right}}
+\end{LTXexample}
+
+Now we can frame the tree:
+
+\begin{LTXexample}[pos=l,width=0.4\linewidth]
+\psframebox[fillstyle=solid,fillcolor=lightgray,framesep=14pt,
+  linearc=14pt,cornersize=absolute,linewidth=1.5pt]{%
+  \psset{tpos=.6,border=1pt,nodesepB=3pt}
+  \pstree[treemode=U,xbbl=8pt,xbbr=14pt]{%
+    \Tc[fillcolor=white,fillstyle=solid]{5pt}}{%
+    \TR*{foo}^{left}
+    \TR*{bar}_{right}}}
+\end{LTXexample}
+
+We would have gotten the same result by changing the bounding box of the two
+terminal nodes.
+
+To skip levels, use
+
+\begin{BDef}
+\LcsStar{skiplevel}\OptArgs\Largb{nodes or subtrees}\\[4pt]
+\LcsStar{skiplevels}\OptArgs\Largb{int} \\
+\qquad<nodes or subtrees> \\
+\Lcs{endskiplevels}
+\end{BDef}
+
+
+These are kind of like subtrees, but with no root node.
+
+\begin{LTXexample}
+  \pstree[treemode=R,levelsep=1.8,radius=2pt]{\Tc{3pt}}{%
+    \skiplevel{\Tfan}
+    \pstree{\Tc{3pt}}{%
+      \TC*
+      \skiplevels{2}
+        \pstree{\Tc{3pt}}{\TC* \TC*}
+        \TC*
+      \endskiplevels
+      \pstree{\Tc{3pt}}{\TC* \TC*}}}
+\end{LTXexample}
+
+The profile at the missing levels is the same as at the first non-missing
+level. You can adjust this with the bounding box parameters. You get greatest
+control if you use nested \Lcs{skiplevel} commands instead of \Lcs{skiplevels}.
+
+\begin{LTXexample}
+\large\psset{radius=6pt, dotsize=4pt}
+\pstree[thislevelsep=0,edge=none,levelsep=2.5cm]{\Tn}{%
+    \pstree{\TR{Player 1}}{\pstree{\TR{Player 2}}{\TR{Player 3}}}
+    \psset{edge=\ncline}
+    \pstree{\pstree[treemode=R]{\TC}{\Tdot ~{(0,0,0)} ^{N}}}{%
+         \pstree{\TC[name=A] ^{L}}{%
+           \Tdot ~{(-10,10.-10)} ^{l}
+           \pstree{\TC[name=C] _{r}}{%
+             \Tdot ~{(3,8,-4)} ^{c}
+             \Tdot ~{(-8,3,4)} _{d}}}
+         \pstree{\TC[name=B] _{R}}{%
+           \Tdot ~{(10,-10.0)} ^{l}
+           \pstree{\TC[name=D]_{r}}{%
+             \Tdot ~{(4,8,-3)} ^{c}
+             \Tdot ~{(0,-5,0)} _{d}}}}}
+\ncbox[linearc=.3,boxsize=.3,linestyle=dashed,nodesep=.4]{A}{B}
+\ncarcbox[linearc=.3,boxsize=.3,linestyle=dashed,arcangle=25,nodesep=.4]{D}{C}
+\end{LTXexample}
+
+\section{The scope of parameter changes}
+
+\Lkeyword{edge} is the only parameter which, when set in a tree node's parameter
+argument, affects the drawing of the node connection (e.g., if you want to
+change the \Lkeyword{nodesep}, your edge has to include the parameter change, or you
+have to set it before the node).
+
+As noted at the beginning of this section, parameter changes made with
+\Lcs{pstree} affect all subtrees. However, there are variants of some of these
+parameters for making local changes, i.e, changes that affects only the
+current level: \Lkeyword{thistreesep}, \Lkeyword{thistreenodesize}, 
+\Lkeyword{thistreefit}=\Lkeyval{tight}/\Lkeyval{loose}, and \Lkeyword{thislevelsep}.
+
+For example:
+\begin{LTXexample}[pos=l,width=0.4\linewidth]
+\pstree[thislevelsep=.5cm,thistreesep=2cm,
+  radius=2pt]{\Tc*{3pt}}{%
+  \pstree{\TC*}{\TC* \TC*}
+  \pstree{\TC*}{\TC* \TC*}}
+\end{LTXexample}
+
+There are some things you may want set uniformly across a level in the tree,
+such as the \Lkeyword{levelsep}. At level <n>, the command \nxLcs{pstreehook<roman(n)>}
+(e.\,g., \Lcs{pstreehookii}) is executed, if it is defined (the root node of the
+whole tree is level 0, the successor tree objects and the node connections
+from the root node to these successors is level 1, etc.). In the following
+example, the \Lkeyword{levelsep} is changed for level 2, without having to set the
+\Lkeyword{thislevelsep} parameter for each of the three subtrees that make of 
+level 2:
+
+\begin{LTXexample}
+\[
+\def\pstreehookiii{\psset{thislevelsep=3cm}}
+\pstree[treemode=R,levelsep=1cm,radius=2pt]{\Tc{4pt}}{%
+  \pstree{\TC*}{%
+    \pstree{\TC*}{\Tr{X_1} \Tr{X_2}}
+    \pstree{\TC*}{\Tr{Y_1} \Tr{Y_2}}}
+  \pstree{\TC*}{%
+    \pstree{\TC*}{\Tr{K_1} \Tr{K_2}}
+    \pstree{\TC*}{\Tr{J_1} \Tr{J_2}}}}
+\]
+\end{LTXexample}
+
+\clearpage
+\section{List of all optional arguments for \nxLPack{pst-tree}}
+
+The default value ist set when an optional argument is called without any value,
+e.\,g. \Lcs{pstree}\Largs{levelsep} is the same as \Lcs{pstree}\Largs{levelsep=2cm}.
+All boolean arguments are preset to \false.
+
+\xkvview{family=pst-tree,columns={key,type,default}}
+
+
+
+\nocite{*}
+\bgroup
+\raggedright
+\bibliographystyle{plain}
+\bibliography{\jobname}
+\egroup
+
+\printindex
+
+
+\end{document}

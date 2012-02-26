@@ -1,0 +1,44 @@
+\section {Commandes de tracé}
+
+La commande de tracé se fait avec le paramètre \verb+action=+ dans la
+commande \verb+\psSolid+.
+
+Quatres valeurs sont possibles~:
+
+\verb+none+~: ne trace rien
+
+\verb+draw+~: trace le solide en structure fil de fer avec tracé en
+pointillé des arêtes cachées
+
+\verb+draw*+~: trace le solide avec tracé en pointillé des arêtes
+cachées et coloration des faces visibles
+
+\verb+draw**+~: trace le solide avec l'algorithme du peintre, sans les
+arêtes cachées et avec coloration des faces visibles.
+
+Les commandes \verb+draw+ et \verb+draw*+ ne sont pertinentes que pour
+les solides convexes.
+
+\begin{center}
+%%
+\psset{unit=0.5}
+%%
+\begin{pspicture}(-5,-4)(5,4)
+\psframe(-5,-4)(5,4)
+\psset{Decran=20}
+\psSolid[object=cube,action=draw,RotZ=20]%
+\end{pspicture}
+%%
+\begin{pspicture}(-5,-4)(5,4)
+\psframe(-5,-4)(5,4)
+\psset{Decran=20}
+\psSolid[object=cube,action=draw*,fillcolor=magenta!20,RotZ=20]%
+\end{pspicture}
+%%
+\begin{pspicture}(-5,-4)(5,4)
+\psframe(-5,-4)(5,4)
+\psset{Decran=20}
+\psSolid[object=cube,fillcolor=magenta!20,RotZ=20]%
+\end{pspicture}
+%%
+\end{center}

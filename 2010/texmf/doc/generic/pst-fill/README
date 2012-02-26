@@ -1,0 +1,29 @@
+pst-fill: tiling and filing of areas and characters
+
+
+pst-fill.dtx - The dtx file
+pst-fill.ins - The ins file
+pst-fill.pdf - The documentation, generated from the docstrip file
+
+to get the sty, the tex and the pdf file, run the Makefile or alternative
+
+latex pst-fill.ins
+latex pst-fill.dtx
+makeindex -s gind.ist pst-fill
+makeindex -s gglo.ist -o pst-fill.gls pst-fill.glo
+latex pst-fill.dtx
+dvips pst-fill.dvi
+ps2pdf pst-fill.ps
+
+
+This version of pst-fill uses the extended version of the keyval 
+package. So be sure that you 
+- have installed xkeyval with the special pst-xkey.tex
+  (CTAN: tex-archive/macros/latex/contrib/xkeyval/)
+- do not load another package after pst-fill, which loads
+  the old keyval.sty or pst-key.tex
+
+
+
+--
+Herbert Voss 2006-11-06

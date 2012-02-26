@@ -1,0 +1,35 @@
+----- pst-node.tex
+1.22  2012-02-12 - fix introduced bug for \rnode with 
+                   commented out the \pst@boxpar
+1.21  2011-11-21 - fix bug for xelatex and scaling
+1.20  2011-08-20 - added \Pst@Debug tu supress some \typeouts
+1.19  2011-08-12 - added \psnode, which combines \rput and \rnode
+1.18  2011-08-01 - bugfix for \shownode (ms)
+1.17  2011-07-04 - added optional argument for \pnode for relative
+                   node setting
+1.16  2011-05-05 - fixed bug with missing star version for \nput
+1.15  2011-02-28 - fixed bug with nodealign
+1.14  2010-10-28 - added the macros
+                   \psGetEdgeA and \psGetEdgeB for getting the
+                   edge coordinates of connections
+                 - added the macro \psDefBoxNodes, which sets
+                   12 nodes of the given argument, see documentation
+1.13  2010-06-06 - changed all *put macros for using pst@refangle
+1.12  2010-04-30 - moved concatstring into the base pstricks.pro
+                 - fixed bug with nbput (ms)
+1.11  2010-04-22 - modified version of \shownode (ms)
+                 - modified \curvepnodes (ms)
+1.10  2010-01-22 - first version with pst-xkey and an own 
+                   documentation (hv) 
+                   
+
+----- pst-node.sty
+1.00 2011-06-05  - make ancient variant 97 available (hv) 
+     2008-12-12 first version (hv) 
+
+
+----- pst-node.pro
+1.13  2011-11-21 - fix bug for xelatex and scaling
+1.12  2010-04-30 - small changes to the code
+1.11  2010-04-22 - added function /concatstringarray (ms)
+1.10  2010-01-22 - first version  

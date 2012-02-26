@@ -1,0 +1,150 @@
+%% $Id: pst-func-doc.tex 245 2010-01-04 17:07:30Z herbert $
+\documentclass[11pt,english,BCOR10mm,DIV12,bibliography=totoc,parskip=false,
+   smallheadings, headexclude,footexclude,oneside]{pst-doc}
+\usepackage[utf8]{inputenc}
+\usepackage{pst-text,pst-grad,pst-exa}
+\let\pstFV\fileversion
+\DeclareFixedFont{\RM}{T1}{ptm}{b}{n}{4cm}
+\renewcommand\bgImage{\pscharpath[fillstyle=gradient,
+  gradbegin=red,gradend=blue,gradangle=-90]{\RM pst2pdf}}
+
+\lstset{language=PSTricks,basicstyle=\footnotesize\ttfamily}
+\def\DVI{\textsc{DVI}}
+\def\PDF{\textsc{PDF}}
+\def\gs{\textsc{Ghostscript}}
+%
+\begin{document}
+
+\title{\texttt{pst2pdf}}
+\subtitle{Running a PSTricks document with pdflatex and \nxLPack{pst-exa};\\
+\small v.\pstFV}
+\author{Herbert Vo\ss}
+\docauthor{}
+\date{\today}
+\maketitle
+
+\tableofcontents
+
+\clearpage
+
+\begin{abstract}
+\noindent
+\Lprog{pst2pdf} is a Perl script for running a PSTricks document in a last run
+with pdflatex. \LPack{pst-exa} is a package that supports the printing of
+code and output of PSTricks examples when running in pdf mode.
+
+\vfill\noindent
+Thanks to: \\
+Pablo Gonzales Luengo;
+Rolf Niepraschk
+
+\end{abstract}
+
+
+\section{Introduction}
+\PST as \PS-related package uses the programming language \PS for internal
+calculations. This is an important adavantage, because floating point arithmetic is no
+problem. Nearly all mathematical calculation can be done when running the \DVI-file
+with \gs. However, creating a \PDF file in a direct way with \Lprog{pdflatex} is
+not possible. \Lprog{pdflatex} cannot understand the \PS related stuff. Instead
+of running \Lprog{pdflatex} one can use the Perl script \Lprog{pdf2eps}, it extracts
+all \PST-related code into single documents with the same preamble as the original
+main document. Then the script runs this document, clips all whitespace arounf the
+image and creates a \Lext{pdf}, \Lext{eps}, and \Lext{png} image of the \PST 
+related code. In a last run which is the \Lprog{pdflatex} the \PST code in the
+main dcouemnt is replaced by the created images.
+
+\section{Running the Perl script}
+The genral syntax for the Perl script is simple
+
+\begin{BDef}
+\Lprog{pst2pdf} \Larg{file}\OptArg*{\Lext{tex}} \OptArg*{options}
+\end{BDef}
+
+The options listed in Table~\ref{perloptions} refer only to the script and not the \LaTeX\ file.
+
+\begin{table}
+\caption{Possible optional arguments for the Perl script \nxLprog{pst2pdf}}\label{perloptions}
+\begin{tabularx}{\linewidth}{@{} l l >{\ttfamily}l X @{}}\\\toprule
+\emph{name} & \emph{values} & \textrm{\emph{default}} & \emph{description}\\\midrule
+\Loption{--imageDir} & literal & imgages/ & the directory for the created images\\
+\Loption{--Iext}     & literal & .pdf     & the extension for \Lcs{includegraphics}, can be empty, then
+    \Lcs{includegraphics} decides which image is used.\\  
+\Loption{--DPI}      & integer & 75       & the dots per inch for a created png file, if possible\\
+\Loption{--Iscale}   & real    & 1        & the value for the option \Loption{scale} in \Lcs{includegraphics}.
+	Important when using a greater dpi value.\\ 
+\Loption{--tempDir}  & literal & .        & the temporary directory for the temp files\\
+\Loption{--verbose}  & boolean & 1        & for a long \Lprog{pst2pdf} log\\
+\Loption{--clear}    & boolean & 0        & delete all temporary files\\
+\Loption{--noImages} & boolean & 0        & create no images, build only the pdf with the alread existing images\\
+\Loption{--runBibTeX} & boolean & 0        & runs \Lprog{bibtex} \\
+\Loption{--runBiber} & boolean & 0        & runs \Lprog{biber} if a file with extension \Lext{bcf} exists \\\bottomrule
+\end{tabularx}
+\end{table}
+
+After the \Lprog{pst2pdf} run there exists a pdf file called \texttt{\Lcs{jobname}-pdf.pdf}. And when not using
+the \Loption{--clear} option also the corresponding \TeX{} file \texttt{\Lcs{jobname}-pdf.tex}.
+The preamble of the document should contain all code which is important to the \PST code.
+
+\section{\PST code}
+The per scripts scans the files for \Lenv{pspicture} and \Lenv{postscript} environments,
+which are then taken with its contents from the main file to create stand alone documents
+with the same preamble as the main document. The \Lenv{pspicture} environment can be nested,
+the \Lenv{postscript} one not! But it can contain an environment \Lenv{pspicture}, but not vice versa.
+The \Lenv{postscript} environment should always be used, when there is some code before a \Lenv{pspicture}
+environment or for some code which is not inside of a \Lenv{pspicture} environment.
+
+\section{The package \nxLPack{pst-exa}}
+The package \LPack{pst-exa} was created to realize examples with printed code and output
+side by side or on top of each other. The package looks in the image directory for the source
+code of the examples and inserts only the code between the environment \Lenv{document},
+which is the sequence \LBEG{document} \ldots\ \LEND{document}.
+
+The package provides the environment \Lenv{PSTexample} with the optional
+arguments listed in Table~\ref{pst-exaoptions}.
+
+\begin{table}
+\caption{Possible optional arguments for the package \LPack{pst-exa}}\label{pst-exaoptions}
+\begin{tabularx}{\linewidth}{@{} l l l X @{}}\\\toprule
+\emph{name} & \emph{values} & \textrm{\emph{default}} & \emph{description}\\\midrule
+\Lkeyword{pos}    & \Lkeyval{l},\Lkeyval{r},\Lkeyval{b},\Lkeyval{t} & \Lkeyval{l} & position of the image, maybe left, right, bottom ot top of the code.\\
+\Lkeyword{halign} & \Lkeyval{l},\Lkeyval{r},\Lkeyval{c}   & \Lkeyval{c} & the horizontal alignment of the image.\\  
+\Lkeyword{valign} & \Lkeyval{l},\Lkeyval{r},\Lkeyval{c}   & \Lkeyval{c} & the vertical alignment of the image.\\
+\Lkeyword{frame}  & see lst  &  & option is passed to \Lcs{lstinputlisting} from the package \LPack{listings}.\\ 
+\Lkeyword{width}  & length   &0.5\Ldim{linewidth}  & the width of the example box.\\
+\Lkeyword{sep}    & length   &1em        & separation between image and code.\\
+\Lkeyword{imageDir} & literal   &images/    & directory for the created images and tex files.\\\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Examples}
+The package contains some example files for uning the script without and
+with the package \LPack{pst-exa}.
+
+\begin{compactdesc}
+\item[test1.tex] running \verb=pst2pdf test1=. The test file contains a jpg-image, which is only possible with pdflatex.
+\item[test2.tex] same as \LFile{test1}, but with using \LPack{pst-exa} and example--code combination.
+\item[test3.tex] another example 
+\end{compactdesc}
+
+\section{List of all optional arguments for \texttt{pst-exa}}
+
+\xkvview{family=pst-exa,columns={key,type,default}}
+
+
+
+
+\bgroup
+\raggedright
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{pst2pdf-doc}
+\egroup
+
+\printindex
+
+
+
+\end{document}
+
+

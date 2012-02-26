@@ -1,0 +1,64 @@
+\section {\' Eclairage par une source lumineuse ponctuelle}
+
+Deux paramètres, l'un positionne la source, l'autre fixe l'intensité
+lumineuse :
+\begin{itemize}
+  \item \texttt{[lightsrc=20 30 50]} en coordonnées cartésiennes.
+  \item \texttt{[lightintensity=2]} (valeur par défaut).
+\end{itemize}
+
+\begin{multicols}{2}
+\setlength{\columnseprule}{1pt}
+\psset{unit=0.5}
+\centerline{
+\begin{pspicture}(-6,-5)(4,5)
+\psframe(-6,-5)(4,5)
+\psset[pst-solides3d]{Decran=1e3,viewpoint=0.5e3 0 1e3,lightsrc=1e3 0 1e3,mode=5}
+\psSolid[object=cube,RotZ=30](0,2,0)
+\psSolid[object=cylindrecreux,RotX=30,RotZ=-30,fillcolor=cyan,incolor=red](4,-3,0)
+\end{pspicture}}
+\begin{verbatim}
+\psset[pst-solides3d]{Decran=1e3,
+       viewpoint=1e3 0 1e3,
+       lightsrc=1e3 0 1e3,
+       mode=5}
+\psSolid[object=cube,RotZ=30](0,2,0)
+\psSolid[object=cylindrecreux,
+         RotX=30,RotZ=-30,
+         fillcolor=cyan,incolor=red](4,-3,0)
+\end{verbatim}
+\columnbreak
+\centerline{
+\begin{pspicture}(-6,-5)(4,5)
+\psframe(-6,-5)(4,5)
+\psset[pst-solides3d]{Decran=30,viewpoint=30 10 20,lightsrc=30 10 20,mode=3}
+\psSolid[object=cube,lightintensity=3,RotX=90,fillcolor=yellow](0,3,0)
+\psSolid[object=cube,lightintensity=1,RotX=90,fillcolor=yellow](3,-3,0)
+\end{pspicture}}
+\begin{verbatim}
+\psset[pst-solides3d]{Decran=30,
+       viewpoint=30 30 30,
+       lightsrc=0 1e3 1e3,
+       mode=3}
+\psSolid[object=cube,
+         lightintensity=3,
+         RotX=90](0,3,0)
+\psSolid[object=cube,
+         lightintensity=1,
+         RotX=90](3,-3,0)
+\end{verbatim}
+\end{multicols}
+\textdbend{} Si l'option \texttt{[lightsrc=}\textsl{value1}~\textsl{value2}~\textsl{value3}\texttt{]}
+n'est pas spécifiée, l'objet est uniformément éclairé.
+
+\begin{center}
+ \begin{pspicture}(-6,-4)(6,4)
+\psframe(-6,-4)(6,4)
+ \psset{Decran=15}
+ \psSolid[r1=3.5,r0=1,object=tore,ngrid=18 36,fillcolor={[rgb]{.372 .62 .628}},RotY=20]%
+ \axesIIID(0,4.5,0)(6,6,4)
+ \end{pspicture}
+\end{center}
+\begin{verbatim}
+ \psSolid[r1=3.5,r0=1,object=tore,ngrid=18 36,fillcolor={[rgb]{.372 .62 .628}}]%
+\end{verbatim}

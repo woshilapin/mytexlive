@@ -1,0 +1,33 @@
+\section {La vénus de Milo}
+\bgroup
+\definecolor{BlanchedAlmond}{rgb}{1,0.92,0.80}
+
+\psset{unit=0.5}
+\begin{pspicture}(-5,-7)(5,9)
+\psset{lightsrc=30 -40 10}
+\psset{SphericalCoor,viewpoint=50 -50 20,Decran=130}
+\psframe(-5,-7)(5,9)
+\psSolid[object=new,RotX=90,fillcolor=BlanchedAlmond,linewidth=0.5\pslinewidth,
+    sommets= (sommets_venus.dat) run,
+    faces={(faces_venus.dat) run}]%
+\end{pspicture}
+\hfill
+\begin{pspicture}(-5,-7)(5,9)
+\psset{lightsrc=0 -40 10}
+\psset{SphericalCoor,viewpoint=50 -80 10,Decran=130}
+\psframe(-5,-7)(5,9)
+\psSolid[object=new,RotX=90,RotZ=30,fillcolor=BlanchedAlmond,linewidth=0.5\pslinewidth,
+    sommets= (sommets_venus.dat) run,
+    faces={(faces_venus.dat) run}]%
+\end{pspicture}
+\hfill
+\begin{pspicture}(-5,-7)(5,9)
+\psset{lightsrc=0 -40 10}
+\psset{SphericalCoor,viewpoint=50 -80 10,Decran=130}
+\psframe(-5,-7)(5,9)
+\psSolid[object=new,RotX=90,RotZ=120,fillcolor=red!60,grid,
+    sommets= (sommets_venus.dat) run,
+    faces={(faces_venus.dat) run}]%
+\end{pspicture}
+
+\egroup

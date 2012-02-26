@@ -1,0 +1,14 @@
+\section {Une coccinelle VW}
+\bgroup
+\psset{lightsrc=10 30 50}
+\noindent
+
+\multido{\i=0+100}{1}{%
+\begin{pspicture}(-6,-2)(2,5)
+\psset{SphericalCoor,viewpoint=50 10 10,Decran=50,unit=1,RotX=\i\space}
+\psSolid[object=new,RotZ=180,fillcolor=lightgray,incolor=yellow!50,
+    sommets= (sommets_cocinelle.dat) run,linewidth=0.5\pslinewidth,action=draw,
+    faces={(faces_cocinelle.dat) run}]%
+\end{pspicture}}
+
+\egroup

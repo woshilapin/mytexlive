@@ -1,0 +1,582 @@
+\section {Les couleurs et les dégradés de couleur}
+
+L'argument \texttt{[fillcolor=}\textsl{name}\texttt{]} permet de spécifier la couleur souhaitée
+pour les faces externes d'un solide.
+L'argument \texttt{[incolor=}\textsl{name}\texttt{]} permet de spécifier la couleur souhaitée
+pour les faces internes d'un solide.
+
+Les valeurs possibles pour \textsl{name} sont toutes celles reconnues
+par PSTricks (et en particulier son package \texttt{xcolor}).
+
+On peut également utiliser des dégradés de couleur dans les espaces
+HSB, RGB ou CMYK. On utilise pour cela les options \verb+[hue]+,
+\verb+[inhue]+ ou \verb+[inouthue]+ selon que l'on considère
+respectivement les faces externes, les faces internes, ou l'ensemble
+des faces.
+Le nombre d'arguments de \verb+hue+ détermine le cas de figure
+
+\subsection {Couleurs pr\'{e}d\'{e}finies par l'option [\texttt{dvipsnames}]}
+
+Il y a $68$~couleurs prédéfinies, qui sont identifiées dans le fichier
+\textsl {solides.pro}~: \textsl {Black}, \textsl {White}, et les
+$66$~couleurs ci-dessous.
+
+\bgroup
+\newcommand{\colorcube}[1]{%
+\begin{pspicture}(-1.2,-1)(1.2,1)
+\psframe(-1.2,-1)(1.2,1)
+\psSolid[object=cube,
+    linewidth=0.07\pslinewidth,
+%    linecolor=#1!50,
+    fillcolor=#1,
+    ngrid=4,
+    a=0.25,
+    action=draw**](0,0,0.1)
+\rput(0,-0.75){\footnotesize \texttt{#1}}
+\end{pspicture}
+}
+
+\parindent0pt
+%\parskip-8pt
+\colorcube{GreenYellow}
+\colorcube{Yellow}
+\colorcube{Goldenrod}
+\colorcube{Dandelion}
+\colorcube{Apricot}
+\colorcube{Peach}
+
+\colorcube{Melon}
+\colorcube{YellowOrange}
+\colorcube{Orange}
+\colorcube{BurntOrange}
+\colorcube{Bittersweet}
+\colorcube{RedOrange}
+
+\colorcube{Mahogany}
+\colorcube{Maroon}
+\colorcube{BrickRed}
+\colorcube{Red}
+\colorcube{OrangeRed}
+\colorcube{RubineRed}
+
+\colorcube{WildStrawberry}
+\colorcube{Salmon}
+\colorcube{CarnationPink}
+\colorcube{Magenta}
+\colorcube{VioletRed}
+\colorcube{Rhodamine}
+
+\colorcube{Mulberry}
+\colorcube{RedViolet}
+\colorcube{Fuchsia}
+\colorcube{Lavender}
+\colorcube{Thistle}
+\colorcube{Orchid}
+
+\colorcube{DarkOrchid}
+\colorcube{Purple}
+\colorcube{Plum}
+\colorcube{Violet}
+\colorcube{RoyalPurple}
+\colorcube{BlueViolet}
+
+\colorcube{Periwinkle}
+\colorcube{CadetBlue}
+\colorcube{CornflowerBlue}
+\colorcube{MidnightBlue}
+\colorcube{NavyBlue}
+\colorcube{RoyalBlue}
+
+\colorcube{Blue}
+\colorcube{Cerulean}
+\colorcube{Cyan}
+\colorcube{ProcessBlue}
+\colorcube{SkyBlue}
+\colorcube{Turquoise}
+
+\colorcube{TealBlue}
+\colorcube{Aquamarine}
+\colorcube{BlueGreen}
+\colorcube{Emerald}
+\colorcube{JungleGreen}
+\colorcube{SeaGreen}
+
+\colorcube{Green}
+\colorcube{ForestGreen}
+\colorcube{PineGreen}
+\colorcube{LimeGreen}
+\colorcube{YellowGreen}
+\colorcube{SpringGreen}
+
+\colorcube{OliveGreen}
+\colorcube{RawSienna}
+\colorcube{Sepia}
+\colorcube{Brown}
+\colorcube{Tan}
+\colorcube{Gray}
+
+\egroup
+
+\subsection {Couleurs pr\'{e}d\'{e}finies par l'option [\texttt{svgnames}]}
+
+Les couleurs suivantes sont reconnues par pstricks si l'on utilise
+l'option [\texttt{svgnames}].
+Par contre, elles ne sont pas identifiées dans le fichier
+\textsl {solides.pro}~: on ne peut les utiliser directement dans
+l'option [\texttt{fcol}].
+
+\bgroup
+\newcommand{\colorcone}[1]{%
+\begin{pspicture}(-1.2,-1)(1.2,1)
+\psframe(-1.2,-1)(1.2,1)
+\psSolid[object=cone,
+    linewidth=0.07\pslinewidth,
+%    linecolor=#1!50,
+    fillcolor=#1,
+    ngrid=4 12,
+    r=0.2,h=0.37,
+    action=draw**](0,0,-0.05)
+\rput(0,-0.75){\footnotesize \texttt{#1}}
+\end{pspicture}
+}
+
+
+\parindent0pt
+%\parskip-8pt
+
+Ces couleurs sont propos\'{e}es par le package \texttt{xcolor}.
+\bigskip
+
+\colorcone{AliceBlue}
+\colorcone{AntiqueWhite}
+\colorcone{Aqua}
+\colorcone{Aquamarine}
+\colorcone{Azure}
+\colorcone{Beige}
+
+\colorcone{Bisque}
+\colorcone{Black}
+\colorcone{BlanchedAlmond}
+\colorcone{Blue}
+\colorcone{BlueViolet}
+\colorcone{Brown}
+
+\colorcone{BurlyWood}
+\colorcone{CadetBlue}
+\colorcone{Chartreuse}
+\colorcone{Chocolate}
+\colorcone{Coral}
+\colorcone{CornflowerBlue}
+
+\colorcone{Cornsilk}
+\colorcone{Crimson}
+\colorcone{Cyan}
+\colorcone{DarkBlue}
+\colorcone{DarkCyan}
+\colorcone{DarkGoldenrod}
+
+\colorcone{DarkGray}
+\colorcone{DarkGreen}
+\colorcone{DarkGrey}
+\colorcone{DarkKhaki}
+\colorcone{DarkMagenta}
+\colorcone{DarkOliveGreen}
+
+\colorcone{DarkOrange}
+\colorcone{DarkOrchid}
+\colorcone{DarkRed}
+\colorcone{DarkSalmon}
+\colorcone{DarkSeaGreen}
+\colorcone{DarkSlateBlue}
+
+\colorcone{DarkSlateGray}
+\colorcone{DarkSlateGrey}
+\colorcone{DarkTurquoise}
+\colorcone{DarkViolet}
+\colorcone{DeepPink}
+\colorcone{DeepSkyBlue}
+
+\colorcone{DimGray}
+\colorcone{DimGrey}
+\colorcone{DodgerBlue}
+\colorcone{FireBrick}
+\colorcone{FloralWhite}
+\colorcone{ForestGreen}
+
+\colorcone{Fuchsia}
+\colorcone{Gainsboro}
+\colorcone{GhostWhite}
+\colorcone{Gold}
+\colorcone{Goldenrod}
+\colorcone{Gray}
+
+\colorcone{Grey}
+\colorcone{Green}
+\colorcone{GreenYellow}
+\colorcone{Honeydew}
+\colorcone{HotPink}
+\colorcone{IndianRed}
+
+\colorcone{Indigo}
+\colorcone{Ivory}
+\colorcone{Khaki}
+\colorcone{Lavender}
+\colorcone{LavenderBlush}
+\colorcone{LawnGreen}
+
+\colorcone{LemonChiffon}
+\colorcone{LightBlue}
+\colorcone{LightCoral}
+\colorcone{LightCyan}
+\colorcone{LightGoldenrodYellow}
+\colorcone{LightGray}
+
+\colorcone{LightGreen}
+\colorcone{LightGrey}
+\colorcone{LightPink}
+\colorcone{LightSalmon}
+\colorcone{LightSeaGreen}
+\colorcone{LightSkyBlue}
+
+\colorcone{LightSlateGray}
+\colorcone{LightSlateGrey}
+\colorcone{LightSteelBlue}
+\colorcone{LightYellow}
+\colorcone{Lime}
+\colorcone{LimeGreen}
+
+\colorcone{Linen}
+\colorcone{Magenta}
+\colorcone{Maroon}
+\colorcone{MediumAquamarine}
+\colorcone{MediumBlue}
+\colorcone{MediumOrchid}
+
+\colorcone{MediumPurple}
+\colorcone{MediumSeaGreen}
+\colorcone{MediumSlateBlue}
+\colorcone{MediumSpringGreen}
+\colorcone{MediumTurquoise}
+\colorcone{MediumVioletRed}
+
+\colorcone{MidnightBlue}
+\colorcone{MintCream}
+\colorcone{MistyRose}
+\colorcone{Moccasin}
+\colorcone{NavajoWhite}
+\colorcone{Navy}
+
+\colorcone{OldLace}
+\colorcone{Olive}
+\colorcone{OliveDrab}
+\colorcone{Orange}
+\colorcone{OrangeRed}
+\colorcone{Orchid}
+
+\colorcone{PaleGoldenrod}
+\colorcone{PaleGreen}
+\colorcone{PaleTurquoise}
+\colorcone{PaleVioletRed}
+\colorcone{PapayaWhip}
+\colorcone{PeachPuff}
+
+\colorcone{Peru}
+\colorcone{Pink}
+\colorcone{Plum}
+\colorcone{PowderBlue}
+\colorcone{Purple}
+\colorcone{Red}
+
+\colorcone{RosyBrown}
+\colorcone{RoyalBlue}
+\colorcone{SaddleBrown}
+\colorcone{Salmon}
+\colorcone{SandyBrown}
+\colorcone{SeaGreen}
+
+\colorcone{Seashell}
+\colorcone{Sienna}
+\colorcone{Silver}
+\colorcone{SkyBlue}
+\colorcone{SlateBlue}
+\colorcone{SlateGray}
+
+\colorcone{SlateGrey}
+\colorcone{Snow}
+\colorcone{SpringGreen}
+\colorcone{SteelBlue}
+\colorcone{Tan}
+\colorcone{Teal}
+
+\colorcone{Thistle}
+\colorcone{Tomato}
+\colorcone{Turquoise}
+\colorcone{Violet}
+\colorcone{Wheat}
+\colorcone{White}
+
+\colorcone{WhiteSmoke}
+\colorcone{Yellow}
+\colorcone{YellowGreen}
+\hfill
+\egroup
+
+\subsection {Dégradé dans l'espace HSB, saturation et brillance maximales}
+
+Il y a 2 arguments~: \verb+[hue=+$h_0$ $h_1$\verb+]+ où
+les nombres $h_0$ et $h_1$ vérifiant $0\leq h_0 < h_1 \leq 1$
+indiquent les bornes du premier paramètre dans l'espace HSB.
+
+\begin{multicols}{2}
+\psset{unit=1}
+\psset{SphericalCoor,viewpoint=50 50 20,Decran=30}
+\begin{pspicture}(-4,-1.5)(3,1)
+\psframe(-4,-1.5)(3,1)
+\psSolid[object=grille,
+   base=-3 5 -3 3,
+   linecolor=gray,
+   hue=0 1](0,0,0)
+\end{pspicture}
+
+\columnbreak
+
+\begin{verbatim}
+\psSolid[object=grille,
+   base=-3 5 -3 3,
+   linecolor=gray,
+   hue=0 1](0,0,0)
+\end{verbatim}
+\end{multicols}
+
+\begin{multicols}{2}
+\psset{unit=1}
+\psset{SphericalCoor,viewpoint=50 50 20,Decran=30}
+\begin{pspicture}(-4,-1.5)(3,1)
+\psframe(-4,-1.5)(3,1)
+\psSolid[object=grille,
+   base=-3 5 -3 3,
+   linecolor=gray,
+   hue=0 .3](0,0,0)
+\end{pspicture}
+
+\columnbreak
+
+\begin{verbatim}
+\psSolid[object=grille,
+   base=-3 5 -3 3,
+   linecolor=gray,
+   hue=0 .3](0,0,0)
+\end{verbatim}
+\end{multicols}
+
+\begin{multicols}{2}
+\psset{unit=1}
+\psset{SphericalCoor,viewpoint=50 50 20,Decran=30}
+\begin{pspicture}(-4,-1.5)(3,1)
+\psframe(-4,-1.5)(3,1)
+\psSolid[object=grille,
+   base=-3 5 -3 3,
+   linecolor=gray,
+   hue=.5 .6](0,0,0)
+\end{pspicture}
+
+\columnbreak
+
+\begin{verbatim}
+\psSolid[object=grille,
+   base=-3 5 -3 3,
+   linecolor=gray,
+   hue=.5 .6](0,0,0)
+\end{verbatim}
+\end{multicols}
+
+\subsection {Dégradé dans l'espace HSB, saturation et brillance fixes}
+
+Il y a 4 arguments~: \verb+[hue=+$h_0$ $h_1$ $s$ $b$\verb+]+ où
+les nombres $h_0$ et $h_1$ vérifiant $0\leq h_0 < h_1 \leq 1$
+indiquent les bornes du premier paramètre dans l'espace HSB et où $s$
+et $b$ sont les paramètres respectifs \textsl {saturastion} et \textsl
+{brillance}. 
+
+\begin{multicols}{2}
+\psset{unit=1}
+\psset{SphericalCoor,viewpoint=50 50 20,Decran=30}
+\begin{pspicture}(-4,-1.5)(3,1)
+\psframe(-4,-1.5)(3,1)
+\psSolid[object=grille,
+   base=-3 5 -3 3,
+   linecolor=gray,
+   hue=0 1 .8 .7](0,0,0)
+\end{pspicture}
+
+\columnbreak
+
+\begin{verbatim}
+\psSolid[object=grille,
+   base=-3 5 -3 3,
+   linecolor=gray,
+   hue=0 1 .8 .7](0,0,0)
+\end{verbatim}
+\end{multicols}
+
+
+\begin{multicols}{2}
+\psset{unit=1}
+\psset{SphericalCoor,viewpoint=50 50 20,Decran=30}
+\begin{pspicture}(-4,-1.5)(3,1)
+\psframe(-4,-1.5)(3,1)
+\psSolid[object=grille,
+   base=-3 5 -3 3,
+   linecolor=gray,
+   hue=0 1 .5 1](0,0,0)
+\end{pspicture}
+
+\columnbreak
+
+\begin{verbatim}
+\psSolid[object=grille,
+   base=-3 5 -3 3,
+   linecolor=gray,
+   hue=0 1 .5 1](0,0,0)
+\end{verbatim}
+\end{multicols}
+
+\subsection {Dégradé dans l'espace HSB, cas général}
+
+Il y a 7 arguments~: \verb+[hue=+$h_0$ $s_0$ $b_0$ $h_1$ $s_1$
+$b_1$\verb+ (hsb)]+ où les nombres $h_i$, $s_i$ et $b_i$ indiquent les
+bornes des paramètre HSB. 
+
+\begin{multicols}{2}
+\psset{unit=1}
+\psset{SphericalCoor,viewpoint=50 50 20,Decran=30}
+\begin{pspicture}(-4,-1.5)(3,1)
+\psframe(-4,-1.5)(3,1)
+\psSolid[object=grille,
+   base=-3 5 -3 3,
+   linecolor=gray,
+   hue=0 .8 1 1 1 .7 (hsb)](0,0,0)
+\end{pspicture}
+
+\columnbreak
+
+\begin{verbatim}
+\psSolid[object=grille,
+   base=-3 5 -3 3,
+   linecolor=gray,
+   hue=0 .8 1 1 1 .7 (hsb)](0,0,0)
+\end{verbatim}
+\end{multicols}
+
+\subsection {Dégradé dans l'espace RGB}
+
+Il y a 6 arguments~: \verb+[hue=+$r_0$ $g_0$ $b_0$ $r_1$ $g_1$
+$b_1$\verb+]+ où les nombres $r_i$, $g_i$ et $b_i$ indiquent les
+bornes respectives des $3$ paramètres RGB.
+
+\begin{multicols}{2}
+\psset{unit=1}
+\psset{SphericalCoor,viewpoint=50 50 20,Decran=30}
+\begin{pspicture}(-4,-1.5)(3,1)
+\psframe(-4,-1.5)(3,1)
+\psSolid[object=grille,
+   base=-3 5 -3 3,
+   linecolor=gray,
+   hue=1 0 0 0 0 1](0,0,0)
+\end{pspicture}
+
+\columnbreak
+
+\begin{verbatim}
+\psSolid[object=grille,
+   base=-3 5 -3 3,
+   linecolor=gray,
+   hue=1 0 0 0 0 1](0,0,0)
+\end{verbatim}
+\end{multicols}
+
+
+\subsection {Dégradé dans l'espace CMYK}
+
+Il y a 8 arguments~: \verb+[hue=+$c_0$ $m_0$ $y_0$ $k_0$ $c_1$ $m_1$ 
+$y_1$ $k_1$\verb+]+ où les nombres $c_i$, $m_i$, $y_i$ et $k_i$ indiquent les
+bornes respectives des $4$ paramètres CMYK.
+
+\begin{multicols}{2}
+\psset{unit=1}
+\psset{SphericalCoor,viewpoint=50 50 20,Decran=30}
+\begin{pspicture}(-4,-1.5)(3,1)
+\psframe(-4,-1.5)(3,1)
+\psSolid[object=grille,
+   base=-3 5 -3 3,
+   linecolor=gray,
+   hue=1 0 0 0 0 0 1 0](0,0,0)
+\end{pspicture}
+
+\columnbreak
+
+\begin{verbatim}
+\psSolid[object=grille,
+   base=-3 5 -3 3,
+   linecolor=gray,
+   hue=1 0 0 0 0 0 1 0](0,0,0)
+\end{verbatim}
+\end{multicols}
+
+\subsection {Dégradé entre 2 couleurs nommées}
+
+Il y a deux paramètres
+\verb+[hue=(+\textsl{couleur1}\verb+) (+\textsl{couleur2}\verb+)]+ où
+\textsl{couleur1} et \textsl{couleur2} sont des noms de couleurs
+connues dans \verb+solides.pro+.
+
+\begin{multicols}{2}
+\psset{unit=1}
+\psset{SphericalCoor,viewpoint=50 50 20,Decran=30}
+\begin{pspicture}(-4,-1.5)(3,1)
+\psframe(-4,-1.5)(3,1)
+\psSolid[object=grille,
+   base=-3 5 -3 3,
+   linecolor=gray,
+   hue=(jaune) (CadetBlue)](0,0,0)
+\end{pspicture}
+
+\columnbreak
+
+\begin{verbatim}
+\psSolid[object=grille,
+   base=-3 5 -3 3,
+   linecolor=gray,
+   hue=(jaune) (CadetBlue)](0,0,0)
+\end{verbatim}
+\end{multicols}
+
+Si on veut utiliser des couleurs définies par \texttt{xcolor}, on
+utilise les paramètres \texttt{color1}, \texttt{color2}, etc... de
+\verb+\psSolid+.
+
+\begin{multicols}{2}
+\psset{unit=1}
+\psset{SphericalCoor,viewpoint=50 50 20,Decran=30}
+\begin{pspicture}(-4,-1.5)(3,1)
+\psframe(-4,-1.5)(3,1)
+\psSolid[object=grille,
+   base=-3 5 -3 3,
+   linecolor=gray,
+   color1=red!50,
+   color2=green!20,
+   hue=(color1) (color2)](0,0,0)
+\end{pspicture}
+
+\columnbreak
+
+\begin{verbatim}
+\psSolid[object=grille,
+   base=-3 5 -3 3,
+   linecolor=gray,
+   color1=red!50,
+   color2=green!20,
+   hue=(color1) (color2)](0,0,0)
+\end{verbatim}
+\end{multicols}
+

@@ -1,0 +1,52 @@
+\section {Nefertiti}
+\bgroup
+\definecolor{AntiqueWhite}{rgb}{0.98,0.92,0.84}
+\definecolor{DarkRed}{rgb}{0.73,0,0}
+\definecolor{AntiquaWhite}{rgb}{0.78,0.78,0.78}
+\definecolor{rose}{rgb}{1,0.75,0.74}
+
+\psset{unit=0.4}
+\psset{lightsrc=50 10 30}
+
+\psset{SphericalCoor,viewpoint=50 20 0,Decran=50}
+\begin{pspicture}(-5,-7)(6,6)
+\psframe*[linecolor=AntiqueWhite](-5,-7)(6,6)
+\psset{RotX=90,sommets= (sommets_nefer0.dat) run}
+\psSolid[object=new,fillcolor=rose,linewidth=0.5\pslinewidth,hollow,incolor=yellow!50,
+    faces={(faces_nefer.dat) run}]%
+\psSolid[object=new,fillcolor=red,linewidth=0.5\pslinewidth,
+    faces={(faces_nefer_levres.dat) run}]%
+%\psSolid[object=new,fillcolor=blue,linewidth=0.5\pslinewidth,linecolor=blue!60,
+%    faces={(faces_nefer_yeux.dat) run}]%
+\psSolid[object=new,fillcolor=black,
+    faces={(faces_nefer_sourcils.dat) run}]%
+\end{pspicture}
+\hfill
+\psset{SphericalCoor,viewpoint=50 20 0,Decran=50}
+\begin{pspicture}(-5,-7)(6,6)
+\psframe*[linecolor=AntiqueWhite](-5,-7)(6,6)
+\psset{RotX=90,RotZ=75,sommets= (sommets_nefer0.dat) run}
+\psSolid[object=new,fillcolor=rose,linewidth=0.5\pslinewidth,hollow,incolor=yellow!50,
+    faces={(faces_nefer.dat) run}]%
+\psSolid[object=new,fillcolor=red,linewidth=0.5\pslinewidth,
+    faces={(faces_nefer_levres.dat) run}]%
+%\psSolid[object=new,fillcolor=blue,linewidth=0.5\pslinewidth,linecolor=blue!60,
+%    faces={(faces_nefer_yeux.dat) run}]%
+\psSolid[object=new,fillcolor=black,
+    faces={(faces_nefer_sourcils.dat) run}]%
+\end{pspicture}
+\hfill
+\begin{pspicture}(-5,-7)(6,6)
+\psframe*[linecolor=AntiqueWhite](-5,-7)(6,6)
+\psset{RotX=90,RotZ=120,sommets= (sommets_nefer0.dat) run}
+\psSolid[object=new,fillcolor=rose,linewidth=0.5\pslinewidth,hollow,incolor=yellow!50,
+    faces={(faces_nefer.dat) run}]%
+\psSolid[object=new,fillcolor=red,linewidth=0.5\pslinewidth,
+    faces={(faces_nefer_levres.dat) run}]%
+%\psSolid[object=new,fillcolor=blue,linewidth=0.5\pslinewidth,linecolor=blue!60,
+%    faces={(faces_nefer_yeux.dat) run}]%
+\psSolid[object=new,fillcolor=black,
+    faces={(faces_nefer_sourcils.dat) run}]%
+\end{pspicture}
+
+\egroup

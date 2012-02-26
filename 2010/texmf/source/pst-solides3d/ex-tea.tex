@@ -1,0 +1,14 @@
+\section {Une théière}
+\bgroup
+\psset{lightsrc=50 10 30}
+\noindent
+\psset{SphericalCoor,viewpoint=50 -10 30,Decran=60,unit=3}
+
+\begin{pspicture}(-2,-2)(2,2)
+
+\psSolid[object=new,RotZ=45,fillcolor=blue!50,incolor=yellow!50,
+    sommets= (sommets_tea.dat) run,linewidth=0.5\pslinewidth,
+    faces={(faces_tea.dat) run}]%
+\end{pspicture}
+
+\egroup

@@ -1,0 +1,12 @@
+1.62  2010/05/28  - use the dimens from the base packgage pstricks
+1.61  2009/12/20  - use \NormalCoor for IntemediatePoint setting
+                  - allow \SpecialCoor for a length
+                  - updated documentation
+1.60  2004/11/20  new macro \pspolygonbox, using pst-xkey (hv)
+1.50  2001/02/08  Standard packaging (.ins + .dtx files).
+1.40  1998/07/09  Define `PolyRotation' parameter as a real number
+                 and not as an angle, to allow to use the macro
+                 degrees' before to draw a polygon.
+1.30  1998/02/06  Rename `PsPicture' parameter to `PstPicture' for
+                 consistancy.
+1.20  1997/06/27  First public release.

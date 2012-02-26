@@ -1,0 +1,4 @@
+0.02  2010-10-03  - new optional argument imageDir, preset
+                    to images/
+                  - modifuications to \PST@filename
+0.01  2010-01-01  first CTAN version

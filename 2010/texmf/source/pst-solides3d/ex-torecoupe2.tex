@@ -1,0 +1,29 @@
+\section{Un tore coupé par l'équateur}
+\bgroup\begin{LTXexample}[pos=t]
+\psset{unit=0.75}
+\begin{pspicture}(-5,-5)(6,6)
+\psframe(-5,-5)(6,6)
+\psset[pst-solides3d]{viewpoint=20 20 20,SphericalCoor,Decran=20,lightsrc=10 15 0}
+% Parametric Surfaces
+\psSolid[object=grille,base=-3 3 -3 3,action=draw,linecolor=red](0,0,-2)
+\defFunction[algebraic]{torus}(u,v){(1+ 0.5*cos(u))*cos(v)}{(1+ 0.5*cos(u))*sin(v)}{0.5*sin(u)}
+\psSolid[object=surfaceparametree,linecolor={[cmyk]{1,0,1,0.5}},
+   base=pi neg 0 0 2 pi mul ,fillcolor=yellow!50,incolor=green!50,
+   function=torus,linewidth=0.5\pslinewidth,unit=2,
+   tracelignedeniveau=true,
+   hauteurlignedeniveau=-.01,
+   linewidthlignedeniveau=1,
+   couleurlignedeniveau=blue,
+   ngrid=20]%
+\gridIIID[Zmin=-2,Zmax=2](-3,3)(-3,3)
+\end{pspicture}
+\end{LTXexample}
+
+%% \defFunction[algebraic]{cercleMilieu}(t){0.5*cos(t)}{0.5*sin(t)}{0}
+%% \psSolid[object=courbe,
+%%     range=0 2 pi mul,unit=2,
+%%     linecolor=blue,
+%%     resolution=360,
+%%     function=cercleMilieu]%
+
+\egroup

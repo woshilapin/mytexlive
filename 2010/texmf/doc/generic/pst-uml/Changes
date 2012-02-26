@@ -1,0 +1,12 @@
+----- pst-uml.tex
+0.83  2007-01-04  use \umlCasePut instead of \umlPutCase (hv)
+0.82  2006-12-19  adapted for use with array package (JHf)
+		  fix bug with keyset for debug (hv)
+0.81  2005-05-10  using pst-xkey and pstricks (hv)
+...
+0.10  1998-03-01  utilsation des cl\'e pour les option de \umlClass
+0.01  1998-02-22  creation
+
+
+hv	Herbert Voss
+JHf	Jobst Hoffmann

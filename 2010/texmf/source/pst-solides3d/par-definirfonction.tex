@@ -1,0 +1,53 @@
+\section {Définir une fonction}
+
+Il est possible de définir des fonctions utilisables dans
+l'environnement postscript. L'ensemble de départ peut être $R$, $R^2$
+ou $R^3$, et l'ensemble d'arrivée peut être $R$, $R^2$ ou $R^3$.
+
+La définition se fait avec la macro \verb!\defFunction!. Cette
+macro nécessite six arguments, dont un seul est optionnel.
+
+\verb!\defFunction[<options>]{<nom>}(<var>){<x(var)>}{<y(var)>}{<z(var)>}!
+
+\begin{table}[h]
+\begin{tabular}{p{2cm}p{11cm}}
+\verb!<options>! & On y insère les option typiques de PSTricks, comme
+\verb!linewidth! etc., et en plus, quelques unes définies par
+\verb!pst-solides3d!. Une très charmante option est \verb!algebraic!,
+avec quelle on peut éviter la notation RPN (Reverse Polish
+Notation). Toutes options sont des paires (clé,valeur) et sont séparées
+avec des virgules.\\
+
+\verb!<nom>! & C'est un nom unique de votre choix -- mais attention:
+évitez des noms avec des accents, PostScript ne les aime pas du
+tout.\\
+
+\verb!<var>! & On y insère au maximum trois variables arbitraires,
+séparées avec des virgules. \\
+
+\verb!<x(var)>! \verb!<y(var)>! \verb!<z(var)>! & On y met des
+fonctions dépendant des variables définies pour les directions
+euclidiens $x,\,y,\,z$. Si une de ces trois directions n'est pas
+voulue, insérez  un 0 entre les parenthèses -- \c{c}a vous donne la
+possibilité de définir aussi des fonctions en plane.
+\end{tabular}
+\end{table}
+
+Quand vous avez défini une fonction, cette fonction est toujours
+reprise avec son \verb!<nom>! choisi.
+
+Voil\`{a} quelques exemples:
+\begin{itemize}
+    \item \verb!\defFunction{cercle}(t){t cos 3 mul}{0}{t sin 3 mul}!
+
+    donne un cercle dans le plane $x,\,z$ avec le rayon 3 en notation RPN.
+    \item \verb!\defFunction[algebraic]{helice}(t){cos(t)}{sin(t)}{t}!
+
+    donne un hélice  en notation algèbre.
+\end{itemize}
+
+\llap {\dbend}
+Cette macro est encore expérimentale. Il nous reste en particulier à
+gérer certains problèmes de conflits de noms. Merci d'utiliser pour
+vos noms de fonctions des noms analogues à ceux utilisés dans la
+documentation.

@@ -1,0 +1,1120 @@
+\documentclass[11pt,english,BCOR10mm,DIV12,bibliography=totoc,parskip=false,smallheadings
+    headexclude,footexclude,oneside]{pst-doc}
+\usepackage[utf8]{inputenc}
+\usepackage{pst-eucl}
+\usepackage{multicol}
+\let\pstEuclideFV\fileversion
+\lstset{pos=l,wide=false,language=PSTricks,
+    morekeywords={multidipole,parallel},basicstyle=\footnotesize\ttfamily}
+%
+\title{\texttt{pst-euclide}}
+\subtitle{A PSTricks package for drawing geometric pictures; v.\pstEuclideFV}
+\author{Dominique Rodriguez}
+\docauthor{Herbert VoÃŸ}
+\date{\today}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+  The \LPack{pst-eucl} package allow the drawing of Euclidean
+  geometric figures using \LaTeX\ macros for specifying mathematical
+  constraints. It is thus possible to build point using common
+  transformations or intersections. The use of coordinates is limited
+  to points which controlled the figure.
+
+  \vfill
+  I would like to thanks the following persons for the help they gave
+  me for development of this package:
+
+  \begin{itemize}
+  \item Denis Girou pour ses critiques pertinentes et ses
+    encouragement lors de la dÃ©couverte de l'embryon initial et pour
+    sa relecture du prÃ©sent manuel;
+  \item Michael Vulis for his fast testing of the documentation using
+    V\TeX\ which leads to the correction of a bug in the \PS\ code;
+  \item Manuel Luque and Olivier Reboux for their remarks and their examples.
+  \item Alain Delplanque for its modification propositions on automatic
+    placing of points name and the ability of giving a list of points in
+    \Lcs{pstGeonode}.
+  \end{itemize}
+\end{abstract}
+
+\clearpage
+\tableofcontents
+\section{Special specifications}
+
+\subsection{\PST Options}
+
+The package activates the \Lcs{SpecialCoor} mode. This mode extend the
+coordinates specification. Furthermore the plotting type is set to
+\Lkeyset{dimen=middle}, which indicates that the position of the
+drawing is done according to the middle of the line. Please look at
+the user manual for more information about these setting.
+
+At last, the working axes are supposed to be (ortho)normed.
+
+\subsection{Conventions}
+
+For this manual, I used the geometric French conventions for naming
+the points:
+
+\begin{itemize}
+\item $O$ is a centre (circle, axes, symmetry, homothety, rotation);
+\item $I$ defined the unity of the abscissa axe, or a midpoint;
+\item $J$ defined the unity of the ordinate axe;
+\item $A$, $B$, $C$, $D$ are points ;
+\item $M'$ is the image of $M$ by a transformation ;
+\end{itemize}
+
+At last, although these are nodes in \PST, I treat them
+intentionally as points.
+
+\section{Basic Objects}
+\subsection{Points}
+\subsubsection{default axes}
+
+%\defcom[Creates a list of points using the common axis. \protect\ParamList{\param{PointName},
+%  \param{PointNameSep}, \param{PosAngle}, \param{PointSymbol}, \param{PtNameMath}}]
+\begin{BDef}
+\Lcs{pstGeonode}\OptArgs\coord1\Largb{$A_1$}\coord2\Largb{$A_1$}\ldots\cAny\Largb{$A_n$}
+\end{BDef}
+This command defines one or more geometrical points associated with a node. Each
+point has a node name $A_i$ which defines the default label put on the
+picture. This label is managed by default in mathematical mode, the boolean parameter
+\Lkeyword{PtNameMath} (default \true) can modify this behavior and let manage the
+label in normal mode.  It is placed at a distance of \Lkeyword{PointNameSep}
+(default 1em) of the center of the node with a angle of
+\Lkeyword{PosAngle} (default 0). It is possible to specify another label using the
+parameter \Lkeyset{PointName=default}, and an empty label can be specified
+by selecting the value \Lkeyval{none}, in that case the point will have no name on the
+picture.
+
+The point symbol is given by the parameter \Lkeyset{PointSymbol=*}.  The
+symbol is the same as used by the macro \Lcs{psdot}.  This parameter can be set to
+\texttt{none}, which means that the point will not be drawn on the picture.
+
+Here are the possible values for this parameter:
+
+\begin{multicols}{3}
+  \begin{itemize}\psset{dotscale=2}
+  \item \Lkeyword{*}: \psdots(.5ex,.5ex)
+  \item \Lkeyword{o}: \psdots[dotstyle=o](.5ex,.5ex)
+  \item \Lkeyword{+}: \psdots[dotstyle=+](.5ex,.5ex)
+  \item \Lkeyword{x}: \psdots[dotstyle=x](.5ex,.5ex)
+  \item \Lkeyword{asterisk} : \psdots[dotstyle=asterisk](.5ex,.5ex)
+  \item \Lkeyword{oplus}: \psdots[dotstyle=oplus](.5ex,.5ex)
+  \item \Lkeyword{otimes}: \psdots[dotstyle=otimes](.5ex,.5ex)
+  \item \Lkeyword{triangle}: \psdots[dotstyle=triangle](.5ex,.5ex)
+  \item \Lkeyword{triangle*}: \psdots[dotstyle=triangle*](.5ex,.5ex)
+  \item \Lkeyword{square}: \psdots[dotstyle=square](.5ex,.5ex)
+  \item \Lkeyword{square*}: \psdots[dotstyle=square*](.5ex,.5ex)
+  \item \Lkeyword{diamond}: \psdots[dotstyle=diamond](.5ex,.5ex)
+  \item \Lkeyword{diamond*}: \psdots[dotstyle=diamond*](.5ex,.5ex)
+  \item \Lkeyword{pentagon}: \psdots[dotstyle=pentagon](.5ex,.5ex)
+  \item \Lkeyword{pentagon*}: \psdots[dotstyle=pentagon*](.5ex,.5ex)
+  \item \Lkeyword{|}: \psdots[dotstyle=|](.5ex,.5ex)
+  \end{itemize}
+\end{multicols}
+
+Furthermore, these symbols can be controlled with some others \PST,
+several of these are :
+
+\begin{itemize}
+\item their scale with \Lkeyword{dotscale}, the value of whom is either two numbers
+  defining the horizontal and vertical scale factor, or one single value being the
+  same for both,
+\item their angle with parameter \Lkeyword{dotangle}.
+\end{itemize}
+
+Please consult the \PST documentation for further details.
+The
+parameters \Lkeyword{PosAngle}, \Lkeyword{PointSymbol}, \Lkeyword{PointName} and
+\Lkeyword{PointNameSep} can be set to :
+
+\begin{itemize}
+\item either a single value, the same for all points ;
+\item or a list of values delimited by accolads \texttt{\{ ... \}} and
+  separated with comma \textit{without any blanks}, allowing to differenciate the
+  value for each point.
+\end{itemize}
+
+In the later case, the list can have less values than point which means that the
+last value is used for all the remaining points.
+
+At least, the parameter setting \Lkeyword{CurveType=none} can be used to
+draw a line between the points:
+
+\begin{itemize}
+\item opened \verb$polyline$ ;
+\item closed \verb$polygon$ ;
+\item open and curved \verb$curve$.
+\end{itemize}
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}[showgrid=true](-2,-2)(3,3)
+\pstGeonode{A}
+\pstGeonode[PosAngle=-135, PointNameSep=1.3](0,3){B_1}
+\pstGeonode[PointSymbol=pentagon, dotscale=2, fillstyle=solid,
+            fillcolor=OliveGreen, PtNameMath=false,
+            PointName=$B_2$, linecolor=red](-2,1){B2}
+\pstGeonode[PosAngle={90,0,-90}, PointSymbol={*,o},
+            linestyle=dashed, CurveType=polygon,
+            PointNameSep={1em,2em,3mm}]
+  (1,2){M_1}(2,1){M_2}(1,0){M_3}
+\pstGeonode[PosAngle={50,100,90}, PointSymbol={*,x,default},
+            PointNameSep=3mm, CurveType=curve,
+            PointName={\alpha,\beta,\gamma,default}]
+  (-2,0){alpha}(-1,-2){beta}(0,-1){gamma}(2,-1.5){T}
+\end{pspicture}
+\end{LTXexample}
+
+Obviously, the nodes appearing in the picture can be used as normal
+\PST nodes. Thus, it is possible to reference a point from
+\rnode{ici}{here}.
+\nccurve[arrowscale=2]{->}{ici}{B_1}
+
+\subsubsection{User defined axes}
+
+
+\Lcs{pstOIJGeonode} creates a list of points in the landmark $(O;I;J)$. Possible 
+parameters are \Lkeyword{PointName}, \Lkeyword{PointNameSep}, \Lkeyword{PosAngle},
+        \Lkeyword{PointSymbol}, and \Lkeyword{PtNameMath}.
+\begin{BDef}
+\Lcs{pstOIJGeonode}\OptArgs\coord1\Largb{$A_1$}\Largb{$O$}\Largb{$I$}\Largb{$J$}
+    \coord2\Largb{$A_2$}\ldots\cAny\Largb{$A_n$}
+\end{BDef}
+
+
+\begin{LTXexample}[width=5.6cm]
+\psset{unit=.7}
+\begin{pspicture*}[showgrid=true](-4,-4)(4,4)
+  \pstGeonode[PosAngle={-135,-90,180}]{O}(1,0.5){I}(0.5,2){J}
+  \pstLineAB[nodesep=10]{O}{I}
+  \pstLineAB[nodesep=10]{O}{J}
+  \multips(-5,-2.5)(1,0.5){11}{\psline(0,-.15)(0,.15)}
+  \multips(-2,-8)(0.5,2){9}{\psline(-.15,0)(.15,0)}
+  \psset{linestyle=dotted}%
+  \multips(-5,-2.5)(1,0.5){11}{\psline(-10,-40)(10,40)}
+  \multips(-2,-8)(0.5,2){9}{\psline(-10,-5)(10,5)}
+  \psset{PointSymbol=x, linestyle=solid}
+  \pstOIJGeonode[PosAngle={-90,0}, CurveType=curve,
+    linecolor=red] (3,1){A}{O}{I}{J}(-2,1){B}(-1,-1.5){C}(2,-1){D}
+\end{pspicture*}
+\end{LTXexample}
+
+
+\subsection{Segment mark}
+
+A segment can be drawn using the \Lcs{ncline} command. However,
+for marking a segment there is the following command:
+
+\begin{BDef}
+\Lcs{pstMarkSegment}OptArgs\Largb{A}\Largb{B}
+\end{BDef}
+
+
+
+
+The symbol drawn on the segment is given by the parameter
+\Lkeyword{SegmentSymbol}. Its value can be any valid command which can be
+used in math mode. Its default value is \Lkeyval{pstslashh},
+which produced two slashes on the segment. The segment is drawn.
+
+Several commands are predefined for marking the segment:
+
+\begin{multicols}{3}
+  \psset{PointSymbol=none, PointName=none, unit=.8}
+  \newcommand\Seg[1]{%
+    \Lcs{#1} : \begin{pspicture}[shift=.3](2,1)
+                 \pstGeonode(0.3,.5){A}(1.7,.5){B}\pstSegmentMark[SegmentSymbol=#1]{A}{B}
+               \end{pspicture}}%
+  \begin{itemize}
+  \item \Seg{pstslash} ;
+  \item \Seg{pstslashh} ;
+  \item \Seg{pstslashhh} ;
+  \item \Seg{MarkHash} ;
+  \item \Seg{MarkHashh} ;
+  \item \Seg{MarkHashhh} ;
+  \item \Seg{MarkCros} ;
+  \item \Seg{MarkCross} ;
+  \end{itemize}
+\end{multicols}
+
+The three commands of the family \nxLcs{MarkHash} draw a line whose inclination is
+controled by the parameter \Lkeyword{MarkAngle} (default is 45). Their width and colour
+depends of the width and color of the line when the drawing is done, ass shown is the
+next example.
+
+
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}[showgrid=true](-2,-2)(2,2)
+  \rput{18}{%
+    \pstGeonode[PosAngle={0,90,180,-90}](2,0){A}(2;72){B}
+      (2;144){C}(2;216){D}(2;288){E}} 
+  \pstSegmentMark{A}{B}
+  \pstSegmentMark[linecolor=green]{B}{C}
+  \psset{linewidth=2\pslinewidth}
+  \pstSegmentMark[linewidth=2\pslinewidth]{C}{D}
+  \pstSegmentMark{D}{E}
+  \pstSegmentMark{E}{A}
+\end{pspicture}
+\end{LTXexample}
+
+
+\subsection{Triangles}
+
+The more classical figure, it has its own macro for a quick definition:
+\iffalse
+
+\defcom[Draws a triangle.  \protect\ParamList{\Lkeyword{PointName},
+  \Lkeyword{PointNameSep}, \Lkeyword{PosAngle}, \Lkeyword{PointSymbol}, \Lkeyword{PointNameA},
+  \Lkeyword{PosAngleA}, \Lkeyword{PointSymbolA}, \Lkeyword{PointNameB},
+  \Lkeyword{PosAngleB}, \Lkeyword{PointSymbolB}, \Lkeyword{PointNameC},
+  \Lkeyword{PosAngleC}, \Lkeyword{PointSymbolC}}]
+  {pstTriangle}{%
+  \OptArg{par}
+  $(x_A;y_A)$\Arg{$A$}$(x_B;y_B)$\Arg{$B$}$(x_C;y_C)$\Arg{$C$}}
+
+In order to accurately put the name of the points, there are three parameters
+\Lkeyword{PosAngleA}, \Lkeyword{PosAngleB} and \Lkeyword{PosAngleC}, which are associated
+respectively to the nodes \Argsans{$A$}, \Argsans{$B$} et \Argsans{$C$}. Obviously
+they have the same meaning as the parameter \Lkeyword{PosAngle}. If one or more of such
+parameters is omitted, the value of \Lkeyword{PosAngle} is taken.  If no angle
+is specified, points name are placed on the bissector line.
+
+In the same way there are parameters for controlling the symbol used
+for each points: \Lkeyword{PointSymbolA}, \Lkeyword{PointSymbolB} and
+\Lkeyword{PointSymbolC}. They are equivalent to the parameter
+\Lkeyword{PointSymbol}. The management of the default value followed the
+same rule.
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}[showgrid=true](-2,-2)(3,3)
+\end{pspicture}
+\end{LTXexample}
+\tabex{triangle}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \subsection{Angles}
+
+Each angle is defined with three points. The vertex is the second
+point. Their order is important because it is assumed that the angle is
+specified in the direct order. The first command is the marking of a
+right angle:
+
+\defcom[Marks the rigth angle \protect\Angle{ABC} given in direct
+        order. \protect\ParamList{\Lkeyword{RightAngleType}, \Lkeyword{RightAngleSize},
+        \Lkeyword{RightAngleSize}}]
+  {pstRightAngle}%
+  {\OptArg{par}\Arg{$A$}\Arg{$B$}\Arg{$C$}}
+
+\cbstart The symbol used is controlled by the parameter \Lkeyword{RightAngleType}
+\DefaultVal{default}. Its possible values are :
+
+\begin{itemize}
+\item \verb$default$ : standard symbol ;
+\item \verb$german$ : german symbol (given by U. Dirr) ;
+\item \verb$suisseromand$ : swiss romand symbol (given P. Schnewlin).
+\end{itemize}\cbend
+
+The only parameter controlling this command, excepting the ones which
+controlled the line, is \Lkeyword{RightAngleSize} which defines the size
+of the symbol\DefaultVal{0.28 unit}.
+
+For other angles, there is the command:
+
+\defcom[Marks the angle \protect\Angle{ABC} given in direct order.
+  \protect\ParamList{\Lkeyword{MarkAngleRadius}, \Lkeyword{LabelAngleOffset},
+  \Lkeyword{Mark}}]
+  {pstMarkAngle}%
+  {\OptArg{par}\Arg{$A$}\Arg{$B$}\Arg{$C$}}
+
+
+The \Lkeyword{label} can be any valid \TeX\ box, it is put at \Lkeyword{LabelSep}
+\DefaultVal{1 unit} of the node in the direction of the bisector of the angle
+modified by \Lkeyword{LabelAngleOffset}\DefaultVal{0} and positioned using
+\Lkeyword{LabelRefPt} \DefaultVal{c}. Furthermore the arc used for marking has a radius
+of \Lkeyword{MarkAngleRadius} \DefaultVal{.4~unit}.  At least, it is possible to place
+an arrow using the parameter \Lkeyword{arrows}.Finally, it is possible to mark
+the angle by specifying a \TeX{} command as argument of parameter \Lkeyword{Mark}.
+
+\tabex{angle}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \subsection{Lines, half-lines and segments}
+
+The classical line!
+
+\defcom[Draws line $(AB)$.]
+  {pstLineAB}{\OptArg{par}\Arg{$A$}\Arg{$B$}}
+
+In order to control its length\footnote{which is the comble for a
+line!}, the two parameters \Lkeyword{nodesepA} et \Lkeyword{nodesepB}
+specify the abscissa of the extremity of the drawing part of the line.
+A negative abscissa specify an outside point, while a positive
+abscissa specify an internal point. If these parameters have to be
+equal, \Lkeyword{nodesep} can be used instead. The default value of these
+parameters is equal to 0.
+
+\tabex{droite}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \subsection{Circles}
+
+A circle can be defined either with its center and a point of its
+circumference, or with two diameterly opposed points. There is two
+commands :
+
+\renewcommand{\ComUnDescr}{Draws the circle of center $O$ crossing $A$. \protect\ParamList{\Lkeyword{Radius},
+  \Lkeyword{Diameter}}.}
+\renewcommand{\ComDeuxDescr}{Draws the circle of diameter $AB$. \protect\ParamList{\Lkeyword{Radius},
+  \Lkeyword{Diameter}}.}
+\defcomdeux{pstCircleOA}{\OptArg{par}\Arg{$O$}\Arg{$A$}}%
+           {pstCircleAB}{\OptArg{par}\Arg{$A$}\Arg{$B$}}
+
+For the first macro, it is possible to omit the second point and then
+to specify a radius or a diameter using the parameters \Lkeyword{Radius}
+and \Lkeyword{Diameter}. The values of these parameters must be specified
+with one of the two following macros :
+
+\renewcommand{\ComUnDescr}{Specifies distance $AB$ for the parameters
+  \protect\Lkeyword{Radius} and \protect\Lkeyword{Diameter}. \protect\ParamList{\Lkeyword{DistCoef}}.}
+\renewcommand{\ComDeuxDescr}{Specifies a numerical value for the parameters
+  \protect\Lkeyword{Radius} and \protect\Lkeyword{Diameter}. \protect\ParamList{\Lkeyword{DistCoef}}.}
+\defcomdeux{pstDistAB}{\OptArg{par}\Arg{$A$}\Arg{$B$}}%
+           {pstDistVal}{\OptArg{par}\Arg{x}}
+
+The first specifies a distance between two points. The parameter
+\Lkeyword{DistCoef} can be used to specify a coefficient to reduce or
+enlarge this distance. To be taken into account this last parameter
+must be specified before the distance. The second macro can be used to
+specify an explicit numeric value.
+
+We will see later how to draw the circle crossing three points.
+
+\vspace{1.1\baselineskip}
+\begin{minipage}[m]{.45\linewidth}
+  With this package, it becomes possible to draw:
+
+  \begin{itemize}
+  \item {\color{red} the circle of center $A$ crossing $B$;}
+  \item {\color{green} the circle of center $A$ whose radius is $AC$;}
+  \item {\color{blue} the circle of center $A$ whose radius is $BC$;}
+  \item {\color{Sepia} the circle of center $B$ whose radius is $AC$;}
+  \item {\color{Aquamarine} the circle of center $B$ of diameter $AC$;}
+  \item {\color{RoyalBlue} the circle whose diameter is $BC$.}
+  \end{itemize}
+\end{minipage}
+%
+\input{Exemples/cercle}
+
+\smallverbatiminput{Exemples/cercle_in}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \subsection{Circle arcs}
+
+\renewcommand{\ComUnDescr}{Draws the circle arc of center $O$ and radius $OA$,
+  delimited by the angle $\protect\Angle{AOB}$ in direct order.}
+\renewcommand{\ComDeuxDescr}{Draws the circle arc of center $O$ and radius $OA$,
+  delimited by the angle $\protect\Angle{AOB}$ in indirect order.}
+\defcomdeux{pstArcOAB}{\OptArg{par}\Arg{$O$}\Arg{$A$}\Arg{$B$}}%
+           {pstArcnOAB}{\OptArg{par}\Arg{$O$}\Arg{$A$}\Arg{$B$}}
+
+These two macros draw circle arcs, $O$ is the center, the radius
+defined by $OA$, the beginning angle given by $A$ and the final angle
+by $B$. Finally, the first macro draws the arc in the direct way,
+whereas the second in the indirect way. It is not necessary that the
+two points are at the same distance of $O$.
+
+\tabex{arc}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \subsection{Curved abscissa}
+
+A point can be positioned on a circle using its curved abscissa.
+
+\defcom[Puts a point on a circle using an curves abscissa.
+  \protect\ParamList{\Lkeyword{PointSymbol}, \Lkeyword{PosAngle},
+  \Lkeyword{PointName}, \Lkeyword{PointNameSep}, \Lkeyword{PtNameMath}, \Lkeyword{CurvAbsNeg}}]
+  {pstCurvAbsNode}{\OptArg{par}\Arg{$O$}\Arg{$A$}\Arg{$B$}\Arg{Abs}}
+
+The point \Argsans{$B$} is positioned on the circle of center
+\Argsans{$O$} crossing \Argsans{$A$}, with the curved abscissa
+\Argsans{Abs}. The origin is \Argsans{$A$} and the direction is
+anti-clockwise by default. The parameter \Lkeyword{CurvAbsNeg}
+\DefaultVal{false} can change this behavior.
+
+If the parameter \Lkeyword{PosAngle} is not specified, the point label is put
+automatically in oirder to be alined with the circle center and the point.
+
+\tabex{abscur}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \subsection{Généric curve}
+
+It is possible to generate a set of points using a loop, and to give
+them a generic name defined by a radical and a number. The following
+command can draw a interpolated curve crossing all such kind of
+points.
+
+\defcom[Draws an interpolate curve using a points family whose name has a
+  naming convention using a prefix and a number.
+  \protect\ParamList{\Lkeyword{GenCurvFirst}, \Lkeyword{GenCurvInc},
+  \Lkeyword{GenCurvLast}}]
+  {pstGenericCurve}{\OptArg{par}\Arg{Radical}\Arg{$n_1$}\Arg{$n_2$}}
+
+The curve is drawn on the points whose name is defined using the
+radical \Argsans{Radical} followed by a number from \Argsans{$n_1$} to
+\Argsans{$n_2$}. In order to manage side effect, the parameters
+\Lkeyword{GenCurvFirst} et \Lkeyword{GenCurvLast} can be used to specified
+special first or last point. The parameter \Lkeyword{GenCurvInc} can be
+used to modify the increment from a point to the next one
+\DefaultVal{1}.
+
+\tabex{gencur}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Geometric Transformations}
+
+The geometric transformations are the ideal tools to construct geometric figures. All
+the classical transformations are available with the following macros \cbstart which
+share the same syntaxic scheme end two parameters.
+
+The common syntax put at the end two point lists whose second is optional or with a
+cardinal at least equal. These two lists contain the antecedent points and their
+respective images. In the case no image is given for some points the a  default name
+is build appending a \verb$'$ to the antecedent name.
+
+The first shared parameter is \Lkeyword{CodeFig} which draws the specific
+constructions lines. Its default value is \Lkeyword{false}, and a
+\Lkeyword{true} value activates this optional drawing.
+The drawing is done using the line style \Lkeyword{CodeFigStyle}
+\DefaultVal{dashed}, with the color \Lkeyword{CodeFigColor}
+\DefaultVal{cyan}.
+
+Their second shared parameter is \Lkeyword{CurveType} which controls the drawing of a
+line crossing all images, and thus allow a quick description of a transformed figure.\cbend
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \subsection{Central symmetry}
+
+\defcom[Builds the symetric point $M'_i$ of $M_i$ in relation to point $O$.
+  \protect\ParamList{\Lkeyword{PointSymbol}, \Lkeyword{PosAngle},
+  \Lkeyword{PointName}, \Lkeyword{PointNameSep}, \Lkeyword{PtNameMath},
+  \Lkeyword{CodeFig}, \Lkeyword{CodeFigColor}, \Lkeyword{CodeFigStyle}}]{pstSymO}%
+  {\OptArg{par}\Arg{$O$}\Arg{$M_1, M_2, \cdots, M_n$}\OptArg{$M'_1, M'_2, \cdots, M'_p$}}
+
+Draw the symmetric point in relation to point $O$. The classical
+parameter of point creation are usable here, and also for all the
+following functions.
+
+\tabex{symcentrale}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \subsection{Orthogonal (or axial) symmetry}
+
+\defcom[Builds the symetric point $M'_i$ of $M_i$ in relation to line $(AB)$.
+  \protect\ParamList{\Lkeyword{PointSymbol}, \Lkeyword{PosAngle},
+  \Lkeyword{PointName}, \Lkeyword{PointNameSep}, \Lkeyword{PtNameMath},
+  \Lkeyword{CodeFig}, \Lkeyword{CodeFigColor}, \Lkeyword{CodeFigStyle}}]{pstOrtSym}%
+  {\OptArg{par}\Arg{$A$}\Arg{$B$}\Arg{$M_1, M_2, \cdots, M_n$}\OptArg{$M'_1, M'_2, \cdots, M'_p$}}
+
+Draws the symmetric point in relation to line $(AB)$.
+
+\tabex{symorthogonale}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \subsection{Rotation}
+
+\defcom[Builds the image $M'_i$ of $M_i$ using a rotation around $O$ of \protect\Lkeyword{RotAngle}
+  degrees (direct).
+  \protect\ParamList{\Lkeyword{PointSymbol}, \Lkeyword{PosAngle},
+  \Lkeyword{PointName}, \Lkeyword{PointNameSep}, \Lkeyword{PtNameMath}, \Lkeyword{RotAngle}}]{pstRotation}%
+  {\OptArg{par}\Arg{$O$}\Arg{$M_1, M_2, \cdots, M_n$}\OptArg{$M'_1, M'_2, \cdots, M'_p$}}
+
+Draw the image of $M_i$ by the rotation of center $O$ and angle given by
+the parameter \Lkeyword{RotAngle}. This later can be an angle specified
+by three points. In such a case, the following function must be used:
+
+\defcom[Specifies the measure of \protect\Angle{AOB} (direct) for the parameter
+  \protect\Lkeyword{RotAngle}. \protect\ParamList{\Lkeyword{AngleCoef}}]
+  {pstAngleABC}{\Arg{$A$}\Arg{$B$}\Arg{$C$}}
+
+Never forget to use the rotation for drawing a square or an equilateral
+triangle.\cbstart The parameter \Lkeyword{CodeFig} puts a bow with an arrow between the
+point and its image, and if \Lkeyword{TransformLabel} \DefaultVal{none}
+contain some text, it is put on the corresponding angle in mathematical mode.
+
+\tabex{rotation}\cbend
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \subsection{Translation}
+
+\defcom[Builds the translated $M'_i$ of $M_i$ using the vector \protect\Vecteur{AB}.
+  \protect\ParamList{\Lkeyword{PointSymbol}, \Lkeyword{PosAngle},
+  \Lkeyword{PointName}, \Lkeyword{PointNameSep}, \Lkeyword{PtNameMath}, \Lkeyword{DistCoef}}]
+  {pstTranslation}%
+  {\OptArg{par}\Arg{$A$}\Arg{$B$}\Arg{$M_1, M_2, \cdots, M_n$}\OptArg{$M'_1, M'_2, \cdots, M'_p$}}
+
+Draws the translated $M'_i$ of $M_i$ using the vector \Vecteur{AB}. Useful for drawing a
+parallel line.
+
+\tabex{translation}
+
+The parameter \Lkeyword{DistCoef} can be used as a multiplicand
+coefficient to modify the translation vector.\cbstart The parameter \Lkeyword{CodeFig}
+draws the translation vector le vecteur de translation between the
+point and its image, labeled in its middle defaultly with the vector name or by the
+text specified with \Lkeyword{TransformLabel} \DefaultVal{none}.\cbend
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \subsection{Homothetie}
+
+\defcom[Builds the image $M'_i$ de $M_i$ using the homothetie of centre $O$ and coefficient
+  \protect\Lkeyword{HomCoef}.
+  \protect\ParamList{\Lkeyword{PointSymbol}, \Lkeyword{PosAngle},
+  \Lkeyword{PointName}, \Lkeyword{PointNameSep}, \Lkeyword{PtNameMath}, \Lkeyword{HomCoef}}]
+  {pstHomO}%
+  {\OptArg{par}\Arg{$O$}\Arg{$M_1, M_2, \cdots, M_n$}\OptArg{$M'_1, M'_2, \cdots, M'_p$}}
+
+Draws $M'_i$ the image of $M_i$ by the homotethy of center $O$ and
+coefficient specified with the parameter \Lkeyword{HomCoef}.
+
+\tabex{homothetie}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \subsection{Orthogonal projection}
+
+\defcom[Build the projected point $M'_i$ of $M_i$ on line $(AB)$.
+  \protect\ParamList{\Lkeyword{PointSymbol}, \Lkeyword{PosAngle},
+  \Lkeyword{PointName}, \Lkeyword{PointNameSep}, \Lkeyword{PtNameMath},
+  \Lkeyword{CodeFig}, \Lkeyword{CodeFigColor}, \Lkeyword{CodeFigStyle}}]
+  {pstProjection}%
+  {\OptArg{par}\Arg{$A$}\Arg{$B$}\Arg{$M_1, M_2, \cdots, M_n$}\OptArg{$M'_1, M'_2, \cdots, M'_p$}}
+
+Projects orthogonally the point $M_i$ on the line $(AB)$. Useful for the altitude of a
+triangle. The name is aligned with the point and the projected point as
+shown in the exemple.
+
+\tabex{projection}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Special object}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \subsection{Midpoint}
+
+\defcom[Build the middle $I$ of \Segment{AB}.
+  \protect\ParamList{\Lkeyword{PointSymbol}, \Lkeyword{PosAngle},
+  \Lkeyword{PointName}, \Lkeyword{PointNameSep}, \Lkeyword{PtNameMath}, \Lkeyword{SegmentSymbol},
+  \Lkeyword{CodeFig}, \Lkeyword{CodeFigColor}, \Lkeyword{CodeFigStyle}}]
+  {pstMiddleAB}%
+  {\OptArg{par}\Arg{$A$}\Arg{$B$}\Arg{$I$}}
+
+Draw the midpoint $I$ of segment $[AB]$. By default, the point name is
+automatically put below the segment.
+
+\tabex{milieu}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \subsection{Triangle center of gravity}
+
+\defcom[Builds the centre of gravity $G$ of triangle $ABC$.
+        \protect\ParamList{\Lkeyword{PointName}, \Lkeyword{PointNameSep}, \Lkeyword{PosAngle},
+        \Lkeyword{PointSymbol}, \Lkeyword{PtNameMath}}]
+  {pstCGravABC}%
+  {\OptArg{par}\Arg{$A$}\Arg{$B$}\Arg{$C$}\Arg{$G$}}
+
+Draw the $ABC$ triangle centre of gravity $G$.
+
+\tabex{grav}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \subsection{Centre of the circumcircle of a triangle}
+
+\defcom[Buids the center $O$ of the circumcircle of triangle $ABC$.
+        \protect\ParamList{\Lkeyword{PointName}, \Lkeyword{PointNameSep}, \Lkeyword{PosAngle},
+        \Lkeyword{PointSymbol}, \Lkeyword{PtNameMath}, \Lkeyword{DrawCirABC}, \Lkeyword{CodeFig},
+        \Lkeyword{CodeFigColor}, \Lkeyword{CodeFigStyle}, \Lkeyword{SegmentSymbolA},
+        \Lkeyword{SegmentSymbolB}, \Lkeyword{SegmentSymbolC}}]
+  {pstCircleABC}{\OptArg{par}\Arg{$A$}\Arg{$B$}\Arg{$C$}\Arg{$O$}}
+ 
+Draws the circle crossing three points (the circum circle) and put its center $O$.
+The effective drawing is controlled by the boolean parameter \Lkeyword{DrawCirABC}
+\DefaultVal{true}.\cbstart Moreover the intermediate constructs (mediator lines) can
+be drawn by setting the boolean parameter \Lkeyword{CodeFig}. In that case the middle
+points are marked on the segemnts using three different marks given by the parameters
+\Lkeyword{SegmentSymbolA}, \Lkeyword{SegmentSymbolB} et \Lkeyword{SegmentSymbolC}.\cbend
+
+\tabex%
+  [@{}m{.35\linewidth}@{\hspace{.013\linewidth}}>{\small}m{.627\linewidth}@{}]%
+  {ccirc}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \subsection{Perpendicular bisector of a segment}
+
+\defcom[Builds the perpendicular bisector of the segment \Segment{AB}, its middle $I$
+        and a point $M$ of the bisector wich is the image of $B$ using rotation.
+        \protect\ParamList{\Lkeyword{PointName}, \Lkeyword{PointNameSep}, \Lkeyword{PosAngle},
+        \Lkeyword{PointSymbol}, \Lkeyword{PtNameMath}, \Lkeyword{CodeFig},
+        \Lkeyword{CodeFigColor}, \Lkeyword{CodeFigStyle}, \Lkeyword{SegmentSymbol}}]
+  {pstMediatorAB}{\OptArg{par}\Arg{$A$}\Arg{$B$}\Arg{$I$}\Arg{$M$}}
+
+The perpendicular bisector of a segment is a line perpendicular to
+this segment in its midpoint. The segment is $[AB]$, the midpoint $I$,
+and $M$ is a point belonging to the perpendicular bisector line. It is
+build by a rotation of $B$ of 90 degrees around $I$. This mean
+that the order of $A$ and $B$ is important, it controls the position
+of $M$. The command creates the two points $M$ end $I$. The
+construction is controlled by the following parameters:
+
+\begin{itemize}
+\item \Lkeyword{CodeFig}, \Lkeyword{CodeFigColor} et \Lkeyword{SegmentSymbol}
+  for marking the right angle ;
+\item \Lkeyword{PointSymbol} et \Lkeyword{PointName} for controlling the
+  drawing of the two points, each of them can be specified
+  separately with the parameters \Lkeyword{...A} et \Lkeyword{...B} ;
+\item parameters controlling the line drawing.
+\end{itemize}
+
+\tabex%
+  [@{}m{.35\linewidth}@{\hspace{.013\linewidth}}>{\small}m{.627\linewidth}@{}]%
+  {mediator}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \subsection{Bisectors of angles}
+
+\defcom[Builds the internal bisector of angle \protect\Angle{BAC} and one of its point
+  $M$, image of $B$ by rotation around $A$.
+  \protect\ParamList{\Lkeyword{PointSymbol}, \Lkeyword{PosAngle},
+  \Lkeyword{PointName}, \Lkeyword{PointNameSep}, \Lkeyword{PtNameMath}}]
+  {pstBissectBAC}{\OptArg{par}\Arg{$B$}\Arg{$A$}\Arg{$C$}\Arg{$N$}}
+
+\defcom[Builds the external bisector of angle \protect\Angle{BAC} and one of its point
+  $M$, image of $B$ by rotation around $A$.
+  \protect\ParamList{\Lkeyword{PointSymbol}, \Lkeyword{PosAngle},
+  \Lkeyword{PointName}, \Lkeyword{PointNameSep}, \Lkeyword{PtNameMath}}]
+  {pstOutBissectBAC}{\OptArg{par}\Arg{$B$}\Arg{$A$}\Arg{$C$}\Arg{$N$}}
+
+there are two bisectors for a given geometric angle: the inside one and
+the outside one; this is why there is two commands. The angle is
+specified by three points specified in the trigonometric direction
+(anti-clockwise). The result of the commands is the specific line and
+a point belonging to this line. This point is built by a rotation of
+point $B$.
+
+\tabex%
+  [@{}m{.35\linewidth}@{\hspace{.013\linewidth}}>{\small}m{.627\linewidth}@{}]%
+  {bissec}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Intersections}
+
+Points can be defined by intersections. Six intersection types  are
+managed:
+
+\begin{itemize}
+\item line-line;
+\item line-circle;
+\item circle-circle;
+\item function-function;
+\item function-line;
+\item function-circle.
+\end{itemize}
+
+An intersection can not exist: case of parallel lines. In such a case,
+the point(s) are positioned at the origin. In fact, the user has to
+manage the existence of these points.
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \subsection{Line-Line}
+
+\defcom[Puts a point at the intersection of the two lines $(AB)$ et $(CD)$.
+  \protect\ParamList{\Lkeyword{PointSymbol}, \Lkeyword{PosAngle},
+  \Lkeyword{PointName}, \Lkeyword{PointNameSep}, \Lkeyword{PtNameMath}}]
+  {pstInterLL}%
+  {\OptArg{par}\Arg{$A$}\Arg{$B$}\Arg{$C$}\Arg{$D$}\Arg{$M$}}
+
+Draw the intersection point between lines $(AB)$ and $(CD)$.
+
+\begin{description}
+\item[basique]
+
+  \tabex{interDD}
+
+\item[Horthocentre]
+
+  \tabex%
+  [@{}m{.35\linewidth}@{\hspace{.013\linewidth}}>{\small}m{.627\linewidth}@{}]
+    {orthocentre}
+
+\end{description}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \subsection{Circle--Line}
+
+\defcom[Puts the intersection point(s) between $(AB)$ and the circle of
+        centre $O$ crossing $C$.
+        \protect\ParamList{\Lkeyword{PointSymbol}, \Lkeyword{PosAngle},
+        \Lkeyword{PointName}, \Lkeyword{PointNameSep}, \Lkeyword{PtNameMath},
+        \Lkeyword{PointSymbolA}, \Lkeyword{PosAngleA}, \Lkeyword{PointNameA},
+        \Lkeyword{PointSymbolB}, \Lkeyword{PosAngleB}, \Lkeyword{PointNameB}, 
+        \Lkeyword{Radius}, \Lkeyword{Diameter}}]
+  {pstInterLC}%
+  {\OptArg{par}\Arg{$A$}\Arg{$B$}\Arg{$O$}\Arg{$C$}%
+    \Arg{$M_1$}\Arg{$M_2$}}
+
+Draw the one or two intersection point(s) between the line  $(AB)$ and
+the circle of centre $O$ and with radius $OC$.
+
+The circle is specified with its center and either a point of its
+circumference or with a radius specified with parameter \Lkeyword{radius}
+or its diameter specified with parameter \Lkeyword{Diameter}. These two
+parameters can be modify by coefficient \Lkeyword{DistCoef}.
+
+
+The position of the wo points is such that the vectors \Vecteur{AB} abd
+\Vecteur{M_1M_2} are in the same direction. Thus, if the points
+definig the line are switch, then the resulting points will be also
+switched. If the intersection is void, then the points are positionned
+at the center of the circle.
+
+
+\tabex
+  [@{}m{.4\linewidth}@{\hspace{.013\linewidth}}>{\small}m{.5777\linewidth}@{}]
+  {interDC}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \subsection{Circle--Circle}
+
+\defcom[Put the intersection point(s) between the circle of centre $O_1$ passant
+        par $B$ et le cercle de centre $O_2$ passant par $C$.]
+  {pstInterCC}%
+  {\OptArg{par}\Arg{$O_1$}\Arg{$B$}\Arg{$O_2$}\Arg{$C$}%
+    \Arg{$M_1$}\Arg{$M_2$}}
+
+This function is similar to the last one. The boolean parameters
+\Lkeyword{CodeFigA} et \Lkeyword{CodeFigB} allow the drawing of the arcs
+at the intersection. In order to get a coherence \Lkeyword{CodeFig} allow
+the drawing of both arcs. The boolean parameters \Lkeyword{CodeFigAarc} and
+\Lkeyword{CodeFigBarc} specified the direction of these optional arcs:
+trigonometric (by default) or clockwise. Here is a first example.
+
+\tabex{interCC}
+
+And a more complete one, which includes the special circle
+specification using radius and diameter. For such specifications it
+exists the parameters \Lkeyword{RadiusA}, \Lkeyword{RadiusB},
+\Lkeyword{DiameterA} and \Lkeyword{DiameterB}.
+
+\begin{center}
+  \rule[-.5cm]{0pt}{8cm}
+  \begin{pspicture}(-3,-4)(7,3)\psgrid
+    \input{Exemples/interCC_bis_in}
+  \end{pspicture}
+\end{center}
+
+\smallverbatiminput{Exemples/interCC_bis_in}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \subsection{Function--function}
+
+\defcom[Puts an intersection point between two function curves.]
+  {pstInterFF}{\OptArg{par}\Arg{$f$}\Arg{$g$}\Arg{$x_0$}\Arg{$M$}}
+
+This function put a point at the intersection between two curves
+defined by a function. $x_0$ is an intersection approximated value of
+the abscissa. It is obviously possible to ise this function several
+time if more than one intersection is present. Each function is
+describerd in \PS in the same way as the description used by
+the \Lcs{psplot} macro of \PST. A constant function can be
+specified, and then seaching function root is possible.
+
+The Newton algorithm is used for the research, and the intersection
+may not to be found. In such a case the point is positionned at the
+origin. On the other hand, the research can be trapped (in a local
+extremum near zero).
+
+\tabex{interFF}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \subsection{Function--line}
+
+\defcom[Puts an intersection point between one function curve and the line $(AB)$.]
+  {pstInterFL}{\OptArg{par}\Arg{$f$}\Arg{$A$}\Arg{$B$}\Arg{$x_0$}\Arg{$M$}}
+
+Puts a point at the intersection between the function $f$ and the line
+$(AB)$.
+
+\tabex{interFL}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \subsection{Function--circle}
+
+\defcom[Puts an intersection point between one function curve and a circle.]
+  {pstInterFC}{\OptArg{par}\Arg{$f$}\Arg{$O$}\Arg{$A$}\Arg{$x_0$}\Arg{$M$}}
+
+Puts a point at the intersection between the function $f$ and the circle
+of centre $O$ and radius $OA$.
+
+\tabex{interFC}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Examples gallery}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \section{Basic geometry}
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \subsection{Drawing of the bissector}
+    \nopagebreak[4]
+
+\tabex{gal_biss}
+
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \cbstart\subsection{Transformation de polygones et courbes}
+
+Here is an example of the use of \Lkeyword{CurveType} with transformation.
+\nopagebreak[4]
+
+\begin{center}
+\input{Exemples/curvetype}
+\end{center}\nopagebreak[4]
+
+\smallverbatiminput{Exemples/curvetype_in}\cbend
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \subsection{Triangle lines}
+
+\begin{center}
+\psset{unit=2cm}
+\input{Exemples/remarq}
+\end{center}\nopagebreak[4]
+
+\smallverbatiminput{Exemples/remarq_in}
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \subsection{Euler circle}
+
+\begin{center}
+\psset{unit=2cm}
+\input{Exemples/euler}
+\end{center}\nopagebreak[4]
+
+\smallverbatiminput{Exemples/euler_in}
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \subsection{Orthocenter and hyperbola}
+
+The orthocenter of a triangle whose points are on the branches of the
+hyperbola ${\mathscr H} : y=a/x$ belong to this hyperbola.
+\nopagebreak[4]
+
+\begin{center}
+\psset{unit=.5cm}
+\input{Exemples/orthoethyper}
+\end{center}\nopagebreak[4]
+
+\smallverbatiminput{Exemples/orthoethyper_in}
+
+\pagebreak[4]
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \subsection{17 sides regular polygon}
+
+Striking picture created by K. F. Gauss.
+he also prooved that it is possible to build the regular polygons which
+have $2^{2^p}+1$ sides, the following one has 257 sides!
+\nopagebreak[4]
+
+\begin{center}
+\psset{unit=1.5cm, CodeFig=true, RightAngleSize=.14, CodeFigColor=red,
+  CodeFigB=true, linestyle=dashed, dash=2mm 2mm}
+\input{Exemples/gauss}
+\end{center}
+
+\pagebreak[4]
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \subsection{Circles \& tangents}
+
+The drawing of the circle tangents which crosses a given point.
+\nopagebreak[4]
+
+\begin{center}
+\input{Exemples/tg1c}
+\end{center}
+
+The drawing of the common tangent of two circles.
+\nopagebreak[4]
+
+\begin{center}
+\input{Exemples/tg2c}
+\end{center}
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \subsection{Fermat's point}
+
+Drawing of Manuel Luque.\nopagebreak[4]
+
+\begin{center}
+\input{Exemples/ptfermat}
+\end{center}
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \subsection{Escribed and inscribed circles of a triangle}
+
+%% cercles inscrit et exinscrits d'un triangle
+\begin{center}
+\psset{unit=1cm, dash=5mm 4mm}%, PointSymbolA=none, PointSymbolB=none}
+\input{Exemples/cinscex}
+\end{center}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \section{Some locus points}
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \subsection{Parabola}
+
+\begin{minipage}[m]{.33\linewidth}
+The parabola is the set of points which are at the same distance
+between a point and a line.
+\end{minipage}
+\newcommand{\NbPt}{11}
+\input{Exemples/parabole}\nopagebreak[4]
+
+\smallverbatiminput{Exemples/parabole_in}
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \subsection{Hyperbola}
+
+\begin{minipage}[b]{.55\linewidth}
+The hyperbola is the set of points whose difference between their
+distance of two points (the focus) is constant.
+\begin{verbatim}
+%% QQ RAPPELS : a=\Sommet, c=\PosFoyer,
+%% b^2=c^2-a^2, e=c/a
+%% pour une hyperbole -> e>1, donc c>a,
+%% ici on choisi a=\sqrt{2}, c=2, e=\sqrt{2}
+%% M est sur H <=> |MF-MF'|=2a
+\end{verbatim}
+\end{minipage}
+%% QQ DEFINITIONS
+\input{Exemples/hyperbole}\nopagebreak[4]
+
+\smallverbatiminput{Exemples/hyperbole_in}
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \subsection{Cycloid}
+
+The wheel rolls from $M$ to $A$. The circle points are on a
+cycloid.\nopagebreak[4]
+
+\begin{center}
+\input{Exemples/cyclo}
+\end{center}\nopagebreak[4]
+
+\smallverbatiminput{Exemples/cyclo_in}
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \subsection{Hypocycloids (Astroid and Deltoid)}
+
+A wheel rolls inside a circle, and depending of the radius ratio, it
+is an astroid, a deltoid and in the general case hypo-cycloids.
+\nopagebreak[4]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% ASTROIDE
+\input{Exemples/hypocyclo}
+%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+\input{Exemples/astro}\input{Exemples/delto}
+\end{center}
+
+\smallverbatiminput{Exemples/hypocyclo}
+\smallverbatiminput{Exemples/astro_in}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \section{Lines and circles envelope}
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \subsection{Conics}
+
+Let's consider a circle and a point $A$ not on the circle. The
+set of all the mediator lines of segments defined by $A$ and the
+circle points, create two conics depending of the position of $A$:
+
+\begin{itemize}
+\item inside the circle: an hyperbola;
+\item outside the circle: an ellipse.
+\end{itemize}
+
+(figure of O. Reboux).
+
+\begin{center}\input{Exemples/envellipse}\end{center}
+
+\smallverbatiminput{Exemples/envellipse_in}
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \subsection{Cardioid}
+
+The cardioid is defined by the circles centered on a circle and
+crossing a given point.
+
+%\begin{center}\input{Exemples/envcardi}\end{center}
+
+\tabex%
+  [@{}m{.5\linewidth}@{\hspace{.013\linewidth}}>{\small}m{.627\linewidth}@{}]%
+  {envcardi}
+
+%\smallverbatiminput{Exemples/envcardi_in}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \section{Homotethy and fractals}
+
+\tabex{fracthom}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \section{hyperbolic geometry: a triangle and its altitudes}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Tracé de géodésique en géométrie hyperbolique
+%% Attention ne fonctionne que si les points ne sont pas alignés avec O
+%% Ceci est un cas particulier, je ne crois pas que les hauteurs
+%% soient concourantes pour tous les triangles hyperboliques.
+\input{Exemples/geohyper}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\appendix
+\chapter{Glossaire des commandes}%%\markboth{GLOSSAIRE DES COMMANDES}{\thepage}%
+%%\addcontentsline{toc}{chapter}{\protect\numberline{}Glossaire des commandes}%
+
+Here is the complete macros list defined by \texttt{pst-eucl}. Each is shown with a
+short description and its parameters which control it. It is obvious that some over
+\PST parameters can be used, especially the ones which control the drawing of
+the line (width, style, color).
+
+\input{euclide_english.ind}
+
+
+\fi
+
+
+\clearpage
+\section{List of all optional arguments for \texttt{pstricks-add}}
+
+\xkvview{family=pst-eucl,columns={key,type,default}}
+
+\nocite{*}
+\bgroup
+\RaggedRight
+\bibliographystyle{plain}
+\bibliography{pst-eucl-doc}
+\egroup
+
+\printindex
+
+
+\end{document}

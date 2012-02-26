@@ -1,0 +1,80 @@
+\section {La grille}
+
+Le paramètre \verb+[base=+$x{min}$ ${x{max}}$ ${y{min}}$
+${y{max}}$\verb+]+ permet de spécifier la taille de la grille.
+
+\begin{multicols}{2}
+\psset{unit=1}
+\psset{SphericalCoor,viewpoint=50 50 20,Decran=30}
+\begin{pspicture}(-4,-2)(3,3)
+\psframe(-4,-2)(3,3)
+\psSolid[object=grille,
+   base=0 4 -3 3,
+   linecolor=gray](0,0,0)
+\axesIIID(0,0,0)(4,3,3)
+\end{pspicture}
+
+\columnbreak
+
+\begin{verbatim}
+\psSolid[object=grille,
+   base=0 4 -3 3,
+   linecolor=gray](0,0,0)
+\end{verbatim}
+\end{multicols}
+
+Le paramètre \verb+[ngrid=+$n_1$ $n_2$\verb+]+ permet de spécifier le
+maillage de la grille. Si $n_2$ est absent, on considère que $n_2 =
+n_1$.
+
+Si $n_1$ est entier, il représente le nombre de mailles sur l'axe
+$Ox$. S'il est réel, il représente le pas de maillage sur l'axe
+$Ox$. Par exemple, le nombre codé \verb+1+ est entier, alors que celui
+codé \verb+1.+ est réel (noter le point).
+
+
+\begin{multicols}{2}
+\psset{unit=1}
+\psset{SphericalCoor,viewpoint=50 50 20,Decran=30}
+\begin{pspicture}(-4,-2)(3,3)
+\psframe(-4,-2)(3,3)
+\psSolid[object=grille,
+   ngrid=1,
+   base=0 4 -3 3,
+   linecolor=gray](0,0,0)
+\axesIIID(0,0,0)(3,3,3)
+\end{pspicture}
+
+\columnbreak
+
+\begin{verbatim}
+\psSolid[object=grille,
+   ngrid=1,
+   base=0 4 -3 3,
+   linecolor=gray](0,0,0)
+\end{verbatim}
+\end{multicols}
+
+\begin{multicols}{2}
+\psset{unit=1}
+\psset{SphericalCoor,viewpoint=50 50 20,Decran=30}
+\begin{pspicture}(-4,-2)(3,3)
+\psframe(-4,-2)(3,3)
+\psSolid[object=grille,
+   ngrid=1. 1,
+   base=0 4 -3 3,
+   linecolor=gray](0,0,0)
+\axesIIID(0,0,0)(3,3,3)
+\end{pspicture}
+
+\columnbreak
+
+\begin{verbatim}
+\psSolid[object=grille,
+   ngrid=1. 1,
+   base=0 4 -3 3,
+   linecolor=gray](0,0,0)
+\end{verbatim}
+\end{multicols}
+
+

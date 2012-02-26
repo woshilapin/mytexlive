@@ -1,0 +1,64 @@
+\begin{center}
+\begin{pspicture}(-4,-3)(4,6)
+\psset{lightsrc=100 10 -20,lightintensity=3,viewpoint=200 30 20,Decran=40,SphericalCoor=true}
+\psframe(-4,-3)(4,6)
+{\psset{linewidth=0.5\pslinewidth}
+\codejps{
+/Soufre1 {3.56  [20 16] newsphere
+ dup (Yellow) outputcolors} def
+/Soufre2 {3.56  [20 16] newsphere
+ {0 0.000 20.10 translatepoint3d} solidtransform
+ dup (Yellow) outputcolors} def
+% Liaison simple
+/LiaisonR {
+     7.5 0.5 15  [10 10] newcylindre
+      dup (Red) outputcolors
+   } def
+/LiaisonY {
+     0 0.5 7.5  [10 10] newcylindre
+      dup (Yellow) outputcolors
+   } def
+% fin Liaison simple
+/Liaison{LiaisonR LiaisonY solidfuz} def
+/Ox {2.17  [20 16] newsphere
+     {0 0 15 translatepoint3d} solidtransform
+     dup (Red) outputcolors} def
+/LO { Liaison Ox solidfuz} def
+/LO1 { LO  {0 -109.5 0 rotateOpoint3d} solidtransform } def
+/LOx1 { LO1  {0 0 120 rotateOpoint3d} solidtransform } def
+% fin liaison simple S-O
+% Liaison double S=O
+/LiaisonD1 {Liaison {-0.75 0 0 translatepoint3d} solidtransform} def
+/LiaisonD2 {Liaison {0.75 0 0 translatepoint3d} solidtransform} def
+/LiaisonDD { LiaisonD1 LiaisonD2 solidfuz} def
+/LiaisonDOx {LiaisonDD Ox solidfuz} def
+/LiaisonDOx1 {LiaisonDOx {0 -109.5 0 rotateOpoint3d} solidtransform } def
+/LiaisonDOx2 {LiaisonDOx1 {0  0 -120 rotateOpoint3d} solidtransform } def
+/LO12 { LiaisonDOx1 LiaisonDOx2 solidfuz} def
+/LO123 {LO12 LOx1 solidfuz} def
+% liaison simple S-S
+/L4 { 0 0.5 20.10  [16 10] newcylindre
+      dup (Yellow) outputcolors
+    } def
+/S1L4{ Soufre1 L4 solidfuz} def
+/S1S2L4{ S1L4 Soufre2 solidfuz} def
+/S2O3 { S1S2L4 LO123 solidfuz} def
+S2O3  drawsolid**}
+\axesIIID(0,0,0)(25,20,25)}
+\psPoint(0,0,20.1){S2}
+\psPoint(-14.14,0,-5){O1}
+\psPoint(7.07,-12.24,-5 ){O2}
+\psPoint(7.07,12.24,-5 ){O3}
+\pcline[linestyle=dotted]{<->}(O2)(O)
+\aput{:U}{15 pm}
+\pcline[linestyle=dotted]{<->}(O)(S2)
+\aput{:U}{\small 20,1 pm}
+\pcline[linestyle=dotted]{<->}(O2)(O3)
+\lput*{:U}{\small 24,5 pm}
+\pcline[linestyle=dotted]{<->}(O2)(S2)
+\lput*{:U}{\small 28,8 pm}
+\pstMarkAngle[arrows=<->,MarkAngleRadius=0.8,linestyle=dotted]{O2}{O}{O3}{\footnotesize 109,4$^{\mathrm{o}}$}
+\pstMarkAngle[arrows=<->,MarkAngleRadius=0.8,linestyle=dotted]{O1}{O}{S2}{\footnotesize 109,5$^{\mathrm{o}}$}
+\rput(0,-2.5){$\mathrm{S_2^{\phantom{2}}O_3^{2-}}$}
+\end{pspicture}
+\end{center}

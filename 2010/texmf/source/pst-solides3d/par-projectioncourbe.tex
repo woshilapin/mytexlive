@@ -1,0 +1,193 @@
+\section {Projection d'une courbe de fonction}
+
+Les exemple précédents l'ont déjà montré, il s'agit de représenter une
+fonction dans le plan défini par les méthodes précisées dans les
+paragraphes précédents. 
+
+La courbe peut-être définie de trois façons : soit par une équation
+simple, soit par deux équations paramétriques, soit enfin par un
+chemin (liste de coordonnées de points). 
+
+\subsection {Courbe de fonction numérique}
+
+La courbe sera définie par une équation, soit en notation algébrique
+avec l'option  \Cadre{[algebraic]}, soit en notation polonaise
+inversée (langage postscript), avec une variable quelconque
+$(x,u,t\ldots)$, par une expression de la forme suivant le cas : 
+
+%% \begin{boxedverbatim}
+\begin{verbatim} 
+\defFunction[algebraic]{nom_fonction}(x){x*sin(x)}{}{}
+\end{verbatim}  
+%% \end{boxedverbatim}
+
+%% \begin{boxedverbatim}
+\begin{verbatim} 
+\defFunction{nom_fonction}(x){x dup sin mul}{}{}
+\end{verbatim}  
+%% \end{boxedverbatim}
+
+Cette expression dans doit être incluse dans l'environnement \Cadre{pspicture}.
+
+Les limites de la variable sont définies dans l'option \Cadre{range=-4 4}
+
+Le tracé de la fonction ainsi définie fait appel à l'objet
+\Cadre{courbe} et à l'option \Cadre{function}. 
+
+%% \begin{boxedverbatim}
+\begin{verbatim} 
+\psProjection[object=courbe,
+            range=-4 4,
+            linecolor={[cmyk]{1,0,1,0.5}},
+            normal=-1 1 0 1 1 2 ,
+            function=nom_fonction]
+\end{verbatim}  
+%% \end{boxedverbatim}
+
+Exemple :
+
+\begin{minipage}{0.4\linewidth}
+\psset{unit=0.5}
+\begin{pspicture}(-6,-6)(6,7)%
+\psframe*[linecolor=blue!50](-6,-6)(6,6)
+\psset{lightsrc=50 20 20,viewpoint=50 30 20,Decran=70}
+{\psset{linewidth=0.5\pslinewidth,linecolor=gray}
+\psSolid[object=grille,base=-4 0 -4 4]
+\psSolid[object=grille,base=-4 4 -4 4,RotX=90,RotZ=90]}
+\defFunction[algebraic]{1_sin}(x){3*sin(1/x)}{}{}
+\psProjection[object=chemin,
+      linewidth=.1,
+      linecolor=green,
+      normal=0 1 0 1 0 0,
+      path=
+         newpath
+            0 0 smoveto
+            1 0 slineto]
+\psProjection[object=chemin,
+      linewidth=.1,
+      linecolor=blue,
+      normal=0 1 0 1 0 0,
+      path=
+         newpath
+            0 0 smoveto
+            0 1 slineto]
+\psPoint(0,0,0){O}\psPoint(0.4,0.4,0.8){K}
+\psline[linewidth=.1,linecolor=red](O)(K)
+\psProjection[object=courbe,
+   range=-4 4,resolution=720,
+   linecolor=red,
+   normal=0 1 0 1 0 0,
+   function=1_sin]
+\psProjection[object=chemin,
+      linewidth=.02,
+      linecolor=red,
+      normal=0 1 0 1 0 0,
+      path=newpath
+          -4 1 4
+          {-4 exch smoveto
+           8 0 srlineto} for
+           -4 1 4
+          {-4 smoveto
+           0 8 srlineto} for
+            ]
+\axesIIID(0,0,0)(4,4,4)
+\end{pspicture}
+\end{minipage}
+\hfill
+\begin{minipage}{0.6\linewidth}
+%% \begin{boxedverbatim}
+\begin{verbatim} 
+\defFunction[algebraic]{1_sin}(x){3*sin(1/x)}{}{}
+\psProjection[object=courbe,
+            range=-4 4,resolution=720,
+            linecolor=red,
+            normal=0 1 0 1 0 0,
+            function=1_sin]
+\end{verbatim}  
+%% \end{boxedverbatim}
+\end{minipage}
+
+\subsection {Courbes paramétrées}
+
+La technique est analogue, à la différence près que la fonction
+évoquée est à valeurs dans $R^2$, et que l'objet passé en paramètre à
+\verb+\psProjection+ est \Cadre{courbeR2}.
+
+Pour dessiner un cercle de rayon $3$, on  écrira :
+
+%% \begin{boxedverbatim}
+\begin{verbatim} 
+\defFunction[algebraic]{cercle}(t){3*cos(t)}{3*sin(t)}{}
+\end{verbatim}  
+%% \end{boxedverbatim}
+
+Autre exemple : les courbes de Lissajous.
+
+\begin{minipage}{0.4\linewidth}
+\psset{unit=0.5}
+\begin{pspicture}(-6,-5)(6,8)%
+\psframe*[linecolor=blue!50](-6,-5)(6,7)
+\psset{lightsrc=50 20 20,viewpoint=50 30 20,Decran=60}
+\defFunction[algebraic]{lissajous}(t){3*sin(0.57735*t)}{4*sin(0.707*t)}{}
+\psProjection[object=chemin,fillstyle=solid,fillcolor=white,
+            linewidth=.005,linecolor=red,
+            normal=1 1 2,
+            path=newpath
+                -4 -4 smoveto
+                -4 4 slineto
+                4 4 slineto
+                4 -4 slineto
+                closepath
+            ](1,1,2)
+\psProjection[object=chemin,
+      linewidth=.1,
+      linecolor=green,
+      normal=1 1 2,
+      path=
+         newpath
+            0 0 smoveto
+            1 0 slineto](1,1,2)
+\psProjection[object=chemin,
+      linewidth=.1,
+      linecolor=blue,
+      normal=1 1 2,
+      path=
+         newpath
+            0 0 smoveto
+            0 1 slineto](1,1,2)
+\psPoint(0,0,0){O}
+\psPoint(1,1,2){O1}\psPoint(1.4,1.4,2.8){K}
+\psline[linewidth=.1,linecolor=red](O1)(K)
+\psline[linestyle=dashed](O)(O1)
+\psProjection[object=courbeR2,
+   range=-25.12 25.12,resolution=720,
+   normal=1 1 2,linecolor=red,
+   function=lissajous](1,1,2)
+\psProjection[object=chemin,
+      linewidth=.02,
+      normal=1 1 2,
+      path=newpath
+          -4 1 4
+          {-4 exch smoveto
+           8 0 srlineto} for
+           -4 1 4
+          {-4 smoveto
+           0 8 srlineto} for
+            ](1,1,2)
+\axesIIID(4,4,2)(5,5,6)
+\end{pspicture}
+\end{minipage}
+\hfill
+\begin{minipage}{0.6\linewidth}
+%% \begin{boxedverbatim}
+\begin{verbatim} 
+\defFunction[algebraic]%
+{lissajous}(t){3*sin(0.57735*t)}{4*sin(0.707*t)}{}
+\psProjection[object=courbeR2,resolution=720,
+            range=-25.12 25.12,
+            normal=1 1 2,
+            linecolor=red,
+            function=lissajous](1,1,2)
+\end{verbatim}  
+%% \end{boxedverbatim}
+\end{minipage}

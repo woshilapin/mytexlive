@@ -1,0 +1,12 @@
+pst-text: text along a different path and char manipulations
+
+pst-text.sty     - The LaTeX file
+pst-text.tex     - The TeX file
+pst-text.pro     - The dvips header file
+pst-text-doc.pdf - The documentation
+pst-text-doc.tex - The documentation, source
+pst-text-doc.bib - The documentation, bibfile
+
+
+--
+Herbert Voss 2006-11-05

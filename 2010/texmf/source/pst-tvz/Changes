@@ -1,0 +1,7 @@
+----- pst-tvz.tex
+1.01  2011-06-14 - fix bug with \nodealign->\Pst@nodealign (hv)
+1.00  2010-10-28 - initial CTAN version (hv)
+
+----- pst-tvz.sty
+      2010-10-28 first version (hv) 
+

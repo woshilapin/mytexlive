@@ -1,0 +1,432 @@
+%% Filename: pst-pad-doc.tex
+%% 
+%% Author: Patrick Drechsler
+%% 
+%% Created: Fri Feb  8 02:04:17 2008
+%% 
+%% Version: $Id: pst-pad-doc.tex 328 2008-03-21 15:22:10Z patrick $
+%% 
+\listfiles
+\documentclass{scrartcl}
+\usepackage[english]{babel}
+\input{pst-pad-doc-header}
+\newcommand{\summary}{A PSTricks package for drawing attachment models}
+
+\begin{document}
+\EnableQuotes
+
+\title{\texttt{pst-pad}\\\summary\\\normalsize ver. \verPstPad} \author{Patrick
+  Drechsler\thanks{\url{<Patrick.Drechsler@pstricks.de>}}} \date{\today}
+\maketitle
+
+\begin{abstract}
+\PadPackage{} is a PSTricks package to draw simple attachment systems.
+\end{abstract}
+
+\setlength{\columnseprule}{0.6pt}
+\begin{multicols}{2}
+{\parskip 0pt \tableofcontents}
+\end{multicols}
+
+\section{Introduction}
+\label{sec:introduction}
+
+The package \PadPackage{} is a collection of graphical elements based on
+PStricks that can be used to facilitate display of attachment systems such as
+two differently shaped surfaces with or without a fluid wedged in
+between. These macros ease the display of wet adhesion models and common
+friction systems such as boundary lubrication, elastohydrodynamic lubrication
+and hydrodynamic lubrication. The name \PadPackage{} was chosen because I used
+this package to display models of different animal attachment pads in my
+research.
+
+\section{Parameters}
+\label{sec:parameters}
+
+There are specific parameters defined to easily change the behaviour of the pst-pad
+objects you are drawing.
+
+\let\HLTTc\textsf
+%\begin{multicols}{2}
+\begin{description}
+\item[\HLTTc{fluid} (boolean):] (\emph{default:~true})
+\item[\HLTTc{WallThickness} (dimension):] (\emph{default:~1})
+\item[\HLTTc{WallString} (string):] (\emph{default:~})
+\item[\HLTTc{WallAngle} (PSTricks color):] (\emph{default:~0})
+\item[\HLTTc{WallLineWidth} (dimension):] (\emph{default:~1pt})
+\item[\HLTTc{WallLineColor} (PSTricks color):] (\emph{default:~black})
+\item[\HLTTc{SphereStartAngle} (dimension):] (\emph{default:~180})
+\item[\HLTTc{SphereEndAngle} (boolean):] (\emph{default:~360})
+\item[\HLTTc{SphereRadius} (dimension):] (\emph{default:~1})
+\item[\HLTTc{ShpereString} (string):] (\emph{default:~})
+\item[\HLTTc{SphereOffset} (dimension):] (\emph{default:~0})
+\item[\HLTTc{SphereFillColor} (PSTricks color):] (\emph{default:~white})
+\item[\HLTTc{SphereLineWidth} (dimension):] (\emph{default:~1pt})
+\item[\HLTTc{SphereLineColor} (PSTricks color):] (\emph{default:~black})
+\item[\HLTTc{FSphereHeight} (dimension):] (\emph{default:~2})
+\item[\HLTTc{FSphereFillColor} (PSTricks color):] (\emph{default:~lightgray})
+\item[\HLTTc{FSphereString} (string):] (\emph{default:~})
+\item[\HLTTc{FSphereLineWidth} (dimension):] (\emph{default:~1pt})
+\item[\HLTTc{FSphereLineColor} (PSTricks color):] (\emph{default:~black})
+\item[\HLTTc{FluidMaxRadius} (dimension):] (\emph{default:~1})
+\item[\HLTTc{FluidMinRadius} (dimension):] (\emph{default:~.5})
+\item[\HLTTc{FluidHeight} (dimension):] (\emph{default:~.5})
+\item[\HLTTc{FluidFillColor} (PSTricks color):] (\emph{default:~yellow})
+\item[\HLTTc{FluidString} (string):] (\emph{default:~})
+\item[\HLTTc{FluidShearOffsetX} (dimension):] (\emph{default:~0})
+\item[\HLTTc{FluidShearOffsetY} (dimension):] (\emph{default:~0})
+\item[\HLTTc{FluidLineWidth} (dimension):] (\emph{default:~1pt})
+\item[\HLTTc{FluidLineColor} (PSTricks color):] (\emph{default:~black})
+\item[\HLTTc{StringA} (string):] (\emph{default:~})
+\item[\HLTTc{StringB} (string):] (\emph{default:~})
+\item[\HLTTc{TotalAngle} (angle):] (\emph{default:~0})
+\end{description}
+
+\clearpage
+
+\section{High-level Macros ("Objects")}
+\label{sec:high-level-macros}
+
+There are three high-level macros: \macro{PstWallToWall},
+\macro{PstSphereToWall} and \macro{PstPad}.
+
+\subsection{\macro{PstWallToWall}}
+\label{sec:macropstwalltowall}
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(4,4)\psgrid
+  \PstWallToWall(2,2)
+\end{pspicture}
+\end{LTXexample}
+
+\subsection{\macro{PstSphereToWall}}
+\label{sec:macropstspheretowall}
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(4,4)\psgrid
+  \PstSphereToWall[fluid=false](2,2)
+\end{pspicture}
+\end{LTXexample}
+
+
+\subsection{\macro{PstPad}}
+\label{sec:macropstpad}
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(4,4)\psgrid
+  \PstPad(2,2)
+\end{pspicture}
+\end{LTXexample}
+
+\clearpage
+
+\subsection{Basic Usage}
+\label{sec:basic-usage}
+
+The following figure shows the usage of some basic parameters with the
+\macro{PstPad} macro. Green and brown colored values in parentheses give
+default and example values, respectively.
+
+\begin{pspicture}(-5,-4)(7.5,4)%\psgrid
+  \PstPad[%
+  FluidMaxRadius=4,%
+  FluidMinRadius=3,%
+  FluidHeight=1,%
+  FSphereHeight=2,%
+  FSphereFillColor=green!20!white,%
+  FluidFillColor=blue!10!white,%
+  FluidLineWidth=1.5pt,%
+  FSphereLineWidth=0.1pt,%
+  WallLineWidth=3pt,%
+  WallLineColor=blue,%
+  FSphereLineColor=magenta,%
+  FluidLineColor=green!50!black%
+  ](0,0)
+  %%
+  \sffamily\footnotesize%
+  \psset{linecolor=gray, linewidth=0.2pt}
+  %% "Crosshair" for orientation:
+  \psline[linestyle=dashed](-5,0)(5,0)
+  \psline[linestyle=dashed](0,-3)(0,1.5)
+  %% Node definitions:
+  \pnode(0,0){center}
+  \pnode(-4,-2.25){maxradiusLeft}
+  \pnode(0,-2.25){maxradiusRight}
+  \pnode(-3,0){minradiusLeft}
+  \pnode(3,0){minradiusRight}
+  \pnode([nodesep=4.5]center){fluidheightCenter}
+  \pnode([nodesep=4.5,offset=-1]center){fluidheightBottom}
+  \pnode([offset=-1]fluidheightBottom){wallThicknessBottom}
+  \pnode([nodesep=5.2,offset=1]center){fsphereheightBottom}
+  \pnode([offset=1]fsphereheightBottom){fsphereheightTop}
+  %%
+  \psset{arrows=|<->|,linewidth=0.8pt,linecolor=red,arrowscale=1.5}
+  %% Center:
+  \rput[l]([nodesep=.2,offset=.2]center){\textbf{(0,0)}}
+  %% Label FluidMinRadius:
+  \ncline{minradiusLeft}{center}
+  \nbput{\ParCol{FluidMinRadius}{0.5}{3}}
+  %% Label FluidMaxRadius:
+  \ncline{maxradiusLeft}{maxradiusRight}
+  \nbput{\ParCol{FluidMaxRadius}{1}{4}}
+  %% Label FluidHeight:
+  \ncline{fluidheightCenter}{fluidheightBottom}
+  \naput{\ParCol{FluidHeight}{.5}{1}}
+  %% Label WallThickness:
+  \ncline{fluidheightBottom}{wallThicknessBottom}
+  \naput{\ParCol{WallThickness}{1}{1}}
+  %% Label FSpereHeight:
+  \ncline{fsphereheightBottom}{fsphereheightTop}
+  \nbput{\ParCol{FSphereHeight/2}{2}{2}}
+  %% Label FSphereFillColor:
+  \psline{->}(-.1,2.2)(-.3,1.6)
+  \rput(-.1,2.6){\ParCol{FSphereFillColor}{"lightgray"}{"green!20!white"}}
+  %% Label FluidFillColor:
+  \psline{->}(4,2.2)(2.5,.6)
+  \rput(4,2.6){\ParCol{FluidFillColor}{"yellow"}{"blue!10!white"}}
+  %% Label FluidLineWidth:
+  \psline{->}([offset=.5,nodesep=3]minradiusRight)(minradiusRight)
+  \rput[l]([offset=-.1,nodesep=3.2]minradiusRight){\ParCol{FluidLineWidth}{1pt}{1.5pt}}
+  \rput[l]([offset=.8,nodesep=3.2]minradiusRight){\ParCol{FluidLineColor}{"black"}{"green!50!black"}}
+  %% Label FSphereLineWidth:
+  \psline{->}(-4.3,2.2)(-3.5,1)
+  \rput(-4.3,2.6){\ParCol{FSphereLineWidth}{1pt}{0.1pt}}
+  \rput(-4.3,3.4){\ParCol{FSphereLineColor}{"black"}{"magenta"}}
+  %% Label WallLineWidth:
+  \psline{->}(1.5,-2.25)(1.5,-1)
+  \rput[t](1.5,-2.5){\ParCol{WallLineWidth}{1pt}{3pt}}
+  \rput[t](1.5,-3.4){\ParCol{WallLineColor}{"black"}{"blue"}}
+\end{pspicture}
+
+\subsection{Liquid shearing}
+\label{sec:liquid-shearing}
+
+Sheared liquids sandwiched in between two surfaces can also be displayed.  The
+following figures shows the usage of the
+parameters \parameter{FluidShearOffsetX}
+and \parameter{FluidShearOffsetY}. Again, green and brown colored values in
+parentheses give default and example values, respectively.
+
+\subsubsection[\parameter{FluidShearOffsetX}]{Parameter \parameter{FluidShearOffsetX}}
+\label{sec:param-offsetx}
+
+\parameter{FluidShearOffsetX}\ describes the x offset from the current value
+of \parameter{FluidMaxRadius}.
+
+\begin{center}
+  \begin{pspicture}[showgrid=false](-5,-2)(4.5,2)%
+    \PstPad[%
+    FluidHeight=1,%
+    FluidShearOffsetX=0.6%
+    ](0,0)
+    %% Labeling:
+    \sffamily\footnotesize%
+    \psset{linecolor=black, linewidth=0.2pt}
+    \psline[linestyle=dotted](-2.5,0)(1.5,0)
+    \psline[linestyle=dotted](0,-1)(0,1.5)
+    
+    %% Node definitions:
+    \pnode(0,0){center}
+    \pnode(-1,-2.25){maxradiusLeft}
+    \pnode(0,-2.25){maxradiusRight}
+    
+    \pnode(-1,0){maxradiusLeftZero}
+    \pnode(0,0){maxradiusRightZero}
+    
+    \pnode([nodesep=-0.6]maxradiusLeft){Xoffset}
+    \pnode([nodesep=-0.6]maxradiusLeftZero){XoffsetZero}
+    
+    \psline[linestyle=dotted]([offset=-1]maxradiusLeftZero)([offset=.5]maxradiusLeftZero)
+    \psline[linestyle=dotted]([offset=-1]XoffsetZero)([offset=.5]XoffsetZero)
+    %% 
+    %% 
+    \psset{arrowscale=2,arrows=|<->|}
+    %% Label FluidMaxRadiusLeft:
+    \ncline{maxradiusLeft}{maxradiusRight}
+    \nbput[npos=0.5]{\ParCol{FluidMaxRadius}{1}{1}}
+    %% Label FluidShearOffsetX:
+    \ncline[linecolor=red]{maxradiusLeftZero}{XoffsetZero}
+    \nbput[npos=1.6]{\ParCol{FluidShearOffsetX}{0}{.6}}
+  \end{pspicture}
+\end{center}
+
+\subsubsection[\parameter{FluidShearOffsetY}]{Parameter \parameter{FluidShearOffsetY}}
+\label{sec:param-offsety}
+
+\parameter{FluidShearOffsetY}\ describes the y offset from zero to determine the
+curvature of the meniscus. 
+
+\begin{center}
+  \begin{pspicture}[showgrid=false](-4.5,-2)(4.5,2)%
+    \PstPad[%
+    FluidHeight=1,%
+    FluidShearOffsetY=0.4%
+    ](0,0)
+    %% Labeling:
+    \sffamily\footnotesize%
+    \psset{linecolor=black, linewidth=0.2pt}
+    \psline[linestyle=dotted](-2.5,0)(1.5,0)
+    \psline[linestyle=dotted](0,-1)(0,1.5)
+    %% Node definitions:
+    \pnode(0,0){center}
+    \pnode([nodesep=1.5]center){fluidheightCenterRight}
+    \pnode([nodesep=-1.5]center){fluidheightCenterLeft}
+    \pnode([nodesep=-1.5,offset=1]center){fluidheightTop}
+    \pnode([offset=-0.4]fluidheightCenterRight){Yoffset}
+    %% 
+    \psline[linestyle=dotted](0,-.4)(1.7,-.4)
+    %% 
+    \psset{arrowscale=2,arrows=|<->|}
+    %% Label FluidHeight:
+    \ncline{fluidheightCenterLeft}{fluidheightTop}
+    \naput{\ParCol{FluidHeight}{.5}{1}}
+    %% Label FluidShearOffsetY:
+    \ncline[linecolor=red]{fluidheightCenterRight}{Yoffset}
+    \naput{\ParCol{FluidShearOffsetY}{0}{.4}}
+  \end{pspicture}
+\end{center}
+
+
+\subsection{Tilting parameters}
+\label{sec:tilting-parameters}
+
+The following figure shows the usage of the \parameter{TotalAngle}
+parameter. The default angle is 0 degrees. Again, green and brown colored
+values in parentheses give default and example values, respectively.
+
+\begin{center}
+\begin{pspicture}(-2.5,-2)(4,2.5)%
+  %%
+  \PstPad[TotalAngle=30](0,0)
+  %% Labeling:
+  \sffamily\footnotesize%
+  \psset{linecolor=black, linewidth=0.2pt}
+  \psline[linestyle=dotted](-2.5,0)(2.5,0)
+  \psline[linestyle=dotted](0,-1)(0,1.5)
+  \rput{30}{%
+    \psline[linestyle=dashed](-2.5,0)(2.5,0)
+    \psline[linestyle=dashed](0,-1)(0,1.5)
+  }
+  \pnode(0,0){center}
+  \psset{linecolor=red}
+  \psarc[arrowscale=2]{<->}(center){2.25}{0}{30}
+  \rput[l]([nodesep=2.5,angle=15]center){%
+    \ParCol{TotalAngle}{0}{30}}%
+\end{pspicture}
+\end{center}
+
+\section{Example Usage}
+\label{sec:example-usage}
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(4,4)\psgrid
+  \PstWallToWall[%
+  FluidFillColor=red,%
+  TotalAngle=10%
+  ](2,2)
+\end{pspicture}
+\end{LTXexample}
+
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(4,4)\psgrid
+  \tiny\sffamily%
+  \PstPad[%
+  FluidFillColor=blue!30!white,%
+  FluidLineColor=blue!70!black,%
+  FSphereFillColor=yellow!40!white,%
+  FSphereLineColor=red!70!black,%
+  FluidString={fluid A},%
+  FluidShearOffsetX=0.1,%
+  FluidShearOffsetY=0.2,%
+  WallThickness=0.4,%
+  FSphereHeight=1,%
+  StringA={sliding insect pad}%
+  ](2,2)
+\end{pspicture}
+\end{LTXexample}
+
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(4,4)\psgrid
+  \PstSphereToWall[%
+  fluid=false,%
+  SphereRadius=1.5,%
+  SphereStartAngle=190,%
+  SphereEndAngle=350,%
+  SphereOffset=0.1,%
+  StringA={string a},%
+  StringB={string b}%
+  ](2,2)
+\end{pspicture}
+\end{LTXexample}
+
+\section{Low-level Macros}
+\label{sec:low-level-macros}
+
+There are four low-level macros: \macro{PstWall}, \macro{PstFluid},
+\macro{PstSphere} and \macro{PstFlattenedSphere}.
+
+\subsection{\macro{PstWall}}
+\label{sec:macropstwall}
+
+\begin{LTXexample}[width=5cm]
+  \begin{pspicture}[showgrid=true](4,2)
+    \PstWall(2,1.5)
+  \end{pspicture}
+\end{LTXexample}
+
+\subsection{\macro{PstFluid}}
+\label{sec:macropstfluid}
+
+\begin{LTXexample}[width=5cm]
+  \begin{pspicture}[showgrid=true](4,2)
+    \rput(2,1){\PstFluid[unit=1pt](0,0)}
+  \end{pspicture}
+\end{LTXexample}
+
+
+\clearpage
+
+\subsection{\macro{PstSphere}}
+\label{sec:macropstsphere}
+
+\begin{LTXexample}[width=5cm]
+  \begin{pspicture}[showgrid=true](4,2)
+    \PstSphere(2,.5)
+  \end{pspicture}
+\end{LTXexample}
+
+\subsection{\macro{PstFlattenedSphere}}
+\label{sec:macr}
+
+\begin{LTXexample}[width=5cm]
+  \begin{pspicture}[showgrid=true](4,2)
+    \PstFlattenedSphere(2,.5)
+  \end{pspicture}
+\end{LTXexample}
+
+
+\section{TODO}
+\label{sec:todo}
+
+\begin{itemize}
+\item Enhance calculations and number conversions.
+\item Implement different degrees of surface roughness.
+\item Implement fluid film contact angle parameter.
+\end{itemize}
+
+
+\section{Acknowledgements}
+\label{sec:acknowledgements}
+
+I would like to thank Herbert Voß and Alan Ristow for their help on getting me
+started with PSTricks macros and low-level calculations in PostScript and \TeX.
+
+\end{document}
+
+%%% Local Variables: 
+%%% TeX-command-default: "Make"
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 

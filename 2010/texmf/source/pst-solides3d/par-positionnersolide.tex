@@ -1,0 +1,153 @@
+\section {Positionner un solide}
+\subsection{Translation}
+La commande suivante
+\verb+\psSolid[object=cube,+\textsl{options}\verb+](x,y,z)+ déplace le
+centre du cube au point de coordonnées $\mathtt{(x,y,z)}$.
+
+L'exemple suivant va recopier le cube d'arête 1 \begin{pspicture}(-0.5,-0.5)(.5,.5)
+\psset{SphericalCoor,Decran=40,viewpoint=50 35 35,a=1,lightsrc=50 30 20}
+\psset{fillcolor=yellow,mode=3,
+  fcol= 0 (Apricot)
+        1 (Lavender)
+        2 (SkyBlue)
+        3 (LimeGreen)
+        4 (OliveGreen)
+        5 (Yellow)
+        6 (GreenYellow)
+        7 (Cerulean)
+        8 (CarnationPink)}
+\psSolid[object=cube](0.5,0.5,0.5)% c1
+\end{pspicture}
+ aux points de coordonnées $\mathtt{(0.5,0.5,0.5)}$, $\mathtt{(4.5,0.5,0.5)}$ etc. afin que ces copies occupent les coins d'un cube d'arête 5.
+\begin{center}
+\begin{pspicture}(-4,-5)(5,5)
+\psframe(-4,-5)(5,5)
+%\psset{SphericalCoor,Decran=3,viewpoint=10 35 35,a=1,lightsrc=50 20 10}
+\psset{SphericalCoor,Decran=40,viewpoint=50 35 35,a=1,lightsrc=50 30 20,
+  fcol= 0 (Apricot)
+        1 (Lavender)
+        2 (SkyBlue)
+        3 (LimeGreen)
+        4 (OliveGreen)
+        5 (Yellow)
+        6 (GreenYellow)
+        7 (Cerulean)
+        8 (CarnationPink)}
+\psSolid[object=grille,base=0 6 0 6,fillcolor=blue!50]%%
+\psSolid[object=grille,base=0 6 0 6,RotY=90,fillcolor=blue!40](0,0,6)%
+\psSolid[object=grille,base=0 6 0 6,RotX=-90,fillcolor=blue!30](0,0,6)%
+\psPoint(1,0.5,0.5){c11}
+\psPoint(0.5,0.5,1){c12}
+\psPoint(0.5,1,0.5){c13}
+\psPoint(4.5,4.5,1){c21}
+\psPoint(4,4.5,0.5){c22}
+\psPoint(4.5,4,0.5){c23}
+\psPoint(4,0.5,0.5){c41}
+\psPoint(4.5,0.5,1){c42}
+\psPoint(4.5,1,0.5){c43}
+\psPoint(0.5,4,0.5){c51}
+\psPoint(0.5,4.5,1){c52}
+\psPoint(1,4.5,0.5){c53}
+\psPoint(0.5,0.5,4){c61}
+\psPoint(0.5,1,4.5){c62}
+\psPoint(1,0.5,4.5){c63}
+\psPoint(4,0.5,4.5){c71}
+\psPoint(4.5,1,4.5){c72}
+\psPoint(4.5,0.5,4){c73}
+\axesIIID(1,1,1)(6,6,6)
+{\psset{fillcolor=yellow,mode=3}
+\psSolid[object=cube](0.5,0.5,0.5)% c1
+\psline[linestyle=dashed,linecolor=red](c11)(c41)
+\psline[linestyle=dashed,linecolor=red](c12)(c61)
+\psline[linestyle=dashed,linecolor=red](c13)(c51)
+\psSolid[object=cube](4.5,0.5,0.5)
+\psSolid[object=cube](0.5,4.5,0.5)
+\psSolid[object=cube](0.5,0.5,4.5)
+\psSolid[object=cube](4.5,4.5,4.5)
+\psSolid[object=cube](4.5,0.5,4.5)
+\psSolid[object=cube](4.5,4.5,0.5)
+\psSolid[object=cube](0.5,4.5,4.5)}
+\psSolid[object=grille,base=0 5 0 5,action=draw,linecolor=gray!50](0,0,5)%
+\psSolid[object=grille,base=0 5 0 5,action=draw,linecolor=gray!50,RotY=90](5,0,5)%
+\psSolid[object=grille,base=0 5 0 5,action=draw,RotX=-90,linecolor=gray!50](0,5,5)%
+\end{pspicture}
+\end{center}
+\begin{verbatim}
+\psset{fillcolor=yellow,mode=3}
+\psSolid[object=cube](0.5,0.5,0.5)
+\psSolid[object=cube](4.5,0.5,0.5)
+\psSolid[object=cube](0.5,4.5,0.5)
+\psSolid[object=cube](0.5,0.5,4.5)
+\psSolid[object=cube](4.5,4.5,4.5)
+\psSolid[object=cube](4.5,0.5,4.5)
+\psSolid[object=cube](4.5,4.5,0.5)
+\psSolid[object=cube](0.5,4.5,4.5)
+\end{verbatim}
+\subsection{Rotation}
+La rotation s'effectue dans l'ordre autour des axes $Ox$, $Oy$ et $Oz$. Prenons l'exemple d'un parallélépipède rectangle,
+\begin{pspicture}(-1,-0.2)(1,.5)
+\psset{SphericalCoor,Decran=40,viewpoint=50 35 35,a=2,b=3,c=1,lightsrc=50 30 30}
+\psset{fillcolor=yellow,unit=0.5,
+  fcol= 0 (Apricot)
+        1 (Lavender)
+        2 (SkyBlue)
+        3 (LimeGreen)
+        4 (OliveGreen)
+        5 (Yellow)
+        6 (Bittersweet)}
+\psSolid[object=parallelepiped](0.5,0.5,0.5)%
+\end{pspicture}
+que l'on va faire tourner
+successivement autour des axes $Ox$, $Oy$ et $Oz$.
+
+\begin{multicols}{4}
+\psset{SphericalCoor,Decran=40,viewpoint=50 35 35,a=2,b=3,c=1}
+\psset{unit=0.5,
+  fcol= 0 (Apricot)
+        1 (Lavender)
+        2 (SkyBlue)
+        3 (LimeGreen)
+        4 (OliveGreen)
+        5 (Yellow)
+        6 (Bittersweet),
+  object=parallelepiped}
+\setlength{\columnseprule}{1pt}
+\centerline{
+\begin{pspicture}(-2.5,-2.5)(2.5,2.5)
+\psframe(-2.5,-2.5)(2.5,2.5)
+\psSolid%%
+\axesIIID(1,1.5,1)(3,3,2)
+\end{pspicture}}
+\columnbreak
+\centerline{
+\begin{pspicture}(-2.5,-2.5)(2.5,2.5)
+\psframe(-2.5,-2.5)(2.5,2.5)
+\psSolid[RotZ=60]%%
+\psSolid[action=draw,linewidth=0.5\pslinewidth]%%
+\axesIIID(1,1.5,1)(2,3,2)
+\end{pspicture}}
+
+\centerline{\texttt{[RotZ=60]}}
+
+\columnbreak
+\centerline{
+\begin{pspicture}(-2.5,-2.5)(2.5,2.5))
+\psframe(-2.5,-2.5)(2.5,2.5)
+\psSolid[RotX=30]%%
+\psSolid[action=draw,linewidth=0.5\pslinewidth]%%
+\axesIIID(1,1.5,1)(2,3,2)
+\end{pspicture}}
+
+\centerline{\texttt{[RotX=30]}}
+
+\columnbreak
+\centerline{
+\begin{pspicture}(-2.5,-2.5)(2.5,2.5)
+\psframe(-2.5,-2.5)(2.5,2.5)
+\psSolid[RotY=45]%%
+\psSolid[action=draw,linewidth=0.5\pslinewidth]%%
+\axesIIID(1,1.5,1)(2,3,2)
+\end{pspicture}}
+
+\centerline{\texttt{[RotY=-45]}}
+\end{multicols}

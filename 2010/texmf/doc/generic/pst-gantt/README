@@ -1,0 +1,18 @@
+pst-gantt: plotting Gantt charts
+
+Save the files pst-gantt.sty|pro|tex in a directory, which is part of your 
+local TeX tree. The pro file should go into $TEXMF/dvips/pstricks/
+Then do not forget to run texhash to update this tree.
+For more information  see the documentation of your LATEX distribution 
+on installing packages into your local TeX system or read the 
+TeX Frequently Asked Questions:
+(http://www.tex.ac.uk/cgi-bin/texfaq2html?label=instpackages).
+
+pst-func needs pst-plot (pstricks-add) and pstricks, which should 
+be part of your local TeX installation, otherwise get it from a 
+CTAN server, f.ex. ftp://ftp.ctan.org
+
+PSTricks is PostScript Tricks, the documentation cannot be run
+with pdftex, use the sequence latex->dvips->ps2pdf.
+
+%% $Id: README 117 2009-05-13 05:54:00Z herbert $

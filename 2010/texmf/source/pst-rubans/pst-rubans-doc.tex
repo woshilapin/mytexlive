@@ -1,0 +1,340 @@
+%% $Id: pst-rubans-doc.tex 511 2011-06-06 15:39:40Z herbert $
+\documentclass[11pt,english,BCOR10mm,DIV12,bibliography=totoc,parskip=false,
+   smallheadings, headexclude,footexclude,oneside]{pst-doc}
+\usepackage[latin9]{inputenc}
+\usepackage{pst-rubans}
+\let\pstRubansFV\fileversion
+\renewcommand\bgImage{%
+%\begin{pspicture}(-10,0)(0,0.2)
+%\pshelices[lightsrc=30 5 17,incolor=yellow!50,R=0.3,h=12,spires=10,dZ=0.2,RotX=90,viewpoint=100 45 0,resolution=180,Decran=100]%
+%\end{pspicture}
+\psset{viewpoint=20 20 70 rtp2xyz,Decran=20,lightsrc=viewpoint,resolution=360}
+\psset{unit=0.6}
+\begin{pspicture}(-5,-5)(5,5)
+\psSpiralRing[incolor=yellow!50,
+              r1=4,r0=1,hue=0 1]%
+\end{pspicture}
+}
+\lstset{pos=l,wide=false,language=PSTricks,
+    morekeywords={psSpiralRing},basicstyle=\footnotesize\ttfamily}
+%
+\begin{document}
+
+\title{\texttt{pst-rubans}}
+\subtitle{Plotting 3D bands -- an extension of \nxLPack{pst-solides3d}; v.\pstRubansFV}
+\author{Manuel Luque\\Herbert Vo\ss}
+\docauthor{}
+\date{\today}
+\maketitle
+
+\tableofcontents
+
+\clearpage
+
+
+\section{introduction}
+\LPack{pst-rubans} est une extension de \LPack{pst-solides3d} qui permet de tracer des rubans sur
+certains solides de révolution : cylindre, tore, sphère, paraboloïde et cône. La largeur du ruban, 
+le nombre de spires, la couleur de la face externe ainsi que celle de la face interne peuvent 
+être paramétrées. Dans le cas des hélices circulaire et conique, on peut aussi choisir le nombre de rubans.
+
+\section{Ruban enroulé autour d'un cylindre}
+On peut paramétrer le rayon \LKeyword{R=2}, la hauteur \LKeyword{h=6}, l'épaisseur(ou largeur) du 
+ruban \LKeyword{dZ=0.5}, le nombre de spires \LKeyword{spires=10} de chaque hélice, le nombre de 
+rubans \LKeyword{rubans=1}, le nombre d'éléments par ruban \LKeyword{resolution=36}, la couleur 
+de l'intérieur et de l'extérieur du ruban.
+
+La base et le couvercle ne font pas partie de la commande.
+\subsection{Nombre de rubans \nxLkeyword{rubans=1}}
+
+\begin{BDef}
+\Lcs{pshelices}\OptArgs\OptArg*{\Largr{$x_0,y_0,z_0$}}
+\end{BDef}
+
+
+
+{\psset{lightsrc=viewpoint,viewpoint=50 45 30 rtp2xyz,Decran=50,dZ=0.2,resolution=72,spires=2,unit=0.5}
+\begin{LTXexample}[pos=l,width=4cm]
+\begin{pspicture}(-2,-1)(2,7)
+\psSolid[object=cylindre,r=1.5,h=0.2,ngrid=1 36](0,0,-0.2)
+\pshelices[incolor=yellow!50,R=1.5,h=6,hue=0 1,grid](0,0,0)
+\psSolid[object=cylindre,r=1.5,h=0.2,ngrid=1 36](0,0,6)
+\end{pspicture}
+\end{LTXexample}
+
+\subsection{Nombre de rubans \nxLkeyword{rubans=2}, nombre de spires \nxLkeyword{spires=2}}
+\begin{LTXexample}[pos=l,width=4cm]
+\begin{pspicture}(-2,-1)(2,7)
+\psSolid[object=cylindre,r=1.5,h=0.2,ngrid=1 36](0,0,-0.2)
+\pshelices[incolor=yellow!50,R=1.5,h=6,hue=0 1,rubans=2,grid](0,0,0)
+\psSolid[object=cylindre,r=1.5,h=0.2,ngrid=1 36](0,0,6)
+\end{pspicture}
+\end{LTXexample}
+
+\clearpage
+\subsection{Nombre de rubans \nxLkeyword{rubans=3}, nombre de spires \nxLkeyword{spires=2}}
+\begin{LTXexample}[pos=l,width=4cm]
+\begin{pspicture}(-2,-1)(2,7)
+\psSolid[object=cylindre,r=1.5,h=0.2,ngrid=1 36](0,0,-0.2)
+\pshelices[incolor=yellow!50,R=1.5,h=6,hue=0 1,rubans=3,grid](0,0,0)
+\psSolid[object=cylindre,r=1.5,h=0.2,ngrid=1 36](0,0,6)
+\end{pspicture}
+\end{LTXexample}
+
+\subsection{Nombre de rubans \nxLkeyword{rubans=4}, nombre de spires \nxLkeyword{spires=2}}
+\begin{LTXexample}[pos=l,width=4cm]
+\begin{pspicture}(-2,-1)(2,7)
+\psSolid[object=cylindre,r=1.5,h=0.2,ngrid=1 36](0,0,-0.2)%
+\pshelices[incolor=yellow!50,R=1.5,h=6,hue=0 1,rubans=4,grid](0,0,0)
+\psSolid[object=cylindre,r=1.5,h=0.2,ngrid=1 36](0,0,6)%
+\end{pspicture}
+\end{LTXexample}
+}
+
+\subsection{Nombre de rubans \nxLkeyword{rubans=4}, on fait varier la hauteur \texttt{[h=2,3,4,5]}}
+
+\begin{LTXexample}[pos=t,wide]
+\psset{lightsrc=30 5 17,viewpoint=50 45 10,Decran=50,resolution=90,spires=2}
+\multido{\nH=2+1}{4}{%
+  \begin{pspicture}(-1.5,-1)(1.5,4)
+   \psSolid[object=cylindre,r=1.5,h=0.2,ngrid=1 36,grid](0,0,-0.2)%
+   \pshelices[incolor=yellow!50,R=1.5,h=\nH,linewidth=0.5\pslinewidth,dZ=0.15,hue=0 1,rubans=4,grid](0,0,0)
+   \psSolid[object=cylindre,r=1.5,h=0.2,ngrid=1 36,grid](0,0,\nH\space dz add)%
+ \end{pspicture}}
+\end{LTXexample}
+
+\clearpage
+\subsection{Rubans disposés sur un plan}
+
+\begin{LTXexample}[width=8cm,preset=\centering]
+\psset{lightsrc=30 5 17,Decran=50,resolution=90,spires=2}
+\begin{pspicture}(-4,-1)(4,4)
+\psset{R=1,h=2,dZ=0.2,linewidth=0.5\pslinewidth,viewpoint=50 60 10}
+\psSolid[object=grille,base=-5 5 -5 5]%
+\psSolid[object=cylindre,r=1,h=0.2,ngrid=1 36](-3,-3,0)
+\psSolid[object=cylindre,r=1,h=0.2,ngrid=1 36](-3,3,0)
+\psSolid[object=cylindre,r=1,h=0.2,ngrid=1 36](3,3,0)
+\psSolid[object=cylindre,r=1,h=0.2,ngrid=1 36](3,-3,0)
+\pshelices[incolor=red!50,rubans=2](-3,-3,0.2)
+\pshelices[incolor=yellow!50,rubans=2](-3,3,0.2)
+\pshelices[incolor=green!50,rubans=2](3,3,0.2)
+\pshelices[incolor=gray!50,rubans=2](3,-3,0.2)
+\end{pspicture}
+\end{LTXexample}
+
+\section{Ruban enroulé autour d'un tore}
+
+\begin{BDef}
+\Lcs{psSpiralRing}\OptArgs\OptArg*{\Largr{$x_0,y_0,z_0$}}
+\end{BDef}
+
+%\begin{lstlisting}
+%\psSpiralRing[incolor=yellow!50,r1=4,r0=1,hue,lightsrc=30 5 17](x,y,z)
+%\end{lstlisting}
+
+On peut paramétrer le rayon moyen \LKeyword{r1=2}, le rayon intérieur \LKeyword{r0=1}, 
+l'épaisseur du ruban \LKeyword{dPHI=2}, en degrés suivant la latitude, le nombre de 
+spires \LKeyword{spires=10}
+du ruban, le nombre de brins du ruban \LKeyword{resolution=36}, la couleur de 
+l'intérieur et de l'extérieur du ruban.
+{
+\psset{viewpoint=20 20 70 rtp2xyz,Decran=20,lightsrc=viewpoint,resolution=360}
+\begin{LTXexample}[pos=l,width=7.5cm]
+\psset{unit=0.75}
+\begin{pspicture}(-5,-5)(5,5)
+\psSpiralRing[incolor=yellow!50,
+              r1=4,r0=1,hue=0 1]%
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=l,width=7.5cm]
+\psset{unit=0.75}
+\begin{pspicture}(-5,-5)(5,5)
+\psframe*(-5,-5)(5,5)
+\psSpiralRing[incolor=yellow!20,r1=4,r0=1,
+              fillcolor=orange,grid,
+              dPHI=10,spires=5]%
+\end{pspicture}
+\end{LTXexample}
+
+
+\begin{LTXexample}[pos=l,width=7.5cm]
+\psset{unit=0.75}
+\begin{pspicture}(-5,-5)(5,5)
+\psSpiralRing[r1=4,r0=1,fillcolor=blue,
+              incolor=gray!50,grid,
+              dPHI=2,spires=20,
+              resolution=720]%
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=l,width=7.5cm]
+\psset{unit=0.75}
+\begin{pspicture}(-5,-5)(5,5)
+\psSolid[object=tore,r0=1,r1=4,action=draw*,ngrid=18 36]%
+\defFunction[algebraic]{solenoidetorique}(t){(4+cos(10*t))*cos(t)}{(4+cos(10*t))*sin(t)}{sin(10*t)}
+\psSolid[object=courbe,linecolor=blue,r=0,
+         resolution=720,range=0 2 pi mul,
+         function=solenoidetorique]%
+\end{pspicture}
+\end{LTXexample}
+}
+\section{Ruban enroulé autour d'un paraboloïde}
+
+\begin{BDef}
+\Lcs{psSpiralParaboloid}\OptArgs\OptArg*{\Largr{$x_0,y_0,z_0$}}
+\end{BDef}
+
+On peut paramétrer la hauteur du paraboloïde \LKeyword{h=6}, l'épaisseur du ruban 
+\LKeyword{dz=.25}, le nombre de spires \LKeyword{spires=10}
+du ruban, le nombre de brins du ruban \LKeyword{resolution=36}, le paramètre de la 
+parabole \LKeyword{p=2}, la couleur de l'intérieur et de l'extérieur du ruban.
+
+\begin{LTXexample}[wide,preset=\centering]
+\psset{lightsrc=40 25 17}
+\psset{unit=0.75,viewpoint=50 30 20,Decran=50}
+\begin{pspicture}(-7,-3)(7,8)
+\psSpiralParaboloid[incolor=yellow!50,h=6,hue=0 1,resolution=360,spires=5,grid,dZ=0.5]
+\gridIIID[QZ=3,Zmin=0,Zmax=6](-5,5)(-5,5)
+\end{pspicture}
+\end{LTXexample}
+
+
+{\psset{lightsrc=40 25 17,viewpoint=50 30 20,Decran=50}
+\begin{LTXexample}[pos=l,width=9cm,wide]
+\psset{unit=0.60}
+\begin{pspicture}(-5,-4)(5,9)
+\defFunction[algebraic]{spiraleparabolique}(t)
+   {2*(sqrt(t))*cos(10*t)}{2*(sqrt(t))*sin(10*t)}{t}
+\psSolid[object=courbe,linecolor=blue,r=0,
+         resolution=720,range=0 6,
+         function=spiraleparabolique]%
+\gridIIID[QZ=3,Zmin=0,Zmax=6](-5,5)(-5,5)
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=l,width=9cm,wide]
+\psset{unit=0.60}
+\begin{pspicture}(-7,-4)(7,9)
+\psSpiralParaboloid[incolor=yellow!50,
+                    h=6,hue=0 1,
+                    resolution=360,
+                    dZ=0.25]
+\gridIIID[QZ=3,Zmin=0,Zmax=6](-5,5)(-5,5)
+\end{pspicture}
+\end{LTXexample}
+}
+\section{Ruban enroulé autour d'une sphère}
+
+\begin{BDef}
+\Lcs{psSphericalSpiral}\OptArgs\OptArg*{\Largr{$x_0,y_0,z_0$}}
+\end{BDef}
+
+%\begin{lstlisting}
+%\psSphericalSpiral[incolor=yellow!50,R=4,hue=0 1,dPHI=2,spires=10](x,y,z)
+%\end{lstlisting}
+
+On peut paramétrer le rayon \LKeyword{R=2}, l'épaisseur du ruban 
+\LKeyword{dPHI=2}, en degrés suivant la latitude, le nombre de spires \LKeyword{spires=10}
+de chaque hélice, le nombre de brins du ruban \LKeyword{resolution=36}, 
+la couleur de l'intérieur et de l'extérieur du ruban.
+
+\psset{viewpoint=50 20 10,Decran=50,resolution=180}
+\begin{LTXexample}[width=9cm]
+\psset{unit=0.75}
+\begin{pspicture}(-5,-5)(5,5)
+\defFunction[algebraic]{helicespherique}(t){4*cos(10*t)*cos(t)}{4*sin(10*t)*cos(t)}{4*sin(t)}
+\psSolid[object=courbe,linecolor=blue,r=0,
+        resolution=720,range=pi 2 div neg pi 2 div,
+        function=helicespherique]%
+\psSolid[object=sphere,r=4,action=draw,ngrid=18 18]%
+\gridIIID[Zmin=-4,Zmax=4](-4,4)(-4,4)
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=9cm]
+\psset{unit=0.75}
+\begin{pspicture}(-5,-5)(5,5)
+\psset{viewpoint=50 20 10,Decran=50,resolution=180}
+\psSphericalSpiral[incolor=yellow!50,R=4,hue=0 1,lightsrc=30 5 17]%
+\gridIIID[Zmin=-4,Zmax=4](-4,4)(-4,4)
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=9cm]
+\psset{unit=0.75}
+\begin{pspicture}(-5,-5)(5,5)
+\psframe*(-5,-5)(5,5)
+\psset{viewpoint=50 20 30,Decran=50,resolution=360}
+\psSphericalSpiral[incolor=yellow!20,R=4,fillcolor=orange,lightsrc=40 15 25,grid,dPHI=10](0,0,0)
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=9cm]
+\begin{pspicture}(-4,-4)(4,4)
+\psframe*(-4,-4)(4,4)
+\psset{unit=0.6}
+\psset{viewpoint=50 20 10,Decran=50,resolution=360}
+\psSphericalSpiral[incolor=yellow!50,R=4,fillcolor=green!50,lightsrc=32 38 -10,grid]
+\white%
+\gridIIID[Zmin=-4,Zmax=4,linecolor=white](-4,4)(-4,4)
+\end{pspicture}
+\end{LTXexample}
+
+\section{Rubans enroulés autour d'un cône}
+
+\begin{BDef}
+\Lcs{psSpiralCone}\OptArgs\OptArg*{\Largr{$x_0,y_0,z_0$}}
+\end{BDef}
+
+
+
+On peut paramétrer le rayon \LKeyword{R=2}, la hauteur \LKeyword{h=6}: 
+il s'agit d'un double cône vertical, l'épaisseur(ou largeur) du ruban 
+\LKeyword{dZ=0.5}, le nombre de spires \LKeyword{spires=10} de chaque hélice, 
+le nombre de rubans \LKeyword{rubans=1}, le nombre d'éléments par ruban 
+\LKeyword{resolution=36}, la couleur de l'intérieur et de l'extérieur du ruban.
+
+\psset{unit=0.75}
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-7,-7)(7,9)
+\psset{viewpoint=50 20 10 rtp2xyz,Decran=50,lightsrc=viewpoint,spires=10}
+\psSolid[object=cone,
+         h=5,r=4,mode=4,
+         action=draw](0,0,-5)
+\psSolid[object=cone,RotX=180,
+         h=5,r=4,mode=4,
+         action=draw](0,0,5)
+\psSpiralCone[incolor=yellow!50,h=10,hue=0 1,resolution=360,dZ=0.25,grid]%
+\gridIIID[Zmin=-5,Zmax=5,planmarks=true](-4,4)(-4,4)
+\end{pspicture}
+\end{LTXexample}
+
+\psset{unit=0.75}
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-7,-8)(7,9)
+\psframe*(-7,-8)(7,9)
+\psset{viewpoint=50 20 30 rtp2xyz,Decran=50,lightsrc=viewpoint,spires=10,rubans=4}
+\psSpiralCone[incolor=yellow!50,h=10,R=5,fillcolor=green!50,resolution=720,dZ=0.1,grid]%
+\end{pspicture}
+\end{LTXexample}
+
+
+
+\clearpage
+\section{List of all optional arguments for \texttt{pst-ruban}}
+
+\xkvview{family=pst-rubans,columns={key,type,default}}
+
+
+\bgroup
+\nocite{*}
+\raggedright
+\bibliographystyle{plain}
+\bibliography{\jobname}
+\egroup
+
+\printindex
+
+
+\end{document}

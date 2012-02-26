@@ -1,0 +1,513 @@
+%% $Id: pst-electricfield-docDE.tex 479 2011-03-26 10:12:49Z herbert $
+\documentclass[11pt,english,ngerman,BCOR10mm,DIV12,bibliography=totoc,parskip=false,smallheadings
+    headexclude,footexclude,oneside]{pst-doc}
+\usepackage[latin1]{inputenc}
+\usepackage{pst-electricfield}
+\let\pstEFfv\fileversion
+\usepackage{pst-func}
+\usepackage{pst-exa}% only when running pst2pdf
+%\let\PSTexample\LTXexample        % when not running pst2pdf
+%\let\endPSTexample\endLTXexample  % when not running pst2pdf
+
+
+\usepackage{esint}
+\lstset{pos=t,language=PSTricks,
+    morekeywords={psElectricfield,psEquipotential},basicstyle=\footnotesize\ttfamily}
+\newcommand\Cadre[1]{\psframebox[fillstyle=solid,fillcolor=black,linestyle=none,framesep=0]{#1}}
+%
+\title{\texttt{pst-electricfield}}
+\subtitle{Feldlinien und \"{A}quipotentiallinien elektrischer Punktladungen; v.\pstEFfv}
+\author{J\"{u}rgen Gilg\\ Manuel Luque\\ Patrice M\'egret\\ Herbert Vo\ss}
+
+
+\begin{document}
+\maketitle
+\begin{abstract}
+Das Paket \texttt{pst-electricfield} hat sich zum Ziel gesetzt Feldlinien und \"{A}quipotentiallinien 
+zu zeichnen f\"{u}r eine beliebige  Anordnung von elektrischen Punktladungen. Die Idee f\"{u}r ein 
+solches Paket ist entstanden durch eine Diskussion \"{u}ber das Darstellen von Feldlinien in der 
+PSTricks Liste \url{http://www.tug.org/pipermail/pstricks/}. Es gibt verschiedene Methoden und 
+Ans\"{a}tze -- diese wollen wir auch in dieser Dokumentation vorstellen.
+
+In diesem Paket werden die Feldlinien mit dem Euler-Verfahren errechnet; dieses Verfahren ist 
+einerseits ausreichend f\"{u}r die Pr\"{a}zision der Darstellung und liefert andererseits eine gute 
+Rechengeschwindigkeit (Kompilierungsdauer). Die numerische L\"{o}sung der impliziten Gleichung 
+f\"{u}r das Potential $V(x,y)=\Sigma V_i$ erlaubt es die \"{A}quipotentiallinien darzustellen, 
+die Rechengeschwindigkeit hierf\"{u}r ist jedoch sehr viel kleiner. Das Paket stellt zwei Befehle 
+zur Verf\"{u}gung, einen f\"{u}r die Feldlinien und einen f\"{u}r die \"{A}quipotentiallinien. 
+Wegen der erh\"{o}hten Rechendauer f\"{u}r die \"{A}quipotentiallinien ist es zu erw\"{a}gen sich 
+nur auf die Feldlinien zu beschr\"{a}nken.
+
+Jede Ladung ist charakterisiert durch ihren Wert $q_i$ und ihre Position $(x_i,y_i)$. Die Anzahl 
+der Ladungen ist frei w\"{a}hlbar, jedoch steigt mit ihr auch erheblich die Rechendauer f\"{u}r 
+die \"{A}quipotentiallinien.
+\end{abstract}
+
+\section{Vorgeschlagene Methode von Patrice M\'egret}
+
+Mit dem Paket \LPack{pst-func} und dem Befehl \Lcs{psplotImp}\verb+[options](x1,y1)(x2,y2)+
+kann man die Feldlinien \textbf{und} die \"{A}quipotentiallinien zeichnen.
+
+Wie leitet man die implizite Funktion der Feldlinien mit Hilfe des elektrischen Potentials her?
+
+Der Gau{\ss}sche Satz sagt aus, dass der Flu{\ss} durch eine geschlossene Oberfl\"{a}che $S$ 
+durch folgende Gleichung definiert ist:
+\begin{equation}\label{pm-eq-a}
+\psi = \oiint\limits_S \vec{D} \cdot \vec{u}_n \mathrm{d} S = Q
+\end{equation}
+ist gleich der Ladung $Q$ im Inneren von $S$. Au{\ss}erhalb der geschlossenen Oberfl\"{a}che ($Q=0$). 
+Der elektrische Flu{\ss} ist konservativ.
+
+Eine Flu{\ss}r\"{o}hre ist eine R\"{o}hre, die um die Linien der dielektrischen Verschiebung $\vec{D}$ 
+gebaut ist au{\ss}erhalb der Ladungen. Der eintretende Flu{\ss} in diese R\"{o}hre ist gleich dem 
+austretenden Flu{\ss} aus der R\"{o}hre (der Flu{\ss} ist konservativ).
+
+Folgt man einer Flussr\"{o}hre konstanter Gr\"{o}{\ss}e, so folgt man auch einer Feldlinie $\vec{D}$ 
+und dieser Ansatz wird gew\"{a}hlt, um eine implizite Gleichung von Feldlinien einfacher geometrischer Anordungen zu erhalten.
+
+In unserem Fall begn\"{u}gen wir uns mit Punktladungen und der Identit\"{a}t von der dielektrischen 
+Verschiebung und der Feldst\"{a}rke (da wir keine Polarisation ber\"{u}cksichtigen).
+
+F\"{u}r eine elektrische Punktladung $q$ im Ursprung eines Koordinatensystems ist die elektrische 
+Feldst\"{a}rke und das Potential gegeben durch:
+\begin{equation}\label{pm-eq-b}
+\vec{E} = \frac{1}{4 \pi \varepsilon_0 \varepsilon_r} q \frac{\vec{r}}{|\vec{r}|^3}
+\end{equation}
+\begin{equation}\label{pm-eq-c}
+V = \frac{1}{4 \pi \varepsilon_0 \varepsilon_r} \frac{q}{r}
+\end{equation}
+
+Der Flu{\ss} durch eine Kugelkappe mit der Oberfl\"{a}che $S$ deren halber \"{O}ffnungswinkel $\theta$ ist, ist gleich:
+\begin{equation}\label{pm-eq-d}
+\psi = \varepsilon_0 \varepsilon_r E S = \frac{1}{2} q (1 -\cos\theta)
+\end{equation}
+denn $S= 2\pi r^2 (1 - \cos\theta)$ und auf Grund von (\ref{pm-eq-a}) $4 \pi r^2 \varepsilon_0 \varepsilon_r E =q$
+
+\begin{center}
+\begin{pspicture}(-3,-3)(3,3)
+%\psgrid
+\psdot[dotscale=2](0,0)
+\uput[-135](0,0){$q$}
+\psaxes[labels=none,ticks=none]{->}(0,0)(-2.5,-2.5)(2.5,2.5)[$x$,-90][$y$,0]
+\pswedge(0,0){2}{-30}{30}
+\psarc{->}(0,0){1}{0}{30}
+\rput(1.2,0.2){$\theta$}
+\rput(2.2,0.7){$S$}
+\end{pspicture}
+\end{center}
+
+Um einen impliziten Ausdruck f\"{u}r die Feldlinien zu erhalten, gen\"{u}gt es die Konstanz des Flusses zum Ausdruck zu bringen: 
+\begin{equation}\label{pm-eq-e}
+\psi(x,y) = \frac{1}{2} q (1 -\cos\theta) = \mathrm{konst.}
+\end{equation}
+Man sieht sofort, dass die Feldlinien f\"{u}r $\theta=\mathrm{konst.}$ radial verlaufen.
+
+Daraus folgt f\"{u}r die Feldlinien in der $xy$-Ebene in kartesischen Koordinaten:
+\begin{equation}\label{pm-eq-f}
+\frac{x}{\sqrt{x^2+y^2}} = \mathrm{konst.}
+\end{equation}
+F\"{u}r die \"{A}quipotentiallinien ist die Gleichung (\ref{pm-eq-c}) schon in impliziter Form, es gen\"{u}gt $V=\mathrm{konst.}$ zu setzen, dies liefert:
+\begin{equation}\label{pm-eq-g}
+\frac{1}{\sqrt{x^2+y^2}} = \mathrm{konst.}
+\end{equation}
+
+\begin{center}
+\begin{pspicture*}(-5,-5)(5,5)
+\psframe*[linecolor=green!20](-5,-5)(5,5)
+\psgrid[subgriddiv=0,gridcolor=lightgray,griddots=10]
+\psElectricfield[Q={[1 0 0]}]
+\psEquipotential[Q={[1 0 0]}](-5,-5)(5,5)
+\multido{\r=-1+0.1}{20}{%
+\psplotImp[linestyle=solid,linecolor=blue](-6,-6)(6,6){%
+x y 2 exp x 2 exp add sqrt div \r \space sub}}
+\multido{\r=0.0+0.1}{10}{%
+\psplotImp[linestyle=solid,linecolor=red](-6,-6)(6,6){%
+x 2 exp y 2 exp add sqrt 1 exch div \r \space sub}}
+\end{pspicture*}
+\end{center}
+
+\begin{verbatim}
+%% lignes de champ
+\psplotImp[linestyle=solid,linecolor=blue](-6,-6)(6,6){%
+x y 2 exp x 2 exp add sqrt div \r \space sub}}
+
+%% \'{e}quipotentielles
+\multido{\r=0.0+0.1}{10}{%
+\psplotImp[linestyle=solid,linecolor=red](-6,-6)(6,6){%
+x 2 exp y 2 exp add sqrt 1 exch div \r \space sub}} 
+\end{verbatim}
+
+Nun verallgemeinern wir eine Punktladungsverteilung l\"{a}ngs einer \textbf{Geraden}. Gegeben sind die 
+Punktladungen $q_i$ mit ihren Koordinaten $(x_i,0)$.
+\begin{center}
+\begin{pspicture}(0,-3)(12,3)
+%\psgrid
+\psset{dotscale=2}
+\dotnode(0,0){NA}\nput{-45}{NA}{$q_1$}
+\dotnode(2,0){NB}\nput{-90}{NB}{$q_2$}
+\dotnode(5,0){NC}\nput{-90}{NC}{$q_n$}
+\dotnode[linecolor=red](4,2){ND}\nput{90}{ND}{$P(x,y)$}
+\ncline{NA}{ND}\naput{$r_1,\theta_1$}
+\ncline{NB}{ND}\nbput{$r_2,\theta_2$}
+\ncline{NC}{ND}\nbput{$r_n,\theta_n$}
+\psaxes[labels=none,ticks=none]{->}(0,0)(0,-2.5)(11,2.5)[$x$,-90][$y$,0]
+\psarc{->}(5,0){0.7}{0}{116.5}
+\rput(6,0.5){$\theta_n$}
+\dotnode[linecolor=blue](4,-2){NE}
+\nccurve[ncurv=2,linecolor=green!40!black]{ND}{NE}
+\end{pspicture}
+\end{center}
+Es liegt eine Zylindersymmetrie vor; es gen\"{u}gt deshalb die Feldlinien und das Potential in der 
+oberen Halb-Ebene $xy$ zu untersuchen und mit einer Rotation um die $x$-Achse erh\"{a}lt man somit 
+die Gesamtl\"{o}sung.
+
+
+
+Bei Rotation um die $x$-Achse, erzeugt die Feldlinie, die durch den Punkt $P$ geht, eine Flussr\"{o}hre, 
+deren elektrischer Flu{\ss} 
+ durch eine beliebige Oberfl\"{a}che durch $P(x,y)$ hindurchflie{\ss}t und die $x$-Achse jenseits 
+ der letzten Ladung schneidet (diese Oberfl\"{a}che schneidet die $xy$-Ebene in dem gr\"{u}nen 
+ Bogen) gem\"{a}{\ss} (\ref{pm-eq-d}):
+\begin{equation}\label{pm-eq-h}
+\psi = \frac{1}{2} \sum_{i=1}^{n} q_i (1 -\cos\theta_i)
+\end{equation}
+Die Feldlinien erh\"{a}lt man sehr einfach, wenn man $\psi = \mathrm{konst.}$ setzt. In kartesischen Koordinaten:
+\begin{equation}\label{pm-eq-i}
+\sum_{i=1}^{n} q_i \frac{x-x_i}{\sqrt{(x-x_i)^2+y^2}} = \mathrm{konst.}
+\end{equation}
+
+F\"{u}r das Potential erh\"{a}lt man trivial:
+\begin{equation}\label{pm-eq-j}
+\sum_{i=1}^{n} \frac{q_i}{\sqrt{(x-x_i)^2+y^2}} = \mathrm{konst.}
+\end{equation}
+
+\begin{center}
+\begin{pspicture*}(-5,-5)(5,5)
+\psframe*[linecolor=green!20](-5,-5)(5,5)
+\psgrid[subgriddiv=0,gridcolor=lightgray,griddots=10]
+\psElectricfield[Q={[1 -2 0][-1 2 0]}]
+\psEquipotential[Q={[1 -2 0][-1 2 0]},Vmin=-2,Vmax=2,stepV=0.25](-5,-5)(5,5)
+\multido{\r=-2+0.2}{20}{%
+\psplotImp[linestyle=solid,linecolor=red](-6,-6)(6,6){%
+x 2 add dup 2 exp y 2 exp add sqrt div 1 mul
+x -2 add dup 2 exp y 2 exp add sqrt div -1 mul add
+\r \space sub}}
+\multido{\r=-0.5+0.1}{10}{%
+\psplotImp[linestyle=solid,linecolor=blue](-6,-6)(6,6){%
+x 2 add 2 exp y 2 exp add sqrt 1 exch div 1 mul
+x -2 add 2 exp y 2 exp add sqrt 1 exch div -1 mul add
+\r \space sub}}
+\end{pspicture*}
+\end{center}
+
+\begin{verbatim}
+%% lignes de champ
+\multido{\r=-2+0.2}{20}{%
+\psplotImp[linestyle=solid,linecolor=red](-6,-6)(6,6){%
+x 2 add dup 2 exp y 2 exp add sqrt div 1 mul
+x -2 add dup 2 exp y 2 exp add sqrt div -1 mul add
+\r \space sub}}
+%% \'{e}quipotentielles
+\multido{\r=-0.5+0.1}{10}{%
+\psplotImp[linestyle=solid,linecolor=blue](-6,-6)(6,6){%
+x 2 add 2 exp y 2 exp add sqrt 1 exch div 1 mul
+x -2 add 2 exp y 2 exp add sqrt 1 exch div -1 mul add
+\r \space sub}}
+\end{verbatim}
+
+Das dargestellte Beispiel besitzt eine Ladung $+1$ in $(-2,0)$ und eine Ladung $-1$ in $(2,0)$ und 
+zeigt die \"{U}berlagerung der Resultate von  impliziter Methode und direkter Integration. Das deckt 
+sich gut, jedoch ist die implizite Methode langsamer und auf ein zylindersymmetrisches Problem 
+eingeschr\"{a}nkt (Ladungsanordnung l\"{a}ngs einer Geraden).
+
+
+\newpage
+\section{Vorgeschlagene Methode von J\"{u}rgen Gilg}
+Mit dem Paket \textsf{pst-func} und dem Befehl \verb+\psplotDiffEqn+ kann man Feldlinien \textbf{und} \"{A}quipotentiallinien zeichnen.
+
+\textbf{Feldlinien}
+
+Gegeben sind die Punktladungen $\{q_1, \,\ldots, \,q_n\}$ und ihre Ortsvektoren $\{\vec{r}_1, \,\ldots, \,\vec{r}_n\}$.
+\begin{equation*}
+\vec{r}_1=\begin{pmatrix}
+x_1\\y_1
+\end{pmatrix},\,\ldots,\,
+\vec{r}_n=\begin{pmatrix}
+x_n\\y_n
+\end{pmatrix};\,
+\vec{r}=\begin{pmatrix}
+x\\y
+\end{pmatrix}
+\end{equation*}
+Mit dem Prinzip der Superposition erh\"{a}lt man die resultierende Feldst\"{a}rke im Punkt $M$ mit $\overrightarrow{r}(M)$:
+\begin{equation}
+\vec{E} = \frac{1}{4 \pi \varepsilon_0 \varepsilon_r} \sum\limits_{i=1}^n q_i \frac{\vec{r} - \vec{r}_i}{|\vec{r} - \vec{r}_i|^3}
+\end{equation}
+In Komponentendarstellung:
+\begin{equation}
+\vec{E} =\begin{pmatrix}
+E_x\\E_y
+\end{pmatrix}=
+ \frac{1}{4 \pi \varepsilon_0 \varepsilon_r} \sum\limits_{i=1}^n  \frac{q_i}{\sqrt{(x-x_i)^2+(y-y_i)^2}^3}\begin{pmatrix}
+   x-x_i\\y-y_i
+ \end{pmatrix}
+\end{equation}
+oder
+\begin{align*}
+E_x&=\frac{1}{4 \pi \varepsilon_0 \varepsilon_r} \sum\limits_{i=1}^n  \frac{q_i(x-x_i)}{\sqrt{(x-x_i)^2+(y-y_i)^2}^3}\\
+E_y&=\frac{1}{4 \pi \varepsilon_0 \varepsilon_r} \sum\limits_{i=1}^n  \frac{q_i(y-y_i)}{\sqrt{(x-x_i)^2+(y-y_i)^2}^3}
+\end{align*}
+Feldlinien verlaufen tangential zu $\vec{E}$.
+\begin{equation*}
+\frac{\text{d}y}{\text{d}x}=\frac{E_y}{E_x}
+\end{equation*}
+Dies ist eine Differentialgleichung 1.~Ordnung.
+
+Es folgt ein Beispiel mit dem Befehl \verb!\psplotDiffEqn! zum Zeichnen der Feldlinien:
+\begin{verbatim}
+\pstVerb{%
+/q1 1 def
+/q2 -0.5 q1 mul def
+/xA 1.8 def
+}
+
+\multido{\rx=-250+10.2}{50}{%
+\psplotDiffEqn[%
+linewidth=0.25pt,%
+linecolor=red,%
+varsteptol=.001,%
+method=rk4,%
+algebraic,
+plotpoints=200%
+]{-20}{20}{\rx}{%
+(q1*(y[0])/(sqrt((x+xA)^2+(y[0])^2))^3+q2*(y[0])/(sqrt((x-xA)^2+(y[0])^2))^3)%
+/%
+(q1*(x+xA)/(sqrt((x+xA)^2+(y[0])^2))^3+q2*(x-xA)/(sqrt((x-xA)^2+(y[0])^2))^3)%
+}%
+}
+\pscircle*(!xA 0){0.25}\pscircle*(!xA neg 0){0.25}
+\end{verbatim}
+
+
+
+\textbf{Elektrisches Potential}
+
+Das elektrische Potential $V$ ist gegeben durch:
+\begin{equation}
+\vec{E}=\begin{pmatrix}
+E_x\\E_y
+\end{pmatrix}=-\text{grad}\, V=-\nabla V =-\begin{pmatrix}
+\frac{\partial V}{\partial x}\\[4pt]
+\frac{\partial V}{\partial y}
+\end{pmatrix}
+\end{equation}
+oder
+\begin{align*}
+E_x=-\frac{\partial V}{\partial x}\\
+E_y=-\frac{\partial V}{\partial y}
+\end{align*}
+
+\textbf{\"{A}quipotentiallinien}
+
+\begin{equation*}
+V=\text{Const}
+\end{equation*}
+
+\"{A}quipotentiallinien stehen stets senkrecht auf den Feldlinien.
+
+\begin{equation*}
+\frac{\text{d}y}{\text{d}x}=-\frac{E_x}{E_y}
+\end{equation*}
+Dies ist eine Differentialgleichung 1.~Ordnung. Man benutzt erneut: \verb!\psplotDiffEqn! um die \"{A}quipotentiallinien zu zeichnen.
+\begin{verbatim}
+\pstVerb{%
+/q1 1 def
+/q2 1 q1 mul def
+/xA 3.25 def
+}
+\multido{\rx=-4.1+0.75}{20}{%
+\psplotDiffEqn[%
+linewidth=0.85pt,%
+linecolor=blue,%
+varsteptol=.00001,%
+method=rk4,%
+algebraic,
+plotpoints=300%
+]{-6}{6}{\rx}{%
+-((q1*(x+xA)/(sqrt((x+xA)^2+(y[0])^2))^3+q2*(x-xA)/(sqrt((x-xA)^2+(y[0])^2))^3))
+/
+(q1*(y[0])/(sqrt((x+xA)^2+(y[0])^2))^3+q2*(y[0])/(sqrt((x-xA)^2+(y[0])^2))^3)%
+}%
+}
+\end{verbatim}
+Hier ein vollst\"{a}ndiges Beispiel: \url{http://tug.org/mailman/htdig/pstricks/2010/007468.html}
+
+Dies ist eine einfache Methode, jedoch mit einem nicht befriedigendenden Resultat, was mit eine 
+Motivation war, dieses Paket zu entwickeln.
+
+
+\section{Feldlinien}
+Das Zeichnen der Feldlininen wird mit dem Befehl \Lcs{psElectricfield}\OptArgs\ aufgerufen.  
+Dieser besitzt folgende Parameter:
+\begin{enumerate}
+  \item Die Ladungen, ihre Ortskoordinaten und die Anzahl der Linien, die von jeder einzelnen 
+  ausgeht (oder bei ihr endet) werden mit mit demselben Parameter aufgerufen 
+  $\mathsf{Q=\{[q_1\, x_1\, y_1\, N_1] [q_2\, x_2\, y_2\, N_2]\ldots[q_i\, x_i\, y_i\, N_i]
+    \ldots [q_n\, x_n\, y_n\, N_n]\}}$. Die Anzahl der Linien ist hierbei optional -- wenn diese 
+    Angabe weggelassen wird, wird ein vordefinierter Wert \textsf{N=19} genommen, der sich aus $360/18=20^\circ$ 
+    ergibt (zwischen zwei Feldlinien, die von jeder einzelnen Ladung ausgeht oder dort endet).
+  \item Die Farbe und Linienst\"{a}rke kann mit den g\"{a}ngigen Parametern von PSTricks 
+  gesetzt werden: \textsf{linecolor} und \textsf{linewidth}.
+  \item Die Anzahl der Berechnungspunkte einer jeden Linie ist vordefiniert mit \textsf{points=400} 
+  und die Schrittweite ist \textsf{Pas=0.025}. Sollten diese Voreinstellungen nicht optimal f\"{u}r 
+  eine Zeichnung sein, dann muss man sie \"{a}ndern.
+  \item Die Position eines Pfeils auf einer Feldlinie kann mit dem Parameter \textsf{posArrow=0.25} 
+  gesetzt werden, der das Verh\"{a}ltnis der Punktanzahl angibt, jeweils beginnend bei der Ladung.
+\end{enumerate}
+\section{\"{A}quipotentiallinien}
+Die \"{A}quipotentiallinien werden mit folgendem Befehl gezeichnet: 
+\verb+\psEquipotential[options](xmin,ymin)(xmax,ymax)+. Die Option f\"{u}r die Ladungen 
+\textsf{Q} ist dieselbe wie bei den Feldlinien, es ist jedoch \"{u}berfl\"{u}ssig~\textsf{N} anzugeben.
+\begin{enumerate}
+  \item Man muss den Maximal- und Minimalwert des Potential vorab berechnen: \textsf{Vmax=3} und 
+  \textsf{Vmin=-1} sind die voreingestellten Werte.
+  \item Intervall zwischen zwei Werten des Potentials \textsf{stepV=0.5}, dies bestimmt die Anzahl der 
+  \"{A}quipotentiallinien.
+  \item Die Farbe und Linienst\"{a}rke kann mit den g\"{a}ngigen Parametern von PSTricks gesetzt werden: 
+  \textsf{linecolor} und \textsf{linewidth}.
+\end{enumerate}
+
+\clearpage
+\section{Beispiele}
+\xLcs{psElectricfield}\xLcs{psEquipotential}
+\begin{PSTexample}[pos=t]
+\begin{pspicture*}(-6,-6)(6,6)
+\psframe*[linecolor=lightgray!50](-6,-6)(6,6)
+\psgrid[subgriddiv=0,gridcolor=gray,griddots=10]
+\psElectricfield[Q={[-1 -2 2][1 2 2][-1 2 -2][1 -2 -2]},linecolor=red]
+\psEquipotential[Q={[-1 -2 2][1 2 2][-1 2 -2][1 -2 -2]},linecolor=blue](-6.1,-6.1)(6.1,6.1)
+\psEquipotential[Q={[-1 -2 2][1 2 2][-1 2 -2][1 -2 -2]},linecolor=green,linewidth=2\pslinewidth,Vmax=0,Vmin=0](-6.1,-6.1)(6.1,6.1)
+\end{pspicture*}
+\end{PSTexample}
+
+\xLkeyword{Q}\xLkeyword{Vmin}\xLkeyword{Vmax}
+\begin{PSTexample}[pos=t]
+\begin{pspicture*}(-6,-6)(6,6)
+\psframe*[linecolor=lightgray!50](-6,-6)(6,6)
+\psgrid[subgriddiv=0,gridcolor=gray,griddots=10]
+\psElectricfield[Q={[-1 -2 2 false][1 2 2 false][-1 2 -2 false][1 -2 -2 false]},radius=1.5pt,linecolor=red]
+\psEquipotential[Q={[-1 -2 2][1 2 2][-1 2 -2][1 -2 -2]},linecolor=blue](-6,-6)(6,6)
+\psEquipotential[Q={[-1 -2 2][1 2 2][-1 2 -2][1 -2 -2]},linecolor=green,linewidth=2\pslinewidth,Vmax=0,Vmin=0](-6.1,-6.1)(6.1,6.1)
+\end{pspicture*}
+\end{PSTexample}
+
+
+\xLkeyword{Pas}\xLkeyword{points}\xLkeyword{posArrow}\xLkeyword{N}
+\begin{PSTexample}[pos=t]
+\begin{pspicture*}(-5,-5)(5,5)
+\psframe*[linecolor=lightgray!40](-5,-5)(5,5)
+\psgrid[subgriddiv=0,gridcolor=lightgray,griddots=10]
+\psElectricfield[Q={[-1 -3 1][1 1 -3][-1 2 2]},N=9,linecolor=red,points=1000,posArrow=0.1,Pas=0.015]
+\psEquipotential[Q={[-1 -3 1][1 1 -3][-1 2 2]},linecolor=blue](-6,-6)(6,6)
+\psEquipotential[Q={[-1 -3 1][1 1 -3][-1 2 2]},linecolor=green,Vmin=-5,Vmax=-5,linewidth=2\pslinewidth](-6,-6)(6,6)
+\end{pspicture*}
+\end{PSTexample}
+
+
+
+\begin{PSTexample}[pos=t,vsep=5mm]
+\psset{unit=0.75cm}
+\begin{pspicture*}(-5,-5)(5,5)
+\psframe*[linecolor=green!20](-5,-5)(5,5)
+\psgrid[subgriddiv=0,gridcolor=lightgray,griddots=10]
+\psElectricfield[Q={[1 -2 0][-1 2 0]},linecolor=red]
+\psEquipotential[Q={[1 -2 0][-1 2 0]},linecolor=blue](-5,-5)(5,5)
+\psEquipotential[Q={[1 -2 0][-1 2 0]},linecolor=green,Vmin=0,Vmax=0](-5,-5)(5,5)
+\end{pspicture*}
+\end{PSTexample}
+
+\begin{PSTexample}[pos=t,vsep=5mm]
+\psset{unit=0.75cm}
+\begin{pspicture*}(-5,-5)(5,5)
+\psframe*[linecolor=green!20](-5,-5)(5,5)
+\psgrid[subgriddiv=0,gridcolor=lightgray,griddots=10]
+\psElectricfield[Q={[1 -2 0][1 2 0]},linecolor=red,N=15,points=500]
+\psEquipotential[Q={[1 -2 0][1 2 0]},linecolor=blue,Vmin=0,Vmax=20,stepV=2](-5,-5)(5,5)
+\psEquipotential[Q={[1 -2 0][1 2 0]},linecolor=green,Vmin=9,Vmax=9](-5,-5)(5,5)
+\end{pspicture*}
+\end{PSTexample}
+
+\begin{PSTexample}[pos=t,vsep=5mm]
+\psset{unit=0.75cm}
+\begin{pspicture*}(-10,-5)(6,5)
+\psframe*[linecolor=lightgray!40](-10,-5)(6,5)
+\psgrid[subgriddiv=0,gridcolor=lightgray,griddots=10]
+\psElectricfield[Q={[600 -60 0 false][-4 0 0] },N=50,points=500,runit=0.8]
+\psEquipotential[Q={[600 -60 0 false][-4 0 0]},linecolor=blue,Vmax=100,Vmin=50,stepV=2](-10,-5)(6,5)
+\psframe*(-10,-5)(-9.5,5)
+\rput(0,0){\textcolor{white}{\large$-$}}
+\multido{\rA=4.75+-0.5}{20}{\rput(-9.75,\rA){\textcolor{white}{\large$+$}}}
+\end{pspicture*}
+\end{PSTexample}
+
+\begin{PSTexample}[pos=t,vsep=5mm]
+\psset{unit=0.75cm}
+\begin{pspicture*}(-5,-5)(5,5)
+\psframe*[linecolor=green!20](-6,-5)(6,5)
+\psgrid[subgriddiv=0,gridcolor=lightgray,griddots=10]
+\psElectricfield[Q={[1 -2 -2][1 -2 2][1 2 2][1 2 -2]},linecolor={[HTML]{006633}}]
+\psEquipotential[Q={[1 -2 -2][1 -2 2][1 2 2][1 2 -2]},Vmax=15,Vmin=0,stepV=1,linecolor=blue](-6,-6)(6,6)
+\end{pspicture*}
+\end{PSTexample}
+
+\begin{PSTexample}[pos=t,vsep=5mm]
+\psset{unit=0.75cm}
+\begin{pspicture*}(-5,-5)(5,5)
+\psframe*[linecolor=green!20](-5,-5)(5,5)
+\psgrid[subgriddiv=0,gridcolor=lightgray,griddots=10]
+\psElectricfield[Q={[1 2 0][1 1 1.732][1 -1 1.732][1 -2 0][1 -1 -1.732][1 1 -1.732]},linecolor=red]
+\psEquipotential[Q={[1 2 0][1 1 1.732 12][1 -1 1.732][1 -2 0][1 -1 -1.732][1 1 -1.732]},linecolor=blue,Vmax=50,Vmin=0,stepV=5](-5,-5)(5,5)
+\end{pspicture*}
+\end{PSTexample}
+
+\begin{PSTexample}[pos=t,vsep=5mm]
+\psset{unit=0.75cm}
+\begin{pspicture*}(-5,-5)(5,5)
+\psframe*[linecolor=green!20](-5,-5)(5,5)
+\psgrid[subgriddiv=0,gridcolor=lightgray,griddots=10]
+\psElectricfield[Q={[1 2 0][1 1 1.732][1 -1 1.732][1 -2 0][1 -1 -1.732][1 1 -1.732][-1 0 0]},linecolor=red]
+\psEquipotential[Q={[1 2 0][1 1 1.732 12][1 -1 1.732][1 -2 0][1 -1 -1.732][1 1 -1.732][-1 0 0]},Vmax=40,Vmin=-10,stepV=5,linecolor=blue](-5,-5)(5,5)
+\end{pspicture*}
+\end{PSTexample}
+
+\begin{PSTexample}[pos=t,vsep=5mm]
+\psset{unit=0.75cm}
+\begin{pspicture*}(-6,-5)(6,5)
+\psframe*[linecolor=green!20](-6,-5)(6,5)
+\psgrid[subgriddiv=0,gridcolor=lightgray,griddots=10]
+\psElectricfield[Q={[1 -4 0][1 -2 0 12][1 0 0][1 2 0][1 4 0]},linecolor=red]
+\psEquipotential[Q={[1 -4 0][1 -2 0][1 0 0][1 2 0][1 4 0]},linecolor=blue,Vmax=30,Vmin=0,stepV=2](-7,-5)(7,5)
+\end{pspicture*}
+\end{PSTexample}
+
+
+
+\clearpage
+\section{Liste der optionalen Argumente f\"ur \texttt{pst-electricfield}}
+
+\xkvview{family=pst-electricfield,columns={key,type,default}}
+
+\nocite{*}
+\bgroup
+\raggedright
+\bibliographystyle{plain}
+\bibliography{pst-electricfield-doc}
+\egroup
+
+
+\printindex
+
+
+
+
+\end{document}

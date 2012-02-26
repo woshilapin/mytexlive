@@ -1,0 +1,842 @@
+% \iffalse meta-comment, etc.
+%%
+%% Package `pst-fr3d.dtx'
+%%
+%% Denis Girou (CNRS/IDRIS - France) <Denis.Girou@idris.fr>
+%%
+%% February 25, 2002
+%%
+%% This program can be redistributed and/or modified under the terms
+%% of the LaTeX Project Public License Distributed from CTAN archives
+%% in directory macros/latex/base/lppl.txt.
+%%
+%% DESCRIPTION:
+%%   `pst-fr3d' is a PSTricks package to draw three dimensional grids
+%%   with various customizations.
+%%
+% \fi
+%
+% \DoNotIndex{\\,\^,\@}
+% \DoNotIndex{\@ifnextchar,\@nameuse,\@nil,\@undefined}
+% \DoNotIndex{\advance}
+% \DoNotIndex{\begin}
+% \DoNotIndex{\catcode,\CodelineIndex,\csname}
+% \DoNotIndex{\def,\define@key,\definecolor,\divide,\DocInput}
+% \DoNotIndex{\documentclass,\dp}
+% \DoNotIndex{\edef,\else,\EnableCrossrefs,\end,\endcsname,\endinput}
+% \DoNotIndex{\endpspicture}
+% \DoNotIndex{\fi,\filedate,\fileversion}
+% \DoNotIndex{\GetFileInfo}
+% \DoNotIndex{\hbadness,\hbox,\hfuzz,\ht}
+% \DoNotIndex{\ifdim,\ifx,\input}
+% \DoNotIndex{\let}
+% \DoNotIndex{\message}
+% \DoNotIndex{\newhsbcolor,\newif}
+% \DoNotIndex{\OnlyDescription}
+% \DoNotIndex{\p@,\ProvidesPackage,\psframebox,\psframesep}
+% \DoNotIndex{\psline,\pslinewidth,\pspolygon,\psset,\PstAtCode,\pst@boxg}
+% \DoNotIndex{\pst@dima,\pst@dimb,\pst@dimc,\pst@dimd,\pst@dimh}
+% \DoNotIndex{\pst@dimtonum,\pst@expandafter,\pst@getnumiii,\pst@hbox}
+% \DoNotIndex{\pst@tempa,\pst@tempb,\pst@tempc,\pst@tempg,\pst@temph}
+% \DoNotIndex{\pst@tempi,\PSTricksLoaded}
+% \DoNotIndex{\RecordChanges,\relax}
+% \DoNotIndex{\setbox,\setkeys,\space}
+% \DoNotIndex{\the,\tw@}
+% \DoNotIndex{\usepackage}
+% \DoNotIndex{\wd}
+% \DoNotIndex{\z@}
+%
+% \setcounter{IndexColumns}{2}
+%
+% \newcommand{\PstFrameBoxThreeDPackage}{`\textsf{pst-fr3d}'}
+% \newcommand{\PstFrameBoxThreeDMacro}{\cs{PstFrameBoxThreeD}}
+% \newcommand{\ColorPackage}{`\textsf{color}'}
+% \newcommand{\PstColPackage}{`\textsf{pstricks}'}
+%
+% ^^A From ltugboat.cls
+%
+% ^^A Typeset the name of an environment
+% \providecommand\env[1]{\textsf{#1}}
+% \providecommand\clsname[1]{\textsf{#1}}
+% \providecommand\pkgname[1]{\textsf{#1}}
+% \providecommand\optname[1]{\textsf{#1}}
+% \providecommand\progname[1]{\textsf{#1}}
+%
+% ^^A A list of options for a package/class
+% \newenvironment{optlist}{\begin{description}%
+%   \renewcommand\makelabel[1]{%
+%     \descriptionlabel{\mdseries\optname{##1}}}%
+%   \itemsep0.25\itemsep}%
+%  {\end{description}}
+%
+% ^^A Utility macros
+%
+%
+% ^^A Example macros - adapted from the `fvrb-ex' package
+% ^^A ---------------------------------------------------
+%
+% ^^A Take care that we use here the four /?_W characters as escape
+% ^^A characters, so we can't use these characters in the examples!
+%
+% \makeatletter
+%
+% ^^A To highlight some verbatim sequences (comments, macro names, etc.)
+% \def\HLEmphasize#1{\textit{#1}}
+% \newcommand{\BS}{\texttt{\symbol{`\\}}}
+% \def\HLMacro#1{\BS{}def\HLMacro@i#1\@nil}
+% \def\HLMacro@i#1def#2\@nil{\HLReverse{#2}}
+% \def\HLReverse#1{{\setlength{\fboxsep}{1pt}\HLReverse@i{#1}}}
+% \def\HLReverse@i#1{\colorbox{black}{\textcolor{white}{\textbf{#1}}}}
+%
+% \def\Example{\FV@Environment{}{Example}}
+% \def\endExample{%
+% \end{VerbatimOut}
+% \Below@Example{\input{\jobname.tmp}}
+% \endgroup}
+%
+% \def\CenterExample{\FV@Environment{}{Example}}
+% \def\endCenterExample{%
+% \end{VerbatimOut}
+% \begin{center}
+%   \Below@Example{\input{\jobname.tmp}}
+% \end{center}
+% \endgroup}
+%
+% \def\SideBySideExample{\FV@Environment{}{Example}}
+% \def\endSideBySideExample{%
+% \end{VerbatimOut}
+% \SideBySide@Example{\input{\jobname.tmp}}
+% \endgroup}
+%
+% \def\FVB@Example{%
+% \begingroup
+% \FV@UseKeyValues
+% \parindent=0pt
+% \multiply\topsep by 2
+% \VerbatimEnvironment
+% \begin{VerbatimOut}[gobble=4,codes={\catcode`\W=12}]{\jobname.tmp}}
+%
+% \def\Below@Example#1{%
+% \VerbatimInput[gobble=0,commentchar=W,commandchars=/?_,frame=single,
+%                numbers=left,numbersep=3pt]{\jobname.tmp}
+% \catcode`\%=14\relax
+% \catcode`\W=9\relax
+% ^^A We suppress the effect of the highlighting macros
+% \catcode`/=0\relax
+% \catcode`?=1\relax
+% \catcode`_=2\relax
+% \def\HLEmphasize##1{##1}%
+% \def\HLMacro##1{##1}%
+% \def\HLReverse##1{##1}%
+% #1
+% \par}
+%
+% \def\SideBySide@Example#1{%
+% \vskip 1mm
+% \@tempdimb=\FV@XRightMargin
+% \advance\@tempdimb -5mm
+% \begin{minipage}[c]{\@tempdimb}
+%   \fvset{xrightmargin=0pt}
+%   \catcode`\%=14\relax
+%   \catcode`\W=9\relax
+%   ^^A We suppress the effect of the highlighting macros
+%   \catcode`/=0\relax
+%   \catcode`?=1\relax
+%   \catcode`_=2\relax
+%   \def\HLEmphasize##1{##1}%
+%   \def\HLMacro##1{##1}%
+%   \def\HLReverse##1{##1}%
+%   #1
+% \end{minipage}%
+% \@tempdimb=\textwidth
+% \advance\@tempdimb -\FV@XRightMargin
+% \advance\@tempdimb 5mm
+% \begin{minipage}[c]{\@tempdimb}
+%   \VerbatimInput[gobble=0,commentchar=W,commandchars=/?_,
+%                  frame=single,numbers=left,numbersep=3pt,
+%                  xleftmargin=5mm,xrightmargin=0pt]{\jobname.tmp}
+% \end{minipage}
+% \vskip 1mm}
+%
+% \makeatother
+%
+% ^^A End of example macros from `fvrb-ex'
+%
+% ^^A For the possible index and changes log
+% \setlength{\columnseprule}{0.6pt}
+%
+% ^^A Beginning of the documentation itself
+%
+% \title{The \PstFrameBoxThreeDPackage{} package\\
+%        A PSTricks package\\
+%        for three dimensional framed boxes}
+% \author{Denis \textsc{Girou}\thanks{CNRS/IDRIS ---
+%         Centre National de la Recherche Scientifique /
+%         Institut du D\'eveloppement et des Ressources en Informatique
+%         Scientifique --- Orsay --- France ---
+%         \mbox{\texttt{<Denis.Girou@idris.fr>}}.
+%   Version 1.1 prepared by Herbert Vo\ss for using \texttt{pst-xkey}}}
+% \date{Version 1.1\\October 10, 2005\\
+%       {\small Documentation revised October 10, 2005}}
+%
+% \maketitle
+%
+% \begin{abstract}
+%     This package allow to draw three dimensional framed boxes using the
+%   macro \PstFrameBoxThreeDMacro. This is specially useful to draw 3d-like
+%   buttons.
+% \end{abstract}
+%
+% \tableofcontents
+%
+% \section{Introduction}
+%
+%   \PstFrameBoxThreeDPackage{} offer a unique main macro with few parameters to
+% interact on it. This is just a small extension of the \cs{psframebox} macro.
+%
+%   All the relevant PSTricks parameters can be use with it, but the
+% \texttt{linestyle}, \texttt{linecolor}, \texttt{doubleline} and
+% \texttt{doublecolor} ones must not be used, as they would be overridden.
+% Nevertheless, some usual parameters are not relevant for this kind of boxes
+% and would produce ``strange'' results (for instance \texttt{border},
+% \texttt{linearc} and \texttt{shadow}).
+%
+%   As usual, \LaTeX{} users are supposed to have loaded the \PstColPackage{}
+% package before this one, to ensure the compatibility with the standard
+% \ColorPackage{} \LaTeX{} package.
+%
+%   The syntax of the macro is the same than the one for the other macros for
+% framed boxes, so simply:
+%
+% \vspace{1mm}
+% \noindent%
+% \fbox{\PstFrameBoxThreeDMacro\texttt{[optional\_parameters]\{\emph{stuff}\}}}
+%
+% \vspace{1mm}
+%   We can put all the valid material inside such 3d boxes, including other
+% framed boxes.
+%
+%   Note also that, obviously, this documentation is very color oriented, and
+% is done to be read on a screen or a colored paper.
+%
+% \section{Usage}
+%
+% \subsection{Default behavior}
+%
+%   The default behavior is the following:
+%
+% \begin{CenterExample}
+%   \PstFrameBoxThreeD{Button}\hfill
+%   \PstFrameBoxThreeD{\shortstack{Yes!\\Yes!\\Yes!}}\hfill
+%   \PstFrameBoxThreeD{\Huge$\frac{1}{\sqrt{3}}$}%
+% \end{CenterExample}
+%
+%   Of course, we can use all the relevant generic PSTricks parameters for the
+% framed boxes (but not those relative to \emph{double} lines), specially
+% those applying to boxes:
+%
+% \begin{CenterExample}
+%   \PstFrameBoxThreeD[doublesep=0.1]{Button}\hfill
+%   \PstFrameBoxThreeD[doublesep=0.2]{Button}\hfill
+%   \PstFrameBoxThreeD[doublesep=0.5]{Button}%
+% \end{CenterExample}
+%
+%   Specially look at the behavior of the \texttt{framesep},
+% \texttt{doublesep} and \texttt{linewidth} parameters:
+%
+% \begin{CenterExample}
+%   \PstFrameBoxThreeD[framesep=0.3]{Button}\hfill
+%   \PstFrameBoxThreeD[doublesep=0.3]{Button}\hfill
+%   \PstFrameBoxThreeD[linewidth=0.3]{Button}\hfill
+%   \PstFrameBoxThreeD[doublesep=0.3,linewidth=0.3]{Button}\hfill
+%   \PstFrameBoxThreeD[framearc=0.5]{Button}%
+% \end{CenterExample}
+%
+% \subsection{Parameters}
+%
+%   To change the way the boxes are drawn, we can also use \textbf{four}
+% specific parameters:
+%
+% \begin{optlist}
+%   \item [FrameBoxThreeDColorHSB (real real real)]: to define the colors
+% used, in the HSB (\emph{hue}, \emph{saturation}, \emph{brightness}) model.
+% This is a sequence of three real values, separated by spaces. This will
+% define the color of the interior of the frame. And for the borders we will
+% use it too, changing it brightness in light and dark.
+%
+%         Note also that if the \emph{brightness} value is negative, no color
+% will fill the interior of the box (this is useful if the general background
+% is not white).
+%   (\emph{Default:~0~0~0.5} --- it must be three numbers between 0~and~1, but
+% as explained the last one can be negative, which has a special meaning).
+% \end{optlist}
+%
+% \begin{CenterExample}
+%   \psset{doublesep=0.1}
+%   \PstFrameBoxThreeD[/HLEmphasize?FrameBoxThreeDColorHSB_=/HLReverse?0.1 0.3 0.5_]{%
+%     Button}\hfill
+%   \PstFrameBoxThreeD[/HLEmphasize?FrameBoxThreeDColorHSB_=/HLReverse?0.6 0.3 0.5_]{%
+%     Button}\hfill
+%   \PstFrameBoxThreeD[/HLEmphasize?FrameBoxThreeDColorHSB_=/HLReverse?0.4 0.1 0.5_]{%
+%     \Huge$\frac{1}{\sqrt{3}}$}\hfill
+%   \PstFrameBoxThreeD[/HLEmphasize?FrameBoxThreeDColorHSB_=/HLReverse?0.9 0.5 0.5_]{%
+%     \psovalbox[fillstyle=solid,fillcolor=yellow]{Button}}\hfill
+%   \PstFrameBoxThreeD[/HLEmphasize?FrameBoxThreeDColorHSB_=/HLReverse?0.4 0.7 0.2_]{%
+%     \PstFrameBoxThreeD[/HLEmphasize?FrameBoxThreeDColorHSB_=/HLReverse?0.4 0.7 0.5_]{%
+%       \PstFrameBoxThreeD[/HLEmphasize?FrameBoxThreeDColorHSB_=/HLReverse?0.4 0.7 0.8_]{%
+%         Button}}}%
+% \end{CenterExample}
+%
+% \begin{CenterExample}
+%   \psset{doublesep=0.2}
+%   \PstFrameBoxThreeD[/HLEmphasize?FrameBoxThreeDColorHSB_=/HLReverse?0 0 0.3_]{Button}\hfill
+%   \PstFrameBoxThreeD[/HLEmphasize?FrameBoxThreeDColorHSB_=/HLReverse?0 0 0.7_]{Button}\hfill
+%   \PstFrameBoxThreeD[/HLEmphasize?FrameBoxThreeDColorHSB_=/HLReverse?0 0 -1_]{Button}\hfill
+%   \definecolor{MyGray}{gray}{0.85}
+%   \psframe*[linecolor=MyGray](-0.3,-0.65)(2.1,0.9)
+%   \PstFrameBoxThreeD[/HLEmphasize?FrameBoxThreeDColorHSB_=/HLReverse?0 0 -1_]{Button}%
+% \end{CenterExample}
+%
+% \begin{SideBySideExample}[xrightmargin=3cm]
+%   \PstFrameBoxThreeD%
+%     [linewidth=0.2,
+%      /HLEmphasize?FrameBoxThreeDColorHSB_=/HLReverse?0.3 0.2 0.5_]{%
+%     \Huge\textcolor{white}{\textbf{21}}}
+% \end{SideBySideExample}
+%
+% \begin{optlist}
+%   \item [FrameBoxThreeDOn (boolean)]: to simulate an ON / OFF button, by
+% exchange of the dark and light colors of the borders (this will give the
+% same result that to use a negative value for the
+% \texttt{FrameBoxThreeDBrightnessDistance} parameter)
+%   (\emph{Default:~true}).
+% \end{optlist}
+%
+% \begin{CenterExample}
+%   \PstFrameBoxThreeD[/HLEmphasize?FrameBoxThreeDColorHSB_=/HLReverse?0.1 0.9 0.5_]{%
+%     Button}\hfill
+%   \PstFrameBoxThreeD[/HLEmphasize?FrameBoxThreeDColorHSB_=/HLReverse?0.1 0.9 0.5_,
+%                      /HLEmphasize?FrameBoxThreeDOn_=/HLReverse?false_]{Button}\hfill
+%   \PstFrameBoxThreeD[/HLEmphasize?FrameBoxThreeDColorHSB_=/HLReverse?0.1 0.9 0.5_,
+%                      /HLEmphasize?FrameBoxThreeDOn_=/HLReverse?false_,linewidth=0.2]{Button}%
+% \end{CenterExample}
+%
+% \begin{CenterExample}
+%   \PstFrameBoxThreeD[linewidth=0.5,/HLEmphasize?FrameBoxThreeDOn_=/HLReverse?false_,
+%                      /HLEmphasize?FrameBoxThreeDColorHSB_=/HLReverse?0.8 0.5 0.5_]{%
+%     \Large\textcolor{yellow}{\textbf{This is your last chance...}}}
+% \end{CenterExample}
+%
+% \begin{optlist}
+%   \item [FrameBoxThreeDOpposite (boolean)]: to use the same color for the
+%   left and right borders, and the same other for the bottom and top ones, or
+%   rather for left and top and right and bottom.
+%   (\emph{Default:~false}).
+% \end{optlist}
+%
+% \begin{CenterExample}
+%   \psset{linewidth=0.2}
+%   \newcommand{\Button}{\textcolor{white}{\textbf{Button}}}
+%   \PstFrameBoxThreeD[/HLEmphasize?FrameBoxThreeDColorHSB_=/HLReverse?0.7 0.8 0.8_]{%
+%     \Button}\hfill
+%   \PstFrameBoxThreeD[/HLEmphasize?FrameBoxThreeDColorHSB_=/HLReverse?0.7 0.8 0.8_,
+%                      /HLEmphasize?FrameBoxThreeDOn_=/HLReverse?false_]{\Button}\hfill
+%   \PstFrameBoxThreeD[/HLEmphasize?FrameBoxThreeDColorHSB_=/HLReverse?0.7 0.8 0.8_,
+%                      /HLEmphasize?FrameBoxThreeDOpposite_=/HLReverse?true_]{\Button}\hfill
+%   \PstFrameBoxThreeD[/HLEmphasize?FrameBoxThreeDColorHSB_=/HLReverse?0.7 0.8 0.8_,
+%                      /HLEmphasize?FrameBoxThreeDOn_=/HLReverse?false_,
+%                      /HLEmphasize?FrameBoxThreeDOpposite_=/HLReverse?true_]{\Button}%
+% \end{CenterExample}
+%
+% \begin{optlist}
+%   \item [FrameBoxThreeDBrightnessDistance (real)]: the distance brightness
+%   of the color used to fill the interior of the box. If this is a negative
+%   number, we will got the same effect that the one of setting
+%   \texttt{FrameBoxThreeDOn} to false. And if it value is 0, the borders will
+%   have obviously the same color that the interior.
+%   (\emph{Default:~0.15} --- it must be a number between -0.5~and~0.5, but the
+%   \emph{brightness} plus and minus it must stay between 0~and~1).
+% \end{optlist}
+%
+% \begin{CenterExample}
+%   \psset{doublesep=0.2}
+%   \PstFrameBoxThreeD[/HLEmphasize?FrameBoxThreeDColorHSB_=/HLReverse?0.6 0.3 0.5_]{%
+%     Button}\hfill % /HLEmphasize?Default = 0.15_
+%   \PstFrameBoxThreeD[/HLEmphasize?FrameBoxThreeDColorHSB_=/HLReverse?0.6 0.3 0.5_,
+%                      /HLEmphasize?FrameBoxThreeDBrightnessDistance_=/HLReverse?0.3_]{%
+%     Button}\hfill
+%   \PstFrameBoxThreeD[/HLEmphasize?FrameBoxThreeDColorHSB_=/HLReverse?0.6 0.3 0.5_,
+%                      /HLEmphasize?FrameBoxThreeDBrightnessDistance_=/HLReverse?0.5_]{%
+%     Button}\hfill
+%   \PstFrameBoxThreeD[/HLEmphasize?FrameBoxThreeDColorHSB_=/HLReverse?0.6 0.3 0.7_,
+%                      /HLEmphasize?FrameBoxThreeDBrightnessDistance_=/HLReverse?0.3_]{%
+%     Button}\hfill
+%   \PstFrameBoxThreeD[/HLEmphasize?FrameBoxThreeDColorHSB_=/HLReverse?0.6 0.3 0.5_,
+%                      /HLEmphasize?FrameBoxThreeDBrightnessDistance_=/HLReverse?-0.2_]{%
+%     Button}%
+% \end{CenterExample}
+%
+% \section{Examples}
+%
+%   We give here more advanced examples.
+%
+% \begin{CenterExample}
+%   \psset{doublesep=0.12}
+%   \multido{\nButtonA=0.1+0.4}{3}{%
+%     \multido{\nButtonB=0+0.05}{11}{%
+%       \PstFrameBoxThreeD%
+%         [FrameBoxThreeDColorHSB=\nButtonA\space 0.5 0.5,
+%          FrameBoxThreeDBrightnessDistance=\nButtonB]{OK}}\\}
+% \end{CenterExample}
+%
+% \begin{CenterExample}
+%   \psset{doublesep=0.05}
+%   \multido{\nButtonA=0+0.1}{11}{%
+%     \multido{\nButtonB=0+0.05}{21}{%
+%       \PstFrameBoxThreeD[FrameBoxThreeDColorHSB=%
+%                          \nButtonB\space \nButtonA\space 0.8]{\$}}\\}
+% \end{CenterExample}
+%
+% \begin{CenterExample}
+%   \psset{gradmidpoint=1,gradangle=90}
+%   \psdblframebox[framesep=0.3,fillstyle=gradient,
+%                  gradbegin=yellow,gradend=LemonChiffon]{%
+%     \shortstack[l]{%
+%       \makebox[8cm]{\LARGE\textbf{Introduction}\dotfill}\\
+%       {\Large by Catherine \textsc{Parker}}\hfill
+%          \raisebox{5.5mm}{%
+%            \PstFrameBoxThreeD[linewidth=0.15,
+%                               FrameBoxThreeDColorHSB=0.3 0.2 0.5]{%
+%              \LARGE\textcolor{white}{3}}}}}
+% \end{CenterExample}
+%
+% \begin{CenterExample}
+%   \psshadowbox[framesep=0.3,fillstyle=gradient,
+%                gradbegin=Orange,gradend=yellow]{%
+%     \setlength{\tabcolsep}{0mm}%
+%     \begin{tabular}{ll}
+%       \makebox[10cm]{%
+%           \LARGE\textbf{Description of the problem\dotfill}} &
+%         \raisebox{-5mm}{%
+%           \PstFrameBoxThreeD[linewidth=0.15,
+%                              FrameBoxThreeDColorHSB=0.9 0.5 0.5]{%
+%             \LARGE\textcolor{white}{\textbf{25}}}}\\[-3mm]
+%       \textcolor{red}{\large by Helen \textsc{Mitchell}
+%       and Ann \textsc{Cartridge}}
+%     \end{tabular}}
+% \end{CenterExample}
+%
+% \begin{CenterExample}
+%   \newcommand{\MyNode}[2]{%
+%   \TR{\PstFrameBoxThreeD[linewidth=0.1,FrameBoxThreeDOn=#2,
+%                          FrameBoxThreeDColorHSB=0.2 0.4 0.5,
+%                          FrameBoxThreeDBrightnessDistance=0.2]{#1}}}
+%   \renewcommand{\psedge}[2]{\ncangle{#2}{#1}}
+%
+%   \psset{angleB=-90,angleA=90,levelsep=2,treesep=3}
+%   \pstree{\MyNode{Richard}{true}}
+%          {\pstree{\MyNode{Paul}{true}}
+%                  {\pstree{\MyNode{Jack}{true}}
+%                          {\MyNode{Michel}{false}}
+%                           \MyNode{Adam}{false}}
+%                   \MyNode{Herbert}{false}}
+% \end{CenterExample}
+%
+% \begin{CenterExample}
+%   \newcommand{\EntryA}[1]{%
+%   \PstFrameBoxThreeD[FrameBoxThreeDColorHSB=0.4 0.6 0.5]{%
+%     \makebox[2.2cm]{#1}}}
+%   \newcommand{\EntryB}[1]{%
+%   \PstFrameBoxThreeD[FrameBoxThreeDColorHSB=0.16 1 0.8]{%
+%     \makebox[0.5cm]{#1}}}
+%   \newcommand{\EntryC}[1]{%
+%   \PstFrameBoxThreeD[FrameBoxThreeDColorHSB=0.7 0.2 0.8]{%
+%     \makebox[1.4cm]{#1}}}
+%   \newcommand{\EntryD}[1]{%
+%   \PstFrameBoxThreeD[FrameBoxThreeDColorHSB=0.9 0.5 0.5]{%
+%     \makebox[1.4cm]{#1}}}
+%
+%   \begin{table}[htbp]
+%     \centering
+%     \large\bfseries
+%     \setlength{\tabcolsep}{5mm}%
+%     \setlength{\belowcaptionskip}{3mm}%
+%     \caption{Results of the year}
+%     \PstFrameBoxThreeD[framesep=0.4,doublesep=0.5,
+%                        FrameBoxThreeDColorHSB=0.3 0.2 0.4]{%
+%       \psset{framesep=0.3,doublesep=0.2}%
+%       \begin{tabular}{lrr}
+%         \\
+%         \EntryA{1st Quarter}&\EntryB{723}&                  \\[1.5cm]
+%         \EntryA{2nd Quarter}&\EntryB{819}&\EntryC{+13 \%}   \\[1.5cm]
+%         \EntryA{3rd Quarter}&\EntryB{687}&\EntryD{--16.1 \%}\\[1.5cm]
+%         \EntryA{4th Quarter}&\EntryB{894}&\EntryC{+30.1 \%} \\[1cm]
+%       \end{tabular}}
+%   \end{table}
+% \end{CenterExample}
+%
+%
+% \StopEventually{}
+%
+% ^^A .................... End of the documentation part ....................
+%
+% \section{Driver file}
+%
+%   The next bit of code contains the documentation driver file for \TeX{},
+% i.e., the file that will produce the documentation you are currently
+% reading. It will be extracted from this file by the \texttt{docstrip}
+% program.
+%
+%    \begin{macrocode}
+%<*driver>
+\documentclass{ltxdoc}
+\GetFileInfo{pst-fr3d.dtx}
+\usepackage{fancyvrb}
+\usepackage{multido}
+\usepackage{pstricks}
+\usepackage{pst-tree}
+\usepackage{pst-grad}
+\usepackage{pst-fr3d}
+\EnableCrossrefs
+\CodelineIndex
+\RecordChanges
+\OnlyDescription                % Comment it for implementation details
+\hbadness=7000                  % Over and under full box warnings
+\hfuzz=3pt
+\definecolor{LemonChiffon}{rgb}{1.,0.98,0.8}
+\definecolor{Orange}      {rgb}{1.,0.65,0.}
+\definecolor{Pink}        {rgb}{1.,0.75,0.8}
+\begin{document}
+  \DocInput{pst-fr3d.dtx}
+\end{document}
+%</driver>
+%    \end{macrocode}
+%
+% \section{\PstFrameBoxThreeDPackage{} \LaTeX{} wrapper}
+%
+%    \begin{macrocode}
+%<*latex-wrapper>
+\RequirePackage{pstricks}
+\ProvidesPackage{pst-fr3d}[2005/10/10 package wrapper for 
+  pst-fr3d.tex (hv)]
+\input{pst-fr3d.tex}
+\ProvidesFile{pst-fr3d.tex}
+  [\filedate\space v\fileversion\space `PST-fr3d' (dg)]
+%</latex-wrapper>
+%    \end{macrocode}
+%
+% \section{\PstFrameBoxThreeDPackage{} code}
+%
+%    \begin{macrocode}
+%<*pst-fr3d>
+%    \end{macrocode}
+%
+% \subsection{Preambule}
+%
+%   Who we are.
+%
+%    \begin{macrocode}
+\csname PstFrameBoxThreeDLoaded\endcsname
+\let\PstFrameBoxThreeDLoaded\endinput
+%    \end{macrocode}
+%
+%   Require the PSTricks package.
+%
+%    \begin{macrocode}
+\ifx\PSTricksLoaded\endinput\else\input pstricks.tex\fi
+%    \end{macrocode}
+%
+%   David \textsc{Carlisle} interface to the `\textsf{keyval}' package.
+%
+%    \begin{macrocode}
+\ifx\PSTXKeyLoaded\endinput\else\input pst-xkey \fi
+%    \end{macrocode}
+%
+%   Catcodes changes.
+%
+%    \begin{macrocode}
+\edef\PstAtCode{\the\catcode`\@}
+\catcode`\@=11\relax
+\pst@addfams{pst-fr3d}
+\def\fileversion{1.1}
+\def\filedate{2005/10/10}
+\message{`Pst-FrameBox3d' v\fileversion, \filedate\space (Denis Girou)}
+%    \end{macrocode}
+%
+% \subsection{Definition of the parameters}
+%
+%   \texttt{FrameBoxThreeDOn} to draw the 3d framed box with an ON / OFF
+% effect.
+%
+%    \begin{macrocode}
+\newif\ifPstFrameBoxThreeD@On
+\define@key[psset]{pst-fr3d}{FrameBoxThreeDOn}[true]{\@nameuse{PstFrameBoxThreeD@On#1}}
+%    \end{macrocode}
+%
+%   \texttt{FrameBoxThreeDOpposite} to use the same colors for the opposite
+% sides or the contiguous ones.
+%
+%    \begin{macrocode}
+\newif\ifPstFrameBoxThreeD@Opposite
+\define@key[psset]{pst-fr3d}{FrameBoxThreeDOpposite}[true]{%
+\@nameuse{PstFrameBoxThreeD@Opposite#1}}
+%    \end{macrocode}
+%
+%   \texttt{FrameBoxThreeDColorHSB} to define the colors used, in the HSB
+% (\emph{hue}, \emph{saturation}, \emph{brightness}) model. This is a sequence
+% of three real values, separated by spaces. This will define the color of the
+% interior of the frame. And for the borders we will use it too, changing it
+% brightness in light and dark.
+%
+%    \begin{macrocode}
+\define@key[psset]{pst-fr3d}{FrameBoxThreeDColorHSB}{%
+\PstFrameBoxThreeD@ColorHSB@i#1\@nil}
+\def\PstFrameBoxThreeD@ColorHSB@i#1\@nil{%
+\pst@expandafter\pst@getnumiii{#1} {} {} {} {}\@nil
+\edef\PstFrameBoxThreeD@Hue{\pst@tempg}%
+\edef\PstFrameBoxThreeD@Saturation{\pst@temph}%
+\edef\PstFrameBoxThreeD@Brightness{\pst@tempi}}
+%    \end{macrocode}
+%
+%   \texttt{FrameBoxThreeDBrightnessDistance} to define the brightness
+% distance between the brightness used for the material of the box
+% (\texttt{BrightnessC}) and the two brightnesss used for the borders
+% (\texttt{BrightnessA} and \texttt{BrightnessB}): \texttt{BrightnessA} =
+% \texttt{BrightnessC} + \texttt{FrameBoxThreeDBrightnessDistance} and
+% \texttt{BrightnessB} = \texttt{BrightnessC} --
+% \texttt{FrameBoxThreeDBrightnessDistance}. It can be a negative number. And
+% if the brightness is negative, we will use a value of 0.5 to compute the two
+% other colors.
+%
+%    \begin{macrocode}
+\define@key[psset]{pst-fr3d}{FrameBoxThreeDBrightnessDistance}{%
+\edef\PstFrameBoxThreeD@BrightnessDistance{#1}}
+%    \end{macrocode}
+%
+%   Next, we set the default values for all these new parameters.
+%
+%    \begin{macrocode}
+\psset{%
+  FrameBoxThreeDOn=true,FrameBoxThreeDOpposite=false,
+  FrameBoxThreeDColorHSB=0 0 0.5,FrameBoxThreeDBrightnessDistance=0.15}%
+%    \end{macrocode}
+%
+% \subsection{Main macro}
+%
+%   The general \cs{PstFrameBoxThreeD} macro to draw three dimensional boxed
+% frames.
+%
+% \begin{macro}{\PstFrameBoxThreeD}
+%    \begin{macrocode}
+\def\PstFrameBoxThreeD{%
+\@ifnextchar[{\PstFrameBoxThreeD@i}{\PstFrameBoxThreeD@i[]}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\PstFrameBoxThreeD@i}
+%    \begin{macrocode}
+\def\PstFrameBoxThreeD@i[#1]#2{{%
+%    \end{macrocode}
+%
+%   We force ``dimmen=middle''.
+%
+%    \begin{macrocode}
+\psset{dimen=middle}%
+%    \end{macrocode}
+%
+%   Then we set the local changes of parameters.
+%
+%    \begin{macrocode}
+\psset{#1}%
+%    \end{macrocode}
+%
+%
+%   If the brightness is negative, the interior of the frame will not be
+% filled with color, and a value of 0.5 will be used to compute the two colors
+% of the borders.
+%
+%    \begin{macrocode}
+\ifdim\PstFrameBoxThreeD@Brightness\p@<\z@%
+  \def\PstFrameBoxThreeD@FillStyle{none}%
+  \def\pst@tempa{0.5}%
+\else
+  \def\PstFrameBoxThreeD@FillStyle{solid}%
+  \def\pst@tempa{\PstFrameBoxThreeD@Brightness}%
+\fi
+%    \end{macrocode}
+%
+%   Computation of the colors of the borders.
+%
+%    \begin{macrocode}
+\pst@dimh=\pst@tempa\p@
+\advance\pst@dimh\PstFrameBoxThreeD@BrightnessDistance\p@
+\pst@dimtonum{\pst@dimh}{\pst@tempb}%
+\advance\pst@dimh-\PstFrameBoxThreeD@BrightnessDistance\p@
+\advance\pst@dimh-\PstFrameBoxThreeD@BrightnessDistance\p@
+\pst@dimtonum{\pst@dimh}{\pst@tempc}%
+%    \end{macrocode}
+%
+%   If the \ColorPackage{} \LaTeX{} package was not loaded (using the
+% \PstColPackage{} compatibility package which is hightly recommanded for
+% \LaTeX{} users), we will use the PSTricks color model.
+%
+%    \begin{macrocode}
+\ifx\definecolor\@undefined
+  \newhsbcolor{PstFrameBoxThreeD@ColorC}{%
+    \PstFrameBoxThreeD@Hue \PstFrameBoxThreeD@Saturation \pst@tempa}%
+  \ifPstFrameBoxThreeD@On
+    \newhsbcolor{PstFrameBoxThreeD@ColorA}{%
+      \PstFrameBoxThreeD@Hue \PstFrameBoxThreeD@Saturation \pst@tempc}%
+    \newhsbcolor{PstFrameBoxThreeD@ColorB}{%
+      \PstFrameBoxThreeD@Hue \PstFrameBoxThreeD@Saturation \pst@tempb}%
+  \else
+    \newhsbcolor{PstFrameBoxThreeD@ColorA}{%
+      \PstFrameBoxThreeD@Hue \PstFrameBoxThreeD@Saturation \pst@tempb}%
+    \newhsbcolor{PstFrameBoxThreeD@ColorB}{%
+      \PstFrameBoxThreeD@Hue \PstFrameBoxThreeD@Saturation \pst@tempc}%
+  \fi
+%    \end{macrocode}
+%
+%   If the \ColorPackage{} \LaTeX{} package was loaded, we will use it as
+% color model.
+%
+%    \begin{macrocode}
+\else
+  \definecolor{PstFrameBoxThreeD@ColorC}{hsb}{%
+    \PstFrameBoxThreeD@Hue,\PstFrameBoxThreeD@Saturation,\pst@tempa}%
+  \ifPstFrameBoxThreeD@On
+    \definecolor{PstFrameBoxThreeD@ColorA}{hsb}{%
+      \PstFrameBoxThreeD@Hue,\PstFrameBoxThreeD@Saturation,\pst@tempc}%
+    \definecolor{PstFrameBoxThreeD@ColorB}{hsb}{%
+      \PstFrameBoxThreeD@Hue,\PstFrameBoxThreeD@Saturation,\pst@tempb}%
+  \else
+    \definecolor{PstFrameBoxThreeD@ColorA}{hsb}{%
+      \PstFrameBoxThreeD@Hue,\PstFrameBoxThreeD@Saturation,\pst@tempb}%
+    \definecolor{PstFrameBoxThreeD@ColorB}{hsb}{%
+      \PstFrameBoxThreeD@Hue,\PstFrameBoxThreeD@Saturation,\pst@tempc}%
+  \fi
+\fi
+%    \end{macrocode}
+%
+%   Now, we can \emph{really} draw the box and the borders.
+%
+%   No lines here.
+%
+%    \begin{macrocode}
+\psset{linestyle=none}%
+%    \end{macrocode}
+%
+%   We draw the material in a standard \cs{psframebox} macro, defining
+% \texttt{doubleline} to \texttt{true}, to compute correctly the bounding box
+% of the box with it borders.
+%
+%    \begin{macrocode}
+\psframebox[fillstyle=\PstFrameBoxThreeD@FillStyle,
+            fillcolor=PstFrameBoxThreeD@ColorC,doubleline=true]{#2}%
+%    \end{macrocode}
+%
+%   We save the material to frame in an internal box, without the size of it
+% borders.
+%
+%    \begin{macrocode}
+\setbox\pst@boxg=\hbox{\psframebox{#2}}%
+%    \end{macrocode}
+%
+%   Then we save in another internal box the same thing, this time with the
+% size of it borders.
+%
+%    \begin{macrocode}
+\setbox\pst@hbox=\hbox{\psframebox[doubleline=true]{#2}}%
+%    \end{macrocode}
+%
+%   We compute the four internal coordinates for the borders.
+%
+%    \begin{macrocode}
+\pst@dima=\wd\pst@hbox
+\advance\pst@dima-\wd\pst@boxg
+\divide\pst@dima\tw@
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\pst@dimb=\pst@dima
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\advance\pst@dima\wd\pst@boxg
+%    \end{macrocode}
+%
+%   Now, we can draw the borders, of course in a \texttt{solid} mode.
+%
+%    \begin{macrocode}
+\psset{fillstyle=solid}%
+%    \end{macrocode}
+%
+%   We draw first the left then the top borders.
+%
+%    \begin{macrocode}
+\pspolygon[fillcolor=PstFrameBoxThreeD@ColorA]
+          (-\wd\pst@hbox,-\dp\pst@hbox)(-\pst@dima,-\dp\pst@boxg)
+          (-\pst@dima,\ht\pst@boxg)(-\wd\pst@hbox,\ht\pst@hbox)
+\pspolygon[fillcolor=PstFrameBoxThreeD@ColorB]
+          (-\wd\pst@hbox,\ht\pst@hbox)(-\pst@dima,\ht\pst@boxg)
+          (-\pst@dimb,\ht\pst@boxg)(0,\ht\pst@hbox)
+%    \end{macrocode}
+%
+%   We must compute the colors of the two other borders.
+%
+%    \begin{macrocode}
+\ifPstFrameBoxThreeD@Opposite
+  \def\pst@tempa{PstFrameBoxThreeD@ColorA}%
+  \def\pst@tempb{PstFrameBoxThreeD@ColorB}%
+\else
+  \def\pst@tempa{PstFrameBoxThreeD@ColorB}%
+  \def\pst@tempb{PstFrameBoxThreeD@ColorA}%
+\fi
+%    \end{macrocode}
+%
+%   Now, we draw the right then the bottom borders.
+%
+%    \begin{macrocode}
+\pspolygon[fillcolor=\pst@tempa]
+          (0,-\dp\pst@hbox)(-\pst@dimb,-\dp\pst@boxg)
+          (-\pst@dimb,\ht\pst@boxg)(0,\ht\pst@hbox)
+\pspolygon[fillcolor=\pst@tempb]
+          (-\wd\pst@hbox,-\dp\pst@hbox)(-\pst@dima,-\dp\pst@boxg)
+          (-\pst@dimb,-\dp\pst@boxg)(0,-\dp\pst@hbox)
+%    \end{macrocode}
+%
+%   And, to finish, a dark oblique line in the middle of the light border and
+% a light oblique line in the middle of the dark border, if the identical
+% colors are contiguous.
+%
+%    \begin{macrocode}
+\ifPstFrameBoxThreeD@Opposite
+\else
+  \psset{linestyle=solid,linewidth=0.2pt,arrows=cc-cc}%
+  \psline[linecolor=PstFrameBoxThreeD@ColorA]
+         (-\pst@dimb,\ht\pst@boxg)(0,\ht\pst@hbox)
+  \psline[linecolor=PstFrameBoxThreeD@ColorB]
+         (-\wd\pst@hbox,-\dp\pst@hbox)(-\pst@dima,-\dp\pst@boxg)
+\fi}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsection{Closing}
+%
+%   Catcodes restoration.
+%
+%    \begin{macrocode}
+\catcode`\@=\PstAtCode\relax
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+%</pst-fr3d>
+%    \end{macrocode}
+%
+% \Finale
+% \PrintIndex
+% \PrintChanges
+%
+\endinput
+%%
+%% End of file `pst-fr3d.dtx'

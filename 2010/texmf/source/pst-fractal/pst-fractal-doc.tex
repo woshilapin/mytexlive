@@ -1,0 +1,507 @@
+%% $Id: pst-func-doc.tex 273 2010-01-26 18:28:55Z herbert $
+\documentclass[11pt,english,BCOR10mm,DIV12,bibliography=totoc,parskip=false,
+   smallheadings, headexclude,footexclude,oneside]{pst-doc}
+\usepackage[utf8]{inputenc}
+\usepackage{pst-fractal,pst-exa}
+\let\pstFV\fileversion
+\renewcommand\bgImage{\includegraphics[scale=1.5]{images/pst-fractal-doc-tmp-1.pdf}}
+\def\PSLenv{\Lenv{pspicture}}
+
+\lstset{language=PSTricks,basicstyle=\footnotesize\ttfamily}
+%
+\begin{document}
+
+\title{\texttt{pst-fractal}}
+\subtitle{Plotting fractals; v.\pstFV}
+\author{Herbert Vo\ss}
+\docauthor{}
+\date{\today}
+\maketitle
+
+\tableofcontents
+
+\clearpage
+
+\begin{abstract}
+\noindent
+The well known \LPack{pstricks} package offers excellent macros to insert more or less complex 
+graphics into a document. \LPack{pstricks} itself is the base for several other additional packages, 
+which are mostly named \verb+pst-xxxx+, like \LPack{pst-fractal}.
+
+This version uses the extended keyval package \LPack{xkeyval}, so be sure that you have installed
+this package together with the spcecial one \LPack{pst-xkey} for PSTricks. The \LPack{xkeyval}
+package is available at \url{CTAN:/macros/latex/contrib/xkeyval/}.
+It is also important that after \LPack{pst-fractal} no package is loaded, which uses the old keyval interface.
+
+The fractals are really big, which is the reason why this document is about 15 MByte
+when you run it without using the external png-images.
+\end{abstract}%
+
+All images in this documentation were converted to the \Lext{jpg} format to get
+a small pdf file size. When using the pdf format for the images the file size will be
+more than 20 MBytes. However, having a small file size will lead into a bad image
+resolution. Run the examples as single documents to see how it will be in
+high quality.
+
+
+\section{Sierpinski triangle}
+
+The triangle must be given by three mandatory arguments. Depending to the kind of
+arguments it is one of the two possible versions:
+
+\begin{BDef}
+\Lcs{psSier}\OptArgs\coord0\coord1\coord2\\
+\Lcs{psSier}\OptArgs\coord0\Largb{Base}\Largb{Recursion}
+\end{BDef}
+
+In difference to \Lcs{psfractal} it doesn't reserve any space, this is the
+reason why it should be part of a \PSLenv{} environment.
+
+\begin{PSTexample}[pos=l]
+\begin{pspicture}(5,5)
+  \psSier(0,0)(2,5)(5,0)
+\end{pspicture}
+\end{PSTexample}
+
+
+\begin{PSTexample}[pos=l]
+\begin{pspicture}(5,5)
+\psSier[linecolor=blue!70,
+   fillcolor=red!40](0,0){5cm}{4}
+\end{pspicture}
+\end{PSTexample}
+
+
+\section{Julia and Mandelbrot sets}
+
+The syntax of the \Lcs{psfractal} macro is simple
+
+\begin{BDef}
+\Lcs{psfractal}\OptArgs\coord0\coord1
+\end{BDef}
+All Arguments are optional, \Lcs{psfractal} is the same as \Lcs{psfractal}\verb+(-1,-1)(1,1)+.
+The Julia and Mandelbrot sets are a graphical representation of the following sequence
+$x$ is the real and $y$ the imaginary part of the complex number $z$. $C(x,y)$ is a complex constant
+and preset by $(0,0)$.
+\begin{align}
+z_{n+1}(x,y) &= (z_n(x,y))^2 +C(x,y)
+\end{align}
+
+\subsection{Julia sets}
+
+A Julia set is given with
+
+\begin{align}
+z_{n+1}(x,y) &= (z_n(x,y))^2 +C(x,y)\\
+z_0 	     &= (x_0;y_0)
+\end{align}
+$(x_0;y_0)$ is the starting value.
+
+\begin{PSTexample}[pos=l]
+\pspicture(-1,-1)(1,1)\psfractal\endpspicture
+\end{PSTexample}
+
+\begin{PSTexample}[pos=l]
+\pspicture(-2,-2)(2,2)
+\psfractal[xWidth=4cm,yWidth=4cm, baseColor=white, dIter=20](-2,-2)(2,2)
+\endpspicture
+\end{PSTexample}
+
+
+\subsection{Mandelbrot sets}
+
+A Mandelbrot set is given with
+
+\begin{align}
+z_{n+1}(x,y) &= (z_n(x,y))^2 +C(x,y)\\
+z_0 	     &= (0;0)\\
+C(x,y) 	     &= (x_0;y_0)
+\end{align}
+
+$(x_0;y_0)$ is the starting value.
+
+\begin{PSTexample}[pos=l]
+\pspicture(-1,-1)(1,1)
+\psfractal[type=Mandel]
+\endpspicture
+\end{PSTexample}
+
+
+\begin{PSTexample}[pos=l]
+\pspicture(-2,-2)(2,2)
+\psfractal[type=Mandel, xWidth=6cm, 
+  yWidth=4.8cm, baseColor=white, 
+  dIter=10](-2,-1.2)(1,1.2)
+\endpspicture
+\end{PSTexample}
+
+\subsection{The options}
+
+
+\subsection{\texttt{type}}
+\Lkeyword{txpe} can be of \Lkeyval{Julia} (default) or \Lkeyval{Mandel}.
+
+
+\begin{PSTexample}[pos=l]
+\pspicture(-1,-1)(3,1)
+\psfractal
+\psfractal[type=Mandel]
+\endpspicture
+\end{PSTexample}
+
+\subsection{\texttt{baseColor}}
+The color for the convergent part is set by \Lkeyword{baseColor}.
+
+\begin{PSTexample}
+\begin{postscript}
+\psfractal[xWidth=4cm,yWidth=4cm,dIter=30](-2,-2)(2,2)
+\psfractal[xWidth=4cm,yWidth=4cm,baseColor=yellow,dIter=30](-2,-2)(2,2)
+\end{postscript}
+\end{PSTexample}
+
+
+\subsection{\texttt{xWidth} and \texttt{yWidth}}
+\Lkeyword{xWidth} and \Lkeyword{yWidth} 
+ define the physical width of the fractal.
+
+\begin{PSTexample}
+\begin{postscript}
+\psfractal[type=Mandel,xWidth=12.8cm,yWidth=10.8cm,dIter=5](-2.5,-1.3)(0.7,1.3)
+\end{postscript}
+\end{PSTexample}
+
+\subsection{\texttt{cx} and \texttt{cy}}\xLkeyword{cx}\xLkeyword{cy}
+Define the starting value for the complex constant number $C$.
+
+\begin{PSTexample}
+\begin{postscript}
+\psset{xWidth=5cm,yWidth=5cm}
+\psfractal[dIter=2](-2,-2)(2,2)
+\psfractal[dIter=2,cx=-1.3,cy=0](-2,-2)(2,2)
+\end{postscript}
+\end{PSTexample}
+
+
+\subsection{\texttt{dIter}}
+The color is set by \Index{wavelength} to RGB conversion of the iteration number, where
+\Lkeyword{dIter} is the step, predefined by 1. The wavelength is given by
+the value of \Lps{iter} added by 400.
+
+\begin{PSTexample}
+\begin{postscript}
+\psset{xWidth=5cm,yWidth=5cm}
+\psfractal[dIter=30](-2,-2)(2,2)
+\psfractal[dIter=10,cx=-1.3,cy=0](-2,-2)(2,2)
+\end{postscript}
+\end{PSTexample}
+
+\subsection{\texttt{maxIter}}
+\Lkeyword{maxIter} is the number of the maximum iteration until it leaves the loop.
+It is predefined by 255, but internally multiplied by \Lkeyword{dIter}.
+
+\begin{PSTexample}
+\begin{postscript}
+\psset{xWidth=5cm,yWidth=5cm}
+\psfractal[maxIter=50,dIter=3](-2,-2)(2,2)
+\psfractal[maxIter=30,cx=-1.3,cy=0](-2,-2)(2,2)
+\end{postscript}
+\end{PSTexample}
+
+\subsection{\texttt{maxRadius}}
+If the square of distance of $z_n$ to the origin of the complex coordinate system
+is greater as \Lkeyword{maxRadius} then the algorithm  leaves the loop
+and sets the point. \Lkeyword{maxRadius} should always be the square of the "`real"'
+value, it is preset by 100.  
+
+\begin{PSTexample}
+\begin{postscript}
+\psset{xWidth=5cm,yWidth=5cm}
+\psfractal[maxRadius=30,dIter=10](-2,-2)(2,2)
+\psfractal[maxRadius=30,dIter=30,cx=-1.3,cy=0](-2,-2)(2,2)
+\end{postscript}
+\end{PSTexample}
+
+\subsection{\texttt{plotpoints}}\xLkeyword{plotpoints}
+This option is only valid for the Sierpinski triangle and preset by 2000.
+
+\begin{PSTexample}
+\begin{pspicture}(5,5)
+  \psSier(0,0)(2.5,5)(5,0)
+\end{pspicture}
+\begin{pspicture}(5,5)
+  \psSier[plotpoints=10000](0,0)(2.5,5)(5,0)
+\end{pspicture}
+\end{PSTexample}
+
+
+
+\section{Phyllotaxis}
+The beautiful arrangement of leaves in some plants, called phyllotaxis, 
+obeys a number of subtle mathematical relationships. For instance, the florets 
+in the head of a sunflower form two oppositely directed spirals: 55 of them clockwise 
+and 34 counterclockwise. Surprisingly, these numbers are consecutive Fibonacci numbers. 
+The Phyllotaxis is like a Lindenmayer system.
+
+\begin{BDef}
+\Lcs{psPhyllotaxis}\OptArgs\Largr{\CAny}
+\end{BDef}
+
+The coordinates of the center are optional, if they are missing, then $(0,0)$
+is assumed.
+
+
+\begin{PSTexample}[pos=l]
+\begin{postscript}
+\psframebox{\begin{pspicture}(-3,-3)(3,3)
+  \psPhyllotaxis
+\end{pspicture}}
+\end{postscript}
+\end{PSTexample}
+
+
+
+\begin{PSTexample}[pos=l]
+\begin{postscript}
+\psframebox{\begin{pspicture}(-3,-3)(4,4)
+  \psPhyllotaxis(1,1)
+\end{pspicture}}
+\end{postscript}
+\end{PSTexample}
+
+\subsection{\texttt{angle}}\xLkeyword{angle}
+
+\begin{PSTexample}[pos=l]
+\begin{postscript}
+\psframebox{\begin{pspicture}(-2.5,-2.5)(2.5,2.5)
+  \psPhyllotaxis[angle=99]
+\end{pspicture}}
+\end{postscript}
+\end{PSTexample}
+
+\subsection{\texttt{c}}\xLkeyword{c}
+This is the length of one element in the unit pt.
+
+\begin{PSTexample}
+\begin{postscript}
+\psframebox{\begin{pspicture}(8,8)
+  \psPhyllotaxis[c=7](4,4)
+\end{pspicture}}
+\end{postscript}
+\end{PSTexample}
+
+\begin{PSTexample}
+\begin{postscript}
+\psframebox{\begin{pspicture}(-3,-3)(3,3)
+  \psPhyllotaxis[c=4,angle=111]
+\end{pspicture}}
+\end{postscript}
+\end{PSTexample}
+
+\subsection{\texttt{maxIter}}\xLkeyword{maxIter}
+This is the number for the iterations.
+
+\begin{PSTexample}
+\begin{postscript}
+\psframebox{\begin{pspicture}(-3,-3)(3,3)
+  \psPhyllotaxis[c=6,angle=111,maxIter=100]
+\end{pspicture}}
+\end{postscript}
+\end{PSTexample}
+
+
+
+\section{Fern}
+
+\begin{BDef}
+\Lcs{psFern}\OptArgs\Largr{\CAny}
+\end{BDef}
+
+The coordinates of the starting point are optional, if they are missing, then $(0,0)$
+is assumed. The default \Lkeyword{scale} is set to 10.
+
+\begin{PSTexample}
+\begin{postscript}
+\psframebox{\begin{pspicture}(-1,0)(1,4)
+  \psFern
+\end{pspicture}}
+\end{postscript}
+\end{PSTexample}
+
+\begin{PSTexample}
+\begin{postscript}
+\psframebox{\begin{pspicture}(-1,0)(2,5)
+  \psFern(1,1)
+\end{pspicture}}
+\end{postscript}
+\end{PSTexample}
+
+\begin{PSTexample}
+\begin{postscript}
+\psframebox{\begin{pspicture}(-3,0)(3,11)
+  \psFern[scale=30,maxIter=100000,linecolor=green]
+\end{pspicture}}
+\end{postscript}
+\end{PSTexample}
+
+
+\section{Koch flake}
+
+\begin{BDef}
+\Lcs{psKochflake}\OptArgs\Largr{\CAny}
+\end{BDef}
+
+The coordinates of the starting point are optional, if they are missing, then $(0,0)$
+is assumed. The origin is the lower left point of the flake, marked as red 
+or black point
+in the following example:
+
+\begin{PSTexample}
+\begin{pspicture}[showgrid=true](-2.4,-0.4)(5,5)
+  \psKochflake[scale=10]
+  \psdot[linecolor=red,dotstyle=*](0,0)
+\end{pspicture}
+\end{PSTexample}
+
+\begin{PSTexample}
+\begin{pspicture}(-0.4,-0.4)(12,4)
+  \psset{fillcolor=lime,fillstyle=solid}
+  \multido{\iA=0+1,\iB=0+2}{6}{%
+    \psKochflake[angle=-30,scale=3,maxIter=\iA](\iB,2.5)\psdot*(\iB,2.5)
+    \psKochflake[scale=3,maxIter=\iA](\iB,0)\psdot*(\iB,0)}
+\end{pspicture}
+\end{PSTexample}
+
+Optional arguments are \Lkeyword{scale}, \Lkeyword{maxIter} (iteration depth) and \Lkeyword{angle}
+for the first rotation angle.
+
+
+\section{Apollonius circles}
+
+\begin{BDef}
+\Lcs{psAppolonius}\OptArgs\Largr{\CAny}
+\end{BDef}
+
+The coordinates of the starting point are optional, if they are missing, then $(0,0)$
+is assumed. The origin is the center of the circle:
+
+\begin{PSTexample}
+\begin{pspicture}[showgrid=true](-4,-4)(4,4)
+  \psAppolonius[Radius=4cm]
+\end{pspicture}
+\end{PSTexample}
+
+
+\begin{PSTexample}
+\begin{pspicture}(-5,-5)(5,5)
+  \psAppolonius[Radius=5cm,Color]
+\end{pspicture}
+\end{PSTexample}
+
+
+\section{Trees}
+
+\begin{BDef}
+\Lcs{psPTree}\OptArgs\Largr{\CAny}
+\Lcs{psFArrow}\OptArgs\Largr{\CAny}\Largb{fraction}
+\end{BDef}
+
+The coordinates of the starting point are optional, if they are missing, then $(0,0)$
+is assumed. The origin is the center of the lower line, shown in the following examples
+by the dot. Special parameters are the width of the lower basic line for the tree and the
+height and angle for the arrow and for both the color option. The color step is given by \Lkeyword{dIter}
+and the depth by \Lkeyword{maxIter}. Valid optional arguments are
+
+\medskip
+\begin{center}
+\begin{tabular}{@{}>{\ttfamily}lll@{}}
+\emph{Name} & \emph{Meaning} & \emph{default}\\\hline
+\Lkeyword{xWidth}   & first base width & 1cm\\
+\Lkeyword{minWidth} & last base width  & 1pt\\
+\Lkeyword{c}	    & factor for unbalanced trees (0<c<1) & 0.5\\
+\Lkeyword{Color}    & colored tree     & fasle
+\end{tabular}
+\end{center}
+
+\bigskip
+\begin{PSTexample}
+\begin{pspicture}[showgrid=true](-3,0)(3,4)
+  \psPTree   
+  \psdot*(0,0)
+\end{pspicture}
+\end{PSTexample}
+
+\begin{PSTexample}
+\begin{pspicture}[showgrid=true](-6,0)(6,7)
+  \psPTree[xWidth=1.75cm,Color=true]
+  \psdot*[linecolor=white](0,0)
+\end{pspicture}
+\end{PSTexample}
+
+\begin{PSTexample}
+\begin{pspicture}(-7,-1)(6,8)
+  \psPTree[xWidth=1.75cm,c=0.35]
+\end{pspicture}
+\end{PSTexample}
+
+\begin{PSTexample}
+\begin{pspicture}(-5,-1)(7,8)
+  \psPTree[xWidth=1.75cm,Color=true,c=0.65]
+\end{pspicture}
+\end{PSTexample}
+
+\begin{PSTexample}
+\begin{pspicture}[showgrid=true](-1,0)(1,3)
+  \psFArrow{0.5}
+\end{pspicture}
+\quad
+\begin{pspicture}[showgrid=true](-2,0)(2,3)
+  \psFArrow{0.6}
+\end{pspicture}
+\quad
+\begin{pspicture*}[showgrid=true](-3,0)(3,3.5)
+  \psFArrow[linewidth=3pt]{0.65}
+\end{pspicture*}
+\end{PSTexample}
+
+
+\begin{PSTexample}
+\begin{pspicture}(-1,0)(1,3)
+  \psFArrow[Color]{0.5}
+\end{pspicture}
+\quad
+\begin{pspicture}(-2,0)(2,3)
+  \psFArrow[Color]{0.6}
+\end{pspicture}
+\quad
+\begin{pspicture*}(-3,0)(3,3.5)
+  \psFArrow[Color]{0.65}
+\end{pspicture*}
+\end{PSTexample}
+
+
+\begin{PSTexample}
+\begin{pspicture}(-3,-3)(2,3)
+  \psFArrow[Color]{0.6}
+  \psFArrow[angle=90,Color]{0.6}
+\end{pspicture}
+\quad
+\begin{pspicture*}(-4,-3)(3,3)
+  \psFArrow[Color]{0.7}
+  \psFArrow[angle=90,Color]{0.7}
+\end{pspicture*}
+\end{PSTexample}
+
+\section{List of all optional arguments for \texttt{pst-fractal}}
+
+\xkvview{family=pst-fractal,columns={key,type,default}}
+
+\bgroup
+\raggedright
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{pst-fractal-doc}
+\egroup
+
+\printindex
+
+\end{document}

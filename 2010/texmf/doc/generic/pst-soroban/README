@@ -1,0 +1,10 @@
+pst-soroban: creates abacus images
+
+pst-soroban.sty     - The LaTeX style file
+pst-soroban-doc.pdf - The documentation
+pst-soroban-doc.tex - The documentation, source
+pst-soroban-doc.bib - The documentation, bibfile
+
+
+--
+Herbert Voss 2007-10-13

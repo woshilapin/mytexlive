@@ -1,0 +1,41 @@
+pstricks-add redefines a lot of the pstricks macros.  
+#
+#  Do not load another PSTricks related package after pstricks-add!!
+#
+pstricks-add collects a lot of the code which was posted
+to the pstricks mailing list and has some more new features:
+
+- pstricks
+   o random dots
+   O braces
+   o define and calculate colors on PS side
+   o Gouraud shading
+   o braces as node connection/linestyle
+   o line style bar
+   o lines, drawn "by hand"
+   o arrows, arrows, arrows, ...
+
+- pst-plot
+   o new syntax for \psplot and \psparametricplot
+   o new macro psTangentLine
+   o new macro psplotTangent
+   o new macro psplotDiffEqn
+
+- pst-node
+   o new option lineAngle for ncdiag
+   o new macros for interpolation nodes
+     and linear combination of two vectors
+   o new macro ncbarr (line with 5 segments)
+
+
+pstricks-add.pro    : the prolog file for pstricks-add
+pstricks-add-doc.tex: the included doc file
+
+Save the files pstricks-add.sty|pro|tex in a directory, 
+which is part of your  local TeX tree. The pro file should go 
+into $TEXMF/dvips/pstricks/
+Then do not forget to run texhash to update this tree.
+For more information  see the documentation of your LATEX distribution 
+on installing packages into your local TeX system or read the 
+TeX Frequently Asked Questions:
+(http://www.tex.ac.uk/cgi-bin/texfaq2html?label=instpackages).

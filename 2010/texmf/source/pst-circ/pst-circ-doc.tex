@@ -1,0 +1,3774 @@
+%% $Id: pst-circ-doc.tex 497 2011-05-12 11:29:52Z herbert $
+\documentclass[11pt,english,BCOR10mm,DIV12,bibliography=totoc,parskip=false,smallheadings
+    headexclude,footexclude,oneside]{pst-doc}
+\usepackage[utf8]{inputenc}
+\usepackage{pst-circ}
+\usepackage{amsmath}
+\let\pstCircFV\fileversion
+\lstset{explpreset={pos=l,wide=false,rframe=},language=PSTricks,
+    morekeywords={multidipole,parallel},basicstyle=\footnotesize\ttfamily}
+%
+\newcommand\CircPackage{\LPack{pst-circ}}
+\makeatletter
+\renewenvironment{description}
+  {\list{}{\labelwidth\z@ \itemindent-\leftmargin
+    \itemsep0pt \parsep0pt
+    \let\makelabel\descriptionlabel}}
+  {\endlist}
+\makeatother
+
+\def\bgImage{\resizebox{0.75\linewidth}{!}{%
+\begin{pspicture}(1,2)(19,9)
+  \pnode(2,8){A}  \antenna{90}(A)
+  \rput(4,8){\rnode{B}{\psframebox{\begin{tabular}{c}Ferrite\\Switch\end{tabular}}}}
+  \ncline{A}{B}
+  %%% Branche Calibration
+  \pnode(4,6){C} \pnode(4,4){D} \pnode(5,5){E}
+  \circulator[tripolestyle=isolator,tripoleconfig=right]{90}(C)(D)(E){Isolator}{}
+  \ncline{B}{C}
+  \pnode(3,3){F} \pnode(5,3){G}
+  \resistor[unit=0.5,dipolestyle=zigzag,variable=true](F)(G){}
+  \pnode(4,3){H}
+  \ncline{D}{H}
+  \rput[t](4,2.75){%
+    \begin{tabular}{c}
+        Hot and Cold\\
+        loads for calibration
+        \end{tabular}}
+  %%% Branche reception
+  \pnode(6,8){R1}  \pnode(8,8){R2}  \pnode(7,7){X1}
+  \circulator[tripolestyle=isolator,tripoleconfig=right]{180}(R1)(R2)(X1){Isolator}{}
+  \ncline{B}{R1}
+  \pnode(10,8){R3}  \pnode(9,7){X2}
+  \mixer[inputarrow,fillcolor=blue,fillstyle=solid](R2)(R3)(X2){Mixer}{}
+  \pnode(9,6){X3}
+  \oscillator[output=top](X3){LO}{}
+  \pnode(12,8){R4}
+  \ncline{R3}{R4}
+  \naput{0.5~GHZ}
+  \pnode(14,8){R5}
+  \filter(R4)(R5){BPF}%
+  \pnode(16,8){R6}
+  \amplifier[inputarrow=true,fillcolor=red,fillstyle=solid](R5)(R6){IF~Amp}
+  \pnode(18,8){R7}
+  \detector[inputarrow=true](R6)(R7){Detector}
+  \pnode(18,4){R8}
+  \amplifier[inputarrow=true,labeloffset=-1](R7)(R8){Amp}
+  \pscircle[fillstyle=solid,fillcolor=white](18,4){0.1}
+  \rput[t](18,3.9){%
+    \begin{tabular}{c}
+        Output\\
+        for processing
+    \end{tabular}}
+\end{pspicture}}
+}
+\lstset{preset={\centering},vsep=5mm}
+
+
+\begin{document}
+
+\title{\texttt{pst-circ}}
+\subtitle{A PSTricks package for drawing electric circuits; v.\pstCircFV}
+\author{%Christoph Jorssen \\
+Herbert Vo\ss}
+%\docauthor{Herbert Vo\ss}
+\date{\today}
+\maketitle
+
+\tableofcontents
+
+\clearpage
+
+\begin{abstract}
+\noindent
+The package \LPack{pst-circ} is a collection of graphical elements based
+on PStricks that can be used to facilitate display of electronic
+circuit elements. For example, an equivalent circuit of a voltage
+source, its source impedance, and a connected load can easily be
+constructed along with arrows indicating current flow and potential
+differences. The emphasis is upon the circuit elements and the
+details of the exact placement are hidden as much as possible so the
+author can focus on the circuitry without the distraction of sorting
+out the underlying vector graphics.
+
+\LPack{pst-circ} loads by default the following packages: \LPack{pst-node}, 
+\LPack{multido}, \LPack{pst-xkey}, and, of course \LPack{pstricks}.
+All should be already part of your local \TeX\ installation. If not, or in case
+of having older versions, go to \url{http://www.CTAN.org/} and load the newest version.
+
+\vfill\noindent
+\begingroup\setlength\emergencystretch{3em}\raggedright
+\sloppy
+Thanks to: \\
+\mbox{Rafal Bartczuk},
+\mbox{Christoph Bersch}, 
+\mbox{Fran\c{c}ois Boone}, 
+    \mbox{Jean-C\^ome Charpentier},
+    \mbox{Patrick Drechsler},
+    \mbox{Amit Finkler},
+    \mbox{Felix Gottwald},
+    \mbox{Markus Graube},
+    \mbox{Henning Heinze},
+    \mbox{Christoph Jorssen},
+    \mbox{Bernd Landwehr},
+    \mbox{Michael Lauterbach},
+    \mbox{Manuel Luque}, 
+    \mbox{Steven P. McPherson}, 
+    \mbox{Ted Pavlic}, 
+    \mbox{Alan Ristow},
+    \mbox{Uwe Siart},
+\mbox{Douglas Waud}, and
+\mbox{Richard Weissnar}.
+\endgroup
+\end{abstract}
+
+\clearpage
+
+\section{The basic system}
+
+\subsection{Parameters}
+
+There are specific paramaters defined to change easily the behaviour of the pst-circ
+objects you are drawing. You'll find a list in Section~\ref{sec:para} on p.~\pageref{sec:para}.
+
+\iffalse
+\begin{longtable}{@{}>{\ttfamily}l l l@{}}
+\textrm{\emph{name}} & \emph{type} & \emph{default}\\\hline
+\endhead
+\Lkeyword{intensity} & boolean &  \emph{false} \\
+\Lkeyword{intensitylabel} & string &  \emph{ } \\
+\Lkeyword{intensitylabeloffset} & dimension &  \emph{ 0.5} \\
+\Lkeyword{intensitycolor} & color &  \emph{ black} \\
+\Lkeyword{intensitylabelcolor} & color &  \emph{ black} \\
+\Lkeyword{intensitywidth} & dimension &  \emph{ \texttt{\Lcs{pslinewidth}}} \\
+\Lkeyword{tension} & boolean &  \emph{ false} \\
+\Lkeyword{tensionlabel} & string &  \emph{ } \\
+\Lkeyword{tensionoffset} & dimension &  \emph{ 1} \\
+\Lkeyword{tensionlabeloffset} & dimension &  \emph{ 1.2} \\
+\Lkeyword{tensioncolor} & color &  \emph{ black} \\
+\Lkeyword{tensionlabelcolor} & color &  \emph{ black} \\
+\Lkeyword{tensionwidth} & dimension &  \emph{ \texttt{\Lcs{pslinewidth}}} \\
+\Lkeyword{labeloffset} & dimension &  \emph{ 0.7} \\
+\Lkeyword{labelangle} & label angle &  \emph{ 0} \\
+\Lkeyword{labelInside} & integer &  \emph{ 0} \\
+\Lkeyword{dipoleconvention} & & \emph{ receptor} \\
+\Lkeyword{directconvetion} & boolean &  \emph{ true} \\
+\Lkeyword{dipolestyle} & string &  \emph{ normal} \\
+\Lkeyword{variable} & boolean &  \emph{ false} \\
+\Lkeyword{parallel} & boolean &  \emph{ false} \\
+\Lkeyword{parallelarm} & dimension &  \emph{ 1.5} \\
+\Lkeyword{parallelsep} & real &  \emph{ 0} \\
+\Lkeyword{parallelnode} & boolean &  \emph{ false} \\
+\Lkeyword{intersect} & boolean &  \emph{ false} \\
+\Lkeyword{intersectA} & node & \\
+\Lkeyword{intersectB} & node & \\
+\Lkeyword{OAinvert} & boolean &  \emph{ true} \\
+\Lkeyword{OAperfect} & boolean &  \emph{ true} \\
+\Lkeyword{OAiplus} & boolean &  \emph{ false} \\
+\Lkeyword{OAiminus} & boolean &  \emph{ false} \\
+\Lkeyword{OAiout} & boolean &  \emph{ false} \\
+\Lkeyword{OAipluslabel} & string &  \emph{ } \\
+\Lkeyword{OAiminuslabel} & string &  \emph{ } \\
+\Lkeyword{OAioutlabel} & string &  \emph{ } \\
+\Lkeyword{transistorcircle} & boolean &  \emph{ true} \\
+\Lkeyword{transistorinvert} & boolean &  \emph{ false} \\
+\Lkeyword{transistoribase} & boolean &  \emph{ false} \\
+\Lkeyword{transistoricollector} & boolean &  \emph{ false} \\
+\Lkeyword{transistoriemitter} & boolean &  \emph{ false} \\
+\Lkeyword{transistoribaselabel} & string &  \emph{ } \\
+\Lkeyword{transistoricollectorlabel} & string &  \emph{ } \\
+\Lkeyword{transistoriemitterlabel} & string &  \emph{ } \\
+\Lkeyword{TRot} & angle &  \emph{ 0} \\
+\Lkeyword{edge} & macro &  \emph{ \texttt{\textbackslash ncangles}} \\
+\Lkeyword{transistortype} & string &  \emph{ NPN} \\
+\Lkeyword{FETchanneltype} & string &  \emph{ N} \\
+\Lkeyword{FETmemory} & boolean &  \emph{ false} \\
+\Lkeyword{primarylabel} & string &  \emph{ } \\
+\Lkeyword{secondarylabel} & string &  \emph{ } \\
+\Lkeyword{transformeriprimary} & boolean &  \emph{ false} \\
+\Lkeyword{transformerisecondary} & boolean &  \emph{ false} \\
+\Lkeyword{transformeriprimarylabel} & string &  \emph{ } \\
+\Lkeyword{transformerisecondarylabel} & string &  \emph{ } \\
+\Lkeyword{tripolestyle} & string &  \emph{ normal}
+\end{longtable}
+\fi
+
+\subsection{Macros}
+
+\subsubsection{Dipole macros}
+\xLcs{resistor}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}[showgrid=true](3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \resistor(A)(B){$R$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLcs{RFLine}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}[showgrid=true](3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \RFLine(A)(B){R}
+\end{pspicture}
+\end{LTXexample}
+
+\xLcs{capacitor}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}[showgrid=true](3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \capacitor(A)(B){$C$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLcs{battery}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \battery(A)(B){$E$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLcs{coil}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \coil(A)(B){$L$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLcs{Ucc}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \Ucc(A)(B){$E$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLcs{Icc}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \Icc(A)(B){$\eta$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLcs{switch}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \switch(A)(B){$K$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLcs{diode}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \diode(A)(B){$D$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLcs{Zener}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \Zener(A)(B){$D$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLcs{lamp}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \lamp(A)(B){$\mathcal L$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLcs{circledipole}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \circledipole(A)(B){$\mathcal G$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyword{labeloffset}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \circledipole[labeloffset=0](A)(B){\Large\textbf{A}}
+\end{pspicture}
+\end{LTXexample}
+
+\xLcs{LED}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \LED(A)(B){$\mathcal D$}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \SQUID(A)(B){S}
+\end{pspicture}
+\end{LTXexample}
+
+\xLcs{RelayNOP}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,3)
+  \pnode(0,0){A}
+  \pnode(3,0){B}%         Relay normally open
+  \RelayNOP[labeloffset=1.6](A)(B){RelayNOP}
+\end{pspicture}
+\end{LTXexample}
+
+\xLcs{Suppressor}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}%         Suppressor (Diode)
+  \Suppressor[labeloffset=0.5](A)(B){Supressor}
+\end{pspicture}
+\end{LTXexample}
+
+\xLcs{Arrestor}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}% Arrestor (Lightning protection)
+  \Arrestor(A)(B){Arrestor}
+\end{pspicture}
+\end{LTXexample}
+
+
+
+\bigskip
+\subsubsection{Tripole macros}
+
+Obviously, \Index{tripole}s are not node connections. So \LPack{pst-circ} tries its best to adjust the
+position of the tripole regarding the three nodes. Internally, the connections are done by the
+\Lcs{ncangle} pst-node macro. However, the auto-positionning and the auto-connections are not always
+well chosen, so don't try to use tripole macros in strange situations!
+
+
+\xLcs{OA}
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(5,3)
+  \pnode(0,0){A}
+  \pnode(0,3){B}
+  \pnode(5,1.5){C}
+  \OA(B)(A)(C)
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyword{OApower}
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(5,3)
+  \pnode(0,0){A}
+  \pnode(0,3){B}
+  \pnode(5,1.5){C}
+  \OA[OApower=true](B)(A)(C)
+\end{pspicture}
+\end{LTXexample}
+
+\xLcs{transistor}
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(3,4)
+\pnode(0,2){A}\pnode(3,1){B}
+\pnode(3,3){C}
+\transistor(A)(B)(C)
+\end{pspicture}
+\end{LTXexample}
+
+\xLcs{transistor}\xLkeyword{TRot}
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(3,4)
+\pnode(3,2){A}\pnode(0,1){B}
+\pnode(0,3){C}
+\transistor[TRot=180](A)(B)(C)
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyword{TRot}
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}[showgrid=true](5,5)
+\pnode(1,3){b}
+\transistor[TRot=90](b){emitter}{collector}
+\transistor[TRot=45](4,4){emitter}{collector}
+\transistor[TRot=180](1,1){emitter}{collector}
+\transistor[TRot=180,transistorinvert=true]%
+  (4,1){emitter}{collector}
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyset{transistortype=PNP}
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(3,4)
+\pnode(0,2){A}\pnode(3,1){B}
+\pnode(3,3){C}
+\transistor[transistortype=PNP](A)(B)(C)
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyword{basesep}\xLkeyword{arrows}
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(5,3)
+  \pnode(0,1.5){A}
+  \pnode(5,0){B}
+  \pnode(5,3){C}
+  \transistor[basesep=2cm,arrows=o-o](A)(B)(C)
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyword{basesep}\xLkeyword{transistoriemitter}
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(3,4)
+\pnode(0,2){A}\pnode(3,0.5){B}
+\pnode(3,3.5){C}
+\transistor[transistoriemitter=true,
+  basesep=1cm](A)(B)(C)
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyword{basesep}\xLkeyword{transistorinvert}
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(3,4)
+\pnode(0,2){A}\pnode(3,1){B}
+\pnode(3,3){C}
+\transistor[transistorinvert,
+  basesep=1cm](A)(B)(C)
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyset{transistortype=PNP}
+\xLkeyword{basesep}\xLnotation{Emitter}\xLkeyword{nodesep}\xLnotation{Collector}
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(5,3)
+  \pnode(0,1.5){A}\psset{linewidth=1pt}
+  \transistor[transistortype=PNP,basesep=2cm,
+     arrows=o-o](A){Emitter}{Collector}
+  \psline{o-}(5,3)(3,3)(3,3|Collector)(Collector)
+  \psline{o-}(5,0)(3,0)(3,3|Emitter)(Emitter)
+  \psline{o-}(A)([nodesep=2]A)
+\end{pspicture}
+\end{LTXexample}
+
+\xLcs{Tswitch}
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(5,2)
+  \pnode(0,2){A}
+  \pnode(5,2){B}
+  \pnode(0,0){C}
+  \Tswitch(A)(B)(C){$K$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLcs{potentiometer}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,3)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \pnode(3,2.25){C}
+  \potentiometer[labeloffset=0pt](A)(B)(C){$P$}
+\end{pspicture}
+\end{LTXexample}
+
+\bigskip
+\subsubsection{Quadrupole macros}
+
+\xLcs{quadripole}
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(5,3)
+  \pnode(0,2.5){A}
+  \pnode(0,0.5){B}
+  \pnode(4,2.5){C}
+  \pnode(4,0.5){D}
+  \quadripole(A)(B)(C)(D){Text}
+\end{pspicture}
+\end{LTXexample}
+
+\xLcs{transformer}
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(5,5)
+  \pnode(0,5){A}
+  \pnode(0,0){B}
+  \pnode(5,5){C}
+  \pnode(5,0){D}
+  \transformer(A)(B)(C)(D){$\mathcal T$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLcs{optoCoupler}
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(5,3)
+  \pnode(0,2.5){A}
+  \pnode(0,0.5){B}
+  \pnode(4,2.5){C}
+  \pnode(4,0.5){D}
+  \optoCoupler(A)(B)(C)(D){$OC$}
+\end{pspicture}
+\end{LTXexample}
+
+
+
+
+\subsubsection{Multidipole}
+
+\Lcs{multidipole} is a macro that allows multiple dipoles to be drawn between two specified nodes.
+\Lcs{multidipole} takes as many arguments as you want. Note the \rnode{Dot}{dot} that is
+after the last dipole.
+
+\bigskip
+\xLcs{diode}\xLcs{resistor}\xLcs{caoacitor}
+\begin{minipage}{7cm}
+\begin{pspicture}(7,7)
+  \pnode(0,0){A}  \pnode(7,7){B}
+  \multidipole(A)(B)\resistor{$R$}%
+    \capacitor[linecolor=red]{$C$}%
+    \diode{$D$}{}\rnode{Dot2}{}.
+\end{pspicture}
+\end{minipage}\hfill
+\begin{minipage}{6cm}
+\verb+\begin{pspicture}(7,7)+\\
+\verb+  \pnode(0,0){A}+\\
+\verb+  \pnode(7,7){B}+\\
+\verb+  \multidipole(A)(B)\resistor{$R$}%+\\
+\verb+    \capacitor[linecolor=red]{$C$}%+\\
+\verb+    \diode{$D$}{}+\rnode{Dot2}{}.\\
+\verb+\end{pspicture}+
+\end{minipage}
+
+
+\bigskip
+\ncangles[linestyle=dashed,linecolor=gray,nodesep=3pt,armA=.5cm,angleA=-90,armB=4cm,angleB=0]{->}{Dot}{Dot2} 
+Important: for the time being, \Lcs{multidipole} takes optional arguments but does not 
+restore original values. We recommand not using it.
+
+
+\bigskip
+\subsubsection{Wire}
+
+\xLcs{wire}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+ \pnode(0,1){A}\pnode(3,1){B}\wire(A)(B)
+ \pnode(0,0){A}\pnode(3,0){B}\wire[arrows=o-*](A)(B)
+\end{pspicture}
+\end{LTXexample}
+
+\bigskip
+\subsubsection{Potential}
+
+\xLcs{tension}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \tension(A)(B){$u$}
+\end{pspicture}
+\end{LTXexample}
+
+\bigskip
+\subsubsection{ground}
+
+\xLcs{ground}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0.5,1){A}
+  \pnode(1,1){B}
+  \pnode(2.5,1){C}
+  \ground(A)
+  \ground{135}(B)
+  \ground[linecolor=blue]{180}(C)
+\end{pspicture}
+\end{LTXexample}
+
+\bigskip
+\subsubsection{Open dipol and open tripol}
+
+\xLcs{OpenDipol}\xLcs{OpenTripol}
+\begin{LTXexample}[width=4.5cm]
+\def\Wave{\psscalebox{3}{$\approx$}}
+\def\PM{\psscalebox{2}{$+\,\,-$}}
+\begin{pspicture}(4,3)
+\pnode(0,0){A}\pnode(2,3){B}\pnode(4,3){C}
+\pnode(4,0){D}
+\OpenDipol[radius=3pt,labelangle=:U,
+  labeloffset=-0.5](A)(B){\Wave}
+\OpenDipol[radius=3pt,labelangle=:U](B)(C){\PM}
+\OpenTripol(A)(D){}
+\end{pspicture}
+\end{LTXexample}
+
+
+\bigskip
+\subsection{Parameters}
+
+\subsubsection{Label parameters}
+
+
+\xLcs{resitor}\xLkeyword{labeloffset}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,1)
+  \pnode(0,.5){A}
+  \pnode(3,.5){B}
+  \resistor[labeloffset=0](A)(B){$R$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLcs{resitor}\xLkeyset{labelangle=:U}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,0){A}
+  \pnode(3,2){B}
+  \resistor[labelangle=:U](A)(B){$R$}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,0){A}
+  \pnode(3,2){B}
+  \resistor[labelangle=0](A)(B){$R$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLcs{transformer}\xLkeyword{primarylabel}\xLkeyword{secondarylabel}
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(5,5)
+  \pnode(0,5){A}
+  \pnode(0,0){B}
+  \pnode(5,5){C}
+  \pnode(5,0){D}
+  \transformer[primarylabel=$n_1$,
+    secondarylabel=$n_2$](A)(B)(C)(D){$\mathcal T$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyword{labelInside}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,4.5)
+  \pnode(0,.5){A}
+  \pnode(3,.5){B}
+  \Ucc[labelInside=1](A)(B){$V$}
+  \pnode(0,2){A}
+  \pnode(3,2){B}
+  \Ucc[labelInside=2](A)(B){$V$}
+  \pnode(0,3.5){A}
+  \pnode(3,3.5){B}
+  \Ucc[labelInside=3](A)(B){$V$}
+\end{pspicture}
+\end{LTXexample}
+
+\bigskip
+\subsubsection{Current intensity and electrical potential parameters}
+
+If the \Lkeyword{intensity} parameter is set to \true, an arrow is drawn on the wire
+connecting one of the nodes to the dipole. If the \Lkeyword{tension} parameter is set to \true,
+an arrow is drawn parallel to the dipole.
+
+The way those \Index{arrows} are drawn is set by \Lkeyword{dipoleconvention} and \Lkeyword{directconvention}
+parameters. \Lkeyword{dipoleconvention} can take two values~: \Lkeyval{generator} or \Lkeyval{receptor}.
+\Lkeyword{directconvention} is a boolean.
+
+
+\xLkeyword{intensity}\xLkeyword{tension}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,.5){A}
+  \pnode(3,.5){B}
+  \resistor[intensity,tension](A)(B){}
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyword{intensity}\xLkeyword{tension}\xLkeyset{dipoleconvention=generator}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,.5){A}
+  \pnode(3,.5){B}
+  \resistor[intensity,tension,
+    dipoleconvention=generator](A)(B){}
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyword{intensity}\xLkeyword{tension}\xLkeyword{directconvention}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,.5){A}
+  \pnode(3,.5){B}
+  \resistor[intensity,tension,
+    directconvention=false](A)(B){}
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyword{intensity}\xLkeyword{tension}\xLkeyset{dipoleconvention=generator}\xLkeyword{directconvention}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,.5){A}
+  \pnode(3,.5){B}
+  \resistor[intensity,tension,
+    dipoleconvention=generator,directconvention=false](A)(B){}
+\end{pspicture}
+\end{LTXexample}
+
+If \Lkeyword{intensitylabel} is set to an non empty argument, then \Lkeyword{intensity} is automatically
+set to true. If \Lkeyword{tensionlabel} is set to an non empty argument, then \Lkeyword{tension} is
+automatically set to true.
+
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,.5){A}
+  \pnode(3,.5){B}
+  \resistor[intensitylabel=$i$,tensionlabel=$u$](A)(B){}
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyword{intensitylabel}\xLkeyword{intensitylabeloffset}
+\xLkeyword{tensionlabel}\xLkeyword{tensionoffset}\xLkeyword{tensionlabeloffset}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1.5){A}
+  \pnode(3,1.5){B}
+  \resistor[intensitylabel=$i$,intensitylabeloffset=-0.5,
+    tensionlabel=$u$,tensionlabeloffset=-1.2,
+    tensionoffset=-1](A)(B){}
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyword{intensitycolor}\xLkeyword{intensitywidth}\xLkeyword{intensitylabel}\xLkeyword{intensitylabelcolor}
+\xLkeyword{tensionwidth}\xLkeyword{tensionlabel}\xLkeyword{tensioncolor}\xLkeyword{tensionlabelcolor}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,.5){A}
+  \pnode(3,.5){B}
+  \resistor[intensitylabel=$i$,intensitywidth=3\pslinewidth,
+    intensitycolor=red,intensitylabelcolor=yellow,
+    tensionlabel=$u$,tensionwidth=2\pslinewidth,
+    tensioncolor=green,tensionlabelcolor=blue](A)(B){}
+\end{pspicture}
+\end{LTXexample}
+
+Some specific intensity parameters are available for \Index{tripole}s and \Index{quadrupole}s.
+
+\xLkeyword{OAiminuslabel}\xLkeyword{OAipluslabel}\xLkeyword{OAioutlabel}
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(5,3)
+  \pnode(0,0){A}
+  \pnode(0,3){B}
+  \pnode(5,1.5){C}
+  \OA[OAipluslabel=$i_+$,
+    OAiminuslabel=$i_-$,
+    OAioutlabel=$i_o$](B)(A)(C)
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyword{basesep}\xLkeyword{transistoribaselabel}\xLkeyword{transistoricollectorlabel}\xLkeyword{transistoriemitterlabel}
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(5,3)
+  \pnode(0,1.5){A}
+  \pnode(5,0){B}
+  \pnode(5,3){C}
+  \transistor[basesep=2cm,transistoribaselabel=$i_B$,
+    transistoricollectorlabel=$i_C$,
+    transistoriemitterlabel=$i_E$](A)(B)(C)
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyword{transformerisecondarylabel}
+\xLkeyword{transformeriprimarylabel}
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(5,5)
+  \pnode(0,5){A}
+  \pnode(0,0){B}
+  \pnode(5,5){C}
+  \pnode(5,0){D}
+  \transformer[transformeriprimarylabel=$i_1$,
+    transformerisecondarylabel=$i_2$]%
+    (A)(B)(C)(D){$\mathcal T$}
+\end{pspicture}
+\end{LTXexample}
+
+
+\subsubsection{Parallel parameters}
+
+If the \Lkeyword{parallel} parameter is set to \true, the dipole is drawn parallel to the line
+connecting the nodes.
+
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,3)
+  \pnode(0,.5){A}
+  \pnode(3,.5){B}
+  \resistor(A)(B){}
+  \resistor[parallel](A)(B){}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,3)
+  \pnode(0,.5){A}
+  \pnode(3,.5){B}
+  \resistor(A)(B){}
+  \resistor[parallel,parallelsep=.5](A)(B){}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,3)
+  \pnode(0,.5){A}
+  \pnode(3,.5){B}
+  \resistor(A)(B){}
+  \resistor[parallel,parallelsep=.3,
+    parallelarm=2](A)(B){}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,3)
+  \pnode(0,.5){A}
+  \pnode(3,.5){B}
+  \resistor(A)(B){}
+  \resistor[parallel,parallelsep=.3,
+    parallelarm=2,parallelnode](A)(B){}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=8.5cm]
+\begin{pspicture}(8,8)
+  \pnode(0,0){A}
+  \pnode(8,8){B}
+  \multidipole(A)(B)\resistor{$R$}%
+    \capacitor[linecolor=red]{$C$}%
+    \coil[parallel,parallelsep=.1]{$L$}%
+    \diode{$D$}.
+\end{pspicture}
+\end{LTXexample}
+
+Note: When used with \Lcs{multidipole}, the  \Lkeyword{parallel} parameter
+must not be set for the first dipole.
+
+
+
+\subsubsection{Wire intersections}
+
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,3)
+  \pnode(0,0){A}
+  \pnode(3,3){B}
+  \pnode(0,3){C}
+  \pnode(3,0){D}
+  \wire(A)(B)
+  \wire[intersect,intersectA=A,intersectB=B](C)(D)
+\end{pspicture}
+\end{LTXexample}
+
+Wire intersect parameters work also with \Lcs{multidipole}.
+
+\begin{LTXexample}[width=6.5cm]
+\begin{pspicture}(7,7)
+  \pnode(0,0){A}
+  \pnode(6,6){B}
+  \pnode(0,6){C}
+  \pnode(6,0){D}
+  \wire(A)(B)
+  \multidipole(C)(D)\resistor{$R$}%
+    \wire[intersect,intersectA=A,intersectB=B]%
+    \capacitor{$C$}.
+\end{pspicture}
+\end{LTXexample}
+
+
+\bigskip
+\subsubsection{Dipole style parameters}
+
+\xLkeyset{dipolestyle=twoCircles}\xLcs{ICC}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \Icc[dipolestyle=twoCircles](A)(B){$I$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyset{dipolestyle=zigzag}\xLcs{resistor}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \resistor[dipolestyle=zigzag](A)(B){$R$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyset{dipolestyle=varistor}\xLcs{resistor}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \resistor[dipolestyle=varistor](A)(B){U}
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyset{dipolestyle=chemical}\xLcs{capacitor}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \capacitor[dipolestyle=chemical](A)(B){$C$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyset{dipolestyle=elektor}\xLcs{capacitor}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \capacitor[dipolestyle=elektor](A)(B){$C$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyset{dipolestyle=elektorchemical}\xLcs{capacitor}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \capacitor[dipolestyle=elektorchemical](A)(B){$C$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyset{dipolestyle=crystal}\xLcs{capacitor}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \capacitor[dipolestyle=crystal](A)(B){$Q$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyset{dipolestyle=rectangle}\xLcs{coil}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \coil[dipolestyle=rectangle](A)(B){$L$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyset{dipolestyle=curved}\xLcs{coil}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \coil[dipolestyle=curved](A)(B){$L$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyset{dipolestyle=elektor}\xLcs{coil}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \coil[dipolestyle=elektor](A)(B){$L$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyset{dipolestyle=elektorcurved}\xLcs{coil}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \coil[dipolestyle=elektorcurved](A)(B){$L$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyset{dipolestyle=thyristor}\xLcs{diode}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \diode[dipolestyle=thyristor](A)(B){$T$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyset{dipolestyle=GTO}\xLcs{diode}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \diode[dipolestyle=GTO](A)(B){$T$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyset{dipolestyle=triac}\xLcs{diode}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \diode[dipolestyle=triac](A)(B){$T$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyset{dipolestyle=schottky}\xLcs{diode}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \diode[dipolestyle=schottky](A)(B){$T$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyword{variable}\xLcs{resistor}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \resistor[variable](A)(B){$R$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyword{variable}\xLcs{capacitor}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \capacitor[variable](A)(B){$C$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyword{variable}\xLcs{coil}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \coil[variable](A)(B){$L$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyword{variable}\xLcs{battery}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \battery[variable](A)(B){$U$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyword{variable}\xLcs{coil}\xLkeyset{dipolestyle=elektor}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \coil[dipolestyle=elektor,variable](A)(B){$L$}
+\end{pspicture}
+\end{LTXexample}
+
+In the following example the parameter \Lkeyword{dipolestyle} is used for a tripole and quadrupole, because
+the coils are drawn as rectangles and the resistor as a \Lkeyword{zigzag}.
+
+\xLkeyset{labelangle=:U}\xLcs{potentiometer}\xLkeyset{dipolestyle=zigzag}
+\begin{LTXexample}[width=3.5cm]
+\begin{pspicture}(3,3)
+  \pnode(0,0){A}
+  \pnode(3,3){B}
+  \pnode(3,1.5){C}
+  \potentiometer[dipolestyle=zigzag,%
+  	labelangle=:U](A)(B)(C){$P$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLcs{transformer}\xLkeyset{dipolestyle=rectangle}
+\begin{LTXexample}[width=4.5cm]
+\begin{pspicture}(4,4)
+  \pnode(0,4){A}
+  \pnode(0,0){B}
+  \pnode(4,4){C}
+  \pnode(4,0){D}
+  \transformer[dipolestyle=rectangle](A)(B)(C)(D){$\mathcal T$}
+\end{pspicture}
+\end{LTXexample}
+
+
+\subsubsection{Tripole style parameters}
+
+\xLcs{Tswitch}\xLkeyset{tripolestyle=left}
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(5,3)
+  \pnode(0,2){A}
+  \pnode(5,2){B}
+  \pnode(0,0){C}
+  \Tswitch[tripolestyle=left](A)(B)(C){$K$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLcs{Tswitch}\xLkeyset{tripolestyle=right}
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(5,3)
+  \pnode(0,2){A}
+  \pnode(5,2){B}
+  \pnode(0,0){C}
+  \Tswitch[tripolestyle=right](A)(B)(C){$K$}
+\end{pspicture}
+\end{LTXexample}
+
+\xLcs{OA}\xLkeyset{tripolestyle=french}
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(5,3)
+  \pnode(0,3){A}
+  \pnode(0,0){B}
+  \pnode(5,1.5){C}
+  \OA[tripolestyle=french](A)(B)(C)
+\end{pspicture}
+\end{LTXexample}
+
+\subsubsection{Potentiometer tripole}
+
+\xLcs{potentiometer}\xLkeyword{labeloffset}
+\begin{pspicture}(3,3)
+  \pnode(0,1){A}
+  \pnode(3,1){B}
+  \pnode(3,2){C}
+  \potentiometer[labeloffset=0pt](A)(B)(C){P}
+\end{pspicture}
+\hfill
+\begin{pspicture}(3,3)
+  \pnode(0,2.5){A}
+  \pnode(3,2.5){B}
+  \pnode(0,1){C}
+  \potentiometer[labeloffset=0pt](A)(B)(C){P}
+\end{pspicture}
+\hfill
+\xLcs{potentiometer}\xLkeyword{labeloffset}\xLkeyset{labelangle=:U}
+\begin{pspicture}(3,3)
+  \pnode(0,0){A}
+  \pnode(3,2){B}
+  \pnode(2.5,3){C}
+  \potentiometer[labeloffset=0pt,labelangle=:U](A)(B)(C){P}
+\end{pspicture}
+
+\vspace{1cm}
+\noindent
+\xLcs{potentiometer}\xLkeyword{labeloffset}
+\begin{pspicture}(3,3)
+  \pnode(1,0){A}
+  \pnode(1,3){B}
+  \pnode(2.5,0){C}
+  \potentiometer[labeloffset=0pt](A)(B)(C){P}
+\end{pspicture}
+\hfill
+\begin{pspicture}(3,3)
+  \pnode(0,3){A}
+  \pnode(3,0){B}
+  \pnode(2,0){C}
+  \potentiometer[labeloffset=0pt,labelangle=:U](A)(B)(C){P}
+\end{pspicture}
+\hfill
+\begin{pspicture}(3,3)
+  \pnode(0,2){A}
+  \pnode(3,2){B}
+  \pnode(1.5,0){C}
+  \potentiometer[labeloffset=0pt](A)(B)(C){P}
+\end{pspicture}
+
+
+\vspace{1cm}
+\noindent
+\begin{pspicture}(3,3)
+  \pnode(1,0){A}
+  \pnode(1,3){B}
+  \pnode(2.5,0){C}
+  \potentiometer[dipolestyle=zigzag](A)(B)(C){P}
+\end{pspicture}
+\hfill
+\begin{pspicture}(3,3)
+  \pnode(0,3){A}
+  \pnode(3,0){B}
+  \pnode(2,0){C}
+  \potentiometer[dipolestyle=zigzag,labelangle=:U](A)(B)(C){P}
+\end{pspicture}
+\hfill
+\begin{pspicture}(3,3)
+  \pnode(0,2){A}
+  \pnode(3,2){B}
+  \pnode(1.5,0){C}
+  \potentiometer[dipolestyle=zigzag](A)(B)(C){P}
+\end{pspicture}
+
+\subsubsection{Other Parameters}
+
+\xLkeyword{OAinvert}\xLcs{OA}
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(5,3)
+  \pnode(0,0){A}
+  \pnode(0,3){B}
+  \pnode(5,1.5){C}
+  \OA[OAinvert=false](B)(A)(C)
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyword{OAperfect}\xLcs{OA}
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(5,3)
+  \pnode(0,0){A}
+  \pnode(0,3){B}
+  \pnode(5,1.5){C}
+  \OA[OAperfect=false](B)(A)(C)
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(5,3)
+  \pnode(0,1.5){A}
+  \pnode(5,0){B}
+  \pnode(5,3){C}
+  \transistor[basesep=2cm,%
+    transistorinvert,transistorcircle=false](A)(B)(C)
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyset{transistortype=FET}\xLcs{transistor}
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(5,3)
+  \pnode(0,1.5){A}\psset{linewidth=1pt}
+  \transistor[basesep=2cm,arrows=o-o,
+    transistortype=FET](A){Emitter}{Collector}
+  \psline{o-}(5,3)(3,3)(3,3|Collector)(Collector)
+  \psline{o-}(5,0)(3,0)(3,3|Emitter)(Emitter)
+  \psline{o-}(A)([nodesep=2]A)
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyset{transistortype=FET}\xLcs{transistor}\xLkeyset{FETchannel=P}
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(5,3)
+  \pnode(0,1.5){A}\psset{linewidth=1pt}
+  \transistor[basesep=2cm,arrows=o-o,
+    transistortype=FET,
+    FETchanneltype=P](A){Emitter}{Collector}
+  \psline{o-}(5,3)(3,3)(3,3|Collector)(Collector)
+  \psline{o-}(5,0)(3,0)(3,3|Emitter)(Emitter)
+  \psline{o-}(A)([nodesep=2]A)
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyset{transistortype=FET}\xLcs{transistor}\xLkeyword{FETmemory}
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(5,3)
+\transistor[basesep=2cm,transistortype=FET,
+  FETmemory=true](0,1.5)(5,0)(5,3)
+\end{pspicture}
+\end{LTXexample}
+
+\clearpage
+\subsection{Special objects}
+
+\subsubsection{\nxLcs{dashpot}}
+
+
+\begin{LTXexample}[pos=t]
+\newcommand*\pswall[3]{% ll ur lr
+  \psframe[linecolor=white,fillstyle=hlines,hatchcolor=black](#1)(#2)% (ll)(ur)
+  \psline[linecolor=black](#1)(#3)}
+\begin{pspicture}(0.5,1)(8,10)
+  \rput(3,9.5){\sffamily \textbf{Viscoelasticity}}
+  % Kelvin-Voigt model (spring and dashpot parallel): ===========
+  \rput[c](1.75,8.85){\sffamily Kelvin-Voigt}
+  \pswall{1,8}{2.5,8.5}{2.5,8}% top
+  \psline(1.75,8)(1.75,7)% top vertical line
+  % node definitions:
+  \pnode(1,7){ul1}\pnode(2.5,7){ur1}  \pnode(1,3){ll1}\pnode(2.5,3){lr1}%
+  \psline(ul1)(ur1)% top line 
+  \psline(ll1)(lr1)% bottom line
+  \resistor[dipolestyle=zigzag,linewidth=0.5pt](ul1)(ll1){}% spring
+  \dashpot[linewidth=0.5pt](ur1)(lr1){}% dashpot
+  \psline[arrowscale=3]{->}(1.75,3)(1.75,2)% force
+  % Maxwell model (spring and dashpot serial): ==================
+  \rput[c](4.5,8.85){\sffamily Maxwell}
+  \pswall{4,8}{5,8.5}{5,8}% top
+  \pnode(4.5,8){t}\pnode(4.5,4){b}% node definitions
+  \resistor[dipolestyle=zigzag,linewidth=0.5pt,labeloffset=1.8](t)(b)% spring
+  {\sffamily\small\begin{tabular}{c}\textbf{elasticity}\\(Hookean solid)\end{tabular}}% end spring
+  \dashpot[linewidth=0.5pt,labeloffset=1.8](4.5,5)(4.5,3)% dashpot
+  {\sffamily\small\begin{tabular}{c}\textbf{viscosity}\\(Newtonian fluid)\end{tabular}
+  }% end dashpot
+  \psline[arrowscale=3]{->}(4.5,3)(4.5,2)% force
+\end{pspicture}
+\end{LTXexample}
+
+
+
+\subsection{Examples}
+
+\begin{LTXexample}[pos=t]
+  \begin{pspicture}(-1.5,-1)(6,5)
+%  [subgriddiv=1,griddots=10]
+  % Node definitions
+  \pnode(0,0){A}
+  \pnode(0,3){B}
+  \pnode(4.5,3){C}
+  \pnode(4.5,0){D}
+  % Dipole node connection
+  \Ucc[tension,dipoleconvention=generator](A)(B){$E$}
+  \multidipole(B)(C)%
+    \switch[intensitylabel=$i$]{$K$}%
+    \resistor[labeloffset=0,tensionlabel=$u_R$]{$R$}.
+  \capacitor[tensionlabel={$u_C$},
+    tensionlabeloffset=-1.2,tensionoffset=-1,
+    directconvention=false](D)(C){$C$}
+  % Wire to complete circuit
+  \wire(A)(D)
+  % Ground
+  \ground(D)
+  \end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+  \begin{pspicture}(-0.5,0)(7,8)
+%  [subgriddiv=1,griddots=10]
+  % Node definitions
+  \pnode(0.5,1){A}
+  \pnode(3.5,1){B}
+  \pnode(6.5,1){C}
+  \pnode(0.5,4){D}
+  \pnode(3.5,4){Minus}
+  \pnode(3.5,3){Plus}
+  \pnode(6.5,5){S}
+  \pnode(3.5,5){E}
+  % Dipole node connections
+  \resistor(D)(Minus){$R_2$}
+  \capacitor(E)(S){$C$}
+  \resistor[parallel,parallelarm=2](E)(S){$R_1$}
+  \OA[intensity](Minus)(Plus)(S)
+  % Wires
+  \wire(Minus)(E)
+  \wire(Plus)(B)
+  % Tensions
+  \tension(A)(D){$u_E$}
+  \makeatletter % (special tricks see below)
+  \tension(C)(S@@){$u_S$}
+  \tension[linecolor=blue](Plus@@)(Minus@@){$\epsilon$}
+  \makeatother
+  % Grounds
+  \ground(A)
+  \ground(B)
+  \ground(C)
+  \end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+  \begin{pspicture}(-1,0)(7,8)
+%  [subgriddiv=1,griddots=10]
+  % Node definitions
+  \pnode(1,1){A}
+  \pnode(1,7){B}
+  \pnode(3,1){C}
+  \pnode(3,7){D}
+  % Dipole node connections
+  \Ucc[tensionlabel=$E$](A)(B){}
+  \resistor(B)(D){$R$}
+  \coil(D)(C){$L$}
+  \capacitor[parallel,parallelarm=2.5](D)(C){$C$}
+  % Wire
+  \wire(A)(C)
+  \end{pspicture}
+\end{LTXexample}
+
+
+
+
+\begin{LTXexample}[pos=t]
+% \usepackage{amsmath}  % example by Markus Graube
+\begin{pspicture}(0,.5)(13,4)
+  \pnode(1,1){I_U}  \pnode(1,3){I_O}    \pnode(2.5,1){C}  \pnode(2.5,3){D}
+  \pnode(4,1){K_LU} \pnode(4,3){K_LO}   \pnode(7,1){K_RU} \pnode(7,3){K_RO}
+  \pnode(9,3){E}    \pnode(7.3,3){K_RO1}\pnode(7.3,1){K_RU1} \pnode(11,3){F}
+  \pnode(12,1){O_U} \pnode(12,3){O_O}
+  \tension[labeloffset=-0.5](I_O)(I_U){$\underline{u}$}
+  \wire[arrows=o-](I_U)(C)
+  \wire[intensitylabel=$\underline{i}$, arrows=o-](I_O)(D)
+  \capacitor[labeloffset=.9](C)(D){$C_B$}
+  \qdisk(C){2pt} \qdisk(D){2pt}
+  \wire(C)(K_LU)
+  \wire[intensitylabel=$\underline{i}_W$](D)(K_LO)
+  \quadripole(K_LO)(K_LU)(K_RO)(K_RU){\parbox{3cm}{%
+    \begin{align*} 
+      \underline{u}   &= \frac{\underline{p}}{X} \\[2ex]
+      \underline{i}_W &= X \underline{q}_U
+    \end{align*}}}
+  \wire(K_RO)(K_RO1)
+  \tension[labeloffset=0.5](K_RO1)(K_RU1){$\underline{p}$}
+  \coil[dipolestyle=rectangle](K_RO)(E){$M_{a,K}$}
+  \capacitor(E)(F){$N_{a,K}$}
+  \wire[intensitylabel=$\underline{q}_U$,arrows=-o](F)(O_O)
+  \wire[arrows=-o](K_RU)(O_U)
+  \tension[labeloffset=0.5](O_O)(O_U){$\underline{p}_U$}
+\end{pspicture}
+\end{LTXexample}
+
+
+
+
+\begin{LTXexample}[width=8.5cm]
+  \begin{pspicture}(-0.25,-0.25)(6,6)
+%  [subgriddiv=1,griddots=10]
+  % Node definitions
+  \pnode(0,3){A}
+  \pnode(3,3){B}
+  \pnode(6,3){C}
+  % Dipole node connections
+  \coil[intensitylabel=$i$](A)(B){$L$}
+  \coil[intensitylabel=$i'$,intensitycolor=green,%
+    parallel,parallelarm=2](B)(C){$L'$}
+  \capacitor[parallel,parallelarm=-2](B)(C){$C$}
+  \end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+  \begin{pspicture}(6,6)
+%  [subgriddiv=1,griddots=10]
+  % Node definitions
+  \pnode(0,0){A}\pnode(6,0){B}
+  \pnode(0.3,4){Cprime}\pnode(5.7,4){Dprime}
+  \pnode(2.5,4){Gprime}\pnode(2.5,0){Hprime}
+  \pnode(0,4){C}\pnode(6,4){D}
+  \pnode(0.3,6){E}\pnode(5.7,6){F}
+  \pnode(4,6){G}\pnode(4,0){H}
+  \multidipole(G)(H)%
+    \wire[intersect,
+      intersectA=C,intersectB=D]
+    \resistor{$R'_3$}.
+  \resistor(E)(G){$R'_1$}
+  \resistor(G)(F){$R'_2$}
+  \multidipole(C)(D)\resistor{$R_1$}%
+    \wire\resistor{$R_2$}.
+  \wire(A)(B)\wire(Cprime)(E)
+  \wire(Dprime)(F)
+  \resistor(Hprime)(Gprime){$R_3$}
+  \end{pspicture}
+\end{LTXexample}
+
+
+
+\begin{LTXexample}[pos=t]
+  \begin{pspicture}(0,-0.25)(9,11)
+  % Node definitions
+  \pnode(0,0){A}\pnode(9,0){B}\pnode(0,6){C}\pnode(9,6){D}\pnode(4.5,1){E}\pnode(4.5,10.5){F}
+  %
+  \switch(A)(C){$K$}
+  \multidipole(A)(B)\resistor{$R$}\battery[intensitylabel=$i$]{$V$}.
+  \wire(B)(D)
+  \multidipole(C)(D)\diode{$D$}\wire.
+  \resistor[tensionlabel=$U_1$](C)(F){$R_1$} \resistor(C)(E){$R_4$}
+  \capacitor[parallel,parallelarm=1.2,parallelsep=1.5](C)(E){$C_2$}
+  \coil(E)(D){$L$}
+  \capacitor[parallel,parallelarm=1.2,parallelsep=1.5](E)(D){$C_3$}
+  \capacitor[tensionlabel=$U_2$](F)(D){$C_1$}
+  \multidipole(E)(F)\wire\wire[intersect,intersectA=C,intersectB=D]%
+    \circledipole[labeloffset=-0.7]{$E$}%
+    \resistor[parallel,parallelsep=.6,parallelarm=.8]{$R$}.
+  \end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(0,-0.2)(13,8)
+  \psset{intensitycolor=red,intensitylabelcolor=red,tensioncolor=green,
+    tensionlabelcolor=green, intensitywidth=3pt}
+  \circledipole[tension,tensionlabel=$U_0$,
+    tensionoffset=0.75,labeloffset=0](0,0)(0,6){\LARGE\textbf{=}}
+  \wire[intensity,intensitylabel=$i_0$](0,6)(2.5,6)
+  \diode[dipolestyle=thyristor](2.5,6)(4.5,6){$T_1$}
+  \wire[intensity,intensitylabel=$i_1$](4.5,6)(6.5,6)
+  \multidipole(6.5,7.5)(2.5,7.5)%
+        \coil[dipolestyle=rectangle,labeloffset=-0.75]{$L_5$}%
+        \diode[labeloffset=-0.75]{$D_5$}.
+  \wire[intensity,intensitylabel=$i_5$](6.5,6)(6.5,7.5)
+  \wire(2.5,7.5)(2.5,3)
+  \wire[intensity,intensitylabel=$i_c$](2.5,4.5)(2.5,6)
+  \qdisk(2.5,6){2pt}\qdisk(6.5,6){2pt}
+  \diode[dipolestyle=thyristor](2.5,4.5)(4.5,4.5){$T_2$}
+  \wire[intensity,intensitylabel=$i_2$](4.5,4.5)(6.5,4.5)
+  \capacitor[tension,tensionlabel=$u_c$,tensionoffset=-0.75,
+    tensionlabeloffset=-1](6.5,4.5)(6.5,6){$C_k$}
+  \qdisk(2.5,4.5){2pt}\qdisk(6.5,4.5){2pt}
+  \wire[intensity,intensitylabel=$i_3$](6.5,4.5)(6.5,3)
+  \multidipole(6.5,3)(2.5,3)%
+    \coil[dipolestyle=rectangle,labeloffset=-0.75]{$L_3$}%
+    \diode[labeloffset=-0.75]{$D_3$}.
+  \wire(6.5,6)(9,6)\qdisk(9,6){2pt}
+  \diode(9,0)(9,6){$D_4$}
+  \wire[intensity,intensitylabel=$i_4$](9,3.25)(9,6)
+  \wire[intensity,intensitylabel=$i_a$](9,6)(11,6)
+  \multidipole(11,6)(11,0)%
+    \resistor{$R_L$}
+    \coil[dipolestyle=rectangle]{$L_L$}
+    \circledipole[labeloffset=0,tension,tensionoffset=0.7,tensionlabel=$U_B$]{\LARGE\textbf{=}}.
+  \wire(0,0)(11,0)\qdisk(9,0){2pt}
+  \pnode(12.5,5.5){A}\pnode(12.5,0.5){B}
+  \tension(A)(B){$u_a$}
+\end{pspicture}
+\end{LTXexample}
+
+
+\makeatletter
+%
+\def\REG{\@ifnextchar[{\pst@REG}{\pst@REG[]}}
+%
+\def\pst@REG[#1](#2)(#3)(#4)#5{{%
+  \psset{dimen=middle,arm=0}%
+  \psset{#1}
+  \pst@getcoor{#2}\pst@tempa
+  \pst@getcoor{#3}\pst@tempb
+  \pst@getcoor{#4}\pst@tempc
+  \pnode(!%
+    \pst@tempa /Y1 exch \pst@number\psyunit div def
+    /X1 exch \pst@number\psxunit div def
+    \pst@tempb /Y2 exch \pst@number\psyunit div def
+    /X2 exch \pst@number\psxunit div def
+    \pst@tempc /Y3 exch \pst@number\psyunit div def
+    /X3 exch \pst@number\psxunit div def
+    /XC X1 X2 add 2 div def
+    /YC Y1 2 mul Y3 add 3 div def
+    /Xin XC 1 sub def
+    /Yin YC 0.5 add def
+    /Xout XC 1 add def
+    /Yout Yin def
+    /Xref XC def
+    /Yref YC 1 sub def
+    XC YC){C@}
+  \pnode(! Xin Yin){in@}
+  \pnode(! Xout Yout){out@}
+  \pnode(! Xref Yref){ref@}
+  \rput(C@){\pst@draw@REG}
+  \ncangle{#2}{in@}
+  \ncangle{#3}{out@}
+  \ncangle{#4}{ref@}
+  \rput(C@){#5}
+  }\ignorespaces}
+%
+\def\pst@draw@REG{%
+  \begingroup
+  \psset{linewidth=1.5\pslinewidth}%
+  \psframe(-1,-0.5)(1,0.75)
+  \psline(-1.5,0.5)(-1,0.5)
+  \psline(1.5,0.5)(1,0.5)
+  \psline(0,-0.5)(0,-1)
+  \endgroup
+  }
+%
+\makeatother
+
+The following example was written by Manuel Luque.
+
+\begin{LTXexample}[pos=t]
+  \begin{pspicture}(0,-0.5)(14,4)
+%  [subgriddiv=1,griddots=10]
+  \pnode(0,0){B}\pnode(0,3){A}
+  \pnode(2.5,3.5){C}\pnode(2.5,-0.5){D}\pnode(5,3){E}\pnode(6.5,1.5){F}
+  \pnode(5,0){G}\pnode(3.5,1.5){H}     \pnode(8,2.5){I}\pnode(8,1){J}
+  \pnode(10,2.5){K}\pnode(10,1){L}     \pnode(14,2.5){M}\pnode(12,1){N}
+  \pnode(3,1){H'}\pnode(14,2.5){O}     \pnode(14,1){P}\pnode(13.5,1){Q}
+  \transformer[transformeriprimarylabel=$i_1$,transformerisecondarylabel=$i_2$,
+    primarylabel=$n_1$,secondarylabel=$n_2$](A)(B)(C)(D){$T_1$}
+  {\psset{fillstyle=solid,fillcolor=black}
+  \diode(H)(E){}\diode(H)(G){} \diode(E)(F){}\diode(G)(F){}}
+  \capacitor[dipolestyle=chemical](I)(J){}  \capacitor(K)(L){}
+  \REG(K)(M)(N)%
+    {\shortstack{\textsf{%
+    \textbf{\large LM7805}}\\\textbf{+5V}}}
+  \ncangle{I}{F}\psline(I)(K)  \ncangle{E}{C}\ncangle{G}{D}
+  \ncangle[arm=0]{P}{Q}        \ncangle[arm=0]{H}{H'}
+  \ground(H')\ground(J)\ground(L)\ground(N)
+  \ground(Q)\qdisk(I){1.5pt}\qdisk(K){1.5pt}\qdisk(E){1.5pt}
+  \qdisk(G){1.5pt}\qdisk(H){1.5pt}\qdisk(F){1.5pt}
+  \pscircle[fillstyle=solid](A){0.075} \pscircle[fillstyle=solid](B){0.075}
+  \pscircle[fillstyle=solid](P){0.075} \pscircle[fillstyle=solid](O){0.075}
+  \end{pspicture}
+\end{LTXexample}
+
+\clearpage
+The following example was written by Lionel Cordesses.
+
+
+
+\begin{LTXexample}[pos=t]
+  \begin{pspicture}(11,3)
+  \psset{dipolestyle=elektor}
+  \pnode(1,2){Vin}\pnode(0.5,2){S}\pnode(0.5,0){Sm}
+  \pnode(2.5,2){A}\pnode(4.5,2){B}\pnode(6.5,2){C}
+  \pnode(8,2){Cd}\pnode(8.5,2){D}\pnode(9.5,2){E}
+  \pnode(2.5,0){Am}\pnode(4.5,0){Bm}\pnode(6.5,0){Cm}
+  \pnode(8.5,0){Dm}\pnode(9.5,0){Em}
+  \Ucc[labeloffset=0.9](Sm)(S){$V_{in}$}\resistor(Vin)(A){$R$}
+  \capacitor(A)(Am){$C_1$} \capacitor(B)(Bm){$C_3$}
+  \capacitor[labeloffset=-0.7](D)(Dm){$C_n$}\resistor(E)(Em){$R$}
+  \coil(A)(B){$L_2$}\coil(B)(C){$L_4$}
+  \wire(Am)(Bm)\wire(Bm)(Cm)\wire(Cm)(Dm)\wire(Dm)(Em)\wire(D)(E)
+  \wire(Cd)(D)\psline[linestyle=dashed](C)(Cd)
+  \wire(S)(Vin)\wire(Sm)(Am)
+  \pscircle*(D){2\pslinewidth} \pscircle*(Dm){2\pslinewidth}
+  \pscircle*(A){2\pslinewidth} \pscircle*(Am){2\pslinewidth}
+  \pscircle*(B){2\pslinewidth} \pscircle*(Bm){2\pslinewidth}
+  \end{pspicture}
+\end{LTXexample}
+
+\clearpage
+The following example was written by Christian Hoffmann.
+
+
+\begin{LTXexample}[pos=t]
+  \SpecialCoor
+  \begin{pspicture}(0,-1)(7,6.5)%
+  \pnode(0,6){plus}
+  \pnode(3,3){basis}
+  \pnode([nodesep=-2] basis){schalter}
+  \pnode(0,0){masse}
+  \wire[arrows=o-*](plus)(basis|plus)
+  \uput[l](plus){$U_0$}
+  \resistor[labeloffset=.8](basis|plus)(basis){$R_1$}
+  \transistor[basesep=2cm](basis){emitter}{kollektor}
+  \wire[arrows=-*](schalter)(basis)
+%  \wire(basis)([nodesep=2] basis)
+  \wire(TBaseNode)(basis)
+  \switch(schalter|masse)(schalter){S}
+  \lamp(kollektor|plus)(kollektor){L}
+  \resistor(kollektor|plus)(basis|plus){$R_2$}
+  \wire(emitter)(emitter|masse)
+  \wire(emitter|masse)(basis|masse)
+  \capacitor(basis)(basis|masse){$C_1$}
+  \wire[arrows=*-](basis|masse)(schalter|masse)
+  \wire[arrows=*-o](schalter|masse)(masse)
+  \end{pspicture}
+\end{LTXexample}
+
+
+Variable radius for \xLcs{circledipole}
+
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(8,5)
+\circledipole(0,1)(3,1){} 
+\pnode(4,1){A}\pnode(7,1){B}
+\circledipole[radius=7mm,labeloffset=1cm](A)(B){Strommesser}\rput(5.5,1){\Huge I}
+\circledipole[radius=4mm,fillstyle=solid,fillcolor=blue!30](0,3)(3,3){C}
+\end{pspicture}
+\end{LTXexample}
+
+
+
+
+\clearpage
+\section{Microwave symbols}
+Since for microwave signal, the direction in which the signal spreads is very important, 
+There are  dipoleinput or tripoleinput or quadripoleinput and arrowinput parameters. 
+The value of theses parameters are left or right for the first one and true or false for second one. 
+
+\xLcs{ifPst@inputarrow}\xLcs{pcline}
+\begin{lstlisting}[style=code]
+\ifPst@inputarrow
+   \ifx\psk@Dinput\pst@Dinput@right
+       \pcline[arrows=-C](#2)(dipole@1)
+       \pcline[arrows=->,arrowinset=0](#3)(dipole@2)
+    \else
+       \pcline[arrows=->,arrowinset=0](#2)(dipole@1)
+       \pcline[arrows=C-](dipole@2)(#3)
+   \fi
+\else
+   \pcline[arrows=-C](#2)(dipole@1)
+   \pcline[arrows=C-](dipole@2)(#3)
+\fi
+\pcline[fillstyle=none,linestyle=none](#2)(#3)
+\end{lstlisting}
+
+The last line is to correct some problems when I use colors (see example2)
+To add color in components (Monopole, tripole and Quadripole), there is a new 
+argument. 
+ \Lcs{multidipole} also works:
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(4,2)
+  \pnode(0.5,1){A}
+  \pnode(3.5,1){B}
+  \multidipole(A)(B)\filter{BPF}%
+    \resistor{$R$}.
+\end{pspicture}
+\end{LTXexample}
+
+\bigskip
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(4,2)
+  \pnode(0.5,1){A}
+  \pnode(3.5,1){B}
+  \multidipole(A)(B)\amplifier{LNA}%
+    \resistor{$R$}.
+\end{pspicture}
+\end{LTXexample}
+
+
+\subsection{New monopole components}
+\subsubsection{New ground}
+\begin{description}
+  \item[\Lkeyword{groundstyle}:]  \Lkeyval{ads} | \Lkeyval{old} | \Lkeyval{triangle}
+\end{description}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(0.5,1){A}
+  \pnode(1,1){B}
+  \pnode(2.5,1){C}
+  \newground(A)
+  \newground[groundstyle=old]{135}(B)
+  \newground[linecolor=blue,groundstyle=triangle]{180}(C)
+\end{pspicture}
+\end{LTXexample}
+
+
+\subsubsection{Antenna}
+\begin{description}
+  \item[\Lkeyword{antennastyle}:]  \Lkeyval{two} | \Lkeyval{three} | \Lkeyval{triangle}
+\end{description}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(1,0.5){A}
+  \antenna[antennastyle=three](A)
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(1,0.5){A}
+  \antenna(A)
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(1,0.5){A}
+  \antenna[antennastyle=triangle](A)
+\end{pspicture}
+\end{LTXexample}
+
+
+\subsection{New monopole macro-components}
+\subsubsection{Oscillator}
+\begin{description}
+  \item[\Lkeyword{output}:]  \Lkeyval{top} | \Lkeyval{right} | \Lkeyval{bottom} | \Lkeyval{left}
+  \item[\Lkeyword{inputarrow}:] \false | \true
+  \item[\Lkeyword{LOstyle}:] -- | \Lkeyval{crystal}
+\end{description}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(1,1){A}
+  \oscillator[output=left,inputarrow=false](A)%
+    {$f_{LO}$}{}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(1,1){A}
+  \oscillator[output=top,inputarrow=true,LOstyle=crystal](A)%
+    {f$_{\textrm{LO}}$}{}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(1,1){A}
+  \oscillator[output=right,inputarrow=false](A)%
+    {$f_{LO}$}{fillstyle=solid,fillcolor=blue}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(1,1){A}
+  \oscillator[output=bottom,inputarrow=false](A)%
+    {$f_{LO}$}{}
+\end{pspicture}
+\end{LTXexample}
+
+\subsection{New dipole macro-components}
+\subsubsection{Filters}
+\begin{description}
+  \item[\Lkeyword{dipolestyle}:]  \Lkeyval{bandpass} | \Lkeyval{lowpass} | \Lkeyval{highpass}
+  \item[\Lkeyword{inputarrow}:] \false | \true
+  \item[\Lkeyword{dipoleinput}:] \Lkeyval{left} | \Lkeyval{right}
+\end{description}
+
+\xLcs{filter}
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}  \pnode(3,1){B}
+  \filter(A)(B){BPF}
+\end{pspicture}
+\end{LTXexample}
+
+\xLcs{filter}
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}  \pnode(3,1){B}
+  \filter[dipolestyle=lowpass,fillstyle=solid,%
+    fillcolor=red](A)(B){LPF}
+\end{pspicture}
+\end{LTXexample}
+
+\xLcs{filter}\xLkeyset{dipolestyle=highpass}
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}  \pnode(3,1){B}
+  \filter[dipolestyle=highpass,dipoleinput=right,
+    inputarrow=true](A)(B){HPF}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}  \pnode(3,1){B}
+  \filter[dipolestyle=highpass,inputarrow=true](A)(B){BPF}
+\end{pspicture}
+\end{LTXexample}
+
+\subsubsection{Isolator}
+\begin{description}
+  \item[\Lkeyword{inputarrow}:] \false | \true
+  \item[\Lkeyword{dipoleinput}:] \Lkeyval{left} | \Lkeyval{right}
+\end{description}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}  \pnode(3,1){B}
+  \isolator[inputarrow=true](A)(B){}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+\pnode(0,1){A}  \pnode(3,1){B}
+\isolator[dipoleinput=right,inputarrow=true,
+  fillstyle=solid,fillcolor=yellow](A)(B){Isolator}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}\pnode(3,1){B}
+  \isolator[dipoleinput=left](A)(B){}
+\end{pspicture}
+\end{LTXexample}
+
+\subsubsection{Frequency multiplier/divider}
+\begin{description}
+  \item[\Lkeyword{dipolestyle}:] \Lkeyval{multiplier} | \Lkeyval{divider}
+  \item[\Lkeyword{value}:] \Lkeyval{N} | $n\in N$
+  \item[\Lkeyword{programmable}:] \false | \true
+  \item[\Lkeyword{inputarrow}:] \false | \true
+  \item[\Lkeyword{dipoleinput}:] \Lkeyval{left} | \Lkeyval{right}
+\end{description}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}\pnode(3,1){B}
+  \freqmult[dipolestyle=divider,inputarrow=true](A)(B){}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}\pnode(3,1){B}
+  \freqmult[dipolestyle=multiplier,value=10](A)(B){}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,3)
+\pnode(0,1.5){A}\pnode(3,1.5){B}
+\freqmult[dipolestyle=multiplier,programmable=true,
+  labeloffset=-1,dipoleinput=right,inputarrow=true,
+  fillstyle=solid,fillcolor=green](A)(B){10<N<35}
+\end{pspicture}
+\end{LTXexample}
+
+\subsubsection{Phase shifter}
+\begin{description}
+  \item[\Lkeyword{inputarrow}:] \false | \true
+  \item[\Lkeyword{dipoleinput}:] \Lkeyval{left} | \Lkeyval{right}
+\end{description}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A1}  \pnode(3,1){A2}
+  \phaseshifter(A1)(A2){}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+\pnode(0,1){B1}  \pnode(3,1){B2}
+\phaseshifter[inputarrow=true,dipoleinput=right,
+  fillstyle=solid,fillcolor=red](B1)(B2){90$^\circ$}
+\end{pspicture}
+\end{LTXexample}
+
+\subsubsection{VCO}
+\begin{description}
+  \item[\Lkeyword{inputarrow}:] \false | \true
+  \item[\Lkeyword{dipoleinput}:] \Lkeyval{left} | \Lkeyval{right}
+\end{description}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A1}  \pnode(3,1){A2}
+  \vco[fillstyle=solid,fillcolor=yellow](A1)(A2){}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(0,1){B1}  \pnode(3,1){B2}
+  \vco[dipoleinput=right,inputarrow=true](B1)(B2){VCO}
+\end{pspicture}
+\end{LTXexample}
+
+\subsubsection{Amplifier}
+\begin{description}
+  \item[\Lkeyword{inputarrow}:] \false | \true
+  \item[\Lkeyword{dipoleinput}:] \Lkeyval{left} | \Lkeyval{right}
+\end{description}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}  \pnode(3,1){B}
+  \amplifier[inputarrow=true](A)(B){}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}  \pnode(3,1){B}
+  \amplifier[dipoleinput=right,inputarrow=true](A)(B){PA}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}  \pnode(3,1){B}
+  \amplifier[dipoleinput=left](A)(B){LNA}
+\end{pspicture}
+\end{LTXexample}
+
+\subsubsection{Detector}
+\begin{description}
+  \item[\Lkeyword{inputarrow}:] \false | \true
+  \item[\Lkeyword{dipoleinput}:] \Lkeyval{left} | \Lkeyval{right}
+\end{description}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}  \pnode(3,1){B}
+  \detector[inputarrow=true](A)(B){}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}  \pnode(3,1){B}
+  \detector[dipoleinput=right,inputarrow=true](A)(B){}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(0,1){A}  \pnode(3,1){B}
+  \detector[dipoleinput=left](A)(B){}
+\end{pspicture}
+\end{LTXexample}
+
+\subsection{New tripole macro-components}
+\subsubsection{Mixer}
+\begin{description}
+  \item[\Lkeyword{tripolestyle}:] \Lkeyval{bottom} | \Lkeyval{top}
+  \item[\Lkeyword{tripoleconfig}:] \Lkeyval{left} | \Lkeyval{right}
+  \item[\Lkeyword{inputarrow}:] \false | \true
+\end{description}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(0.5,1){A}\pnode(2.5,1){B}\pnode(1.5,2){C}
+  \mixer[tripolestyle=top,inputarrow=true](A)(B)(C)%
+    {Mixer}{}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(0.5,1){A}\pnode(2.5,1){B}\pnode(1.5,0){C}
+  \mixer[inputarrow=true,tripoleinput=right](A)(B)(C)
+    {Mixer}{fillstyle=solid,fillcolor=yellow}
+\end{pspicture}
+\end{LTXexample}
+
+\subsubsection{Circulator}
+\begin{description}
+  \item[\Lkeyword{tripolestyle}:] \Lkeyval{circulator} | \Lkeyval{isolator}
+  \item[\Lkeyword{inputarrow}:] \false | \true
+  \item[\Lkeyword{tripoleinput}:] \Lkeyval{left} | \Lkeyval{right}
+\end{description}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(0.5,1){A}\pnode(2.5,1){B}\pnode(1.5,0){C}
+  \circulator{0}(A)(B)(C){Circulator}{}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,3)
+  \pnode(1.5,0.5){A}\pnode(1.5,2.5){B}\pnode(0.5,1.5){C}
+  \circulator[tripolestyle=isolator,inputarrow=true]{90}%
+    (A)(B)(C){Isolator}{}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+\pnode(0.5,1){A}\pnode(2.5,1){B}\pnode(1.5,0){C}
+\circulator[tripoleconfig=right,tripolestyle=isolator,
+    inputarrow=true,tripoleinput=right]{0}%
+    (B)(A)(C){Isolator}{}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+\pnode(0.5,1){A}\pnode(2.5,1){B}\pnode(1.5,2){C}
+\circulator[tripoleconfig=right,
+  inputarrow=true]{180}(A)(B)(C){Isolator}%
+    {fillstyle=solid,fillcolor=red}
+\end{pspicture}
+\end{LTXexample}
+
+\subsubsection{Agc}
+\begin{description}
+  \item[\Lkeyword{inputarrow}:] \false | \true
+  \item[\Lkeyword{tripoleinput}:] \Lkeyval{left} | \Lkeyval{right}
+\end{description}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(0.5,1){A}\pnode(2.5,1){B}\pnode(1.5,0){C}
+  \agc(A)(B)(C){AGC}{fillstyle=solid,fillcolor=yellow}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(0.5,1){A}\pnode(2.5,1){B}\pnode(1.5,0){C}
+  \agc[tripoleinput=right,inputarrow=true](A)(B)(C)%
+    {AGC}{fillstyle=solid,fillcolor=blue}
+\end{pspicture}
+\end{LTXexample}
+
+\subsection{New quadripole macro-components}
+\subsubsection{Coupler}
+\begin{description}
+  \item[\Lkeyword{couplerstyle}:] \Lkeyval{hybrid} | \Lkeyval{directional}
+  \item[\Lkeyword{inputarrow}:] \false | \true
+  \item[\Lkeyword{quadripoleinput}:] \Lkeyval{left} | \Lkeyval{right}
+\end{description}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(0,1.4){A} \pnode(0,0.6){B}
+  \pnode(3,1.4){C} \pnode(3,0.6){D}
+  \coupler[couplerstyle=hybrid,inputarrow=true](A)(B)(C)(D)%
+    {Hyb. $180$\ensuremath{^\circ}}%
+    {fillstyle=solid,fillcolor=yellow}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(0,1.4){A} \pnode(0,0.6){B}
+  \pnode(3,1.4){C} \pnode(3,0.6){D}
+  \coupler[couplerstyle=directional](A)(B)(C)(D){10~dB}{}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(0,1.4){A} \pnode(0,0.6){B}
+  \pnode(3,1.4){C} \pnode(3,0.6){D}
+  \coupler[couplerstyle=hybrid,inputarrow=true,%
+    quadripoleinput=right](A)(B)(C)(D)%
+    {Hyb. $180$\ensuremath{^\circ}}{}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm,rframe={}]
+\begin{pspicture}(3,2)
+  \pnode(0,1.4){A} \pnode(0,0.6){B}
+  \pnode(3,1.4){C} \pnode(3,0.6){D}
+  \coupler[couplerstyle=directional,quadripoleinput=right,%
+  inputarrow=true](A)(B)(C)(D){10~dB}{}
+\end{pspicture}
+\end{LTXexample}
+
+
+\subsection{Examples}
+\subsubsection{Radiometer block diagram example}
+From Chang, K., RF and Microwave Wireless Systems, Wiley InterScience, page 319, ISBN 0-471-35199-7
+
+\noindent
+\resizebox{\linewidth}{!}{%
+\begin{pspicture}(1,2)(19,9)
+  \pnode(2,8){A}
+  \antenna{90}(A)
+  \rput(4,8){\rnode{B}{\psframebox{\begin{tabular}{c}Ferrite\\Switch\end{tabular}}}}
+  \ncline{A}{B}
+  %%% Branche Calibration
+  \pnode(4,6){C}
+  \pnode(4,4){D}
+  \pnode(5,5){E}
+  \circulator[tripolestyle=isolator,tripoleconfig=right]{90}(C)(D)(E){Isolator}{}
+  \ncline{B}{C}
+  \pnode(3,3){F}
+  \pnode(5,3){G}
+  \resistor[unit=0.5,dipolestyle=zigzag,variable=true](F)(G){}
+  \pnode(4,3){H}
+  \ncline{D}{H}
+  \rput[t](4,2.75){%
+    \begin{tabular}{c}
+        Hot and Cold\\
+        loads for calibration
+        \end{tabular}}
+  %%% Branche reception
+  \pnode(6,8){R1}
+  \pnode(8,8){R2}
+  \pnode(7,7){X1}
+  \circulator[tripolestyle=isolator,tripoleconfig=right]{180}(R1)(R2)(X1){Isolator}{}
+  \ncline{B}{R1}
+  \pnode(10,8){R3}
+  \pnode(9,7){X2}
+  \mixer[inputarrow=true](R2)(R3)(X2){Mixer}{}
+  \pnode(9,6){X3}
+  \oscillator[output=top](X3){LO}{}
+  \pnode(12,8){R4}
+  \ncline{R3}{R4}
+  \naput{0.5~GHZ}
+  \pnode(14,8){R5}
+  \filter(R4)(R5){BPF}%
+  \pnode(16,8){R6}
+  \amplifier[inputarrow=true](R5)(R6){IF~Amp}
+  \pnode(18,8){R7}
+  \detector[inputarrow=true](R6)(R7){Detector}
+  \pnode(18,4){R8}
+  \amplifier[inputarrow=true,labeloffset=-1](R7)(R8){Amp}
+  \pscircle[fillstyle=solid,fillcolor=white](18,4){0.1}
+  \rput[t](18,3.9){%
+    \begin{tabular}{c}
+        Output\\
+        for processing
+    \end{tabular}}
+\end{pspicture}}
+
+\clearpage
+\begin{landscape}
+\subsubsection{Ku-band Transceiver}
+\resizebox{\linewidth}{!}{%
+\psset{unit=1cm}
+\begin{pspicture}(0,-3.5)(29.25,11)
+  \rput[r](1.9,8){70/140MHz}
+  \pnode(2,8){N1}
+  \pnode(4,8){N2}
+  \amplifier[fillstyle=solid,fillcolor=Thistle,inputarrow=true](N1)(N2){IF~Amp}
+
+  \pnode(6,8){N3}
+  \pnode(5,7){D1}
+  \mixer(N2)(N3)(D1){}{}
+
+  \pnode(5,5){D2}
+  \amplifier[fillstyle=solid,fillcolor=CornflowerBlue,labeloffset=-1.5](D2)(D1){L-Band Buffers}
+  \pnode(3,5){D3}
+  \amplifier[fillstyle=solid,fillcolor=CornflowerBlue](D3)(D2){}
+  \pnode(2,5){D4}
+  \oscillator[output=right](D4){VCO}{fillstyle=solid,fillcolor=Orange}
+  \psframe(1.25,3)(2.75,5.75)
+  \rput[b](2,3.1){\large\textbf{L-band}}
+  \pnode(5,3){D5}
+  \amplifier[fillstyle=solid,fillcolor=CornflowerBlue](D2)(D5){}
+
+  \pnode(2,2){R1}
+  \pnode(4,2){R2}
+  \amplifier[fillstyle=solid,fillcolor=Thistle](R2)(R1){IF~Amp}
+  \rput[r](1.9,2){70/140MHz}
+  \pnode(6,2){R3}
+  \filter(R3)(R2){}
+  \pnode(8,2){R4}
+  \pnode(7,3){D6}
+  \mixer[tripolestyle=top](R3)(R4)(D6){}{}
+  \ncline{D5}{D6}
+
+  \pnode(8,8){N4}
+  \filter(N3)(N4){}
+  \pnode(10,8){N5}
+  \amplifier[fillstyle=solid,fillcolor=NavyBlue](N4)(N5){L-band Amp}
+  \pnode(12,8){N6}
+  \resistor[unit=0.5,dipolestyle=zigzag,variable=true,labeloffset=-0.8](N5)(N6){RF Atten}
+  \pnode(11,8){U0}
+
+  \pnode(14,8){N7}
+  \amplifier[fillstyle=solid,fillcolor=NavyBlue](N6)(N7){}
+  \pnode(16,8){N8}
+  \pnode(15,7){D7}
+  \mixer(N7)(N8)(D7){Mixer}{fillstyle=solid,fillcolor=BurntOrange}
+  \pnode(18,8){N9}
+  \filter(N8)(N9){}
+  \pnode(20,8){N10}
+  \amplifier[fillstyle=solid,fillcolor=NavyBlue,labeloffset=-0.8](N9)(N10){L-band Amp}
+  \pnode(22,8){N11}
+  \pnode(21,7){X1}
+  \mixer(N10)(N11)(X1){Mixer}{fillstyle=solid,fillcolor=BurntOrange}
+  \pnode(24,8){N12}
+  \filter(N11)(N12){}
+  \pnode(26,8){N13}
+  \amplifier[fillstyle=solid,fillcolor=RubineRed,labeloffset=-0.8](N12)(N13){Ku-band Amp}
+
+  \pnode(18,10){U2}
+  \pnode(20,10){U3}
+  \detector[fillstyle=solid,fillcolor=NavyBlue,dipoleinput=right](U2)(U3){Det L-Band}
+  \pnode(11,10){U1}
+  \ncline{U2}{U1}
+  \ncline{U1}{U0}
+  \pnode(24,10){U4}
+  \pnode(26,10){U5}
+  \detector[fillstyle=solid,fillcolor=RubineRed,dipoleinput=right](U4)(U5){Det Ku-Band}
+  \ncline{U4}{U3}
+  \ncline{U5}{N13}
+
+  \pnode(15,5){D8}
+  \amplifier[fillstyle=solid,fillcolor=CornflowerBlue,labeloffset=-1.5](D8)(D7){L-Band Buffers}
+  \pnode(13,5){D9}
+  \amplifier[fillstyle=solid,fillcolor=CornflowerBlue](D9)(D8){}
+  \pnode(13,4){D10}
+  \ncline{D9}{D10}
+  \pnode(11,4){D11}
+  \vco[fillstyle=solid,fillcolor=Orange](D11)(D10){VCO}
+  \rput(10,4){\rnode{D12}{\psframebox{\textbf{PLL}}}}
+  \ncline{D11}{D12}
+  \pnode(10,6){D13}
+  \ncline{D12}{D13}
+  \pnode(11,6){D14}
+  \ncline{D13}{D14}
+  \pnode(13,6){D15}
+  \freqmult[fillstyle=solid,fillcolor=Goldenrod,dipolestyle=divider](D14)(D15){Prescaler}
+  \ncline{D15}{D9}
+  \psframe(9.5,3.25)(13.1,7)
+  \rput[tl](9.7,6.8){\large\textbf{L-Band}}
+
+  \pnode(10,2){R5}
+  \amplifier[fillstyle=solid,fillcolor=NavyBlue](R5)(R4){L-band Amp}
+  \pnode(12,2){R6}
+  \resistor[unit=0.5,dipolestyle=zigzag,variable=true,labeloffset=-0.8](R5)(R6){RF Atten}
+  \pnode(14,2){R7}
+  \amplifier[fillstyle=solid,fillcolor=NavyBlue](R7)(R6){L-band Amp}
+  \pnode(16,2){R8}
+  \filter(R8)(R7){}
+  \pnode(18,2){R9}
+  \pnode(17,3){D17}
+  \mixer[tripolestyle=top](R8)(R9)(D17){Mixer}{fillstyle=solid,fillcolor=BurntOrange}
+
+  \pnode(15,3){D16}
+  \amplifier[fillstyle=solid,fillcolor=CornflowerBlue](D8)(D16){}
+  \ncline{D16}{D17}
+
+  \pnode(20,2){R10}
+  \amplifier[fillstyle=solid,fillcolor=NavyBlue](R10)(R9){L-band Amp}
+  \pnode(22,2){R11}
+  \amplifier[fillstyle=solid,fillcolor=NavyBlue](R11)(R10){L-band Amp}
+  \pnode(24,2){R12}
+  \filter(R12)(R11){}
+  \pnode(26,2){R13}
+  \pnode(25,1){R15}
+  \mixer(R12)(R13)(R15){Mixer}{fillstyle=solid,fillcolor=BurntOrange}
+  \pnode(28,2){R14}
+  \amplifier[fillstyle=solid,fillcolor=Purple](R14)(R13){Ku-band LNA}
+
+  \pnode(25,-1){R16}
+  \amplifier[fillstyle=solid,fillcolor=OliveGreen,labeloffset=-1.6](R16)(R15){Ku-band Buffers}
+  \pnode(24,-1){R17}
+  \ncline{R16}{R17}
+  \pnode(24,-2){R18}
+  \ncline{R17}{R18}
+  \pnode(22,-2){R19}
+  \vco[fillstyle=solid,fillcolor=Red](R18)(R19){Ku-band}
+  \rput(21,-2){\rnode{R20}{\psframebox{\textbf{PLL}}}}
+  \ncline{R19}{R20}
+  \pnode(21,0){R21}
+  \ncline{R20}{R21}
+  \pnode(22,0){R22}
+  \ncline{R21}{R22}
+  \pnode(24,0){R23}
+  \freqmult[fillstyle=solid,fillcolor=Goldenrod,dipolestyle=divider](R22)(R23){Prescaler}
+  \ncline{R23}{R17}
+  \psframe(18,-3)(28.5,3)
+  \rput[br](28,-2.75){\large\textbf{LNB}}
+  \rput[bl](18,3.1){%
+    \begin{tabular}{l}
+    \textbf{950-1540 MHz}\\
+    \textbf{900-1700 MHz}
+    \end{tabular}}
+  \cnode(29,2){.1}{S2}
+  \ncline{R14}{S2}
+
+  \pnode(21,5.5){X2}
+  \ncline{X1}{X2}
+  \pnode(24,5.5){X3}
+  \amplifier[fillstyle=solid,fillcolor=OliveGreen](X3)(X2){Ku-band Buffers}
+  \pnode(24,6.25){X4}
+  \ncline{X3}{X4}
+  \pnode(26,6.25){X5}
+  \freqmult[fillstyle=solid,fillcolor=Goldenrod,dipolestyle=divider,labeloffset=-0.7](X4)(X5){Prescaler}
+  \pnode(27,6.25){X6}
+  \ncline{X5}{X6}
+  \rput(27,4.75){\rnode{X7}{\psframebox{\textbf{PLL}}}}
+  \ncline{X6}{X7}
+  \pnode(26,4.75){X8}
+  \ncline{X7}{X8}
+  \pnode(24,4.75){X9}
+  \vco[fillstyle=solid,fillcolor=Red](X8)(X9){Ku-band}
+  \ncline{X9}{X3}
+  \psframe(23.75,3.25)(28.5,7)
+  \rput[br](28,3.5){\large\textbf{Ku-band}}
+
+  \pnode(28.5,8){N14}
+  \amplifier[fillstyle=solid,fillcolor=RubineRed](N13)(N14){}
+  \cnode(29,8){.1}{S1}
+  \ncline{N14}{S1}
+  \psframe(26.25,7.25)(28.5,10)
+  \rput[t](27.375,9.75){\large \textbf{SSPA}}
+ 
+  \rput[lt](2,0){\large%
+    \begin{tabular}{l}
+        \textbf{Tx/GHz: 13.75-14.00, 14.00-14.50}\\
+        \textbf{Rx/GHz: 10.95-11.70, 11.20-11.70, 11.70-12.20, 12.25-12.75}
+    \end{tabular}}
+\end{pspicture}}
+
+\end{landscape}
+
+
+
+\clearpage
+\section{Flip Flops -- logical elements}
+
+The syntax for all logical base circuits is
+\begin{BDef}
+\Lcs{logic}\OptArgs\OptArg*{\coord0}\Largb{label}
+\end{BDef}
+
+\noindent where the options and the origin are optional. If they are missing,
+then the default options, described in the next section and the default
+origin $(0,0)$ is used. The origin specifies the lower left corner
+of the logical circuit.
+
+\xLcs{logic}xLkeyword{logicType}
+\begin{lstlisting}[style=code]
+\logic{Demo}
+\logic[logicType=and]{Demo}
+\logic(0,0){Demo}
+\logic[logicType=and](0,0){Demo}
+\end{lstlisting}
+
+The above four ,,different`` calls of the \Lcs{logic} macro give the
+same output, because they are equivalent. 
+
+\subsection{The Options}
+
+\begin{longtable}{@{}>{\ttfamily}l l l@{}}
+\textrm{\emph{name}} & \emph{type} & \emph{default}\\\hline
+\endhead
+\Lkeyword{logicShowNode} & boolean & \false \\
+\Lkeyword{logicShowDot} & boolean & \false \\
+\Lkeyword{logicNodestyle} & command & \emph{\textbackslash footnotesize} \\
+\Lkeyword{logicSymbolstyle} & command & \emph{\textbackslash large} \\
+\Lkeyword{logicSymbolpos} & value & \emph{0.5} \\
+\Lkeyword{logicLabelstyle} & command & \emph{\textbackslash small} \\
+\Lkeyword{logicType} & string & \Lkeyval{and} \\
+\Lkeyword{logicChangeLR} & boolean & \false \\
+\Lkeyword{logicWidth} & length & \emph{1.5} \\
+\Lkeyword{logicHeight} & length & \emph{2.5} \\
+\Lkeyword{logicWireLength} & length & \emph{0.5} \\
+\Lkeyword{logicNInput} & number & \emph{2} \\
+\Lkeyword{logicJInput} & number & \emph{2} \\
+\Lkeyword{logicKInput} & number &\emph{2}
+\end{longtable}
+
+\subsection{Basic Logical Circuits}
+At least the basic objects require a unique label name, otherwise it is
+not sure, that all nodes will work well. The label may contain any
+alphanumerical character and most of all symbols. But it is save
+using only combinations of letters and digits. For example:
+\begin{verbatim}
+And0
+a0
+a123
+12
+NOT123a
+\end{verbatim}
+
+\verb|A_1| is not a good choice, the underscore may cause some problems.
+
+\subsubsection{And}
+\psset{subgriddiv=0,griddots=5,gridlabels=7pt}
+\begin{LTXexample}[width=4.5cm](3,3)
+  \begin{pspicture}(-1,0)(3,3)
+  \logic{AND1}
+  \end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=4.5cm](3,3)
+  \begin{pspicture}(-0.5,0)(3,3)
+  \logic[logicChangeLR]{AND2}
+  \end{pspicture}
+\end{LTXexample}
+
+\xLkeyword{logicShowNode}\xLkeyset{logicType=and}\xLkeyword{logicChangeLR}\xLkeyword{logicNInput}
+\xLkeyword{logicWidth}\xLkeyword{logicHeight}\xLkeyword{logicChangeLR}
+\begin{LTXexample}[width=4.5cm](4,6)
+  \begin{pspicture}(-0.5,0)(4,5)
+  \logic[logicShowNode,%
+     logicWidth=2,
+     logicHeight=4,
+     logicNInput=6,
+     logicChangeLR](1,1){AND3}
+  \end{pspicture}
+\end{LTXexample}
+
+\subsubsection{NotAnd}
+\begin{LTXexample}[width=4.5cm](3,3)
+  \begin{pspicture}(-0.5,0)(3,3)
+  \logic[logicType=nand,
+     logicShowNode]{NAND1}
+  \end{pspicture}
+\end{LTXexample}
+
+
+\begin{LTXexample}[width=4.5cm](3,3)
+  \begin{pspicture}(-0.5,0)(3,3)
+  \logic[logicType=nand,
+     logicChangeLR]{NAND2}
+  \end{pspicture}
+\end{LTXexample}
+
+\xLkeyword{logicShowNode}\xLkeyset{logicType=nand}\xLkeyword{logicChangeLR}\xLkeyword{logicNInput}
+\xLkeyword{logicWidth}\xLkeyword{logicHeight}\xLkeyword{logicChangeLR}
+\begin{LTXexample}[width=4.5cm](4,6)
+  \begin{pspicture}(4,5)
+  \logic[logicType=nand,
+     logicShowNode,
+     logicWidth=2,
+     logicHeight=4,
+     logicNInput=6,
+     logicChangeLR](1,1){NAND3}
+  \end{pspicture}
+\end{LTXexample}
+
+\subsubsection{Or}
+\begin{LTXexample}[width=4.5cm](3,3)
+  \begin{pspicture}(-0.5,0)(3,3)
+  \logic[logicType=or,
+     logicShowNode]{OR1}
+  \end{pspicture}
+\end{LTXexample}
+
+
+\begin{LTXexample}[width=4.5cm](3,3)
+  \begin{pspicture}(-0.5,0)(3,3)
+  \logic[logicType=or,
+     logicChangeLR]{OR2}
+  \end{pspicture}
+\end{LTXexample}
+
+
+\xLkeyword{logicShowNode}\xLkeyset{logicType=or}\xLkeyword{logicChangeLR}\xLkeyword{logicNInput}
+\xLkeyword{logicWidth}\xLkeyword{logicHeight}\xLkeyword{logicChangeLR}
+\begin{LTXexample}[width=4.5cm](4,6)
+  \begin{pspicture}(4,5)
+  \logic[logicType=or,
+     logicShowNode,
+     logicWidth=2,
+     logicHeight=4,
+     logicNInput=6,
+     logicChangeLR](1,1){OR3}
+  \end{pspicture}
+\end{LTXexample}
+
+\clearpage
+\subsubsection{Not Or}
+
+\begin{LTXexample}[width=4.5cm](3,3)
+  \begin{pspicture}(-0.5,0)(3,3)
+  \logic[logicType=nor,
+     logicShowNode]{NOR1}
+  \end{pspicture}
+\end{LTXexample}
+
+
+\begin{LTXexample}[width=4.5cm](3,3)
+  \begin{pspicture}(-0.5,0)(3,3)
+  \logic[logicType=nor,
+     logicChangeLR]{NOR2}
+  \end{pspicture}
+\end{LTXexample}
+
+\xLkeyword{logicShowNode}\xLkeyset{logicType=nor}\xLkeyword{logicChangeLR}\xLkeyword{logicNInput}
+\xLkeyword{logicWidth}\xLkeyword{logicHeight}\xLkeyword{logicChangeLR}
+\begin{LTXexample}[width=4.5cm](4,6)
+  \begin{pspicture}(4,5)
+  \logic[logicType=nor,
+     logicShowNode,
+     logicWidth=2,
+     logicHeight=4,
+     logicNInput=6,
+     logicChangeLR](1,1){NOR3}
+  \end{pspicture}
+\end{LTXexample}
+
+
+\subsubsection{Not}
+
+\begin{LTXexample}[width=4.5cm](3,3)
+  \begin{pspicture}(-0.5,0)(3,3)
+  \logic[logicType=not,
+     logicShowNode]{NOT1}
+  \end{pspicture}
+\end{LTXexample}
+
+
+\begin{LTXexample}[width=4.5cm](3,3)
+  \begin{pspicture}(-0.5,0)(3,3)
+  \logic[logicType=not,
+     logicChangeLR]{NOT2}
+  \end{pspicture}
+\end{LTXexample}
+
+\xLkeyword{logicShowNode}\xLkeyset{logicType=not}\xLkeyword{logicChangeLR}
+\xLkeyword{logicWidth}\xLkeyword{logicHeight}\xLkeyword{logicChangeLR}
+\begin{LTXexample}[width=4.5cm](4,6)
+  \begin{pspicture}(4,5)
+  \logic[logicType=not,
+     logicShowNode,
+     logicWidth=2,
+     logicHeight=4,
+     logicChangeLR](1,1){NOT3}
+  \end{pspicture}
+\end{LTXexample}
+
+\subsubsection{Exclusive OR}
+
+\begin{LTXexample}[width=4.5cm](3,3)
+  \begin{pspicture}(-0.5,0)(3,3)
+  \logic[logicType=exor,
+     logicShowNode]{ExOR1}
+  \end{pspicture}
+\end{LTXexample}
+
+
+\begin{LTXexample}[width=4.5cm](3,3)
+  \begin{pspicture}(-0.5,0)(3,3)
+  \logic[logicType=exor,
+     logicChangeLR]{ExOR2}
+  \end{pspicture}
+\end{LTXexample}
+
+\xLkeyword{logicShowNode}\xLkeyset{logicType=exor}\xLkeyword{logicChangeLR}\xLkeyword{logicNInput}
+\xLkeyword{logicWidth}\xLkeyword{logicHeight}\xLkeyword{logicChangeLR}
+\begin{LTXexample}[width=4.5cm](4,6)
+  \begin{pspicture}(4,5)
+  \logic[logicType=exor,
+     logicShowNode,
+     logicNInput=6,
+     logicWidth=2,
+     logicHeight=4,
+     logicChangeLR](1,1){ExOR3}
+  \end{pspicture}
+\end{LTXexample}
+
+
+\clearpage
+\subsubsection{Exclusive NOR}
+
+\xLkeyset{logicType=exnor}\xLkeyword{logicShowNode}
+\begin{LTXexample}[width=4.5cm](3,3)
+  \begin{pspicture}(-0.5,0)(3,3)
+  \logic[logicType=exnor,
+     logicShowNode]{ExNOR1}
+  \end{pspicture}
+\end{LTXexample}
+
+
+\xLkeyset{logicType=exor}\xLkeyword{logicChangeLR}
+\begin{LTXexample}[width=4.5cm](3,3)
+  \begin{pspicture}(-0.5,0)(3,3)
+  \logic[logicType=exnor,
+     logicChangeLR]{ExNOR2}
+  \end{pspicture}
+\end{LTXexample}
+
+\xLkeyword{logicShowNode}\xLkeyset{logicType=exor}\xLkeyword{logicChangeLR}\xLkeyword{logicNInput}
+\xLkeyword{logicWidth}\xLkeyword{logicHeight}\xLkeyword{logicChangeLR}
+\begin{LTXexample}[width=4.5cm](4,6)
+  \begin{pspicture}(4,5)
+  \logic[logicType=exnor,
+     logicShowNode,
+     logicNInput=6,
+     logicWidth=2,
+     logicHeight=4,
+     logicChangeLR](1,1){ExNOR3}
+  \end{pspicture}
+\end{LTXexample}
+
+
+\subsection{RS Flip Flop}
+
+\xLkeyword{logicShowNode}\xLkeyset{logicType=RS}
+\begin{LTXexample}[width=4.5cm](3,4.5)
+  \begin{pspicture}(-1,-1)(3,3)
+  \logic[logicShowNode,
+     logicType=RS]{RS1}
+  \end{pspicture}
+\end{LTXexample}
+
+
+\xLkeyword{logicShowNode}\xLkeyset{logicType=RS}\xLkeyword{logicChangeLR}
+\begin{LTXexample}[width=4.5cm](3,4.5)
+  \begin{pspicture}(-1,-1)(3,3)
+  \logic[logicShowNode,
+     logicType=RS,
+     logicChangeLR]{RS2}
+  \end{pspicture}
+\end{LTXexample}
+
+
+\subsection{D Flip Flop}
+
+\begin{LTXexample}[width=4.5cm](3,4.5)
+  \begin{pspicture}(-1,-1)(3,3)
+  \logic[logicShowNode,
+     logicType=D]{D1}
+  \end{pspicture}
+\end{LTXexample}
+
+\xLkeyword{logicShowNode}\xLkeyset{logicType=D}\xLkeyword{logicChangeLR}
+\begin{LTXexample}[width=4.5cm](3,4.5)
+  \begin{pspicture}(-1,-1)(3,3)
+  \logic[logicShowNode=true,
+     logicType=D,
+     logicChangeLR]{D2}
+  \end{pspicture}
+\end{LTXexample}
+
+
+\subsection{JK Flip Flop}
+\xLkeyword{logicShowNode}\xLkeyset{logicType=JK}\xLkeyword{logicJInput}\xLkeyword{logicKInput}
+\begin{LTXexample}[width=4.5cm](3,4.5)
+\begin{pspicture}(-1,-1)(3,3)
+  \logic[logicShowNode,
+     logicType=JK,
+     logicKInput=2,
+     logicJInput=2]{JK1}
+\end{pspicture}
+\end{LTXexample}
+
+\xLkeyword{logicShowNode}\xLkeyset{logicType=JK}\xLkeyword{logicJInput}\xLkeyword{logicKInput}\xLkeyword{logicChangeLR}
+\begin{LTXexample}[width=4.5cm](3,4.5)
+  \begin{pspicture}(-1,-1)(3,3)
+  \logic[logicShowNode,logicType=JK,
+     logicKInput=2, logicJInput=4,
+     logicChangeLR]{JK2}
+  \end{pspicture}
+\end{LTXexample}
+
+\subsection{Other Options}
+
+\xLkeyword{logicShowDot}
+\begin{LTXexample}[width=3.5cm](3,3)
+  \begin{pspicture}(-0.5,0)(3,2.5)
+  \logic[logicShowDot]{A0}
+  \end{pspicture}
+\end{LTXexample}
+
+\xLkeyword{logicWireLength}
+\begin{LTXexample}[width=4.5cm](4,3)
+  \begin{pspicture}(-1,0)(3,2.5)
+  \logic[logicWireLength=1,
+     logicShowDot]{A1}
+  \end{pspicture}
+\end{LTXexample}
+
+\bigskip
+The unit of \Lkeyword{logicWireLength} is the same than the actual one for pstricks, set by
+the \Lkeyword{unit} option.
+
+\subsection{The Node Names}
+Every logic circuit is defined with its name, which should be a unique one.
+If we have the following NAND circuit, then \LPack{pst-circ} defines the nodes
+\begin{lstlisting}[style=syntax]
+NAND11, NAND12, NAND13, NAND14, NAND1Q
+\end{lstlisting}
+
+\noindent If there exists an inverted output, like for alle Flip Flops,
+then the negated one gets the appendix \verb|neg| to the node name. For 
+example:
+\begin{lstlisting}[style=syntax]
+NAND1Q, NAND1Qneg
+\end{lstlisting}
+
+\begin{LTXexample}[width=3cm](3,3.5)
+  \begin{pspicture}(-0.5,0)(2.5,3)
+  \logic[logicShowNode=true,%
+      logicLabelstyle=\footnotesize,%
+      logicType=nand,%
+      logicNInput=4]{NAND1}
+  \multido{\n=1+1}{4}{%
+     \pscircle*[linecolor=red](NAND1\n){2pt}%
+  }
+  \pscircle*[linecolor=blue](NAND1Q){2pt}
+  \end{pspicture}
+\end{LTXexample}
+
+\vspace{0.5cm}
+Now it is possible to draw a line from the output to the input 
+
+\begin{lstlisting}[style=syntax]
+\ncbar[angleA=0,angleB=180]{<Node A>}{<Node B>}
+\end{lstlisting}
+
+It may be easier to print a grid since the drawing phase and then comment it out if
+all is finished.
+
+\bigskip
+\begin{LTXexample}[width=3.5cm](3,3.5)
+  \begin{pspicture}(-1,-1)(2.5,3)
+  \logic[logicShowNode=true,%
+      logicLabelstyle=\footnotesize,%
+      logicType=nand,%
+      logicWireLength=1,%
+      logicNInput=4]{NAND1}
+      \pnode(-0.5,0|NAND11){tempA}
+      \pnode(2,0|NAND1Q){tempB}
+  \end{pspicture}
+  \ncbar[angleA=-90,angleB=0,arm=0.75,%
+      arrows=*-*, dotsize=0.15]{tempA}{tempB}
+\end{LTXexample}
+
+\subsection{Examples}
+
+\begin{LTXexample}[pos=t]
+   \begin{pspicture}(-1,0)(5,5)
+     \psset{logicType=nor, logicLabelstyle=\normalsize,%
+          logicWidth=1, logicHeight=1.5, dotsize=0.15}
+     \logic(1.5,0){nor1}
+     \logic(1.5,3){nor2}
+     \psline(nor2Q)(4,0|nor2Q)
+     \uput[0](4,0|nor2Q){$Q$}
+     \psline(nor1Q)(4,0|nor1Q)
+     \uput[0](4,0|nor1Q){$\overline{Q}$}
+     \psline{*-}(3.50,0|nor2Q)(3.5,2.5)(1.5,2.5)
+         (0.5,1.75)(0.5,0|nor12)(nor12)
+     \psline{*-}(3.50,0|nor1Q)(3.5,2)(1.5,2)
+         (0.5,2.5)(0.5,0|nor21)(nor21)
+     \psline(0,0|nor11)(nor11)\uput[180](0,0|nor11){R}
+     \psline(0,0|nor22)(nor22)\uput[180](0,0|nor22){S}
+   \end{pspicture}
+\end{LTXexample}
+
+\bigskip
+\begin{LTXexample}[pos=t]
+  \begin{pspicture}(-4,0)(5,7)
+     \psset{logicWidth=1, logicHeight=2, dotsize=0.15}
+     \logic[logicWireLength=0](-2,0){A0}
+     \logic[logicWireLength=0](-2,5){A1}
+     \ncbar[angleA=-180,angleB=-180,arm=0.5]{A11}{A02}
+     \psline[dotsize=0.15]{-*}(-3.5,3.5)(-2.5,3.5)
+     \uput[180](-3.5,3.5){$T$}
+     \psline(-3.5,0.5)(A01)\uput[180](-3.5,0.5){$S$}
+     \psline(-3.5,6.5)(A12)\uput[180](-3.5,6.5){$R$}
+     \psset{logicType=nor, logicLabelstyle=\normalsize}
+     \logic(1,0.5){nor1}
+     \logic(1,4.5){nor2}
+     \psline(nor2Q)(4,0|nor2Q)
+     \uput[0](4,0|nor2Q){$Q$}
+     \psline(nor1Q)(4,0|nor1Q)
+     \uput[0](4,0|nor1Q){$\overline{Q}$}
+     \psline{*-}(3,0|nor2Q)(3,4)(1,4)(0,3)(0,0|nor12)(nor12)
+     \psline{*-}(3,0|nor1Q)(3,3)(1,3)(0,4)(0,0|nor21)(nor21)
+     \psline(A0Q)(nor11)
+     \psline(A1Q)(nor22)
+  \end{pspicture}
+\end{LTXexample}
+
+
+\clearpage
+
+\section{Logical circuits in american style}
+
+\begin{longtable}{ll>{\ttfamily}l}
+\toprule
+		\emph{macro} & \emph{option} & \emph{defaults} \\\midrule
+		\endfirsthead
+		\midrule
+		\emph{macro} & \emph{option} & \emph{defaults} \\\midrule
+		\endhead
+		\midrule
+		\small continued on next page $\dots$ & & \\
+		\endfoot
+		\midrule
+		\endlastfoot
+		\Lcs{logicnot} & \Lkeyword{input} & true \\
+		& \Lkeyword{invertinput} & false \\
+		& \Lkeyword{invertoutput} & false \\
+		& \Lkeyword{iec} & false \\
+		& \Lkeyword{iecinvert} & false \\
+		& \Lkeyword{bubblesize} & 0.2 \\
+		& \multicolumn{2}{@{}l}{\quad possible values \texttt{0.05, 0.10, 0.15, 0.20}} \\
+		\midrule
+		\Lcs{logicand} & \Lkeyword{ninputs} & 2 \\
+		& \nxLkeyword{input?} & true \\
+		& \multicolumn{2}{l}{\quad where ? = a--d} \\
+		& \nxLkeyword{invertinput?} & false \\
+		& \multicolumn{2}{l}{\quad where ? = a--d} \\
+		& \Lkeyword{invertoutput} & false \\
+		& \Lkeyword{iec} & false \\
+		& \Lkeyword{iecinvert} & false \\
+		& \Lkeyword{bubblesize} & 0.2 \\
+		& \multicolumn{2}{@{}l}{\quad possible values \texttt{0.05, 0.10, 0.15, 0.20}} \\
+		\midrule
+		\Lcs{logicor} & \Lkeyword{ninputs} & 2 \\
+		& \nxLkeyword{input?} & true \\
+		& \multicolumn{2}{l}{\quad where ? = 1--4} \\
+		& \nxLkeyword{invertinput?} & false \\
+		& \multicolumn{2}{l}{\quad where ? = a--d} \\
+		& \Lkeyword{invertoutput} & false \\
+		& \Lkeyword{iec} & false \\
+		& \Lkeyword{iecinvert} & false \\
+		& \Lkeyword{bubblesize} & 0.2 \\
+		& \multicolumn{2}{@{}l}{\quad possible values \texttt{0.05, 0.10, 0.15, 0.20}} \\
+		\midrule
+		\Lcs{logicxor} & \Lkeyword{ninputs} & 2 \\
+		& \nxLkeyword{input?} & true \\
+		& \multicolumn{2}{l}{\quad where ? = 1--4} \\
+		& \nxLkeyword{invertinput?} & false \\
+		& \multicolumn{2}{l}{\quad where ? = a--d} \\
+		& \Lkeyword{invertoutput} & false \\
+		& \Lkeyword{iec} & false \\
+		& \Lkeyword{iecinvert} & false \\
+		& \Lkeyword{bubblesize} & 0.2 \\
+		& \multicolumn{2}{@{}l}{\quad possible values \texttt{0.05, 0.10, 0.15, 0.20}} \\
+		\midrule
+		\Lcs{logicff} & \Lkeyword{inputa} & true \\
+		& \Lkeyword{invertinputa} & false \\
+		& \Lkeyword{inputalabel} & \\
+		& \Lkeyword{inputb} & true \\
+		& \Lkeyword{invertinputb} & false \\
+		& \Lkeyword{inputblabel} & \\
+		& \Lkeyword{enable} & false \\
+		& \Lkeyword{invertenable} & false \\
+		& \Lkeyword{clock} & false \\
+		& \Lkeyword{invertclock} & false \\
+		& \Lkeyword{set} & false \\
+		& \Lkeyword{invertset} & false \\
+		& \Lkeyword{reset} & false \\
+		& \Lkeyword{invertreset} & false \\
+		& \Lkeyword{bubblesize} & 0.2 \\
+		& \multicolumn{2}{@{}l}{\quad possible values \texttt{0.05, 0.10, 0.15, 0.20}} \\
+		\midrule
+		\Lcs{logicic} & \Lkeyword{nicpins} & 8 \\
+		& \multicolumn{2}{@{}l}{\quad possible values \texttt{8, 14, 16, 20, 32}} \\
+		& \nxLkeyword{pin?} & true \\
+		& \nxLkeyword{invertpin?} & false \\
+		& \nxLkeyword{pin?label} & \\
+		& \nxLkeyword{pin?number} & \\
+		& \multicolumn{2}{@{}l}{\quad where \texttt{? = a--z,aa,ab,ac,ad,ae,af}} \\
+		& \Lkeyword{bubblesize} & 0.2 \\
+		& \multicolumn{2}{@{}l}{\quad possible values \texttt{0.05, 0.10, 0.15, 0.20}} \\
+		\midrule
+		\Lcs{xic} & \Lkeyword{plcaddress} & \\
+		& \Lkeyword{plcsymbol} & \\
+		\midrule
+		\Lcs{xio} & \Lkeyword{plcaddress} & \\
+		& \Lkeyword{plcsymbol} & \\
+		\midrule
+		\Lcs{ote} & \Lkeyword{plcaddress} & \\
+		& \Lkeyword{plcsymbol} & \\
+		& \Lkeyword{latch} & false \\
+		& \Lkeyword{unlatch} & false \\
+		\midrule
+		\Lcs{osr} & \Lkeyword{plcaddress} & \\
+		& \Lkeyword{plcsymbol} & \\
+		\midrule
+		\Lcs{res} & \Lkeyword{plcaddress} & \\
+		& \Lkeyword{plcsymbol} & \\
+		\midrule
+		\Lcs{swpb} & \Lkeyword{contactclosed} & false \\
+		\midrule
+		\Lcs{swtog} & \Lkeyword{contactclosed} & false \\
+		\midrule
+		\Lcs{contact} & \Lkeyword{contactclosed} & false \\
+		\end{longtable}
+
+
+
+\subsection{Examples}
+
+%
+% NOT Example
+%
+
+
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-1,-1)(8.5,3)
+  \logicnot[invertoutput=true](0,0){IEEE}
+  \logicnot[invertoutput=true,iec=true,iecinvert=true](4,0){IEC}
+\end{pspicture}
+\end{LTXexample}
+
+
+%
+% AND Example
+%
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-1,-1)(9.5,3)
+  \logicand[ninputs=2](0,0){IEEE}
+  \logicand[ninputs=2,iec=true](5,0){IEC}
+\end{pspicture}
+\end{LTXexample}
+
+%
+% NAND Example
+%
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-1,-1)(9.5,3)
+  \logicand[ninputs=2,invertoutput=true](0,0){IEEE}	
+  \logicand[ninputs=2,invertoutput=true,iec=true,iecinvert=true](5,0){IEC}
+\end{pspicture}
+\end{LTXexample}
+
+
+%
+% Negative-AND Example
+%
+\begin{LTXexample}[pos=l]
+\begin{pspicture}(-1,-1)(5,3)
+  \logicand[ninputs=2,invertinputa=true,
+            invertinputb=true](0,0){Name}
+\end{pspicture}
+\end{LTXexample}
+
+% OR Example
+%
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-1,-1)(9.5,3)
+  \logicor[ninputs=2](0,0){IEEE}
+  \logicor[ninputs=2,iec=true](5,0){IEC}
+\end{pspicture}
+\end{LTXexample}
+
+%
+% NOR Example
+%
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-1,-1)(9.5,3)
+  \logicor[ninputs=2,invertoutput=true](0,0){IEEE}
+  \logicor[ninputs=2,invertoutput=true,iec=true,iecinvert=true](5,0){IEC}
+\end{pspicture}
+\end{LTXexample}
+
+%
+% Negative-OR Example
+%
+\begin{LTXexample}[pos=l]
+\begin{pspicture}(-1,-1)(5,3)
+  \logicor[ninputs=2,invertinputa=true,
+           invertinputb=true](0,0){Name}
+\end{pspicture}
+\end{LTXexample}
+
+%
+% Exclusive-OR Example
+%
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-1,-1)(9.5,3)
+  \logicxor[ninputs=2]{0}(0,0){IEEE}	
+  \logicxor[ninputs=2,iec=true]{0}(5,0){IEC}	
+\end{pspicture}
+\end{LTXexample}
+
+%
+% Exclusive-NOR Example
+%
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-1,-1)(9.5,3)
+  \logicxor[ninputs=2,invertoutput=true]{0}(0,0){IEEE}	
+  \logicxor[ninputs=2,invertoutput=true,iec=true,iecinvert=true]{0}(5,0){IEC}	
+\end{pspicture}
+\end{LTXexample}
+
+\subsubsection{$S$-$R$ Flip-Flop with Clock}
+%
+% FF Example
+%
+\begin{LTXexample}[pos=l]
+\begin{pspicture}(-1,-1)(5,4)
+  \logicff[clock=true,inputalabel=$S$,inputblabel=$R$](0,0){Name}	
+\end{pspicture}
+\end{LTXexample}
+
+%
+% FF Example
+%
+\subsubsection{$\bar{S}$-$\bar{R}$ Flip-Flop with Enable} %$
+\begin{LTXexample}[pos=l]
+\begin{pspicture}(-1,-1)(5,4)
+  \logicff[enable=true,inputalabel=$\bar{S}$,inputblabel=$\bar{R}$](0,0){Name}
+\end{pspicture}
+\end{LTXexample}
+
+%
+% FF Example
+%
+\subsubsection{$J$-$K$ Flip-Flop}
+\begin{LTXexample}[pos=l]
+\begin{pspicture}(-1,-1)(5,4)
+  \logicff[inputalabel=$J$,inputblabel=$K$](0,0){Name}
+\end{pspicture}
+\end{LTXexample}
+
+%
+% FF Example
+%
+\subsubsection{$J$-$K$ Flip-Flop with Set and Reset}
+\begin{LTXexample}[pos=l]
+\begin{pspicture}(-1,-1)(5,4)
+  \logicff[set=true,reset=true,invertreset=true,%
+      inputalabel=$J$,inputblabel=$K$](0,0){Name}	
+\end{pspicture}
+\end{LTXexample}
+
+%
+% FF Example
+%
+\subsubsection{$D$ Flip-Flop}
+\begin{LTXexample}[pos=l]
+\begin{pspicture}(-1,-1)(5,4)
+  \logicff[inputb=false,inputalabel=$D$](0,0){Name}
+\end{pspicture}
+\end{LTXexample}
+
+%
+% FF Example
+%
+\subsubsection{Full Adder}
+\begin{LTXexample}[pos=l]
+\begin{pspicture}(-1,-1)(5,4)
+  \logicff[enable=true,invertoutputb=false,inputalabel=$A$,
+     inputblabel=$C_{in}$,inputenlabel=$B$,outputalabel=$\Sigma$,
+     outputblabel=$C_{out}$](0,0){Name}
+\end{pspicture}
+\end{LTXexample}
+
+%
+\subsubsection{7-Segment Display}
+%
+\begin{LTXexample}[pos=l]
+\begin{pspicture}(6.5,5)
+  \sevensegmentdisplay(0,0){Name}
+\end{pspicture}
+\end{LTXexample}
+
+%
+% 7-Segment Display Example
+%
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-1,-2)(6.5,6)
+  \sevensegmentdisplay[pinld=false,pinle=false,pinrc=false,pinlalabel=a,
+    pinlblabel=f,pinlglabel=e,pinrglabel=d,pinrelabel=c,pinrdlabel=g,
+    pinrblabel=b,pinralabel={$V_{CC}$},pinlanumber=1,pinlbnumber=2,
+    pinlcnumber=3,pinlfnumber=6,pinlgnumber=7,pinrgnumber=8,pinrfnumber=9,
+    pinrenumber=10,pinrdnumber=11,pinrbnumber=13,pinranumber=14](0,0){Name}
+\end{pspicture}
+\end{LTXexample}
+
+%
+% 7-Segment Display Example
+%
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-1,-2)(6.5,6)
+  \sevensegmentdisplay[segmentdisplay=5](0,0){Name}
+\end{pspicture}
+\end{LTXexample}
+
+%
+% 7-Segment Display Example
+%
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-1,-2)(6.5,6)
+  \sevensegmentdisplay[segmentdisplay=0,segmentcolor=red,segmentlabels=false,
+    pinlalabel=la,pinlblabel=lb,pinlclabel=lc,pinldlabel=ld,pinlelabel=le,
+    pinlflabel=lf,pinlglabel=lg,pinrglabel=rg,pinrflabel=rf,pinrelabel=re,
+    pinrdlabel=rd,pinrclabel=rc,pinrblabel=rb,pinralabel=ra,pinlanumber=1,
+    pinlbnumber=2,pinlcnumber=3,pinldnumber=4,pinlenumber=5,pinlfnumber=6,
+    pinlgnumber=7,pinrgnumber=8,pinrfnumber=9,pinrenumber=10,pinrdnumber=11,
+    pinrcnumber=12,pinrbnumber=13,pinranumber=14,pinta=true,pintalabel=ta,
+    pintanumber=0,pintb=true,pintblabel=tb,pintbnumber=0,pintc=true,
+    pintclabel=tc,pintcnumber=0,pintd=true,pintdlabel=td,pintdnumber=0,
+    pinte=true,pintelabel=te,pintenumber=0,pinba=true,pinbalabel=ba,
+    pinbanumber=0,pinbb=true,pinbblabel=bb,pinbbnumber=0,pinbc=true,
+    pinbclabel=bc,pinbcnumber=0,pinbd=true,pinbdlabel=bd,pinbdnumber=0,
+    pinbe=true,pinbelabel=be,pinbenumber=0](0,0){Name}
+\end{pspicture}
+\end{LTXexample}
+
+%
+% 7-Segment Display Example
+%
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-1,-2)(6.5,6)
+  \sevensegmentdisplay[segmentdisplay=10,pinla=false,pinlb=false,
+    pinlc=false,pinld=false,pinle=false,pinlf=false,pinlg=false,pinrg=false,
+    pinrf=false,pinre=false,pinrd=false,pinrc=false,pinrb=false,pinra=false,
+    pinta=true,pintalabel=g,pintanumber=0,pintb=true,pintblabel=f,pintbnumber=0,
+    pintc=true,pintclabel=$V_{cc}$,pintcnumber=0,pintd=true,pintdlabel=a,
+    pintdnumber=0,pinte=true,pintelabel=b,pintenumber=0,pinba=true,pinbalabel=e,
+    pinbanumber=0,pinbb=true,pinbblabel=d,pinbbnumber=0,pinbc=true,
+    pinbclabel=$V_{cc}$,pinbcnumber=0,pinbd=true,pinbdlabel=c,pinbdnumber=0,
+    pinbe=true,pinbelabel=dp,pinbenumber=0](0,0){Name}
+\end{pspicture}
+\end{LTXexample}
+
+%
+% IC Example 8-pins
+%
+\subsubsection{8-Pin DIP IC}
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-1,-2)(5,4)
+  \logicic[nicpins=8,bubblesize=0.1,%
+	pintl=true,pintllabel=tl,pintlnumber=1,%
+	pintc=true,pintclabel=tc,pintcnumber=2,%
+	pintr=true,pintrlabel=tr,pintrnumber=3,%
+	invertpintl=true,invertpintc=true,invertpintr=true,%
+	pinbl=true,pinbllabel=bl,pinblnumber=1,%
+	pinbc=true,pinbclabel=bc,pinbcnumber=2,%
+	pinbr=true,pinbrlabel=br,pinbrnumber=3,%
+	invertpinbl=true,invertpinbc=true,invertpinbr=true,%
+	pinalabel=a,pinblabel=b,pinclabel=c,pindlabel=d,%
+	pinelabel=e,pinflabel=f,pinglabel=g,pinhlabel=h,%
+	pinanumber=1,pinbnumber=2,pincnumber=3,pindnumber=4,%
+	pinenumber=5,pinfnumber=6,pingnumber=7,pinhnumber=8](0,0){Name}
+\end{pspicture}
+\end{LTXexample}
+
+%
+% IC Example 8-pins all inverted
+%
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-1,-2)(5,4)
+  \logicic[nicpins=8,%
+	pintl=true,pintllabel=tl,pintlnumber=1,%
+	pintc=true,pintclabel=tc,pintcnumber=2,%
+	pintr=true,pintrlabel=tr,pintrnumber=3,%
+	invertpintl=true,invertpintc=true,invertpintr=true,%
+	pinbl=true,pinbllabel=bl,pinblnumber=1,%
+	pinbc=true,pinbclabel=bc,pinbcnumber=2,%
+	pinbr=true,pinbrlabel=br,pinbrnumber=3,%
+	invertpinbl=true,invertpinbc=true,invertpinbr=true,%
+	pinalabel=a,pinblabel=b,pinclabel=c,pindlabel=d,%
+	pinelabel=e,pinflabel=f,pinglabel=g,pinhlabel=h,%
+	pinanumber=1,pinbnumber=2,pincnumber=3,pindnumber=4,%
+	pinenumber=5,pinfnumber=6,pingnumber=7,pinhnumber=8,%
+	invertpina=true,invertpinb=true,invertpinc=true,invertpind=true,%
+	invertpine=true,invertpinf=true,invertping=true,invertpinh=true](0,0){Name}
+\end{pspicture}
+\end{LTXexample}
+
+%
+% IC Example 14-pin
+%
+\subsubsection{14-Pin DIP IC}
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-1,-2)(5,6)
+  \logicic[nicpins=14,%
+	pintl=true,pintllabel=tl,pintlnumber=1,%
+	pintc=true,pintclabel=tc,pintcnumber=2,%
+	pintr=true,pintrlabel=tr,pintrnumber=3,%
+	invertpintl=true,invertpintc=true,invertpintr=true,%
+	pinbl=true,pinbllabel=bl,pinblnumber=1,%
+	pinbc=true,pinbclabel=bc,pinbcnumber=2,%
+	pinbr=true,pinbrlabel=br,pinbrnumber=3,%
+	invertpinbl=true,invertpinbc=true,invertpinbr=true,%
+	pinalabel=a,pinblabel=b,pinclabel=c,pindlabel=d,%
+	pinelabel=e,pinflabel=f,pinglabel=g,pinhlabel=h,%
+	pinilabel=i,pinjlabel=j,pinklabel=k,pinllabel=l,%
+	pinmlabel=m,pinnlabel=n,%
+	pinanumber=1,pinbnumber=2,pincnumber=3,pindnumber=4,%
+	pinenumber=5,pinfnumber=6,pingnumber=7,pinhnumber=8,
+	pininumber=9,pinjnumber=10,pinknumber=11,pinlnumber=12,%
+	pinmnumber=13,pinnnumber=14]%
+	(0,0){Name}
+\end{pspicture}
+\end{LTXexample}
+
+%
+\subsubsection{14-Pin DIP IC all inverted}
+% IC Example 14-pin all inverted
+%
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-1,-2)(5,6)
+  \logicic[nicpins=14,%
+	pintl=true,pintllabel=tl,pintlnumber=1,%
+	pintc=true,pintclabel=tc,pintcnumber=2,%
+	pintr=true,pintrlabel=tr,pintrnumber=3,%
+	invertpintl=true,invertpintc=true,invertpintr=true,%
+	pinbl=true,pinbllabel=bl,pinblnumber=1,%
+	pinbc=true,pinbclabel=bc,pinbcnumber=2,%
+	pinbr=true,pinbrlabel=br,pinbrnumber=3,%
+	invertpinbl=true,invertpinbc=true,invertpinbr=true,%
+	pinalabel=a,pinblabel=b,pinclabel=c,pindlabel=d,%
+	pinelabel=e,pinflabel=f,pinglabel=g,pinhlabel=h,%
+	pinilabel=i,pinjlabel=j,pinklabel=k,pinllabel=l,%
+	pinmlabel=m,pinnlabel=n,%
+	pinanumber=1,pinbnumber=2,pincnumber=3,pindnumber=4,%
+	pinenumber=5,pinfnumber=6,pingnumber=7,pinhnumber=8,
+	pininumber=9,pinjnumber=10,pinknumber=11,pinlnumber=12,%
+	pinmnumber=13,pinnnumber=14,
+	invertpina=true,invertpinb=true,invertpinc=true,invertpind=true,%
+	invertpine=true,invertpinf=true,invertping=true,invertpinh=true,%
+	invertpini=true,invertpinj=true,invertpink=true,invertpinl=true,%
+	invertpinm=true,invertpinn=true]%
+	(0,0){Name}
+\end{pspicture}
+\end{LTXexample}
+
+%
+% IC Example 16-pin
+%
+\subsubsection{16-Pin DIP IC}
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-1,-2)(5,6)
+  \logicic[nicpins=16,%
+	pintl=true,pintllabel=tl,pintlnumber=1,%
+	pintc=true,pintclabel=tc,pintcnumber=2,%
+	pintr=true,pintrlabel=tr,pintrnumber=3,%
+	invertpintl=true,invertpintc=true,invertpintr=true,%
+	pinbl=true,pinbllabel=bl,pinblnumber=1,%
+	pinbc=true,pinbclabel=bc,pinbcnumber=2,%
+	pinbr=true,pinbrlabel=br,pinbrnumber=3,%
+	invertpinbl=true,invertpinbc=true,invertpinbr=true,%
+	pinalabel=a,pinblabel=b,pinclabel=c,pindlabel=d,%
+	pinelabel=e,pinflabel=f,pinglabel=g,pinhlabel=h,%
+	pinilabel=i,pinjlabel=j,pinklabel=k,pinllabel=l,%
+	pinmlabel=m,pinnlabel=n,pinolabel=o,pinplabel=p,%
+	pinanumber=1,pinbnumber=2,pincnumber=3,pindnumber=4,%
+	pinenumber=5,pinfnumber=6,pingnumber=7,pinhnumber=8,
+	pininumber=9,pinjnumber=10,pinknumber=11,pinlnumber=12,%
+	pinmnumber=13,pinnnumber=14,pinonumber=15,pinpnumber=16]%
+	(0,0){Name}
+\end{pspicture}
+\end{LTXexample}
+
+% IC Example 16-pin all inverted
+%
+\subsubsection{16-Pin DIP IC all inverted}
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-1,-2)(5,6)
+  \logicic[nicpins=16,%
+	pintl=true,pintllabel=tl,pintlnumber=1,%
+	pintc=true,pintclabel=tc,pintcnumber=2,%
+	pintr=true,pintrlabel=tr,pintrnumber=3,%
+	invertpintl=true,invertpintc=true,invertpintr=true,%
+	pinbl=true,pinbllabel=bl,pinblnumber=1,%
+	pinbc=true,pinbclabel=bc,pinbcnumber=2,%
+	pinbr=true,pinbrlabel=br,pinbrnumber=3,%
+	invertpinbl=true,invertpinbc=true,invertpinbr=true,%
+	pinalabel=a,pinblabel=b,pinclabel=c,pindlabel=d,%
+	pinelabel=e,pinflabel=f,pinglabel=g,pinhlabel=h,%
+	pinilabel=i,pinjlabel=j,pinklabel=k,pinllabel=l,%
+	pinmlabel=m,pinnlabel=n,pinolabel=o,pinplabel=p,%
+	pinanumber=1,pinbnumber=2,pincnumber=3,pindnumber=4,%
+	pinenumber=5,pinfnumber=6,pingnumber=7,pinhnumber=8,
+	pininumber=9,pinjnumber=10,pinknumber=11,pinlnumber=12,%
+	pinmnumber=13,pinnnumber=14,pinonumber=15,pinpnumber=16,
+	invertpina=true,invertpinb=true,invertpinc=true,invertpind=true,%
+	invertpine=true,invertpinf=true,invertping=true,invertpinh=true,%
+	invertpini=true,invertpinj=true,invertpink=true,invertpinl=true,%
+	invertpinm=true,invertpinn=true,invertpino=true,invertpinp=true]%
+	(0,0){Name}
+\end{pspicture}
+\end{LTXexample}
+
+%
+% IC Example 20-pin
+%
+\subsubsection{20-Pin DIP IC}
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-1,-2)(5,7)
+  \logicic[nicpins=20,%
+	pintl=true,pintllabel=tl,pintlnumber=1,%
+	pintc=true,pintclabel=tc,pintcnumber=2,%
+	pintr=true,pintrlabel=tr,pintrnumber=3,%
+	invertpintl=true,invertpintc=true,invertpintr=true,%
+	pinbl=true,pinbllabel=bl,pinblnumber=1,%
+	pinbc=true,pinbclabel=bc,pinbcnumber=2,%
+	pinbr=true,pinbrlabel=br,pinbrnumber=3,%
+	invertpinbl=true,invertpinbc=true,invertpinbr=true,%
+	pinalabel=a,pinblabel=b,pinclabel=c,pindlabel=d,%
+	pinelabel=e,pinflabel=f,pinglabel=g,pinhlabel=h,%
+	pinilabel=i,pinjlabel=j,pinklabel=k,pinllabel=l,%
+	pinmlabel=m,pinnlabel=n,pinolabel=o,pinplabel=p,%
+	pinqlabel=q,pinrlabel=r,pinslabel=s,pintlabel=t,%
+	pinanumber=1,pinbnumber=2,pincnumber=3,pindnumber=4,%
+	pinenumber=5,pinfnumber=6,pingnumber=7,pinhnumber=8,
+	pininumber=9,pinjnumber=10,pinknumber=11,pinlnumber=12,%
+	pinmnumber=13,pinnnumber=14,pinonumber=15,pinpnumber=16,%
+	pinqnumber=17,pinrnumber=18,pinsnumber=19,pintnumber=20]%
+	(0,0){Name}
+\end{pspicture}
+\end{LTXexample}
+
+%
+% IC Example 20-pin all inverted
+%
+\subsubsection{20-Pin DIP IC all inverted}
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-1,-2)(5,7)
+  \logicic[nicpins=20,%
+	pintl=true,pintllabel=tl,pintlnumber=1,%
+	pintc=true,pintclabel=tc,pintcnumber=2,%
+	pintr=true,pintrlabel=tr,pintrnumber=3,%
+	invertpintl=true,invertpintc=true,invertpintr=true,%
+	pinbl=true,pinbllabel=bl,pinblnumber=1,%
+	pinbc=true,pinbclabel=bc,pinbcnumber=2,%
+	pinbr=true,pinbrlabel=br,pinbrnumber=3,%
+	invertpinbl=true,invertpinbc=true,invertpinbr=true,%
+	pinalabel=a,pinblabel=b,pinclabel=c,pindlabel=d,%
+	pinelabel=e,pinflabel=f,pinglabel=g,pinhlabel=h,%
+	pinilabel=i,pinjlabel=j,pinklabel=k,pinllabel=l,%
+	pinmlabel=m,pinnlabel=n,pinolabel=o,pinplabel=p,%
+	pinqlabel=q,pinrlabel=r,pinslabel=s,pintlabel=t,%
+	pinanumber=1,pinbnumber=2,pincnumber=3,pindnumber=4,%
+	pinenumber=5,pinfnumber=6,pingnumber=7,pinhnumber=8,
+	pininumber=9,pinjnumber=10,pinknumber=11,pinlnumber=12,%
+	pinmnumber=13,pinnnumber=14,pinonumber=15,pinpnumber=16,%
+	pinqnumber=17,pinrnumber=18,pinsnumber=19,pintnumber=20,%
+	invertpina=true,invertpinb=true,invertpinc=true,invertpind=true,%
+	invertpine=true,invertpinf=true,invertping=true,invertpinh=true,%
+	invertpini=true,invertpinj=true,invertpink=true,invertpinl=true,%
+	invertpinm=true,invertpinn=true,invertpino=true,invertpinp=true,%
+	invertpinq=true,invertpinr=true,invertpins=true,invertpint=true]%
+	(0,0){Name}
+\end{pspicture}
+\end{LTXexample}
+
+%
+% IC Example 32-pin
+%
+\subsubsection{32-Pin DIP IC}
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-1,-2)(6,9.5)
+  \logicic[nicpins=32,%
+	pintl=true,pintllabel=tl,pintlnumber=1,%
+	pintc=true,pintclabel=tc,pintcnumber=2,%
+	pintr=true,pintrlabel=tr,pintrnumber=3,%
+	invertpintl=true,invertpintc=true,invertpintr=true,%
+	pinbl=true,pinbllabel=bl,pinblnumber=1,%
+	pinbc=true,pinbclabel=bc,pinbcnumber=2,%
+	pinbr=true,pinbrlabel=br,pinbrnumber=3,%
+	invertpinbl=true,invertpinbc=true,invertpinbr=true,%
+	pinalabel=a,pinblabel=b,pinclabel=c,pindlabel=d,%
+	pinelabel=e,pinflabel=f,pinglabel=g,pinhlabel=h,%
+	pinilabel=i,pinjlabel=j,pinklabel=k,pinllabel=l,%
+	pinmlabel=m,pinnlabel=n,pinolabel=o,pinplabel=p,%
+	pinqlabel=q,pinrlabel=r,pinslabel=s,pintlabel=t,%
+	pinulabel=u,pinvlabel=v,pinwlabel=w,pinxlabel=x,%
+	pinylabel=y,pinzlabel=z,pinaalabel=aa,pinablabel=ab,%
+	pinaclabel=ac,pinadlabel=ad,pinaelabel=ae,pinaflabel=af,%
+	pinanumber=1,pinbnumber=2,pincnumber=3,pindnumber=4,%
+	pinenumber=5,pinfnumber=6,pingnumber=7,pinhnumber=8,
+	pininumber=9,pinjnumber=10,pinknumber=11,pinlnumber=12,%
+	pinmnumber=13,pinnnumber=14,pinonumber=15,pinpnumber=16,%
+	pinqnumber=17,pinrnumber=18,pinsnumber=19,pintnumber=20,%
+	pinunumber=21,pinvnumber=22,pinwnumber=23,pinxnumber=24,%
+	pinynumber=25,pinznumber=26,pinaanumber=27,pinabnumber=28,%
+	pinacnumber=29,pinadnumber=30,pinaenumber=31,pinafnumber=32]%
+	(0,0){Name}
+\end{pspicture}
+\end{LTXexample}
+
+%
+% IC Example 32-pin all inverted
+%
+\subsubsection{32-Pin DIP IC all inverted}
+\begin{center}
+\begin{pspicture}(-1,-2)(6,9.5)
+  \logicic[nicpins=32,%
+	pintl=true,pintllabel=tl,pintlnumber=1,%
+	pintc=true,pintclabel=tc,pintcnumber=2,%
+	pintr=true,pintrlabel=tr,pintrnumber=3,%
+	invertpintl=true,invertpintc=true,invertpintr=true,%
+	pinbl=true,pinbllabel=bl,pinblnumber=1,%
+	pinbc=true,pinbclabel=bc,pinbcnumber=2,%
+	pinbr=true,pinbrlabel=br,pinbrnumber=3,%
+	invertpinbl=true,invertpinbc=true,invertpinbr=true,%
+	pinalabel=a,pinblabel=b,pinclabel=c,pindlabel=d,%
+	pinelabel=e,pinflabel=f,pinglabel=g,pinhlabel=h,%
+	pinilabel=i,pinjlabel=j,pinklabel=k,pinllabel=l,%
+	pinmlabel=m,pinnlabel=n,pinolabel=o,pinplabel=p,%
+	pinqlabel=q,pinrlabel=r,pinslabel=s,pintlabel=t,%
+	pinulabel=u,pinvlabel=v,pinwlabel=w,pinxlabel=x,%
+	pinylabel=y,pinzlabel=z,pinaalabel=aa,pinablabel=ab,%
+	pinaclabel=ac,pinadlabel=ad,pinaelabel=ae,pinaflabel=af,%
+	pinanumber=1,pinbnumber=2,pincnumber=3,pindnumber=4,%
+	pinenumber=5,pinfnumber=6,pingnumber=7,pinhnumber=8,
+	pininumber=9,pinjnumber=10,pinknumber=11,pinlnumber=12,%
+	pinmnumber=13,pinnnumber=14,pinonumber=15,pinpnumber=16,%
+	pinqnumber=17,pinrnumber=18,pinsnumber=19,pintnumber=20,%
+	pinunumber=21,pinvnumber=22,pinwnumber=23,pinxnumber=24,%
+	pinynumber=25,pinznumber=26,pinaanumber=27,pinabnumber=28,%
+	pinacnumber=29,pinadnumber=30,pinaenumber=31,pinafnumber=32,%
+	invertpina=true,invertpinb=true,invertpinc=true,invertpind=true,%
+	invertpine=true,invertpinf=true,invertping=true,invertpinh=true,%
+	invertpini=true,invertpinj=true,invertpink=true,invertpinl=true,%
+	invertpinm=true,invertpinn=true,invertpino=true,invertpinp=true,%
+	invertpinq=true,invertpinr=true,invertpins=true,invertpint=true,%
+	invertpinu=true,invertpinv=true,invertpinw=true,invertpinx=true,%
+	invertpiny=true,invertpinz=true,invertpinaa=true,invertpinab=true,%
+	invertpinac=true,invertpinad=true,invertpinae=true,invertpinaf=true]%
+	(0,0){Name}
+\end{pspicture}
+\end{center}
+
+
+\begin{lstlisting}
+\begin{pspicture}(-1,-2)(6,9.5)
+  \logicic[nicpins=32,%
+	pintl=true,pintllabel=tl,pintlnumber=1,%
+	pintc=true,pintclabel=tc,pintcnumber=2,%
+	pintr=true,pintrlabel=tr,pintrnumber=3,%
+	invertpintl=true,invertpintc=true,invertpintr=true,%
+	pinbl=true,pinbllabel=bl,pinblnumber=1,%
+	pinbc=true,pinbclabel=bc,pinbcnumber=2,%
+	pinbr=true,pinbrlabel=br,pinbrnumber=3,%
+	invertpinbl=true,invertpinbc=true,invertpinbr=true,%
+	pinalabel=a,pinblabel=b,pinclabel=c,pindlabel=d,%
+	pinelabel=e,pinflabel=f,pinglabel=g,pinhlabel=h,%
+	pinilabel=i,pinjlabel=j,pinklabel=k,pinllabel=l,%
+	pinmlabel=m,pinnlabel=n,pinolabel=o,pinplabel=p,%
+	pinqlabel=q,pinrlabel=r,pinslabel=s,pintlabel=t,%
+	pinulabel=u,pinvlabel=v,pinwlabel=w,pinxlabel=x,%
+	pinylabel=y,pinzlabel=z,pinaalabel=aa,pinablabel=ab,%
+	pinaclabel=ac,pinadlabel=ad,pinaelabel=ae,pinaflabel=af,%
+	pinanumber=1,pinbnumber=2,pincnumber=3,pindnumber=4,%
+	pinenumber=5,pinfnumber=6,pingnumber=7,pinhnumber=8,
+	pininumber=9,pinjnumber=10,pinknumber=11,pinlnumber=12,%
+	pinmnumber=13,pinnnumber=14,pinonumber=15,pinpnumber=16,%
+	pinqnumber=17,pinrnumber=18,pinsnumber=19,pintnumber=20,%
+	pinunumber=21,pinvnumber=22,pinwnumber=23,pinxnumber=24,%
+	pinynumber=25,pinznumber=26,pinaanumber=27,pinabnumber=28,%
+	pinacnumber=29,pinadnumber=30,pinaenumber=31,pinafnumber=32,%
+	invertpina=true,invertpinb=true,invertpinc=true,invertpind=true,%
+	invertpine=true,invertpinf=true,invertping=true,invertpinh=true,%
+	invertpini=true,invertpinj=true,invertpink=true,invertpinl=true,%
+	invertpinm=true,invertpinn=true,invertpino=true,invertpinp=true,%
+	invertpinq=true,invertpinr=true,invertpins=true,invertpint=true,%
+	invertpinu=true,invertpinv=true,invertpinw=true,invertpinx=true,%
+	invertpiny=true,invertpinz=true,invertpinaa=true,invertpinab=true,%
+	invertpinac=true,invertpinad=true,invertpinae=true,invertpinaf=true]%
+	(0,0){Name}
+\end{pspicture}
+\end{lstlisting}
+
+
+%
+% XIC
+%
+\subsubsection{XIC}
+\begin{LTXexample}[pos=l]
+\begin{pspicture}(-1,-1)(1,1)
+  \xic[plcaddress=I:1/0,
+       plcsymbol=Symbol](0,0)
+\end{pspicture}
+\end{LTXexample}
+
+%
+% XIO
+%
+\subsubsection{XI0}
+\begin{LTXexample}[pos=l]
+\begin{pspicture}(-1,-1)(1,1)
+  \xio[plcaddress=I:1/0,
+       plcsymbol=Symbol](0,0)
+\end{pspicture}
+\end{LTXexample}
+
+%
+% OTE
+%
+\subsubsection{OTE}
+\begin{LTXexample}[pos=l]
+\begin{pspicture}(-1,-1)(1,1)
+  \ote[plcaddress=O:2/0,
+       plcsymbol=Symbol](0,0)
+\end{pspicture}
+\end{LTXexample}
+
+%
+% OTL
+%
+\subsubsection{OTL}
+\begin{LTXexample}[pos=l]
+\begin{pspicture}(-1,-1)(1,1)
+  \ote[latch=true,
+       plcaddress=O:2/0,
+       plcsymbol=Symbol](0,0)
+\end{pspicture}
+\end{LTXexample}
+
+%
+% OTU
+%
+\subsubsection{OTE}
+\begin{LTXexample}[pos=l]
+\begin{pspicture}(-1,-1)(1,1)
+  \ote[unlatch=true,
+       plcaddress=O:2/0,
+       plcsymbol=Symbol](0,0)
+\end{pspicture}
+\end{LTXexample}
+
+%
+% OSR
+%
+\subsubsection{OSR}
+\begin{LTXexample}[pos=l]
+\begin{pspicture}(-1,-1)(1,1)
+  \osr[plcaddress=O:2/0,
+       plcsymbol=Symbol](0,0)
+\end{pspicture}
+\end{LTXexample}
+
+%
+% RES
+%
+\subsubsection{RES}
+\begin{LTXexample}[pos=l]
+\begin{pspicture}(-1,-1)(1,1)
+  \res[plcaddress=O:2/0,
+       plcsymbol=Symbol](0,0)
+\end{pspicture}
+\end{LTXexample}
+
+%
+% PB NO
+%
+\subsubsection{Switch PB NO}
+\begin{LTXexample}[pos=l]
+\begin{pspicture}(-1,-1)(1,1)
+  \swpb(0,0)
+\end{pspicture}
+\end{LTXexample}
+
+%
+% PB NC
+%
+\subsubsection{Switch PB NC}
+\begin{LTXexample}[pos=l]
+\begin{pspicture}(-1,-1)(1,1)
+  \swpb[contactclosed=true](0,0)
+\end{pspicture}
+\end{LTXexample}
+
+%
+% Switch Toggle NO
+%
+\subsubsection{Switch TOGGLE NO}
+\begin{LTXexample}[pos=l]
+\begin{pspicture}(-1,-1)(1,1)
+  \swtog(0,0)
+\end{pspicture}
+\end{LTXexample}
+
+%
+% Switch Toggle NC
+%
+\subsubsection{Switch PB NC}
+\begin{LTXexample}[pos=l]
+\begin{pspicture}(-1,-1)(1,1)
+  \swtog[contactclosed=true](0,0)
+\end{pspicture}
+\end{LTXexample}
+
+%
+% Contact NO
+%
+\subsubsection{Contact NO}
+\begin{LTXexample}[pos=l]
+\begin{pspicture}(-1,-1)(1,1)
+  \contact(0,0)
+\end{pspicture}
+\end{LTXexample}
+
+%
+% Contact NC
+%
+\subsubsection{Contact NC}
+\begin{LTXexample}[pos=l]
+\begin{pspicture}(-1,-1)(1,1)
+  \contact[contactclosed=true](0,0)
+\end{pspicture}
+\end{LTXexample}
+
+%
+% Motor Armature
+%
+\subsubsection{Motor Armature}
+\begin{LTXexample}[pos=l]
+\begin{pspicture}(-1,-1)(1,1)
+  \armature(0,0)
+\end{pspicture}
+\end{LTXexample}
+
+%
+% Modified pst-circ Components
+%
+\subsubsection{Modified default symbols}
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-1,-1)(5,10)
+\newdiode[labeloffset=-0.8](0,0)(4,0){$\backslash$newdiode}
+\newLED[labeloffset=-0.8](0,2)(4,2){$\backslash$newLED}
+\newZener[labeloffset=-0.8](0,4)(4,4){$\backslash$newZener}
+\newcapacitor[labeloffset=-0.8](0,6)(4,6){$\backslash$newcapacitor}
+\newcapacitor[labeloffset=-0.8](0,6)(4,6){$\backslash$newcapacitor}
+\newcapacitor[labeloffset=-0.8](0,6)(4,6){$\backslash$newcapacitor}
+\vdc[labeloffset=-0.8](0,8)(4,8){$\backslash$vdc}
+\vac[labeloffset=-0.8](0,10)(4,10){$\backslash$vac}		
+\end{pspicture}
+\end{LTXexample}
+
+%
+% \vac
+%
+\begin{LTXexample}[pos=l]
+\begin{pspicture}(-1,-1)(5,4)
+  \vac[labeloffset=-0.7](0,0)(4,0){$\backslash$vac}
+  \vac[labeloffset=1](0,0)(2,3.464){$\backslash$vac}
+  \vac[labeloffset=1](2,3.464)(4,0){$\backslash$vac}
+\end{pspicture}
+\end{LTXexample}
+
+
+\section{Adding new components}
+
+Adding new components is not simple unless you need only a simple dipole. For dipoles a macro is provided that generates all helping macros for a new component so that you need to write only the actual drawing code.
+
+If you want to add a new dipole component, you only need the following code:
+\begin{lstlisting}[language=TeX]
+  \newCircDipole{ComponentName}%
+  \def\pst@draw@ComponentName{%
+    % The PSTricks code for your component
+    % The center of the component is at (0,0)
+    \pnode(component_left_end,0){dipole@1}
+    \pnode(component_right_end,0){dipole@2}}
+\end{lstlisting}
+This code can be placed in the core code or somewhere in the respective document in which case it must be surrounded by \lstinline[language=TeX]{\makeatletter...\makeatother}.
+
+If your new dipole should also work with \Lcs{multidipole} then you have to make some changes in the \Lcs{multidipole} core code. In the definition
+of \Lcs{pst@multidipole}, look for the last \Lcs{ifx} test
+\begin{lstlisting}[language=TeX]
+  % ...
+  % Extract from \pst@multidipole
+     \else\ifx\OpenDipol   #4\let\pscirc@next\pst@multidipole@OpenDipol% 27
+     \else\ifx\OpenTripol  #4\let\pscirc@next\pst@multidipole@OpenTripol% 28
+     \else                         % Put your modification here
+     \else\let\pscirc@next\ignorespaces
+     \fi\fi\fi
+  % Extract form \pst@multidipole
+  % ...
+\end{lstlisting}
+and add (marked with \verb+%%%+)
+\begin{lstlisting}[language=TeX]
+  % ...
+  % Extract from \pst@multidipole
+     \else\ifx\OpenDipol   #4\let\pscirc@next\pst@multidipole@OpenDipol% 27
+     \else\ifx\OpenTripol  #4\let\pscirc@next\pst@multidipole@OpenTripol% 28
+     \else\ifx\ComponentName#4\let\next\pst@multidipole@ComponentName%%%
+     \else\let\pscirc@next\ignorespaces
+     \fi\fi\fi
+  % Extract form \pst@multidipole
+  % ...
+\end{lstlisting}
+Do the same in \verb+\pst@multidipole@+
+\begin{lstlisting}[language=TeX]
+  % ...
+  % Extract from \pst@multidipole@
+     \else\ifx\OpenDipol#1\let\pscirc@next\pst@multidipole@OpenDipol% 27
+     \else\ifx\OpenTripol#1\let\pscirc@next\pst@multidipole@OpenTripol% 28
+     \else\ifx\ComponentName#1\let\next\pst@multidipole@ComponentName%%%
+     \else\let\pscirc@next\ignorespaces\pst@multidipole@output
+     \fi\fi\fi
+  % Extract form \pst@multidipole@
+  % ...
+\end{lstlisting}
+and that's it! All you have to do then is send your modified \LFile{pst-circ.tex} to 
+me and  it will become part of the official release of \LPack{pst-circ}.
+
+\bigskip
+\begin{LTXexample}[width=3.5cm]
+  \begin{pspicture}(3,2)
+    \newCircDipole{delayline}
+    \makeatletter
+    \def\pst@draw@delayline{%
+       \psset{linewidth=1.5\pslinewidth}%
+       \psframe(-0.5,-0.3)(0.5,0.3)
+       \psline[arrows=->](-0.2,-0.5)(0.2,0.5)
+       \pnode(-0.5,0){dipole@1}
+       \pnode(0.5,0){dipole@2}}%
+    \makeatother
+    \pnode(0,1){A}\pnode(3,1){B}
+    \delayline(A)(B){delay}
+  \end{pspicture}
+\end{LTXexample}
+
+
+
+
+\clearpage
+\section{List of all optional arguments for \texttt{pst-circ}}\label{sec:para}
+Note: the default for booleans is always false.
+
+\xkvview{family=pst-circ,columns={key,type,default}}
+
+\bgroup
+\raggedright
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{pst-circ-doc}
+\egroup
+
+\printindex
+
+\end{document}

@@ -1,0 +1,1035 @@
+%\iffalse -*-mode:Latex;tex-command:"latex *;dvips pst-slpe -o"-*- \fi
+%\iffalse
+%
+% Copyright 1998-2008 Martin Giese, mgiese@risc.uni-linz.ac.at
+%                     Herbert Voss (using xkeyval,\psBall,fading)
+% 
+%% This program can be redistributed and/or modified under the terms
+%% of the LaTeX Project Public License Distributed from CTAN archives
+%% in directory macros/latex/base/lppl.txt.
+%%
+%\fi
+% \changes{v1.31}{2011/10/25}{ fix bug in psball (hv)}
+% \changes{v1.3}{2008/09/20}{ fading option (hv)}
+% \changes{v1.2}{2008/06/19}{ \textbackslash psBall (hv)}
+% \changes{v1.1}{2006/06/19}{%
+%	using the extended pst-xkey instead of the old pst-key package; 
+%	creating a dtx file (hv)}
+% \changes{v1.0}{2005/03/05}{More compatible to the other PStricks 
+% packages. (RN)}
+%
+%
+% \DoNotIndex{\!,\",\#,\$,\%,\&,\',\(,\+,\*,\,,\-,\.,\/,\:,\;,\<,\=,\>,\?}
+% \DoNotIndex{\@,\@B,\@K,\@cTq,\@f,\@fPl,\@ifnextchar,\@nameuse,\@oVk}
+% \DoNotIndex{\[,\\,\],\^,\_,\ }
+% \DoNotIndex{\^,\\^,\\\^,$\^$,$\\^$,$\\^$}
+% \DoNotIndex{\0,\2,\4,\5,\6,\7,\8,}
+% \DoNotIndex{\A,\a}
+% \DoNotIndex{\B,\b,\Bc,\begin,\Bq,\Bqc}
+% \DoNotIndex{\C,\c,\catcode,\cJA,\CodelineIndex,\csname}
+% \DoNotIndex{\D,\def,\define@key,\Df,\divide,\DocInput,\documentclass,\pst@addfams}
+% \DoNotIndex{\eCN,\edef,\else,\eHd,\eMcj,\EnableCrossrefs,\end,\endcsname}
+% \DoNotIndex{\endCenterExample,\endExample,\endinput,\endpsclip}
+% \DoNotIndex{\PrintIndex,\PrintChanges,\ProvidesFile}
+% \DoNotIndex{\endpspicture,\endSideBySideExample,\Example}
+% \DoNotIndex{\F,\f,\FdUrr,\fi,\filedate,\fileversion,\FV@Environment}
+% \DoNotIndex{\FV@UseKeyValues,\FV@XRightMargin,\FVB@Example,\fvset}
+% \DoNotIndex{\G,\g,\GetFileInfo,\gr,\GradientLoaded,\gsFKrbK@o,\gsj,\gsOX}
+% \DoNotIndex{\hbadness,\hfuzz,\HLEmphasize,\HLMacro,\HLMacro@i}
+% \DoNotIndex{\HLReverse,\HLReverse@i,\hqcu,\HqY}
+% \DoNotIndex{\I,\i,\ifx,\input,\Ir,\IU}
+% \DoNotIndex{\j,\jl,\JT,\JVodH}
+% \DoNotIndex{\K,\k,\kfSlL}
+% \DoNotIndex{\L,\let}
+% \DoNotIndex{\message,\mHNa,\mIU}
+% \DoNotIndex{\N,\nB,\newcmykcolor,\newdimen,\newif,\nW}
+% \DoNotIndex{\O,\oCDJDo,\ocQhVI,\OnlyDescription,\oRKJ}
+% \DoNotIndex{\P,\p,\ProvidesPackage,\psframe,\pslinewidth,\psset}
+% \DoNotIndex{\PstAtCode,\PSTricksLoaded}
+% \DoNotIndex{\q,\Qr,\qssRXq,\qu,\qXjFQp,\qYL}
+% \DoNotIndex{\R,\r,\RecordChanges,\relax,\RlaYI,\rN,\Rp,\rp,\RPDXNn,\rput}
+% \DoNotIndex{\S,\scalebox,\SgY,\SideBySide@Example,\SideBySideExample}
+% \DoNotIndex{\SgY,\sk,\Sp,\space,\sZb}
+% \DoNotIndex{\T,\the,\tw@}
+% \DoNotIndex{\u,\UiSWGEf@,\uJi,\usepackage,\uVQdMM,\UYj}
+% \DoNotIndex{\VerbatimEnvironment,\VerbatimInput,\VrC@}
+% \DoNotIndex{\WhZ,\WjKCYb,\WNs}
+% \DoNotIndex{\XkN,\XW}
+% \DoNotIndex{\Z,\ZCM,\Ze}
+% \DoNotIndex{\addtocounter,\advance,\alph,\arabic,\AtBeginDocument,\AtEndDocument}
+% \DoNotIndex{\AtEndOfPackage,\begingroup,\bfseries,\bgroup,\box,\csname}
+% \DoNotIndex{\else,\endcsname,\endgroup,\endinput,\expandafter,\fi}
+% \DoNotIndex{\TeX,\z@,\p@,\@one,\xdef,\thr@@,\string,\sixt@@n,\reset,\or,\multiply,\repeat,\RequirePackage}
+% \DoNotIndex{\@cclvi,\@ne,\@ehpa,\@nil,\copy,\dp,\global,\hbox,\hss,\ht,\ifodd,\ifdim,\ifcase,\kern}
+% \DoNotIndex{\chardef,\loop,\leavevmode,\ifnum,\lower}
+% \setcounter{IndexColumns}{2}
+%
+%\iffalse
+%<*!prolog>
+\def\pstslpefileversion{1.31}
+\def\pstslpefiledate{2011/10/25}
+%</!prolog>
+%\fi
+%
+% \title{\textsf{pst-slpe} package \\ version \pstslpefileversion}
+% \author{Martin Giese\footnote{\texttt{giese@ira.uka.de}} and 
+%         Herbert Vo\ss\footnote{\texttt{hvoss@tug.org}}}
+% \date{\pstslpefiledate}
+% \maketitle
+%
+%\section{Introduction}
+%As of the 97 release, PSTricks contains the |pst-grad| 
+%package, which provides a gradient fill style for arbitrary shapes.
+%Although it often produces nice results, it has a number of
+%deficiencies:
+%\begin{enumerate}
+%\item It is not possible to go from a colour $A$ to $B$ to $C$,
+%etc. The most evident application of such a multi-colour gradient are
+%of course rainbow effects.  But they can also be useful in informative 
+%contexts, eg to identify modes of operation in a scale of values
+%(normal/danger/overload).
+%\item Colours are interpolated linearly in the RGB space.  This is
+%often OK, but when you want to go from red $(1,0,0)$ to green
+%$(0,1,0)$, it looks much better to get there via yellow $(1,1,0)$ than 
+%via brown $(0.5,0.5,0)$.  The point is, that to get from one saturated
+%colour to another, the colours on the way should also be saturated to
+%produce an optically pleasing result.
+%\item |pst-grad| is limited to {\em linear} gradients, ie~there
+%is a (possibly rotated) rectilinear coordinate system, such that the
+%colour at every point depends only on the $x$ coordinate of the
+%point.  In particular, there is no way to get circular patterns.
+%\end{enumerate}
+%|pst-slpe| solves {\em all} of the mentioned
+%problems in {\em one} package.  
+%
+%Problems 1.~is addressed by permitting the user to specify an
+%arbitrary number of colours, along with the points at which these are
+%to be reached.  A special form of each of the fill styles is provided,
+%which just needs two colours as parameters, and goes from one to the
+%other.  This makes the fill styles easier to use in that simple case.
+%
+%Problem 2.~is solved by interpolating in the hue-saturation-value
+%colour space.  Conversion between RGB and HSV is done behind the
+%scenes.  The user specifies colours in RGB.
+%
+%Finally, |pst-slpe| provides {\em concentric} and {\em radial}
+%gradients.  What these mean is best explained with a polar coordinate
+%system:  In a concentric pattern, the colour of a point depends on the
+%radius coordinate, while in a radial pattern, it depends on the angle
+%coordinate.  
+%
+%As a special bonus, the PostScript part of |pst-slpe| is somewhat
+%optimized for speed.  In |ghostscript|, rendering is about 30\% faster 
+%than with |pst-grad|.
+%\medskip
+%
+%For most of these problems, solutions have been posted in the
+%appropriate \TeX\ newsgroup over the years.  |pst-slpe| has however
+%been developed independently from these proposals.  It is based on 
+%the original PSTricks 0.93 |gradient| code, most of which has been 
+%changed or replaced.  The
+%author is indebted to Denis Girou, whose encouragement triggered the
+%process of making this a shipable package instead of a private
+%experiment.
+%\medskip
+%
+%The new fill styles and the
+%graphics parameters provided to use them are described in
+%section 2 of this document.  Section 3, if present, documents the 
+%implementation consisting of a generic \TeX\ file and a PostScript
+%header for the |dvi|-to-PostScript converter.  You can get section 3
+%by calling \LaTeX\ as follows on most relevant systems:
+%\begin{verbatim}
+%latex '\AtBeginDocument{\AlsoImplementation}\input{pst-slpe.dtx}'
+%\end{verbatim}
+%\section{Package Usage}
+% To use |pst-slpe|, you have to say
+% \begin{verbatim}
+%   \usepackage{pst-slpe}
+% \end{verbatim}
+% in the document prologue for \LaTeX, and 
+% \begin{verbatim}
+%   \input pst-slpe.tex
+% \end{verbatim}
+% in ``plain'' \TeX.
+%
+% \section{New macro and fill styles}
+% \DescribeMacro{\psBall}
+%    It takes the (optional) coordinates of the ball center, the color
+%    and the radius as parameter and uses |\pscircle| for painting
+%    the bullet. 
+%
+%    \vspace{1cm}
+%    \psBall{black}{2ex}
+%    \psBall(1,0){blue}{3ex}
+%    \psBall(2.5,0){red}{4ex}
+%    \psBall(4,0){green!50!blue!60}{5ex}
+%
+%    \vspace{1cm}
+% \begin{verbatim}
+%    \psBall{black}{2ex}
+%    \psBall(1,0){blue}{3ex}
+%    \psBall(2.5,0){red}{4ex}
+%    \psBall(4,0){green!50!blue!60}{5ex}
+% \end{verbatim}
+%
+%    The predinied options can be overwritten in the usual way:
+%
+%    \vspace{1cm}
+%    \psBall{black}{2ex}
+%    \psBall[sloperadius=10pt](1,0){blue}{3ex}
+%    \psBall(2.5,0){red}{4ex}
+%    \psBall[slopebegin=red](4,0){green!50!blue!60}{5ex}
+%
+%    \vspace{1cm}
+% \begin{verbatim}
+%    \psBall{black}{2ex}
+%    \psBall[sloperadius=10pt](1,0){blue}{3ex}
+%    \psBall(2.5,0){red}{4ex}
+%    \psBall[slopebegin=red](4,0){green!50!blue!60}{5ex}
+% \end{verbatim}
+%
+% \DescribeMacro{slope}
+% \DescribeMacro{slopes}
+% \DescribeMacro{ccslope}
+% \DescribeMacro{ccslopes}
+% \DescribeMacro{radslope}
+% \DescribeMacro{radslopes}
+% |pst-slpe| provides six new fill styles called |slope|, |slopes|,
+% |ccslope|, |ccslopes|, |radslope| and |radslopes|.  These obviously
+% come in pairs: The $\ldots$|slope|-styles are simplified versions of
+% the general $\ldots$|slopes|-styles.\footnote{By the way, I use slope
+% as a synonym for gradient.  It sounds less pretentious and avoids
+% name clashes.}  The |cc|$\ldots$ styles paint concentric patterns,
+% and the |rad|$\ldots$ styles do radial ones.  
+%
+% Here is a little
+% overview of what they look like:
+% \newcommand{\st}{$\vcenter to30pt{}$}
+% \begin{quote}\LARGE
+%  \begin{tabular}{cc}
+%   \psframebox[fillstyle=slope]{\st|slope|} &\qquad
+%   \psframebox[fillstyle=slopes]{\st|slopes|} \\[2ex]
+%   \psframebox[fillstyle=ccslope]{\st|ccslope|} &\qquad
+%   \psframebox[fillstyle=ccslopes]{\st|ccslopes|} \\[2ex]
+%   \psframebox[fillstyle=radslope]{\st|radslope|} &\qquad
+%   \psframebox[fillstyle=radslopes]{\st|radslopes|} \\[2ex]
+%  \end{tabular}
+% \end{quote}
+% These examples were produced by saying simply
+% \begin{verbatim}
+%   \psframebox[fillstyle=slope]{...}
+% \end{verbatim}
+% etc.~without setting any further graphics parameters.  The package
+% provides a number of parameters that can be used to control
+% the way these patterns
+% are painted.
+% \medskip
+%
+% \DescribeMacro{slopebegin}
+% \DescribeMacro{slopeend}
+% The graphics parameters |slopebegin| and |slopeend| set the colours
+% between which the three $\ldots$|slope| styles should interpolate.
+% Eg,
+% \begin{verbatim}
+%   \psframebox[fillstyle=slope,slopebegin=red,slopeend=green]{...}
+% \end{verbatim}
+% produces:
+% \begin{quote}\Large
+%  \psframebox[fillstyle=slope,slopebegin=red,slopeend=green]{\st slopes!}
+% \end{quote}
+% The same settings of |slopebegin| and |slopeend| for the |ccslope|
+% and |radslope| fillstyles produce
+% \begin{quote}\Large
+%  \psframebox[fillstyle=ccslope,slopebegin=red,slopeend=green]{\st slopes!}
+%   \quad{\normalsize resp.}\quad
+%  \psframebox[fillstyle=radslope,slopebegin=red,slopeend=green]{\st slopes!}
+% \end{quote}
+% The default settings go from a greenish yellow to pure blue.
+% \medskip
+%
+% \DescribeMacro{slopecolors}
+% If you want to interpolate between more than two colours, you have
+% to use the $\ldots$|slopes| styles, which are controlled by the 
+% |slopecolors| parameter instead of |slopebegin| and |slopeend|.  The 
+% idea is to specify the colour to use at certain points `on the
+% way'.  To fill a shape with |slopes|, imagine a linear scale 
+% from its left edge to its right edge.  The left edge must lie at
+% coordinate 0.  Pick an arbitrary value for the right edge, say 23.
+% Now you want to get light yellow at the left edge, a pastel green at $17/23$ 
+% of the way and dark cyan at the right edge, like this:
+% \begin{quote}\psset{unit=0.45cm}
+%  \begin{pspicture}(-1,0)(24,6)
+%   \pscustom[fillstyle=slopes,
+% slopecolors=0 1 1 .9  17 .5 1 .5  23 0 0.5 0.5  3]{
+%    \psccurve(0,2.5)(12,3.5)(20,4)(23,2)(17,2.5)}
+%   \psaxes(0,5)(-0.01,5)(23.01,5)
+%   \psline(0,5)(0,1)
+%   \psline(17,5)(17,1)
+%   \psline(23,5)(23,1)
+%  \end{pspicture}
+% \end{quote}
+% The RGB values for the three colours are $(1,1,0.9)$, $(0.5,1,0.5)$
+% and $(0,0.5,0.5)$.  The value for the |slopecolors| parameter is a list
+% of `colour infos' followed by the number of `colour infos'. 
+% Each `colour info' consists
+% of the coordinate value where a colour is to be specified, followed by
+% the RGB values of that colour.  All these values are separated by
+% white space.  The correct setting for the example is thus:
+% \begin{verbatim}
+%   slopecolors=0 1 1 .9   17 .5 1 .5   23 0 .5 .5   3
+% \end{verbatim}
+% For |ccslopes|, specify the colours from the center outward.  
+% For |radslopes| (with no rotation specified), 0 represents the ray
+% going `eastward'.  Specify the colours anti-clockwise.  If you want a
+% smooth gradient at the beginning and starting ray of |radslopes|, you
+% should pick the first and last colours identical.
+%
+% Please note, that the |slopecolors| parameter is not subject to any
+% parsing on the \TeX\ side.  If you forget a number or specify the wrong
+% number of segments, the PostScript interpreter will probably crash.
+%
+% The default value for |slopecolors| specifies a rainbow.
+%
+% \medskip
+%
+% \DescribeMacro{slopesteps}
+% The parameter |slopesteps| controls the number of distinct colour steps
+% rendered.  Higher values for this parameter result in better quality
+% but proportionally slower rendering.  Eg, setting
+% |slopesteps| to 5 with the |slope| fill style results in
+% \begin{quote}\Large
+%  \psframebox[fillstyle=slope,slopesteps=5]{\st slopes!}
+% \end{quote}
+%
+% The default value is 100, which
+% suffices for most purposes.  Remember that the number of distinct colours
+% reproducible by a given device is limited.  Pushing |slopesteps| to
+% high will result only in loss of performance at no gain in quality.
+% \medskip
+%
+% \DescribeMacro{slopeangle}
+% The |slope(s)| and |radslope(s)| patterns may be rotated.  As usual,
+% the angles are given anti-clockwise.  Eg, an angle of 30 degrees
+% gives
+% \begin{quote}\Large\psset{slopeangle=30}
+%  \psframebox[fillstyle=slope]{\st slopes!}
+%   \quad{\normalsize and}\quad
+%  \psframebox[fillstyle=radslope]{\st slopes!}
+% \end{quote}
+% with the |slope| and |radslope| fillstyles.
+% \medskip
+%
+% \DescribeMacro{slopecenter}
+% For the |cc|$\ldots$ and |rad|$\ldots$ styles, it is possible to
+% set the center of the pattern.  The |slopecenter| parameter is set to
+% the coordinates of that center relative to the bounding box of the
+% current path.  The following effect:
+% \begin{quote}\psset{unit=0.45cm}
+%  \begin{pspicture}(-1,-1)(24,5)
+%   \pscustom[fillstyle=radslope,slopecenter=0.2 0.4]{
+%    \pspolygon(0,2.5)(12,2.5)(20,4)(23,2)(17,2.5)(3,0)}
+%   \psaxes[axesstyle=frame,Dx=0.1,dx=2.2999,Dy=0.2,dy=0.7999](0,0)(23,4) 
+%   \psline(4.6,0)(4.6,4)
+%   \psline(0,1.6)(23,1.6)
+%  \end{pspicture}
+% \end{quote}
+%  was achieved with 
+% \begin{verbatim}
+%    fillstyle=radslope,slopecenter=0.2 0.4
+% \end{verbatim}
+% The default value for |slopecenter| is |0.5 0.5|, which is the
+% center for symmetrical shapes.  Note that this parameter is not
+% parsed by \TeX, so setting it to anything else than two numbers 
+% between 0 and 1 might crash the PostScript interpreter.
+% \medskip
+%
+% \DescribeMacro{sloperadius}
+% Normally, the |cc|$\ldots$ and |rad|$\ldots$ styles distribute the
+% given colours so that the center is painted in the first colour given,
+% and the points of the shape furthest from the center are painted in 
+% the last colour.  In other words the maximum radius to which the
+% |slopecolors| parameter refers is the maximum distance from the
+% center (defined by |slopecenter|) to any point on the periphery
+% of the shape.  This radius can be explicitly set with |sloperadius|.
+% Eg, setting |sloperadius=0.5cm| gives
+% \begin{quote}\Large\psset{sloperadius=0.5cm}
+%  \psframebox[fillstyle=ccslope]{\st slopes!}
+% \end{quote}
+% Any point further from the center than the given |sloperadius| is
+% painted with the last colour in |slopeclours|, resp.~|slopeend|.
+%
+% The default value for |sloperadius| is 0, which invokes the default
+% behaviour of automatically calculating the radius.
+%
+% \DescribeMacro{fading}
+% \DescribeMacro{startfading}
+% \DescribeMacro{endfading}
+% The optional boolean keyword |fading| allows a transparency effect of
+% the filled area, starting with the opacity value |startfading| and
+% ending with the value of |endfading|. Both values must be of the
+% intervall [0\ldots1], with 0 for total opacity and 1 for no
+% opacity. The values are preset by 0 and 1.
+%
+% Here is a little
+% overview of what they look like:
+% \begin{quote}\LARGE\color{white}
+%  \begin{tabular}{cc}
+%   \psframe*(-0.3,-0.25)(3,20pt)\psframebox[fading,fillstyle=slope]{\st|  slope  |} &\qquad
+%   \psframe*(-0.3,-0.25)(3,20pt)\psframebox[fading,fillstyle=slopes]{\st| slopes |} \\[2ex]
+%   \psframe*(-0.3,-0.25)(3,20pt)\psframebox[fading,fillstyle=ccslope]{\st|ccslope |} &\qquad
+%   \psframe*(-0.3,-0.25)(3,20pt)\psframebox[fading,fillstyle=ccslopes]{\st|ccslopes|} \\[2ex]
+%   \psframe*(-0.3,-0.25)(3,20pt)\psframebox[fading,fillstyle=radslope]{\st|radslope|} &\qquad
+%   \psframe*(-0.3,-0.25)(3,20pt)\psframebox[fading,fillstyle=radslopes]{\st|radslopes|} \\[2ex]
+%  \end{tabular}
+% \end{quote}
+% \color{black}
+%
+% These examples were produced by saying simply
+% \begin{verbatim}
+%   \psframebox[fading,fillstyle=...]{...}
+% \end{verbatim}
+%
+% \begin{quote}\LARGE\color{white}
+% \psset{fading,startfading=0.3,endfading=0.8}
+%  \begin{tabular}{cc}
+%   \psframe*(-0.3,-0.25)(3,20pt)\psframebox[fillstyle=slope]{\st|  slope  |} &\qquad
+%   \psframe*(-0.3,-0.25)(3,20pt)\psframebox[fillstyle=slopes]{\st| slopes |} \\[2ex]
+%   \psframe*(-0.3,-0.25)(3,20pt)\psframebox[fillstyle=ccslope]{\st|ccslope |} &\qquad
+%   \psframe*(-0.3,-0.25)(3,20pt)\psframebox[fillstyle=ccslopes]{\st|ccslopes|} \\[2ex]
+%   \psframe*(-0.3,-0.25)(3,20pt)\psframebox[fillstyle=radslope]{\st|radslope|} &\qquad
+%   \psframe*(-0.3,-0.25)(3,20pt)\psframebox[fillstyle=radslopes]{\st|radslopes|} \\[2ex]
+%  \end{tabular}
+% \end{quote}
+% \color{black}
+%
+% These examples were produced by saying simply
+% \begin{verbatim}
+%   \psframebox[fading,startfading=0.3,endfading=0.8,fillstyle=...]{...}
+% \end{verbatim}
+%
+% \StopEventually{}
+%
+%\section{The Code}
+% \subsection{Producing the documentation}
+%
+%    A short driver is provided that can be extracted if necessary by
+%    the \textsc{docstrip} program provided with \LaTeXe.
+%    \begin{macrocode}
+%<*driver>
+\NeedsTeXFormat{LaTeX2e}
+\documentclass{ltxdoc}
+\usepackage{pst-slpe}
+\usepackage{pst-plot}
+\DisableCrossrefs
+\MakeShortVerb{\|}
+\newcommand\Lopt[1]{\textsf{#1}}
+\newcommand\file[1]{\texttt{#1}}
+\AtEndDocument{
+\PrintChanges
+\PrintIndex
+}
+%\OnlyDescription
+\begin{document}
+\DocInput{pst-slpe.dtx}
+\end{document}
+%</driver>
+%    \end{macrocode}
+%
+% \subsection{The \file{pst-slpe.sty} file}
+%    The \file{pst-slpe.sty} file is very simple.  It just loads 
+%    the generic \file{pst-slpe.tex} file. 
+%    \begin{macrocode}
+%<*stylefile>
+\RequirePackage{pstricks}
+\ProvidesPackage{pst-slpe}[2005/03/05 package wrapper for `pst-slpe.tex']
+\input{pst-slpe.tex}
+\ProvidesFile{pst-slpe.tex}
+  [\pstslpefiledate\space v\pstslpefileversion\space 
+    `pst-slpe' (mg,hv)]
+\IfFileExists{pst-slpe.pro}{%
+  \ProvidesFile{pst-slpe.pro}
+    [2008/06/19 v. 0.01,  PostScript prologue file (hv)]
+    \@addtofilelist{pst-slpe.pro}}{}%
+%</stylefile>
+%    \end{macrocode}
+%
+% \subsection{The \file{pst-slpe.tex} file}
+%    \file{pst-slpe.tex} contains the \TeX-side of things.  We begin
+%    by identifying ourselves and setting things up, the same as in 
+%    other PSTricks packages.
+%    \begin{macrocode}
+%<*texfile>
+\message{ v\pstslpefileversion, \pstslpefiledate}
+\csname PstSlopeLoaded\endcsname
+\let\PstSlopeLoaded\endinput
+\ifx\PSTricksLoaded\endinput\else
+  \def\next{\input pstricks.tex }\expandafter\next
+\fi
+\ifx\PSTXKeyLoaded\endinput\else\input pst-xkey \fi % --> hv
+\edef\TheAtCode{\the\catcode`\@}
+\catcode`\@=11
+\pst@addfams{pst-slpe}                              % --> hv
+\pstheader{pst-slpe.pro}
+%    \end{macrocode}
+%    \begin{macro}{slopebegin}
+%    \begin{macro}{slopeend}
+%    \begin{macro}{slopesteps}
+%    \begin{macro}{slopeangle}
+%
+% \subsubsection{New graphics parameters}
+%    We now define the various new parameters needed by the |slope|
+%    fill styles and install default values.  First come the colours, 
+%    ie~graphics parameters |slopebegin| and |slopeend|, followed
+%    by the number of steps, |slopesteps|, and the rotation angle, 
+%    |slopeangle|.
+%    \begin{macrocode}
+\newrgbcolor{slopebegin}{0.9 1 0}
+\define@key[psset]{pst-slpe}{slopebegin}{\pst@getcolor{#1}\psslopebegin}% --> hv
+\psset[pst-slpe]{slopebegin=slopebegin}                                 % --> hv
+
+\newrgbcolor{slopeend}{0 0 1}
+\define@key[psset]{pst-slpe}{slopeend}{\pst@getcolor{#1}\psslopeend}% --> hv
+\psset[pst-slpe]{slopeend=slopeend}% --> hv
+
+\define@key[psset]{pst-slpe}{slopesteps}{\pst@getint{#1}\psslopesteps}% --> hv
+\psset[pst-slpe]{slopesteps=100}% --> hv
+
+\define@key[psset]{pst-slpe}{slopeangle}{\pst@getangle{#1}\psx@slopeangle}% --> hv
+\psset[pst-slpe]{slopeangle=0}% --> hv
+%    \end{macrocode}
+%    \end{macro}
+%    \end{macro}
+%    \end{macro}
+%    \end{macro}
+%    \begin{macro}{slopecolors}
+%    The value for |slopecolors| is not parsed.  It is directly copied 
+%    to the PostScript output.  This is certainly not the way it
+%    should be, but it's simple.  The default value is a rainbow from
+%    red to magenta.
+%    \begin{macrocode}
+\define@key[psset]{pst-slpe}{slopecolors}{\def\psx@slopecolors{#1}}% --> hv
+\psset[pst-slpe]{slopecolors={% --> hv
+0.0 1 0 0		
+0.4 0 1 0
+0.8 0 0 1
+1.0 1 0 1
+4}}
+%    \end{macrocode}
+%    \end{macro}
+%    \begin{macro}{slopecenter}
+%    The argument to |slopecenter| isn't parsed either.  But there's
+%    probably not much that can go wrong with two decimal numbers.
+%    \begin{macrocode}
+\define@key[psset]{pst-slpe}{slopecenter}{\def\psx@slopecenter{#1}}% --> hv
+\psset[pst-slpe]{slopecenter={0.5 0.5}}% --> hv
+%    \end{macrocode}
+%    \end{macro}
+%    \begin{macro}{sloperadius}
+%    The default value for |sloperadius| is 0, which makes the
+%    PostScript procedure |PatchRadius| determine a value for the radius.
+%    \begin{macrocode}
+\define@key[psset]{pst-slpe}{sloperadius}{\pst@getlength{#1}\psx@sloperadius}% --> hv
+\psset[pst-slpe]{sloperadius=0}% --> hv
+%    \end{macrocode}
+%    \end{macro}
+%    \begin{macro}{fading}
+%    The default value for |fading| is false, which is no transparency effect at all.
+%    With |fading=true| the package takes the values |startfading| and |endfading|
+%    into account for the opacity effect of the filled area.
+%    \end{macro}
+%    \begin{macrocode}
+\define@boolkey[psset]{pst-slpe}[PST@]{fading}[true]{}% --> hv
+\psset[pst-slpe]{fading=false}% --> hv
+%    \end{macrocode}
+%    \begin{macro}{startfading}
+%    The relativ number for the starting value (0\ldots1), preset by 0.
+%    \end{macro}
+%    \begin{macrocode}
+\define@key[psset]{pst-slpe}{startfading}{\pst@checknum{#1}\psk@startfading }% --> hv
+%    \end{macrocode}
+%    \begin{macro}{endfading}
+%    The relativ number for the end value (0\ldots1), preset by 1.
+%    \end{macro}
+%    \begin{macrocode}
+\define@key[psset]{pst-slpe}{endfading}{\pst@checknum{#1}\psk@endfading }% --> hv
+\psset[pst-slpe]{startfading=0,endfading=1}% --> hv
+%    \end{macrocode}
+%
+% \subsubsection{Fill style macros}
+%
+%    Now come the fill style definitions that use these parameters.
+%    There is one macro for each fill style named |\psfs@|$style$.  
+%    PSTricks calls this macro whenever the current path needs to
+%    be filled in that style.  The current path should not be 
+%    clobbered by the PostScript code output by the macro.
+%
+%    \begin{macro}{slopes}
+%    For the slopes fill style we produce PostScript code that
+%    first puts the |slopecolors| parameter onto the stack.  Note that
+%    the number of colours listed, which comes last in |slopecolors| is
+%    now on the top of the stack.  Next come the |slopesteps| and
+%    |slopeangle| parameters.  We switch to the dictionary established
+%    by the \file{pst-slop.pro} Prolog and call |SlopesFill|, which
+%    does the artwork and takes care to leave the path alone.
+%    \begin{macrocode}
+\def\psfs@slopes{%
+ \addto@pscode{
+  \psx@slopecolors\space
+  \psslopesteps
+  \psx@slopeangle 
+  \ifPST@fading \psk@startfading \psk@endfading true \else false \fi
+  tx@PstSlopeDict begin SlopesFill end}}
+%    \end{macrocode}
+%    \end{macro}
+%
+%    \begin{macro}{slope}
+%    The |slope| style uses parameters |slopebegin| and |slopeend|
+%    instead of |slopecolors|.  So the produced PostScript uses these
+%    parameters to build a stack in |slopecolors| format.  The 
+%    |\pst@usecolor| generates PostScript to set the current colour.
+%    We can query the RGB values with |currentrgbcolor|.  
+%    A |gsave|/|grestore| pair is used to avoid changing the
+%    PostScript graphics state.  Once the stack is set up,
+%    |SlopesFill| is called as before.
+%    \begin{macrocode}
+\def\psfs@slope{%
+ \addto@pscode{%
+  gsave
+    0 \pst@usecolor\psslopebegin currentrgbcolor
+    1 \pst@usecolor\psslopeend currentrgbcolor
+    2
+  grestore
+  \psslopesteps \psx@slopeangle 
+  \ifPST@fading \psk@startfading \psk@endfading true \else false \fi
+  tx@PstSlopeDict begin SlopesFill end}}
+%    \end{macrocode}
+%    \end{macro}
+%
+%    \begin{macro}{ccslopes}
+%    \begin{macro}{ccslope}
+%    \begin{macro}{radslopes}
+%    The code for the other fill styles is about the same, except for a few
+%    parameters more or less and different PostScript procedures called
+%    to do the work.
+%    \begin{macrocode}
+\def\psfs@ccslopes{%
+ \addto@pscode{%
+  \psx@slopecolors\space  
+  \psslopesteps \psx@slopecenter\space \psx@sloperadius\space
+  \ifPST@fading \psk@startfading \psk@endfading true \else false \fi
+  tx@PstSlopeDict begin CcSlopesFill end}}
+\def\psfs@ccslope{%
+ \addto@pscode{%
+  gsave 0 \pst@usecolor\psslopebegin currentrgbcolor
+    1 \pst@usecolor\psslopeend currentrgbcolor
+    2 grestore
+  \psslopesteps \psx@slopecenter\space \psx@sloperadius\space
+  \ifPST@fading \psk@startfading \psk@endfading true \else false \fi
+  tx@PstSlopeDict begin CcSlopesFill end}}
+\def\psfs@radslopes{%
+ \addto@pscode{%
+  \psx@slopecolors\space  
+  \psslopesteps\psx@slopecenter\space\psx@sloperadius\space\psx@slopeangle
+  \ifPST@fading \psk@startfading \psk@endfading true \else false \fi
+  tx@PstSlopeDict begin RadSlopesFill end}}
+%    \end{macrocode}
+%    \end{macro}
+%    \end{macro}
+%    \end{macro}
+%    \begin{macro}{radslope}
+%    |radslope| is slightly different:  Just going from one colour to
+%    another in 360 degrees is usually not what is wanted.  |radslope| just
+%    does something pretty with the colours provided.
+%    \begin{macrocode}
+\def\psfs@radslope{%
+ \addto@pscode{%
+  gsave 0 \pst@usecolor\psslopebegin currentrgbcolor
+    1 \pst@usecolor\psslopeend currentrgbcolor
+    2 \pst@usecolor\psslopebegin currentrgbcolor
+    3 \pst@usecolor\psslopeend currentrgbcolor
+    4 \pst@usecolor\psslopebegin currentrgbcolor
+    5 grestore
+  \psslopesteps\psx@slopecenter\space\psx@sloperadius\space\psx@slopeangle
+  \ifPST@fading \psk@startfading \psk@endfading true \else false \fi
+  tx@PstSlopeDict begin RadSlopesFill end}}
+%    \end{macrocode}
+%    \end{macro}
+%
+%    \begin{macro}{\psBall}
+%    \begin{macrocode}
+\def\psBall{\pst@object{psBall}}
+\def\psBall@i{\@ifnextchar(\psBall@ii{\psBall@ii(0,0)}}
+\def\psBall@ii(#1,#2)#3#4{{%
+  \pst@killglue
+  \pssetlength\pst@dima{#4}%%%%%  20111025 hv
+  \pst@dimb=\pst@dima%%%%%%%%%%%  20111025 hv
+  \advance\pst@dima by 0.075\pst@dimb%
+  \addbefore@par{sloperadius=\the\pst@dima,fillstyle=ccslope,
+   slopebegin=white,slopeend=#3,slopecenter=0.4 0.6,linestyle=none}%
+  \use@par%
+  \pscircle(#1,#2){#4}%
+  }\ignorespaces%
+}
+%    \end{macrocode}
+%    \end{macro}
+%
+%
+%    \begin{macrocode}
+\catcode`\@=\TheAtCode\relax
+%</texfile>
+%    \end{macrocode}
+%
+% \subsection{The \file{pst-slpe.pro} file}
+%    The file \file{pst-slpe.pro} contains PostScript definitions
+%    to be included in the PostScript output by the 
+%    |dvi|-to-PostScript converter, eg |dvips|.
+%    First thing is to define a
+%    dictionary to keep definitions local.
+%    \begin{macrocode}
+%<*prolog>
+/tx@PstSlopeDict 60 dict def tx@PstSlopeDict begin
+%    \end{macrocode}
+%
+%    \begin{macro}{Opacity++}
+%    This macro increments the Opacity index
+%    \begin{macrocode}
+/Opacity 1 def % preset, no transparency
+/Opacity++ { Opacity dOpacity add /Opacity ED } def
+%    \end{macrocode}
+%    \end{macro}
+%    \begin{macro}{max}
+%    $x1 \quad x2 \quad \mathtt{max}\quad max$\\
+%    |max| is a utility function that calculates the maximum
+%    of two numbers.
+%    \begin{macrocode}
+/max {2 copy lt {exch} if pop} bind def
+%    \end{macrocode}
+%    \end{macro}
+%
+%    \begin{macro}{Iterate}
+%    $p_1\quad r_1\quad g_1\quad b_1\quad\ldots\quad
+%    p_n\quad r_n\quad g_n\quad b_n\quad n\quad \mathtt{Iterate}\quad -$\\
+%    This is the actual iteration, which goes through the colour
+%    information and plots the segments.  
+%    It uses the value of |NumSteps| which is set by the wrapper
+%    procedures.  |DrawStep| is called all of |NumSteps| times, so 
+%    it had better be fast.
+%
+%    First, the number of colour infos is read from the
+%    top of the stack and decremented, to get the number of segments. 
+%    \begin{macrocode}
+/Iterate {
+  1 sub /NumSegs ED
+%    \end{macrocode}
+%    Now we get the first colour.  This is really the {\em last}
+%    colour given in the |slopecolors| argument.  We have to work
+%    {\em down} the stack, so we shall be careful to plot the segments
+%    in reverse order.  The |dup mul| stuff squares the RGB
+%    components.  This does a kind-of-gamma correction, without
+%    which primary colours tend to take up too much space in the
+%    slope.  This is nothing deep, it just looks better in my opinion.
+%    The following lines convert RGB to HSB and store the resulting
+%    components, as well as the |Pt| coordinate in four variables.
+%    \begin{macrocode}
+  dup mul 3 1 roll dup mul 3 1 roll dup mul 3 1 roll
+  setrgbcolor currenthsbcolor 
+  /ThisB ED
+  /ThisS ED
+  /ThisH ED
+  /ThisPt ED
+%    \end{macrocode}
+%    To avoid gaps, we fill the whole  path in that first colour.
+%    \begin{macrocode}
+  Opacity .setopacityalpha 
+  gsave 
+  fill 
+  grestore
+%    \end{macrocode}
+%    The body of the following outer loop is executed
+%    once for each segment.
+%    It expects a current colour and |Pt| coordinate in the |This*|
+%    variables and pops the next colour and point from the stack. It
+%    then draws the single steps of that segment.
+%    \begin{macrocode}
+  NumSegs {
+    dup mul 3 1 roll dup mul 3 1 roll dup mul 3 1 roll
+    setrgbcolor currenthsbcolor
+    /NextB ED
+    /NextS ED
+    /NextH ED
+    /NextPt ED
+%    \end{macrocode}
+%    |NumSteps| always contains the remaining number of steps available.
+%    These are evenly distributed between |Pt| coordinates |ThisPt| 
+%    to 0, so for the current segment we may use 
+%    $|NumSteps|*(|ThisPt|-|NextPt|)/|ThisPt|$ steps.
+%    \begin{macrocode}
+    ThisPt NextPt sub ThisPt div NumSteps mul cvi /SegSteps exch def
+    /NumSteps NumSteps SegSteps sub def
+%    \end{macrocode}
+%    |SegSteps| may be zero.  In that case there is nothing to do for
+%    this segment.
+%    \begin{macrocode}
+    SegSteps 0 eq not {
+%    \end{macrocode}
+%    If one of the colours is gray, ie~0 saturation, its hue is
+%    useless.  In this case, instead of starting of with a random hue,
+%    we take the hue of the other endpoint.  (If both have saturation
+%    0, we have a pure gray scale and no harm is done)
+%    \begin{macrocode}
+      ThisS 0 eq {/ThisH NextH def} if
+      NextS 0 eq {/NextH ThisH def} if
+%    \end{macrocode}
+%    To interpolate between two colours of different hue, we want to
+%    go the shorter way around the colour circle.  The following code
+%    assures that this happens if we go linearly from |This*| to 
+%    |Next*| by conditionally adding 1.0 to one of the hue values.
+%    The new hue values can lie between 0.0 and 2.0, so we will later
+%    have to subtract 1.0 from values greater than one.
+%    \begin{macrocode}
+      ThisH NextH sub 0.5 gt
+        {/NextH NextH 1.0 add def} 
+        { NextH ThisH sub 0.5 ge {/ThisH ThisH 1.0 add def} if }
+      ifelse
+%    \end{macrocode}
+%    We define three variables to hold the current colour coordinates
+%    and calculate the corresponding increments per step.
+%    \begin{macrocode}
+      /B ThisB def
+      /S ThisS def
+      /H ThisH def
+      /BInc NextB ThisB sub SegSteps div def
+      /SInc NextS ThisS sub SegSteps div def
+      /HInc NextH ThisH sub SegSteps div def
+%    \end{macrocode}
+%    The body of the following inner loop sets the current colour,
+%    according to |H|, |S| and |B| and
+%    undoes the kind-of-gamma correction by converting to RGB colour.
+%    It then calls |DrawStep|, which draws one step and maybe updates
+%    the current point or user space, or variables of its own.  Finally,
+%    it increments the three colour variables.
+%    \begin{macrocode}
+      SegSteps {
+        H dup 1. gt {1. sub} if S B sethsbcolor 
+        currentrgbcolor 
+        sqrt 3 1 roll sqrt 3 1 roll sqrt 3 1 roll
+        setrgbcolor
+        DrawStep
+        /H H HInc add def
+        /S S SInc add def
+        /B B BInc add def
+      } bind repeat
+%    \end{macrocode}
+%    The outer loop ends by moving on to the |Next| colour and point.
+%
+%    \begin{macrocode}
+      /ThisH NextH def
+      /ThisS NextS def
+      /ThisB NextB def
+      /ThisPt NextPt def
+    } if
+  } bind repeat
+} def
+%    \end{macrocode}
+%    \end{macro}
+%
+%    \begin{macro}{PatchRadius}
+%    $-\quad\mathtt{PatchRadius}\quad-$\\
+%    This macro inspects the value of the variable |Radius|.  If it is
+%    0, it is set to the maximum distance of any point in the 
+%    current path from the origin of user space.  This has the effect
+%    that the current path will be totally filled.  To find the maximum
+%    distance, we flatten the path and call |UpdRR| for each endpoint
+%    of the generated polygon.  The current maximum square distance is
+%    gathered in |RR|.  
+%    \begin{macrocode}
+/PatchRadius {
+  Radius 0 eq { 
+    /UpdRR { dup mul exch dup mul add RR max /RR ED } bind def
+    gsave
+    flattenpath
+    /RR 0 def
+    {UpdRR} {UpdRR} {} {} pathforall
+    grestore
+    /Radius RR sqrt def
+  } if
+} def
+%    \end{macrocode}
+%    \end{macro}
+%
+%    \begin{macro}{SlopesFill}
+%    $p_1\quad r_1\quad g_1\quad b_1\quad\ldots\quad
+%    p_n\quad r_n\quad g_n\quad b_n\quad n\quad s\quad\alpha\quad    
+%    \mathtt{SlopesFill}\quad -$\\
+%    Fill the current path with a slope described by $p_1,\ldots,b_n,n$.
+%    Use a total of $s$ single steps.  Rotate the slope by $\alpha$ 
+%    degrees, 0 meaning $r_1,g_1,b_1$ left to $r_n,g_n,b_n$ right.
+%
+%    After saving the current path, we do the rotation and get the
+%    number of steps, which is later needed by |Iterate|.  Remember,
+%    that iterate calls |DrawStep| in the reverse order, ie~from
+%    right to left.  We work around this by adding 180 degrees to 
+%    the rotation.    Filling
+%    works by clipping to the path and painting an appropriate sequence
+%    of rectangles.  |DrawStep| is set up for |Iterate| to draw a 
+%    rectangle of width |XInc| high enough to cover the whole
+%    clippath (we use the Level 2 operator |rectfill| for speed) and
+%    translate the user system by |XInc|.
+%    \begin{macrocode}
+/SlopesFill {
+  /Fading ED		% do we have fading?
+  Fading {
+    /FadingEnd ED % the last opacity value
+    dup /FadingStart ED % the first opacity value
+    /Opacity ED % the opacity start value
+  } if
+  gsave
+  180 add rotate
+  /NumSteps ED
+  Fading { /dOpacity FadingEnd FadingStart sub NumSteps div def } if
+  clip
+  pathbbox
+  /h ED /w ED
+  2 copy translate
+  h sub neg /h ED
+  w sub neg /w ED
+  /XInc w NumSteps div def
+  /DrawStep {
+    Fading {			% do we have a fading?
+      Opacity .setopacityalpha  % set opacity value
+      Opacity++			% increase opacity
+    } if
+    0 0 XInc h rectfill
+    XInc 0 translate
+  } bind def
+  Iterate
+  grestore
+} def
+%    \end{macrocode}
+%    \end{macro}
+%
+%    \begin{macro}{CcSlopesFill} $p_1\quad r_1\quad g_1\quad
+%    b_1\quad\ldots\quad p_n\quad r_n\quad g_n\quad b_n\quad n\quad
+%    c_x\quad c_y \quad r\quad \mathtt{CcSlopesFill}\quad -$\\ Fills
+%    the current path with a concentric pattern,
+%    ie~in a polar coordinate system, the colour depends on the
+%    radius and not on the angle.
+%    Centered around a point with coordinates $(c_x,c_y)$ relative to
+%    the bounding box of the path, ie~for a rectangle, $(0,0)$ will
+%    center the pattern around the lower left corner of the rectangle,
+%    $(0.5,0.5)$ around its center.  The largest circle has a radius of
+%    $r$.  If $r=0$, $r$ is taken to be the maximum distance of any
+%    point on the current path from the center defined by $(c_x,c_y)$.
+%    The colours are given from the center outwards,
+%    ie~$(r_1,g_1,b_1)$ describe the colour at the center.
+%
+%    The code is similar to that of |SlopesFill|.  The main differences
+%    are the call to |PatchRadius|, which catches the case that $r=0$
+%    and the different definition for |DrawStep|, Which now fills a
+%    circle of radius |Rad| and decreases that Variable.  Of course,
+%    drawing starts on the outside, so we work down the stack and circles
+%    drawn later partially cover those drawn first.  Painting
+%    non-overlapping, `donut-shapes' would be slower. 
+%    \begin{macrocode}
+/CcSlopesFill {
+  /Fading ED		% do we have fading?
+  Fading {
+    /FadingEnd ED % the last opacity value
+    dup /FadingStart ED % the first opacity value
+    /Opacity ED % the opacity start value
+  } if
+  gsave
+  /Radius ED
+  /CenterY ED
+  /CenterX ED
+  /NumSteps ED
+  Fading { /dOpacity FadingEnd FadingStart sub NumSteps div def } if
+  clip
+  pathbbox
+  /h ED /w ED
+  2 copy translate
+  h sub neg /h ED
+  w sub neg /w ED
+  w CenterX mul h CenterY mul translate
+  PatchRadius
+  /RadPerStep Radius NumSteps div neg def
+  /Rad Radius def
+  /DrawStep {
+    Fading {			% do we have a fading?
+      Opacity .setopacityalpha  % set opacity value
+      Opacity++			% increase opacity
+    } if
+    0 0 Rad 0 360 arc
+    closepath fill
+    /Rad Rad RadPerStep add def
+  } bind def
+  Iterate
+  grestore
+} def
+%    \end{macrocode}
+%    \end{macro}
+%
+%    \begin{macro}{RadSlopesFill}
+%    $p_1\quad r_1\quad g_1\quad b_1\quad\ldots
+%    \quad p_n\quad r_n\quad g_n\quad b_n\quad n\quad
+%    c_x\quad c_y \quad r\quad\alpha\quad \mathtt{CcSlopesFill}\quad -$\\
+%    This fills the current path with a radial pattern, ie~in a
+%    polar coordinate system the colour depends on the angle and not on
+%    the radius.  All this is very similar to |CcSlopesFill|.  There
+%    is an extra parameter $\alpha$, which rotates the pattern.
+%
+%    The only new thing in the code is the |DrawStep| procedure.
+%    This does {\em not} draw a circular arc, but a triangle, which is
+%    considerably faster.  One of the short sides of the triangle is
+%    determined by |Radius|, the other one by |dY|, which is calculated
+%    as $|dY|:=|Radius|\times\tan(|AngleIncrement|)$.
+%    \begin{macrocode}
+/RadSlopesFill {
+  /Fading ED		% do we have fading?
+  Fading {
+    /FadingEnd ED % the last opacity value
+    dup /FadingStart ED % the first opacity value
+    /Opacity ED % the opacity start value
+  } if
+  gsave
+  rotate
+  /Radius ED
+  /CenterY ED
+  /CenterX ED
+  /NumSteps ED
+  Fading { /dOpacity FadingEnd FadingStart sub NumSteps div def } if
+  clip
+  pathbbox
+  /h ED /w ED
+  2 copy translate
+  h sub neg /h ED
+  w sub neg /w ED
+  w CenterX mul h CenterY mul translate
+  PatchRadius
+  /AngleIncrement 360 NumSteps div neg def
+  /dY AngleIncrement sin AngleIncrement cos div Radius mul def
+  /DrawStep {
+    Fading {			% do we have a fading?
+      Opacity .setopacityalpha  % set opacity value
+      Opacity++			% increase opacity
+    } if
+    0 0 moveto
+    Radius 0 rlineto
+    0 dY rlineto
+    closepath fill
+    AngleIncrement rotate
+  } bind def
+  Iterate
+  grestore
+} def
+%    \end{macrocode}
+%    \end{macro}
+%
+% Last, but not least, we have to close the private dictionary.
+%    \begin{macrocode}
+end
+%</prolog>
+%    \end{macrocode}
+% \Finale
+%

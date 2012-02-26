@@ -1,0 +1,22 @@
+pst-pad-doc-header.tex:
+
+2008-03-21	version 0.3b: added common header for german/english docs
+
+pst-pad-docDE.tex|pdf:
+
+2008-03-21	version 0.3b: added german docs
+
+pst-pad-doc.tex|pdf:
+
+2008-03-21	version 0.3b: doc fix
+2008-02-21	version 0.3a: changed email address
+2008-02-19	version 0.3: first CTAN release (rev 319)
+
+pst-pad.sty:
+
+2008-02-19	version 0.3: first CTAN release (rev 319)
+
+pst-pad.tex:
+
+2008-02-21	version 0.3a: bumped version number
+2008-02-19	version 0.3: first CTAN release (rev 319)

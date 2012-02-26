@@ -1,0 +1,52 @@
+\section{Les modes}
+
+Pour un certain nombre de solides, on a prédéfini certains
+maillages. Le positionnement du paramètre \texttt{[mode=0, 1, 2, 3 ou 4]} permet de passer
+du maillage prédéfini le plus grossier \texttt{[mode=0]} au maillage
+prédéfini le plus fin \texttt{[mode=4]}.
+
+Ceci permet notamment de mettre au point une image avec tous les
+solides en \texttt{[mode=0]} afin d'accélérer les calculs, avant de passer au
+\texttt{[mode=4]} pour une image définitive.
+
+%% avec mode = 0
+\begin{center}
+\psset{lightsrc=10 5 0,SphericalCoor,viewpoint=50 20 -40,Decran=35,unit=0.5,%
+       incolor=white,fillcolor=green!50,r0=5,r1=2,h=5,object=troncconecreux,r0=5,r1=2,h=5}
+\begin{pspicture}(-5,-5)(5,5)
+\psframe(-5,-5)(5,5)
+\psSolid[mode=0]%
+\rput(0,-4.5){\psframebox[fillstyle=solid,fillcolor=black]{\small \textcolor{white}{\texttt{[mode=0]}}}}
+\end{pspicture}
+%
+\begin{pspicture}(-5,-5)(5,5)
+\psframe(-5,-5)(5,5)
+\psSolid[mode=1]%
+\rput(0,-4.5){\psframebox[fillstyle=solid,fillcolor=black]{\small\textcolor{white}{\texttt{[mode=1]}}}}
+\end{pspicture}
+%
+\begin{pspicture}(-5,-5)(5,5)
+\psframe(-5,-5)(5,5)
+\psSolid[mode=2]%
+\rput(0,-4.5){\psframebox[fillstyle=solid,fillcolor=black]{\textcolor{white}{\texttt{[mode=2]}}}}
+\end{pspicture}
+%
+\begin{pspicture}(-5,-5)(5,5)
+\psframe(-5,-5)(5,5)
+\psSolid[mode=3]%
+\rput(0,-4.5){\psframebox[fillstyle=solid,fillcolor=black]{\textcolor{white}{\texttt{[mode=3]}}}}
+\end{pspicture}
+%
+\begin{pspicture}(-5,-5)(5,5)
+\psframe(-5,-5)(5,5)
+\psSolid[mode=4]%
+\rput(0,-4.5){\psframebox[fillstyle=solid,fillcolor=black]{\textcolor{white}{\texttt{[mode=4]}}}}
+\end{pspicture}
+%
+\begin{pspicture}(-5,-5)(5,5)
+\psframe(-5,-5)(5,5)
+\psSolid[mode=5]%
+\rput(0,-4.5){\psframebox[fillstyle=solid,fillcolor=black]{\small\textcolor{white}{\texttt{[mode=5] => [mode=4] forcé}}}}
+\end{pspicture}
+\end{center}
+\newpage

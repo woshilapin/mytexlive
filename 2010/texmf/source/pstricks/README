@@ -1,0 +1,12 @@
+pstricks.sty	  package wrapper for pstricks. Loads also
+                  a xcolor package and makes some aprovements
+		  for prosper/seminar. Makes also the pstcol.sty
+		  obsolete.
+		  Use of pstcol together with color is still possible
+pstricks.tex      pstricks.tex patch 15
+pstricks.pro      pstricks.pro patch 4. Save it into $TEXMF/dvips/pstricks/
+pstnews1-10.tex   Documentation source
+pstnews1-10.pdf   Documentation
+pstnews97-15.tex  Documentation source
+pstnews97-15.pdf  Documentation
+pst-all.sty       package wrapper for the basic pstricks packages.

@@ -1,0 +1,85 @@
+\PassOptionsToPackage{dvipsnames}{xcolor}
+\documentclass[11pt,english,BCOR10mm,DIV12,bibliography=totoc,parskip=false,
+   smallheadings, headexclude,footexclude,oneside]{pst-doc}
+\usepackage[utf8]{inputenc}
+\usepackage{pst-pulley}
+\let\pstPulleyFV\fileversion
+\renewcommand\bgImage{\psscalebox{0.5}{\pspulleys[N=1,M=60,h=35]}}
+
+\lstset{language=PSTricks,morekeywords={pspulleys},basicstyle=\footnotesize\ttfamily}
+%
+\begin{document}
+
+\title{\texttt{pst-pulley}}
+\subtitle{Plotting different pulleys; v.\pstPulleyFV}
+\author{Thomas Söll}
+\docauthor{}
+\date{\today}
+\maketitle
+
+\tableofcontents
+\psset{unit=1cm}
+
+\clearpage
+
+\begin{abstract}
+\noindent
+\LPack{pst-pulley} loads by default the following packages: \LPack{pst-plot}, 
+\LPack{pstricks-add}, \LPack{pst-eucl}, \LPack{pst-xkey}, and, of course \LPack{pstricks}.
+All should be already part of your local \TeX\ installation. If not, or in case
+of having older versions, go to \url{http://www.CTAN.org/} and load the newest version.
+
+\vfill\noindent
+Thanks to: \\
+\ldots
+
+
+\end{abstract}
+
+\clearpage
+\section{Examples}
+
+\begin{center}\xLcs{pspulleys}\xLkeyword{grid}\xLkeyword{N}\xLkeyword{M}\xLkeyword{h}
+\pspulleys[grid,N=1,M=60,h=35]
+\end{center}
+
+\begin{center}
+\pspulleys[N=2,M=60,h=30,Dx=0.41]
+\end{center}
+
+\begin{center}
+\pspulleys[N=3,M=60,h=25]
+\end{center}
+
+\begin{center}
+\pspulleys[N=4,M=60,h=20]
+\end{center}
+
+\begin{center}
+\pspulleys[N=5,M=60,h=15]
+\end{center}
+
+\begin{center}
+\pspulleys[N=6,M=60,h=10]
+\end{center}
+
+
+\clearpage
+\section{List of all optional arguments for \texttt{pst-pulleys}}
+
+\xkvview{family=pst-pulleys,columns={key,type,default}}
+
+
+
+
+\bgroup
+\raggedright
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{pst-pulley-doc}
+\egroup
+
+\printindex
+
+
+\end{document} 

@@ -1,0 +1,52 @@
+			 the pst-eucl package
+
+This program can be redistributed and/or modified under the terms
+of the LaTeX Project Public License Distributed from CTAN
+archives in directory macros/latex/base/lppl.txt.
+
+However, you MUST send me an Email with a small commentary!
+
+Then you should consider making a donation:
+
+    1. directly to the LaTeX3 team;
+    2. and/or to me for the support of this package (choose one of the three)
+	a. $1 or 1 euro (or more),
+	b. some beautiful stamps (cancelled or not) of your country
+           (for my children),
+	c. a beautiful postcard with a beautiful stamp on it .
+
+       my address:
+			    La Grand'Terre
+		    07460 Saint André de Cruziéres
+				FRANCE
+
+INSTALLATION
+------------
+
+   If you want to just test it quickly, keep the files:
+
+	pst-eucl.pro, pst-eucl.tex and pst-eucl.sty
+
+   in the directory where you work.
+
+   For a good integration:
+
+   copy pst-eucl.pro to your local texmf directory :
+
+	/usr/local/texmf.local/dvips/pstricks (for example)
+
+   	pst-eucl.tex and pst-eucl.sty to a directory referenced
+        by the TEXCONFIG shell global variable, or in the local texmf
+	directory :
+
+	/usr/local/texmf.local/tex/generic/pstricks
+
+   run `texhash`
+
+   if you don't have a local texmf directory, you can create it or ask
+   the root to create it by modifying the file:
+
+	$(TEXMF)/web2c/texmf.cnf
+
+	remove the original for the first line:
+

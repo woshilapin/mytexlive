@@ -1,0 +1,19 @@
+\section {Sphères accolées}
+\bgroup
+\definecolor{Tan}{cmyk}{0.14,0.42,0.56,0}
+
+\psset{lightsrc=30 90 30,unit=0.75}
+
+
+\begin{center}
+\begin{pspicture}(-6,-6)(6,6)
+\psset{SphericalCoor,viewpoint=100 70 15,Decran=100}
+\psSolid[object=grille,base=-7 7 -4 4,action=draw*,linecolor=red](0,0,-4)
+\psSolid[object=new,RotX=0,RotY=0,RotZ=0,incolor=yellow!50,hue=0 0.7 0.5 1,hollow,linewidth=0.5\pslinewidth,
+        sommets= (sommets_unionspheres.dat) run,
+        faces={(faces_unionspheres.dat) run}]%
+\gridIIID[Zmin=-4,Zmax=4](-7,7)(-4,4)
+\end{pspicture}
+\end{center}
+
+\egroup

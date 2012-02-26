@@ -1,0 +1,30 @@
+---- pst-optic.tex
+1.00  2009-02-10  - new style opticalAxis to allow different line styles
+                  - cosmetic changes to the code and the documentation
+0.97  2007-01-07  - new option rayWidth for psprism 
+0.96  2006-08-03  - new macros for setting a prism 
+                  - new option for a plan convex and 
+		    divergent lens
+0.95  2006-07-20  - fix spurious blanks 
+                  - use \def instead of \edef
+                    for the keyval definitions
+		  - some improvements to the code
+0.94  2005-10-28  using \psscalebox to prevent clashes with graphicx
+                  needs pstricks.tex > 1.10
+0.93  2004-11-25  \ignorespaces for all macros
+0.92  2004-11-08  spurious blank
+0.91  2004-10-23  use pst-xkey instead of pst-key
+
+---- pst-optic.sty
+     2004-11-09   new version to get a TeX output of the used version 
+
+---- pst-optic-doc.tex
+     2009-02-10   new documentation
+     2005-10-24   the parallel line image was wrong
+     2005-05-18   small update to some examples
+
+---- pst-optic-examples.tex
+     2009-02-10   new documentation
+     2005-05-18   small update to some examples
+
+     

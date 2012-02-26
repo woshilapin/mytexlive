@@ -1,0 +1,183 @@
+\documentclass[dvips,a4paper,english]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{mathpazo}%    use this if you have the palatino math font
+%\usepackage{arev}%  use this if you do not have the palatino math font
+%\usepackage[scaled=0.9]{luximono}%  use this if you do not have the palatino math font
+\usepackage{url}
+\usepackage{amsmath}
+\usepackage{tabularx}
+\usepackage{longtable}
+%\usepackage{fancyhdr}
+%\pagestyle{fancy}
+\usepackage[varwidth]{pst-grid}
+\let\pstGRIDFV\fileversion
+\usepackage{babel}
+\usepackage{showexpl}
+\lstset{pos=t,wide=true,language=PSTricks,
+    morekeywords={psGammaDist,psChiIIDist,psTDist,psFDist,psBetaDist,psPlotImpl}}
+\lstdefinestyle{syntax}{backgroundcolor=\color{blue!20},numbers=none,xleftmargin=0pt,xrightmargin=0pt,
+    frame=single}
+%
+\usepackage{xspace}
+\def\PS{PostScript\xspace}
+\def\CMD#1{{\ttfamily\textbackslash #1}}
+\def\dt{\ensuremath{\,\mathrm{d}t}}
+\def\Index#1{\index{#1}#1}
+%
+\def\pshlabel#1{\footnotesize#1}
+\def\psvlabel#1{\footnotesize#1}
+\usepackage[colorlinks,linktocpage]{hyperref}
+%
+\begin{document}
+\title{\texttt{pst-grid}\\[1cm]
+plotting a background grid\\[5mm]
+		  {\small v.\pstGRIDFV}}
+%\thanks{%
+%		This document was written with \texttt{Kile: 1.6a (Qt: 3.1.1; KDE: 3.1.1;}
+%		\protect\url{http://sourceforge.net/projects/kile/}) and the PDF output
+%		  was build with VTeX/Free (\protect\url{http://www.micropress-inc.com/linux})}\\
+\author{Herbert Vo\ss}%\thanks{%
+%Thanks to: 
+%    Martin Chicoine, 
+%}}
+\date{\today}
+
+\maketitle
+
+This package allows to place a grid in the background of any text or math. 
+It has one optional argument \verb+varwidth+, which enables the package to
+use the \verb+varwidth+ package and the environment of the same name instaed
+of using the \verb+minipage+ environment.
+
+The package provides only one environment:
+
+\begin{lstlisting}[style=syntax]
+\begin{dogrid}[width][<options>]
+ ...
+\end{dogrid}
+\end{lstlisting}
+
+Both arguments are optional, but when using the second one then the first one must be
+at least empty but present. Otherwise you'll get an error, because the first optional
+argument must contain a length or be empty. If it is missing or empty, then \verb+\columnwidth+
+is assumed. The grid is preset with the followinmg arguments:
+
+\begin{lstlisting}
+\psset[pst-grid]{Gtrim=0 0}% no trim
+\psset[pst-grid]{gridskip=0.5cm}
+\psset{linecolor=black!50,linestyle=dotted,linewidth=1pt}
+\end{lstlisting}
+
+All settings can be overwritten in the usual way by using the optional argument.
+Thge \verb+Gtrim+ option can be used to add or substract some more line of squares
+to the grid. Negative values are possible. The \verb+gridskip+ value is added
+as vertical space after placing the grid.
+
+\begin{LTXexample}[pos=l]
+\begin{dogrid}
+\[ \left(
+\begin{array}{c@{}c@{}c}
+\begin{array}{|cc|}\hline
+a_{11} & a_{12} \\
+a_{21} & a_{22} \\\hline
+\end{array} & 0 & 0 \\
+0 & \begin{array}{|ccc|}\hline
+    b_{11} & b_{12} & b_{13}\\
+    b_{21} & b_{22} & b_{23}\\
+    b_{31} & b_{32} & b_{33}\\\hline
+    \end{array} & 0 \\
+0 & 0 & \begin{array}{|cc|}\hline
+        c_{11} & c_{12} \\
+        c_{21} & c_{22} \\\hline
+        \end{array} \\
+\end{array}\right)\]
+\end{dogrid}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=l]
+\begin{dogrid}[][Gtrim=-1 0]
+\[ \left(
+\begin{array}{c@{}c@{}c}
+\begin{array}{|cc|}\hline
+a_{11} & a_{12} \\
+a_{21} & a_{22} \\\hline
+\end{array} & 0 & 0 \\
+0 & \begin{array}{|ccc|}\hline
+    b_{11} & b_{12} & b_{13}\\
+    b_{21} & b_{22} & b_{23}\\
+    b_{31} & b_{32} & b_{33}\\\hline
+    \end{array} & 0 \\
+0 & 0 & \begin{array}{|cc|}\hline
+        c_{11} & c_{12} \\
+        c_{21} & c_{22} \\\hline
+        \end{array} \\
+\end{array}\right)\]
+\end{dogrid}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=l]
+\begin{dogrid}[][Gtrim=-1 0,linecolor=red!70]
+\[ \left(
+\begin{array}{c@{}c@{}c}
+\begin{array}{|cc|}\hline
+a_{11} & a_{12} \\
+a_{21} & a_{22} \\\hline
+\end{array} & 0 & 0 \\
+0 & \begin{array}{|ccc|}\hline
+    b_{11} & b_{12} & b_{13}\\
+    b_{21} & b_{22} & b_{23}\\
+    b_{31} & b_{32} & b_{33}\\\hline
+    \end{array} & 0 \\
+0 & 0 & \begin{array}{|cc|}\hline
+        c_{11} & c_{12} \\
+        c_{21} & c_{22} \\\hline
+        \end{array} \\
+\end{array}\right)\]
+\end{dogrid}
+\end{LTXexample}
+
+
+\begin{LTXexample}[pos=t]
+\begin{dogrid}[][linestyle=solid,linecolor=black!20]
+\[\begin{array}{rcll}
+y & = & x^{2}+bx+c\\
+  & = & x^{2}+2\cdot{\displaystyle\frac{b}{2}x+c}\\
+  & = & \underbrace{x^{2}+2\cdot\frac{b}{2}x+\left(\frac{b}{2}\right)^{2}}-
+	{\displaystyle \left(\frac{b}{2}\right)^{2}+c}\\
+ &  & \qquad\left(x+{\displaystyle \frac{b}{2}}\right)^{2}\\
+ & = & \left(x+{\displaystyle \frac{b}{2}}\right)^{2}-
+	\left({\displaystyle \frac{b}{2}}\right)^{2}+c & 
+	\left|+\left({\displaystyle \frac{b}{2}}\right)^{2}-c\right.\\
+y+\left({\displaystyle \frac{b}{2}}\right)^{2}-c & = & \left(x+
+	{\displaystyle \frac{b}{2}}\right)^{2} & \left|(\textrm{Scheitelpunktform})\right.\\
+y-y_{S} & = & (x-x_{S})^{2}\\
+S(x_{S};y_{S}) & \,\textrm{bzw.}\, & S\left(-{\displaystyle \frac{b}{2};\,
+    \left({\displaystyle \frac{b}{2}}\right)^{2}-c}\right)
+\end{array}\]
+\end{dogrid}
+\end{LTXexample}
+
+
+\bigskip
+\begin{LTXexample}[pos=t]
+\begin{dogrid}[.75\linewidth][linecolor=lightgray,linestyle=solid,Gtrim=0 -1]
+\begin{enumerate}
+\item This is the first sentence
+\item This is the second sentence
+\item This is the third one
+\item And this the last one
+\end{enumerate}
+\end{dogrid}
+\end{LTXexample}
+
+
+\nocite{*}
+\bgroup
+\raggedright
+\bibliographystyle{plain}
+\bibliography{\jobname}
+\egroup
+
+
+\end{document}

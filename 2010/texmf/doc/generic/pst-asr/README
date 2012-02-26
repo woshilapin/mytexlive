@@ -1,0 +1,23 @@
+
+The pst-asr package is based on PSTricks and is intended to be
+used by linguists to typeset autosegmental representations. The
+core files are 1) pst-asr.tex, the Tex macro file, 2)
+pst-asr.sty, a LaTex wrapper which calls pst-asr.tex, and 3)
+pst-asr-doc.pdf, the documentation.  The complete Tex source for
+the documentation is zipped into pst-asr-doc-source.zip along
+with README.txt, which has instructions for generating the
+documentation.
+
+The file pst-asr-examples.tex is a LaTex file which contains
+almost all the examples in the documentation, very simply
+formatted (no packages other than pstricks, pst-xkey, and pst-asr
+are used) in order to facilitate user experimentation with
+pst-asr typesetting.  Users should be able to run this file with
+little difficulty if pst-asr is fully installed or is simply
+in the same directory that pst-asr-examples.tex is in.
+pst-asr-examples.pdf shows what the source produces.
+
+This material is subject to the LaTeX Project Public License. See
+http://www.ctan.org/tex-archive/help/Catalogue/licenses.lppl.html
+for the details of that license.
+

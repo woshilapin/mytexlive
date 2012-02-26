@@ -1,0 +1,48 @@
+%% Package `pst-3dplot.tex'
+%%
+%% Herbert Voss <voss _at_ pstricks.de> (Germany)
+%%
+%% 2004-12-04
+%%
+
+PSTricks offers excellent macros to insert more or less complex 
+graphics into a document. pstricks.tex itself is the base for several 
+other additional packages, which are mostly named pst-xxxx, 
+like pst-3dplot. There exists several packages for plotting three 
+dimensional graphical objects. pst-3dplot is similiar to the 
+pst-plot package for two dimensional objects and mathematical functions.
+
+
+Save the files
+
+pst-3dplot.sty 
+pst-3dplot.tex
+pst-3dplot.pro
+
+in any place, where latex or any other TeX program will find it.
+The pro file should go into $TEXMF$/dvips/pstricks/.
+
+pst-3dplot uses the extended version of the keyval package. So
+be sure that you 
+- have installed xkeyval with the special pst-xkey
+  (CTAN: tex-archive/macros/latex/contrib/xkeyval/)
+- do not load another package after pst-3dplot, which loads
+  the old keyval.sty or pst-key.tex
+
+
+If you like to get the documentation file in another format run 
+
+latex pst-3dplot-doc.tex
+bibtex pst-3dplot-doc
+latex pst-3dplot-doc.tex
+dvips pst-3dplot-doc.dvi
+
+to get a PostScript file. But pay attention, that the pst-3dplot
+files are saved in the above mentioned way, before you run
+latex on the documentation file.
+
+The intermediate DVI file works only with viewers which can 
+interprete the embedded PostScript code.
+
+For another PDF output read the introduction from
+the documentation.

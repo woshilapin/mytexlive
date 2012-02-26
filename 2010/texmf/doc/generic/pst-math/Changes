@@ -1,0 +1,17 @@
+..... pst-math.pro
+0.61 2010-10-02  - moved vasicek into pst-func to make the
+                   probability available as parameter
+0.6  2010-09-29  - added the inverse normal function
+                 - added the varicek density function
+0.5  2009-08-27  modified SINC function (Patrice Megret)
+0.4  2009-05-11  added SystemEqnSolver
+0.3  2009-01-20  added SIMPSON for numeric integration (dr/hv)
+0.2  2007-08-30  added GAMMA function (hv)
+0.1              first CTAN version (cj)
+
+
+..... pst-math.sty
+
+
+..... pst-math.tex
+0.23  2009-08-27  define \pstPi# on TeX level

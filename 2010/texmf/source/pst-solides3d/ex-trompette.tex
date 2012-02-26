@@ -1,0 +1,19 @@
+\section{Trompette, version 1}
+\bgroup\begin{LTXexample}[pos=t]
+\begin{pspicture}(-6,-8)(6,6)
+\psframe*[linecolor=gray!50](-6,-8)(6,6)
+\psset[pst-solides3d]{viewpoint=20 40 30,SphericalCoor,Decran=20,lightsrc=10 15 10}
+\defFunction[algebraic]{trompette}(u,v){cos(u)*sin(v)}{cos(v)+ln(tan(1/2*v))+2}{sin(u)*sin(v)}
+% en notation RPN
+%\defFunction{trompette}(u,v){u Cos v Sin mul}{v Cos 0.5 v mul Tan log 2.3 mul add}{u Sin v Sin mul}
+\psSolid[object=grille,base=-4 4 -4 4,action=draw*,linecolor=red](0,0,-2)
+\psSolid[object=surfaceparametree,linecolor={[cmyk]{1,0,1,0.5}},
+   base=0 2 pi mul 0.03 2,fillcolor=yellow!50,incolor=green!50,
+   function=trompette,linewidth=0.5\pslinewidth,unit=2,
+   ngrid=20]%
+\gridIIID[Zmin=-2,Zmax=2](-4,4)(-4,4)
+\end{pspicture}
+\end{LTXexample}
+
+
+\egroup

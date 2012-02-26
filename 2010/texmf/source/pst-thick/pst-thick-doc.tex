@@ -1,0 +1,957 @@
+%% $Id: pst-thick-doc.tex 170 2009-12-08 21:30:53Z herbert $
+\documentclass[11pt,english,french,BCOR10mm,DIV12,bibliography=totoc,parskip=false,smallheadings
+    headexclude,footexclude,oneside]{pst-doc}
+\usepackage[utf8]{inputenc}
+\usepackage{pst-thick}
+\let\pstFV\fileversion
+\usepackage{pst-slpe,pst-grad,pst-text}
+%
+\def\bgImage{{%\psset{unit=0.5}
+\begin{pspicture}(0,-0.5)(20,1.5)
+\psthick[E=1.2,stylethick=rainbow]{1}{19}{\fonctionSinus{10}{1}}%
+\rput(0,0){\pstextpath[c]{\parametricplot[linestyle=none]{1}{19}{%
+    /P 10 def % periode (10 unites)
+    /A 1 def % amplitude
+    /O 360 P div def
+     t O t mul sin A mul
+    }}{\Huge\texttt{\textbf{ PStricks}}: a long long winding road :-)}}
+\end{pspicture}}}
+
+\lstset{explpreset={pos=t,width=-99pt,overhang=0pt,hsep=\columnsep,vsep=\bigskipamount,rframe={}},style=code}
+\begin{document}
+
+\title{\texttt{pst-thick}}
+\subtitle{A PSTricks package for drawing very thick lines and curves; v.\pstFV}
+\author{Manuel Luque \\Herbert Vo\ss}
+%\docauthor{Herbert Vo\ss}
+\date{\today}
+\maketitle
+
+\clearpage
+
+\begin{abstract}
+Le tracé d'une ligne avec \texttt{PStricks} comporte de très nombreuses options qui doivent satisfaire la majorité des
+utilisateurs. Vous ne trouverez donc pas ici un catalogue de toutes les options possibles, telles que :
+\begin{compactitem}
+  \item \Lkeyword{doublecolor}\texttt{=red!25}
+  \item \Lkeyword{doublesep}=2
+  \item \Lkeyword{linecolor}\texttt{=red}
+  \item \Lkeyword{linewidth}\texttt{=0.1}
+  \item etc.
+\end{compactitem}
+Les documentations sur ces options sont très nombreuses, par exemple en français :
+\begin{compactitem}
+  \item \url{http://www-igm.univ-mlv.fr/~daaboul/PSTricks/Cours7_PSTricks.ps}
+  \item \url{http://www-igm.univ-mlv.fr/~daaboul/PSTricks/Cours8_PSTricks.ps}
+  \item \url{http://www.gutenberg.eu.org/pub/GUTenberg/publicationsPDF/16-girou.pdf}
+  \item \url{http://documents.epfl.ch/users/d/da/danalet/www/MiniProjet/PSTricks.pdf}
+\end{compactitem}
+Il s'agit plutôt, ici, de regarder ce qui se passe à l'intérieur et aux bords d'une ligne, en créant une commande permettant d'obtenir
+le \textit{chemin} d'une ligne, pour diverses applications qui n'ont peut-être aucune utilité pratique\ldots
+\end{abstract}
+
+\tableofcontents
+
+\clearpage
+
+\section{La commande et les options}
+
+\begin{BDef}
+\Lcs{psthick}\OptArgs\Largb{t1}\Largb{t2}\Largb{function}
+\end{BDef}
+
+Cette commande s'écrit et comporte de grandes analogies avec \Lcs{parametricplot}.
+
+\bigskip\noindent
+\begin{tabularx}{\linewidth}{@{} l>{\ttfamily}cc X @{}}  \toprule
+\emph{name}            & \emph{type} & \emph{default} & \emph{description}\\\toprule
+\Lkeyword{E}           & nombre      & 1              & épaisseur du trait cm \\
+\Lkeyword{K}           & nombre      & 0              & modifie l'inclinaison par rapport à la normale de l'angle \Lkeyword{K}\\\midrule
+\Lkeyword{stylethick}  & texte       & \Lkeyval{thicklineblue}& style du tracé\\ \midrule
+\Lkeyword{curveonly}   & boolean     & false          & Ne trace que les bords de la ligne\\
+\Lkeyword{stylecurve1} & texte       & \Lkeyval{onlythecurvered}& style du tracé de la courbe 1 \\
+\Lkeyword{stylecurve2} & texte       & \Lkeyval{onlythecurveblue}& style du tracé de la courbe 2 \\\bottomrule
+\end{tabularx}
+
+\bigskip
+Les styles prédéfinis sont les suivants :
+
+\bigskip
+\begin{lstlisting}
+\newpsstyle{thickline}{fillstyle=solid,fillcolor=red!25,linecolor=red,plotpoints=360}
+\newpsstyle{onlythecurvered}{linecolor=red,plotpoints=360}
+\newpsstyle{onlythecurveblue}{linecolor=blue,plotpoints=360}
+\newpsstyle{thicklineblue}{fillstyle=solid,fillcolor=blue!25,linecolor=blue,plotpoints=360}
+\newpsstyle{rainbow}{fillstyle=ccslopes,linecolor=red,plotpoints=360}
+\newpsstyle{solide}{fillstyle=solid,fillcolor=black,plotpoints=360}
+\newpsstyle{default}{}% lignes noires, rien a l'interieur
+\end{lstlisting}
+
+Dans la commande \verb+\psthick[options]{t1}{t2}{function}+, \textcolor{red}{\texttt{t1}} est la valeur initiale et
+\textcolor{red}{\texttt{t2}} la valeur finale, comme dans \verb+\parametricplot+.
+
+La fonction sera définie, en \texttt{PostScript}, par $\mathsf{x(t)}$ et $\mathsf{y(t)}$. 
+L'exemple le plus simple, pré-défini, est la fonction \texttt{sinus}~:~
+\Lcs{fonctionSinus}\Largb{periode}\Largb{amplitude}
+
+\begin{lstlisting}
+\def\fonctionSinus#1#2{%
+    /P #1 def % periode (10 unites)
+    /A #2 def % amplitude
+    /O 360 P div def % pulsation 2*pi/P
+    /x0 t def
+    /y0 t O mul sin A mul def % A*sin(O*t)
+    /dx dt def
+    /dy t dt add O mul sin
+        t O mul sin
+        sub
+        A mul def }
+\end{lstlisting}
+
+Le nom des variables ne doit pas être modifié. Pour définir une fonction particulière, 
+il faut donc écrire 4 définitions :
+
+\begin{compactitem}
+  \item \texttt{x0=x(t)}
+  \item \texttt{y0=y(t)}
+  \item \texttt{dx=x(t+dt)-x(t)}
+  \item \texttt{dy=y(t+dt)-y(t)}
+\end{compactitem}
+en respectant la notation \texttt{PostScript} et passer, éventuellement, en options, 
+d'autres paramètres, comme dans cet exemple, la période et l'amplitude. D'autres exemple seront donnés plus loin.
+
+\section{Tracer une courbe avec une épaisseur donnée, principe :}
+Prenons, par exemple, le tracé d'une sinusoïde avec une épaisseur constante de 2~cm. 
+Le principe est simple et se décompose en 4 points :
+\begin{compactitem}
+  \item tracer la sinusoïde en question(en traits discontinus);
+  \item tracer la normale en chacun des points(en un nombre de points donnés) et de part et d'autre marquer
+  à une distance égale à la demi-épaisseur les points correspondants aux deux bords de la courbe ;
+  \item tracer, en reliant les points correspondants, les deux bords de la courbe, qui, 
+  remarquons-le, ne sont plus des sinusoïdes ;
+  \item remplir l'intervalle avec la couleur ou le motif voulu.
+\end{compactitem}
+
+\begin{center}
+\psset{unit=0.75cm}
+\begin{pspicture}(-1,-3)(10,3)
+\psthick[curveonly,E=2]{0}{10}{\fonctionSinus{10}{2}}
+\multido{\i=0+1}{11}{%
+\pnode(!/t \i\space def
+    /E 2 def
+    /dt 10 360 div def
+    \fonctionSinus{10}{2}
+    /ds dx dup mul dy dup mul add sqrt def
+    /dx dx ds div def
+    /dy dy ds div def
+    /nx E 2 div dy mul neg def % normale x
+    /ny E 2 div dx mul def % normale y
+    /x1 x0 nx add def
+    /y1 y0 ny add def
+      x1 y1){A}
+\psdot[linecolor=red](A)
+\pnode(! /x2 x0 nx sub def  /y2 y0 ny sub def x2 y2){B}
+\psdot[linecolor=red](B)   \psdot(!t O t mul sin A mul) \psline(A)(B)}
+\parametricplot[linestyle=dashed]{0}{10}{ t O t mul sin A mul }
+\psaxes(0,0)(-1,-3)(10,3)
+\end{pspicture}
+\end{center}
+
+\begin{lstlisting}
+\begin{pspicture}(-1,-3)(10,3)
+\psthick[curveonly,E=2]{0}{10}{\fonctionSinus{10}{2}}
+\multido{\i=0+1}{11}{%
+\pnode(!/t \i\space def
+    /E 2 def
+    /dt 10 360 div def
+    \fonctionSinus{10}{2}
+    /ds dx dup mul dy dup mul add sqrt def
+    /dx dx ds div def
+    /dy dy ds div def
+    /nx E 2 div dy mul neg def % normale x
+    /ny E 2 div dx mul def % normale y
+    /x1 x0 nx add def
+    /y1 y0 ny add def
+      x1 y1){A}
+\psdot[linecolor=red](A)
+\pnode(! /x2 x0 nx sub def  /y2 y0 ny sub def x2 y2){B}
+\psdot[linecolor=red](B)   \psdot(!t O t mul sin A mul) \psline(A)(B)}
+\parametricplot[linestyle=dashed]{0}{10}{ t O t mul sin A mul }
+\psaxes(0,0)(-1,-3)(10,3)
+\end{pspicture}
+\end{lstlisting}
+
+
+
+\begin{center}
+\psset{unit=0.75cm}
+\begin{pspicture}(-1,-3)(10,3)
+\psthick[E=2]{0}{10}{\fonctionSinus{10}{2}}%
+\psaxes(0,0)(-1,-3)(10,3)%\psgrid(0,-3)(10,3)
+\end{pspicture}
+\end{center}
+
+\begin{lstlisting}
+\begin{pspicture}(-1,-3)(10,3)
+\psset{plotpoints=360}
+\psthick[E=2]{0}{10}{\fonctionSinus{10}{2}}
+\psaxes(0,0)(-1,-3)(10,3)
+\end{pspicture}
+\end{lstlisting}
+
+
+
+
+\section{Le même(?) résultat avec les commandes de base de \mbox{PStricks}}
+L'option \Lkeyset{doubleline=true} et ses paramètres associés \Lkeyword{doublecolor} et 
+\Lkeyword{doublesep} permettent d'obtenir un
+tracé analogue(preuve que les commandes internes à \texttt{PostScript} utilisent 
+la même méthode que celle employée dans la première partie).
+
+Les valeurs passées en options sont les suivantes :
+\begin{compactitem}
+  \item \Lkeyword{doublecolor}\texttt{=red!25}
+  \item \Lkeyword{doublesep}=2 : épaisseur de 2~cm
+  \item \Lkeyset{linecolor=red}
+%  \item \verb+linewidth=\pslinewidth+ : épaisseur standard d'une ligne.
+\end{compactitem}
+
+\begin{center}
+\begin{pspicture}[showgrid=true](-1,-3)(10,3.5)
+  \pnode(!/P 10 def % période (10 unites)
+    /A 2 def % amplitude
+    /O 360 P div def 0 0){bluf}
+  \parametricplot[plotpoints=360,doublecolor=red!25,doubleline=true,
+       linecolor=red,doublesep=2]{0}{10}{ t O t mul sin A mul }
+\end{pspicture}
+\end{center}
+
+\begin{lstlisting}[style=code]
+\begin{pspicture}[showgrid=true](-1,-3)(10,3.5)
+  \pnode(!/P 10 def % periode (10 unites)
+    /A 2 def % amplitude
+    /O 360 P div def 0 0){bluf}
+  \parametricplot[plotpoints=360,doublecolor=red!25,doubleline=true,
+       linecolor=red,doublesep=2]{0}{10}{ t O t mul sin A mul }
+\end{pspicture}
+\end{lstlisting}
+
+
+Il y a quand même une différence dans la méthode employée par \texttt{PStricks}, 
+on peut l'observer sur le tracé suivant:
+\begin{center}
+\begin{pspicture}[showgrid=true](-1,-3)(10,3.5)
+  \pnode(!/P 10 def % periode (10 unites)
+    /A 2 def % amplitude
+    /O 360 P div def  0 0){bluf}
+  \parametricplot[plotpoints=360,doublecolor=red!25,doubleline=true,linecolor=red,
+    doublesep=2]{0}{10}{ t O t mul sin A mul }
+  \parametricplot[plotpoints=360,linecolor=red,linewidth=2]{7}{10}{ t O t mul sin A mul }
+\end{pspicture}
+\end{center}
+
+
+\begin{lstlisting}
+\begin{pspicture}[showgrid=true](-1,-3)(10,3.5)
+  \pnode(!/P 10 def % periode (10 unites)
+    /A 2 def % amplitude
+    /O 360 P div def  0 0){bluf}
+  \parametricplot[plotpoints=360,doublecolor=red!25,doubleline=true,linecolor=red,
+    doublesep=2]{0}{10}{ t O t mul sin A mul }
+  \parametricplot[plotpoints=360,linecolor=red,linewidth=2]{7}{10}{ t O t mul sin A mul }
+\end{pspicture}
+\end{lstlisting}
+
+
+
+\texttt{PStricks} trace d'abord une courbe d'épaisseur 2~cm plus l'épaisseur d'un trait 
+de couleur rouge, puis avec le pinceau de la couleur
+de \Lkeyword{doublecolor} une ligne d'épaisseur 2~cm, qui remplace la couleur rouge 
+entre les deux bords. On peut apercevoir, très fugitivement, ce phénomène,
+lors de l'affichage avec un visualiseur \texttt{PostScript}.
+
+\section{Réalisation d'une frise par les deux méthodes}
+On peut donc se demander, à juste titre, s'il y a un quelconque intérêt à fabriquer une commande spéciale
+pour tracer des courbes épaisses dès lors que les commandes de base de \texttt{PStricks} 
+permettent aisément d'obtenir le résultat souhaité ?
+
+Afin de comparer les deux méthodes, réalisons l'ébauche d'une frise où deux sinusoïdes s'entrelacent, l'une passant alternativement dessus puis dessous la deuxième.
+\subsection{Méthode 1 : simple superposition}
+La démarche utilisée est ultra simple : on trace d'abord la sinusoïde rouge puis la sinusoïde bleue, ensuite on re-dessine par-dessus une portion de
+sinusoïde rouge correspondant à la deuxième intersection
+\begin{center}
+\psset{unit=0.5cm}
+\begin{pspicture}(-1,-4)(12,4)
+\psset{E=2}
+\psthick{-2.5}{12.5}{\fonctionSinus{10}{2}}
+\psthick[stylethick=thicklineblue]{-2.5}{12.5}{\fonctionSinus{10}{-2}}
+\psthick[linestyle=none]{2.5}{7.5}{\fonctionSinus{10}{2}}
+\psthick[curveonly]{2.5}{7.5}{\fonctionSinus{10}{2}}
+\rput(5.5,-3.5){Commande spéciale}
+\end{pspicture}
+\hfill
+\begin{pspicture}(-1,-4)(12,4)
+  \pnode(!/P 10 def % période (10 unités)
+    /A 2 def % amplitude
+    /O 360 P div def
+    0 0){bluf}
+\psset{plotpoints=360}
+    \parametricplot[linewidth=\pslinewidth,doublecolor=red!25,doubleline=true,linecolor=red,doublesep=2]{-2.5}{12.5}{%
+     t O t mul sin A mul
+    }%
+    \parametricplot[linewidth=\pslinewidth,doublecolor=blue!25,doubleline=true,linecolor=blue,doublesep=2]{-2.5}{12.5}{%
+     t O t mul sin A mul neg
+    }%
+    \parametricplot[linewidth=\pslinewidth,doublecolor=red!25,doubleline=true,linecolor=red,doublesep=2]{2.5}{7.5}{%
+     t O t mul sin A mul
+    }%
+\rput(5.5,-3.5){Commandes de base \texttt{PStricks}}
+\end{pspicture}
+\end{center}
+
+
+
+
+
+Votre \oe{}il exercé a certainement remarqué que les raccordements ne sont 
+pas parfaits avec les commandes de base \texttt{PStricks}, une fine trace verticale
+rouge marque les deux extrémités de la portion rajoutée !
+\subsection{Méthode 2 : commande \texttt{clip}}
+Une méthode plus élaborée consiste à ne dessiner pour la deuxième intersection 
+que la partie correspondante à la courbe rouge qui coïncide avec la courbe bleue
+lors de l'intersection, cela est possible avec la commande \Lcs{psclip} de \texttt{PostScript} 
+adaptée à \texttt{PStricks}.
+
+Dans les deux cas nous allons faire un \textit{clipping} de la courbe bleue et le remplacer à 
+la deuxième intersection par la courbe rouge.
+
+\begin{center}
+\psset{unit=0.5cm}
+\begin{pspicture}(-1,-4)(12,4)
+\psthick[E=2]{-2.5}{12.5}{\fonctionSinus{10}{2}}%
+\psthick[E=2,stylethick=thicklineblue]{-2.5}{12.5}{\fonctionSinus{10}{-2}}%
+% on élargit la courbe bleue pour ne pas laisser de traces de bord lors du clipping
+\psclip{\psthick[E=2.5,stylethick=vide]{0}{10}{\fonctionSinus{10}{-2}}}%
+% l'épaisseur initiale est rétablie
+\psthick[E=2]{2.5}{7.5}{\fonctionSinus{10}{2}}%
+\endpsclip%
+\rput(5.5,-3.5){Commande spéciale}
+\end{pspicture}
+\hfill
+\begin{pspicture}(-1,-4)(12,4)
+  \pnode(!/P 10 def % période (10 unités)
+    /A 2 def % amplitude
+    /O 360 P div def
+    0 0){bluf}
+\psset{plotpoints=360}
+    \parametricplot[linewidth=\pslinewidth,doublecolor=red!25,doubleline=true,linecolor=red,doublesep=2]{-2.5}{12.5}{%
+     t O t mul sin A mul
+    }%
+    \parametricplot[linewidth=\pslinewidth,doublecolor=blue!25,doubleline=true,linecolor=blue,doublesep=2]{-2.5}{12.5}{%
+     t O t mul sin A mul neg
+    }%
+\psclip{\parametricplot[doubleline=true,doublecolor=blue!25,linecolor=blue,doublesep=2]{2.5}{7.5}{%
+     t O t mul sin A mul neg}}
+\parametricplot[linewidth=\pslinewidth,doublecolor=red!25,doubleline=true,linecolor=red,doublesep=2]{2.5}{7.5}{%
+     t O t mul sin A mul}
+\endpsclip%
+\rput(5.5,-3.5){Commandes de base \texttt{PStricks}}
+\end{pspicture}
+\end{center}
+
+\begin{lstlisting}[style=code]
+\begin{pspicture}(-1,-4)(12,4)
+\psthick[E=2]{-2.5}{12.5}{\fonctionSinus{10}{2}}
+\psthick[E=2,stylethick=thicklineblue]{-2.5}{12.5}{\fonctionSinus{10}{-2}}%
+\psclip{\psthick[E=2.5,stylethick=vide]{0}{10}{\fonctionSinus{10}{-2}}}%
+  \psthick[E=2]{2.5}{7.5}{\fonctionSinus{10}{2}}%
+\endpsclip%
+\rput(5.5,-3.5){Commande speciale}
+\end{pspicture}
+\end{lstlisting}
+
+\textbf{Conclusion : avantage à la commande spéciale.} Les commandes de base 
+\texttt{PStricks} ne permettent pas de faire un \textit{clipping}, car le chemin qui délimite le contour de la ligne
+n'est pas défini, ou plutôt n'est pas accessible par ce procédé.
+
+\section{Remplir l'intérieur avec une couleur ou un motif particulier}
+\subsection{Les couleurs de l'arc-en-ciel}
+Cela est facile, grâce au package \LPack{pst-slpe}, en définissant le style adapté :
+
+\begin{lstlisting}[style=code]
+\newpsstyle{rainbow}{fillstyle=ccslopes,linecolor=red}
+\end{lstlisting}
+
+\begin{center}
+\begin{pspicture}(-1,-2)(10,3)
+\psthick[stylethick=rainbow,E=0.5]{0}{10}{\fonctionSinus{5}{2}}
+\psaxes(0,0)(-1,-2)(10,3)
+\end{pspicture}
+\end{center}
+
+\begin{lstlisting}[style=code]
+\begin{pspicture}(-1,-2)(10,3)
+\psthick[stylethick=rainbow,E=0.5]{0}{10}{\fonctionSinus{5}{2}}
+\psaxes(0,0)(-1,-2)(10,3)
+\end{pspicture}
+\end{lstlisting}
+
+\subsection{Des hachures}
+\newpsstyle{hachures}{fillstyle=crosshatch,plotpoints=360}
+\begin{center}
+\begin{pspicture}(-1,-2)(10,3)
+\psthick[stylethick=hachures,E=0.5]{0}{10}{\fonctionSinus{5}{2}}
+\psaxes(0,0)(-1,-2)(10,3)
+\end{pspicture}
+\end{center}
+
+\begin{lstlisting}[style=code]
+\newpsstyle{hachures}{fillstyle=crosshatch,plotpoints=360}
+\begin{pspicture}(-1,-2)(10,3)
+\psthick[stylethick=hachures,E=0.5]{0}{10}{\fonctionSinus{5}{2}}
+\psaxes(0,0)(-1,-2)(10,3)
+\end{pspicture}
+\end{lstlisting}
+
+
+\section{Simulation(?) de la reptation d'un ver ou d'un serpent}
+
+\begin{center}
+\psset{unit=0.5cm}
+\begin{pspicture}(-1,-2)(20,3)
+\psthick[stylethick=serpent,E=1.5]{0}{20}{\fonctionSinus{10}{2}}
+\multido{\i=0+1}{21}{%
+\pnode(!/t \i\space def
+    /dt 10 360 div def   /E 1.5 def
+    \fonctionSinus{10}{2}
+    /ds dx dup mul dy dup mul add sqrt def
+    /dx dx ds div def  /dy dy ds div def
+    /nx E 2 div dy mul neg def % normale x
+    /ny E 2 div dx mul def % normale y
+    /x1 x0 nx add def  /y1 y0 ny add def
+      x1 y1){A}
+\psdot(A)
+\pnode(! /x2 x0 nx sub def /y2 y0 ny sub def x2 y2){B}
+\psdot(B) \psline(A)(B)}
+\parametricplot[linestyle=dashed]{0}{20}{ t O t mul sin 2 mul }
+\end{pspicture}
+\end{center}
+
+\begin{lstlisting}
+\psset{unit=0.5cm}
+\begin{pspicture}(-1,-2)(20,3)
+\psthick[stylethick=serpent,E=1.5]{0}{20}{\fonctionSinus{10}{2}}
+\multido{\i=0+1}{21}{%
+\pnode(!/t \i\space def
+    /dt 10 360 div def   /E 1.5 def
+    \fonctionSinus{10}{2}
+    /ds dx dup mul dy dup mul add sqrt def
+    /dx dx ds div def  /dy dy ds div def
+    /nx E 2 div dy mul neg def % normale x
+    /ny E 2 div dx mul def % normale y
+    /x1 x0 nx add def  /y1 y0 ny add def
+      x1 y1){A}
+\psdot(A)
+\pnode(! /x2 x0 nx sub def /y2 y0 ny sub def x2 y2){B}
+\psdot(B) \psline(A)(B)}
+\parametricplot[linestyle=dashed]{0}{20}{ t O t mul sin 2 mul }
+\end{pspicture}
+\end{lstlisting}
+
+
+\begin{center}
+\psset{unit=0.5cm}
+\begin{pspicture}(-1,-2)(20,3)
+\psthick[stylethick=serpent,E=1.5]{0}{20}{\fonctionSinus{10}{0.5}}
+\multido{\i=0+1}{21}{%
+  \pnode(! /t \i\space def  /dt 10 360 div def
+    \fonctionSinus{10}{0.5}
+    /E 1.5 def
+    /ds dx dup mul dy dup mul add sqrt def
+    /dx dx ds div def  /dy dy ds div def
+    /nx E 2 div dy mul neg def % normale x
+    /ny E 2 div dx mul def % normale y
+    /x1 x0 nx add def  /y1 y0 ny add def
+      x1 y1){A}
+  \psdot(A) \pnode(! /x2 x0 nx sub def /y2 y0 ny sub def x2 y2){B}
+  \psdot(B) \psline(A)(B)}
+\parametricplot[linestyle=dashed]{0}{20}{ t O t mul sin 0.5 mul }
+\end{pspicture}
+\end{center}
+
+\begin{lstlisting}
+\psset{unit=0.5cm}
+\begin{pspicture}(-1,-2)(20,3)
+\psthick[stylethick=serpent,E=1.5]{0}{20}{\fonctionSinus{10}{0.5}}
+\multido{\i=0+1}{21}{%
+  \pnode(! /t \i\space def  /dt 10 360 div def
+    \fonctionSinus{10}{0.5}
+    /E 1.5 def
+    /ds dx dup mul dy dup mul add sqrt def
+    /dx dx ds div def  /dy dy ds div def
+    /nx E 2 div dy mul neg def % normale x
+    /ny E 2 div dx mul def % normale y
+    /x1 x0 nx add def  /y1 y0 ny add def
+      x1 y1){A}
+  \psdot(A) \pnode(! /x2 x0 nx sub def /y2 y0 ny sub def x2 y2){B}
+  \psdot(B) \psline(A)(B)}
+\parametricplot[linestyle=dashed]{0}{20}{ t O t mul sin 0.5 mul }
+\end{pspicture}
+\end{lstlisting}
+
+\begin{center}
+\psset{unit=0.5cm}
+\begin{pspicture}(-1,-2)(20,3)
+\psthick[stylethick=serpent,E=1.5]{0}{20}{\fonctionSinus{10}{-1}}
+\multido{\i=0+1}{21}{%
+\pnode(! /t \i\space def
+    /dt 10 360 div def  /E 1.5 def
+    \fonctionSinus{10}{-1}
+    /ds dx dup mul dy dup mul add sqrt def
+    /dx dx ds div def  /dy dy ds div def
+    /nx E 2 div dy mul neg def % normale x
+    /ny E 2 div dx mul def % normale y
+    /x1 x0 nx add def  /y1 y0 ny add def
+      x1 y1){A}
+  \psdot(A)\pnode(! /x2 x0 nx sub def /y2 y0 ny sub def x2 y2){B}
+  \psdot(B) \psline(A)(B)}
+\parametricplot[linestyle=dashed]{0}{20}{ t O t mul sin -1 mul }
+\end{pspicture}
+\end{center}
+
+\begin{lstlisting}
+\psset{unit=0.5cm}
+\begin{pspicture}(-1,-2)(20,3)
+\psthick[stylethick=serpent,E=1.5]{0}{20}{\fonctionSinus{10}{-1}}
+\multido{\i=0+1}{21}{%
+  \pnode(! /t \i\space def
+    /dt 10 360 div def  /E 1.5 def
+    \fonctionSinus{10}{-1}
+    /ds dx dup mul dy dup mul add sqrt def
+    /dx dx ds div def  /dy dy ds div def
+    /nx E 2 div dy mul neg def % normale x
+    /ny E 2 div dx mul def % normale y
+    /x1 x0 nx add def  /y1 y0 ny add def
+      x1 y1){A}
+  \psdot(A)\pnode(! /x2 x0 nx sub def /y2 y0 ny sub def x2 y2){B}
+  \psdot(B) \psline(A)(B)}
+\parametricplot[linestyle=dashed]{0}{20}{ t O t mul sin -1 mul }
+\end{pspicture}
+\end{lstlisting}
+
+\begin{center}
+\psset{unit=0.5cm}
+\begin{pspicture}(-1,-2)(20,3)
+\psthick[stylethick=serpent,E=1.5]{0}{20}{\fonctionSinus{10}{-2.5}}
+\multido{\i=0+1}{21}{%
+\pnode(!/t \i\space def
+    /dt 10 360 div def
+    \fonctionSinus{10}{-2.5}
+    /E 1.5 def
+    /ds dx dup mul dy dup mul add sqrt def
+    /dx dx ds div def
+    /dy dy ds div def
+    /nx E 2 div dy mul neg def % normale x
+    /ny E 2 div dx mul def % normale y
+    x0 nx add y0 ny add ){A}
+  \psdot(A)\pnode(! x0 nx sub y0 ny sub ){B}
+  \psdot(B) \psline(A)(B)}
+\parametricplot[linestyle=dashed]{0}{20}{ t O t mul sin -2.5 mul }
+\end{pspicture}
+\end{center}
+
+\begin{lstlisting}
+\psset{unit=0.5cm}
+\begin{pspicture}(-1,-2)(20,3)
+\psthick[stylethick=serpent,E=1.5]{0}{20}{\fonctionSinus{10}{-2.5}}
+\multido{\i=0+1}{21}{%
+\pnode(!/t \i\space def
+    /dt 10 360 div def
+    \fonctionSinus{10}{-2.5}
+    /E 1.5 def
+    /ds dx dup mul dy dup mul add sqrt def
+    /dx dx ds div def
+    /dy dy ds div def
+    /nx E 2 div dy mul neg def % normale x
+    /ny E 2 div dx mul def % normale y
+    x0 nx add y0 ny add ){A}
+  \psdot(A)\pnode(! x0 nx sub y0 ny sub ){B}
+  \psdot(B) \psline(A)(B)}
+\parametricplot[linestyle=dashed]{0}{20}{ t O t mul sin -2.5 mul }
+\end{pspicture}
+\end{lstlisting}
+
+\section{Autres exemples : parabole et cercle}
+\def\fonctionParabole#1#2#3{% ax^2+bx+c
+    /A #1 def %
+    /B #2 def %
+    /C #3 def
+    /x0 t def
+    /y0 A t dup mul mul t B mul add C add def % ax^2+bx+c
+    /dx dt def
+    /dy A t dt add dup mul mul t dt add B mul add C add
+        A t dup mul mul t B mul add C add
+        sub
+        def
+    }
+\begin{center}
+\psset{unit=0.75}
+\begin{pspicture}(-6,-5)(3,5)
+\psthick[stylethick=thicklineblue,linewidth=0.1]{-6}{2}{\fonctionParabole{0.5}{2}{-2}}
+\psaxes(0,0)(-6,-5)(3,5)
+\end{pspicture}
+\hfill
+\begin{pspicture}(-6,-5)(3,5)
+\psthick[curveonly,stylecurve2=onlythecurveblue,linewidth=0.1]{-6}{2}{\fonctionParabole{0.5}{2}{-2}}
+\multido{\n=-6+0.5}{17}{%
+\pnode(!/t \n\space def
+    /dt 0.01 def
+    \fonctionParabole{0.5}{2}{-2}
+    /E 1 def
+    /ds dx dup mul dy dup mul add sqrt def
+    /dx dx ds div def
+    /dy dy ds div def
+    /nx E 2 div dy mul neg def % normale x
+    /ny E 2 div dx mul def % normale y
+    /x1 x0 nx add def
+    /y1 y0 ny add def
+      x1 y1){A}
+\psdot(A)
+\pnode(!
+    /x2 x0 nx sub def
+    /y2 y0 ny sub def
+      x2 y2){B}
+\psdot(B)
+\psline(A)(B)}
+\psaxes(0,0)(-6,-5)(3,5)
+\end{pspicture}
+\end{center}
+
+\begin{lstlisting}
+\begin{pspicture}(-6,-5)(3,5)
+\psthick[stylethick=thicklineblue,linewidth=0.1]{-6}{2}{\fonctionParabole{0.5}{2}{-2}}
+\psaxes(0,0)(-6,-5)(3,5)
+\end{pspicture}
+\end{lstlisting}
+\begin{lstlisting}
+\def\fonctionParabole#1#2#3{% ax^2+bx+c
+    /A #1 def %
+    /B #2 def %
+    /C #3 def
+    /x0 t def
+    /y0 A t dup mul mul t B mul add C add def % ax^2+bx+c
+    /dx dt def
+    /dy A t dt add dup mul mul t dt add B mul add C add
+        A t dup mul mul t B mul add C add
+        sub
+        def
+    }
+\end{lstlisting}
+\def\fonctionCercle#1#2#3{% {x_centre}{y_centre}{rayon}
+    /xC #1 def %
+    /yC #2 def %
+    /radius #3 def
+    /x0 t cos radius mul xC add def
+    /y0 t sin radius mul yC add def
+    /dx t dt add cos radius mul xC add
+        x0 sub def
+     /dy t dt add sin radius mul yC add
+         y0 sub def}
+\begin{center}
+\begin{pspicture}(-4,-5)(3,5)
+\psthick[E=1,linewidth=0.1]{45}{315}{\fonctionCercle{-1}{-1}{3}}%
+\psthick[curveonly]{-45}{45}{\fonctionCercle{-1}{-1}{3}}%
+\psdot(-1,-1)
+\pscircle[linestyle=dashed](-1,-1){3}
+\multido{\i=-45+10}{10}{%
+\pnode(!/t \i\space def
+    /dt 1 def
+    \fonctionCercle{-1}{-1}{3}
+    /E 1 def
+    /ds dx dup mul dy dup mul add sqrt def
+    /dx dx ds div def
+    /dy dy ds div def
+    /nx E 2 div dy mul neg def % normale x
+    /ny E 2 div dx mul def % normale y
+    /x1 x0 nx add def
+    /y1 y0 ny add def
+      x1 y1){A}
+\psdot(A)
+\pnode(!
+    /x2 x0 nx sub def
+    /y2 y0 ny sub def
+      x2 y2){B}
+\psdot(B)
+\psline(A)(B)}
+\psaxes(0,0)(-4,-4)(3,4)
+\end{pspicture}
+\hfill
+\begin{pspicture}(-3,-5)(3,3)
+\psclip{\psthick[E=0.5,stylethick=vide]{0}{360}{\fonctionCercle{0}{0}{2}}}
+\psframe*[linecolor=blue](-3.5,-4)(1.17,4)
+\psframe*[linecolor=white](-1.17,-4)(1.17,4)
+\psframe*[linecolor=red](1.17,-4)(3.5,4)
+\endpsclip%
+\psthick[curveonly,E=0.5,stylecurve2=onlythecurveblue]{0}{360}{\fonctionCercle{0}{0}{2}}%
+\psaxes(0,0)(-4,-4)(4,4)
+\end{pspicture}
+\end{center}
+
+\begin{lstlisting}
+\psthick[E=1,linewidth=0.1]{45}{315}{\fonctionCercle{-1}{-1}{3}}%
+\psthick[curveonly]{-45}{45}{\fonctionCercle{-1}{-1}{3}}%
+\psdot(-1,-1)
+\pscircle[linestyle=dashed](-1,-1){3}
+\multido{\i=-45+10}{10}{%
+\pnode(! /t \i\space def  /dt 1 def
+    \fonctionCercle{-1}{-1}{3}
+    /E 1 def
+    /ds dx dup mul dy dup mul add sqrt def
+    /dx dx ds div def
+    /dy dy ds div def
+    /nx E 2 div dy mul neg def % normale x
+    /ny E 2 div dx mul def % normale y
+    x0 nx add y0 ny add ){A}
+\psdot(A)
+\pnode(! x0 nx sub y0 ny sub ){B}
+\psdot(B)
+\psline(A)(B)
+\end{lstlisting}
+
+\begin{lstlisting}
+\def\fonctionCercle#1#2#3{% {x_centre}{y_centre}{rayon}
+    /xC #1 def /yC #2 def %
+    /radius #3 def
+    /x0 t cos radius mul xC add def
+    /y0 t sin radius mul yC add def
+    /dx t dt add cos radius mul xC add x0 sub def
+     /dy t dt add sin radius mul yC add y0 sub def}
+\end{lstlisting}
+
+\section{Influence de l'inclinaison : paramètre \texttt{K}}
+
+\subsection{Sur la sinusoïde avec K=45°}
+\Lkeyword{K} est l'inclinaison en degrés, par rapport à la normale à la courbe d'origine.
+
+\begin{center}
+\psset{unit=0.75cm}
+\begin{pspicture}(-1,-3)(10,3)
+\psthick[curveonly,E=2,K=45]{0}{10}{\fonctionSinus{10}{2}}
+\multido{\i=0+1}{11}{%
+\pnode(! /t \i\space def 
+    /E 2 def  /K 45 def
+    /dt 10 360 div def
+    \fonctionSinus{10}{2}
+    /ds dx dup mul dy dup mul add sqrt def
+    /dx dx ds div def /dy dy ds div def
+    /dx' K cos dx mul K sin dy mul sub def
+    /dy' K sin dx mul K cos dy mul add def
+    /nx E 2 div dy' mul neg def % normale x
+    /ny E 2 div dx' mul def % normale y
+    x0 nx add y0 ny add ){A}
+\psdot[linecolor=red](A)
+\pnode(! x0 nx sub y0 ny sub ){B}
+\psdot[linecolor=red](B) \psdot(!t O t mul sin A mul) \psline(A)(B)}
+\parametricplot[linestyle=dashed]{0}{10}{ t O t mul sin A mul }
+\psaxes(0,0)(-1,-3)(10,3)
+\end{pspicture}
+\end{center}
+
+\begin{lstlisting}
+\psset{unit=0.75cm}
+\begin{pspicture}(-1,-3)(10,3)
+\psthick[curveonly,E=2,K=45]{0}{10}{\fonctionSinus{10}{2}}
+\multido{\i=0+1}{11}{%
+\pnode(! /t \i\space def 
+    /E 2 def  /K 45 def
+    /dt 10 360 div def
+    \fonctionSinus{10}{2}
+    /ds dx dup mul dy dup mul add sqrt def
+    /dx dx ds div def /dy dy ds div def
+    /dx' K cos dx mul K sin dy mul sub def
+    /dy' K sin dx mul K cos dy mul add def
+    /nx E 2 div dy' mul neg def % normale x
+    /ny E 2 div dx' mul def % normale y
+    x0 nx add y0 ny add ){A}
+\psdot[linecolor=red](A)
+\pnode(! x0 nx sub y0 ny sub ){B}
+\psdot[linecolor=red](B) \psdot(!t O t mul sin A mul) \psline(A)(B)}
+\parametricplot[linestyle=dashed]{0}{10}{ t O t mul sin A mul }
+\psaxes(0,0)(-1,-3)(10,3)
+\end{pspicture}
+\end{lstlisting}
+
+\begin{center}
+\begin{pspicture}(-1,-3)(10,3)
+\psthick[plotpoints=360,E=2,K=45]{0}{10}{\fonctionSinus{10}{2}}%
+\psaxes(0,0)(-1,-3)(10,3)%\psgrid(0,-3)(10,3)
+\end{pspicture}
+\end{center}
+
+\begin{lstlisting}
+\begin{pspicture}(-1,-3)(10,3)
+\psthick[plotpoints=360,E=2,K=45]{0}{10}{\fonctionSinus{10}{2}}
+\psaxes(0,0)(-1,-3)(10,3)
+\end{pspicture}
+\end{lstlisting}
+
+\subsection{Sur l'épaisseur avec K=80°}
+
+\begin{center}
+\begin{pspicture}(-1,-3)(10,3)
+\psthick[plotpoints=360,E=2,K=80,stylethick=solide]{0}{10}{\fonctionSinus{10}{2}}%
+\psaxes(0,0)(-1,-3)(10,3)%\psgrid(0,-3)(10,3)
+\end{pspicture}
+\end{center}
+
+\begin{lstlisting}
+\begin{pspicture}(-1,-3)(10,3)
+\psthick[plotpoints=360,E=2,K=80,stylethick=solide]{0}{10}{\fonctionSinus{10}{2}}
+\psaxes(0,0)(-1,-3)(10,3)%\psgrid(0,-3)(10,3)
+\end{pspicture}
+\end{lstlisting}
+
+\section{Une frise}
+Obtenue à coups de \Lcs{psclip}\ldots\Lcs{endpsclip}\ldots très laborieux et pas très beau : à revoir !
+
+\newpsstyle{thicklinejaune}{fillstyle=solid,fillcolor=yellow!50!cyan!50,linecolor=yellow,plotpoints=360}
+\newpsstyle{thicklinevert}{fillstyle=solid,fillcolor=green!50,linecolor=green,plotpoints=360}
+\newpsstyle{onlycurvejaune}{linecolor=yellow,plotpoints=360}
+\def\SinusPhase#1#2#3{%
+    /P #1 def % période (10 unités)
+    /A #2 def % amplitude
+    /F #3 180 div 3.14 mul def
+    /O 360 P div def % pulsation 2*pi/P
+    /x0 t def
+    /y0 t F add O mul sin A mul def % A*sin(O*t)
+    /dx dt def
+    /dy t F add dt add O mul sin
+        t F add O mul sin
+        sub
+        A mul def }
+\begin{center}
+\psset{unit=0.5}
+\begin{pspicture}(0,-4)(30,4)
+\def\motif{%
+\psclip{\psframe[linestyle=none,dimen=inner](0,-3)(10,3)}%
+\psthick[stylethick=thicklineblue]{-1}{11}{\SinusPhase{10}{2}{90}}% bleu
+\psthick[stylethick=thicklinejaune,E=0.5]{-1}{11}{\SinusPhase{10}{1.25}{-100}}% jaune
+\psthick{-1}{11}{\SinusPhase{10}{2}{0}}% rose
+%1-bleu dans intersection rose et bleu
+\psclip{\psthick[stylethick=vide,E=1.1]{-1}{11}{\SinusPhase{10}{2}{0}}}% rose
+\psthick[stylethick=thicklineblue]{0}{3}{\SinusPhase{10}{2}{90}}% bleu
+\endpsclip%
+%
+\psclip{\psthick[stylethick=vide,E=1.1]{0}{11}{\SinusPhase{10}{2}{90}}}% bleu
+\psthick{5}{9}{\SinusPhase{10}{2}{0}}% rose
+\endpsclip%
+%
+\psclip{\psthick[stylethick=vide,E=0.6]{0}{11}{\SinusPhase{10}{1.25}{-100}}}% jaune
+\psthick[stylethick=thicklineblue]{7}{9}{\SinusPhase{10}{2}{90}}% bleu
+\endpsclip%
+%
+\psclip{\psthick[stylethick=vide,E=1.1]{0}{10}{\SinusPhase{10}{2}{0}}}% rose
+\psthick[stylethick=thicklinejaune,E=0.5]{7}{11}{\SinusPhase{10}{1.25}{-100}}% jaune
+\endpsclip%
+%
+\psclip{\psthick[stylethick=vide,E=1.1]{0}{11}{\SinusPhase{10}{2}{0}}}% rose
+\psthick[stylethick=thicklinejaune,E=0.5]{-0.5}{1}{\SinusPhase{10}{1.25}{-100}}% jaune
+\endpsclip%
+\endpsclip}%
+\motif\rput(10,0){\motif}\rput(20,0){\motif}
+\psline[linewidth=0.1](0,3)(30,3)
+\psline[linewidth=0.1](0,-3)(30,-3)
+\end{pspicture}
+\end{center}
+
+\section{Les limites de la commande \/\texttt{psthick}}
+Si l'épaisseur est trop grande par rapport au rayon de courbure, il apparaît le 
+phénomène suivant(points de rebroussement)~:
+
+\begin{center}
+\psset{unit=0.5}
+\begin{pspicture}(0,-6)(10,6)
+\psthick[E=2,stylethick=default,plotpoints=720]{0}{10}{\fonctionSinus{5}{5}}%
+\parametricplot[linestyle=dashed,plotpoints=720,linecolor=red]{0}{10}{%
+    /P 5 def % période (5 unités)
+    /A 5 def % amplitude
+    /O 360 P div def
+     t O t mul sin A mul }
+\psaxes[Dx=10,Dy=5](0,0)(0,-5)(10,5)
+\end{pspicture}
+\hspace{2cm}%
+\begin{pspicture}(0,-6)(10,6)
+\parametricplot[plotpoints=720,linewidth=2]{0}{10}{%
+    /P 5 def % période (5 unités)
+    /A 5 def % amplitude
+    /O 360 P div def
+     t O t mul sin A mul }
+\psaxes[Dx=10,Dy=5](0,0)(0,-5)(10,5)
+\end{pspicture}
+\end{center}
+
+À droite la courbe obtenue avec la commande classique \Lkeyword{linewidth}=2 
+qui avec un pinceau de peinture noire de largeur 2~cm efface ces points.
+
+\begin{lstlisting}
+\begin{pspicture}(0,-6)(10,6)
+\psthick[E=2,stylethick=default,plotpoints=720]{0}{10}{\fonctionSinus{5}{5}}%
+\end{pspicture}
+\hfill
+\begin{pspicture}(0,-6)(10,6)
+\parametricplot[plotpoints=720,linewidth=2]{0}{10}{%
+    /P 5 def % periode (5 unites)
+    /A 5 def % amplitude
+    /O 360 P div def
+     t O t mul sin A mul }
+\end{pspicture}
+\end{lstlisting}
+
+On peut en combinant les deux méthodes arriver à ``gommer'' ces points intérieurs 
+de rebroussement tout en gardant le contour.
+
+\begin{center}
+\psset{unit=0.5}
+\begin{pspicture}(0,-6)(10,6)
+\psthick[curveonly,E=2,stylecurve2=onlythecurveblue,linewidth=0.2,plotpoints=720]{0}{10}{\fonctionSinus{5}{5}}%
+\parametricplot[plotpoints=720,linewidth=2,linecolor=yellow]{0}{10}{%
+    /P 5 def % periode (5 unités)
+    /A 5 def % amplitude
+    /O 360 P div def
+     t O t mul sin A mul
+    }
+\psaxes[Dx=10,Dy=5](0,0)(0,-5)(10,5)
+\end{pspicture}
+\end{center}
+
+\begin{lstlisting}
+\begin{pspicture}(0,-6)(10,6)
+\psthick[curveonly,E=2,stylecurve2=onlythecurveblue,linewidth=0.2]{0}{10}{\fonctionSinus{5}{5}}%
+\parametricplot[plotpoints=720,linewidth=2,linecolor=yellow]{0}{10}{%
+    /P 5 def % periode (5 unites)
+    /A 5 def % amplitude
+    /O 360 P div def
+     t O t mul sin A mul }
+\psaxes[Dx=10,Dy=5](0,0)(0,-5)(10,5)
+\end{pspicture}
+\end{lstlisting}
+
+
+\clearpage
+\section{List of all optional arguments for \texttt{pst-am}}
+
+\xkvview{family=pst-thick,columns={key,type,default}}
+
+\nocite{*}
+\bgroup
+\RaggedRight
+\bibliographystyle{plain}
+\bibliography{pst-thick-doc}
+\egroup
+
+\printindex
+
+
+\end{document}
+\begin{lstlisting}
+\end{lstlisting}

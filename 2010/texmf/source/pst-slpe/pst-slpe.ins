@@ -1,0 +1,25 @@
+\def\batchfile{pst-slpe.ins}
+
+\input docstrip.tex
+
+\keepsilent
+
+\askforoverwritefalse
+
+\generate{\file{pst-slpe.sty}{\from{pst-slpe.dtx}{stylefile}}%
+	  \file{pst-slpe.tex}{\from{pst-slpe.dtx}{texfile}}%
+	  \usepostamble\empty%
+	  \file{pst-slpe.pro}{\from{pst-slpe.dtx}{prolog}}%
+}
+
+\Msg{************************************************************}
+\Msg{ }
+\Msg{  To finish the installation you have to move the files}
+\Msg{  `pst-slpe.sty' and `pst-slpe.tex' into a directory}
+\Msg{  searched by TeX and the file `pst-slpe.pro'}
+\Msg{  to a directory searched by dvips.}
+\Msg{ }
+\Msg{  To type-set the documentation, including instructions,}
+\Msg{  run the file `pst-slpe.dtx' through LaTeX.}
+\Msg{ }
+\Msg{***********************************************************}

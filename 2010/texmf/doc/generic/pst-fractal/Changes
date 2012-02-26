@@ -1,0 +1,25 @@
+pst-fractal.pro --------
+0.02  2010-02-10  fix bug in tx@fern
+0.01  2007-04-05  first CTAN version
+
+
+pst-fractal.tex --------
+0.06  2010-02-10  - add another type of a Sierpinski triangle
+0.05  2007-09-25  - allow unbalanced trees with option 0<c<1
+                  - use option c for unballanced trees
+		  - new option minWidth
+0.04  2007-05-16  added the new macros
+		    \psPhyllotaxis 
+		    \psFern 
+		    \psKochflake
+		    \psAppolonius
+		    \psPTree
+		    \psFArrow
+		    all with several new options
+0.03  2007-04-05  first CTAN version
+
+
+pst-fractal.sty --------
+2007-09-25  add message for pst-fractal.pro
+2007-04-05  first CTAN version
+

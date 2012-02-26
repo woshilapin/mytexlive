@@ -1,0 +1,525 @@
+%% $Id: pst-am-doc.tex 166 2009-12-08 14:48:53Z herbert $
+\documentclass[11pt,english,BCOR10mm,DIV12,bibliography=totoc,parskip=false,smallheadings
+    headexclude,footexclude,oneside]{pst-doc}
+\usepackage[latin9]{inputenc}
+\usepackage{pst-am}
+\let\pstAmFV\fileversion
+%
+\begin{filecontents*}{pst-am-doc.eps}
+%!PS
+%%BoundingBox: 18 532 572 668
+%%CreationDate: Mon Apr 30 09:25:21 2007
+%%EndComments
+% (c) P. Kleiweg 1997
+% adaptation plagiat de ManuelLuque 05/06/2006
+% avec le concours du groupe Syracuse
+%/Font /Utopia-Regular def
+/Font /Times-Roman def
+/warp { % x y 1 index => x y x
+1 index % position  horizontale du point courant X
+periode N mul  mul
+cos 2 add
+mul     % hauteur finale Y
+} bind def
+/warpmove{
+2 index { 
+newpath
+} if
+warp  moveto
+pop false
+} bind def
+
+/warpline {
+warp
+lineto
+} bind def
+
+/warpcurve {
+6 2 roll warp
+6 2 roll warp
+6 2 roll warp
+curveto
+}  bind def
+
+/warpit {
+true
+{ warpmove } {  warpline } { warpcurve } { closepath } pathforall
+pop
+}  bind def
+
+297 600 translate
+
+% taille de des caractères
+Font findfont 40 scalefont setfont
+
+/warptxt (MODULATION D'AMPLITUDE) def % texte à déformer
+/warpwidth  warptxt stringwidth pop def % largeur horizontale du texte
+/warphalf  warpwidth 2 div def % demi-largeur horizontale
+
+/periode {360 warpwidth div} bind def % une sinusoïde
+/N 3 def %  ondulation sur 3 périodes
+
+%% modif 1
+%% sinusoïde du haut
+%% 2 sinusoïdes clippées
+warphalf neg 20 moveto
+warphalf neg 1 warphalf { 20 lineto } for % les 2  sinusoïdes
+warphalf -1 warphalf neg { 22 lineto } for
+closepath
+
+%% modif 2
+%% sinusoïde du bas
+%% 2 sinusoïdes clippées
+warphalf neg -15 moveto
+warphalf neg 1 warphalf { -15 lineto } for % les 2  sinusoïdes
+warphalf -1 warphalf neg { -17 lineto } for
+closepath
+
+%% modif 3
+warphalf neg -10 moveto
+warptxt true charpath
+
+%% c'est parti !
+warpit
+gsave
+0 0 1  setrgbcolor
+fill
+grestore
+0 0 0.5  setrgbcolor
+stroke
+\end{filecontents*}
+
+\def\bgImage{\includegraphics[scale=0.66]{pst-am-doc.eps}}
+
+\let\SaveFV\fileversion
+\def\masse{%
+    \psframe[fillstyle=vlines,linestyle=none,hatchwidth=0.5\pslinewidth](-0.5,-0.7)(0.5,-0.5)
+    \psline[linewidth=1.5\pslinewidth](-0.5,-0.5)(0.5,-0.5)
+    \psline(0,0)(0,-0.5)}
+\def\noeud(#1){\qdisk(#1){1.5pt}}
+%
+\def\selfA{\psframe[linestyle=none,fillstyle=solid](-1,-.2)(1,0.4)
+  \multido{\nS=-0.75+0.50}{4}{%
+    \psset{dimen=middle}
+    \rput(\nS,0){\pscurve[linewidth=1.5\pslinewidth](-0.25,0)(0,0.4)(0.25,0)}}}
+\def\selfB{\psframe[linestyle=none,fillstyle=solid](-0.75,-.1)(0.75,0.4)
+  \multido{\nS=-0.50+0.50}{3}{%
+    \psset{dimen=middle}
+    \rput(\nS,0){\pscurve[linewidth=1.5\pslinewidth](-0.25,0)(0,0.4)(0.25,0)}}}
+\def\GBF{\pscircle[fillstyle=solid,linewidth=1.5\pslinewidth]{0.5}}
+\def\resistor{\psframe[fillstyle=solid,linewidth=1.5\pslinewidth](-0.5,-0.2)(0.5,0.2)}
+\def\condensateur{%
+    \psframe[linestyle=none,fillstyle=solid](-0.15,-0.5)(0.15,0.5)
+    \psline[linewidth=1.5\pslinewidth](-0.15,-0.5)(-0.15,0.5)
+    \psline[linewidth=1.5\pslinewidth](0.15,-0.5)(0.15,0.5)}
+\def\masse{%
+    \psframe[fillstyle=vlines,linestyle=none,hatchwidth=0.5\pslinewidth](-0.5,-0.7)(0.5,-0.5)
+    \psline[linewidth=1.5\pslinewidth](-0.5,-0.5)(0.5,-0.5)
+    \psline(0,0)(0,-0.5)}
+\def\diode{%
+    \psline(0,0.25)(0.5,0)(0,-0.25)(0,0.25)
+    \psline(0.5,0.25)(0.5,-0.25)
+    \psline(-0.5,0)(1,0)}
+\def\circput(#1)(#2)#3{%
+\pcline(#2)(#1)%
+\lput*{:U}{#3}}
+\def\noeud(#1){\qdisk(#1){1.5pt}}
+
+\lstset{explpreset={pos=t,width=-99pt,overhang=0pt,hsep=\columnsep,vsep=\bigskipamount,rframe={}}}
+\psset{Centering=true}
+\begin{document}
+
+\title{\texttt{pst-am}}
+\subtitle{A PSTricks package for drawing Modulations and Demodulations; v.\pstAmFV}
+\author{Manuel Luque \\Herbert Vo\ss}
+%\docauthor{Herbert Vo\ss}
+\date{\today}
+\maketitle
+
+\tableofcontents
+
+\clearpage
+
+\psset{title={Luc\'ee Auguste Fresnel}}
+\begin{abstract}
+\noindent
+\LPack{pst-am} allows the simulation of modulated and demodulated
+amplitude of the radio waves. You can choose several possible parameters 
+and plot the following curves:
+\begin{compactitem}
+\item modulated signals;
+\item wave carrier;
+\item signal modulation;
+\item signal recovering;
+\item signal demodulation.
+\end{compactitem}
+
+The main command is called \Lcs{psAM}\OptArgs\ and has different options, including allowing
+view table of the used values, are detailed thereafter.
+The macro was written directly in PostScript\footnote{Original idea by  
+Peter Kleiweg and inspired by discussions on \url{http://melusine.eu.org/cgi-bin/mailman/listinfo/syracuse}}.
+
+\begin{LTXexample}[pos=t]
+\psAM[SignalModulant,timeDiv=2e-4,SignalRedresse,SignalDemodule,
+  voltDivY2=0.5,R=4700]
+\end{LTXexample}
+\end{abstract}
+
+
+\clearpage
+\section{Introduction}
+\subsection{Example of a modulation}
+\begin{center}
+\begin{pspicture}(-5,-1)(5,7)
+\psline(-5,0)(5,0)\psline(-5,5)(-1,5)\psline(-2,4)(-1,4)
+\pnode(-5,5){E2}\noeud(E2)
+\pnode(-2,4){E1}\noeud(E1)
+\psline[arrowinset=0,arrowscale=2](1,4.5)(3,4.5)
+\psframe[linewidth=1.5\pslinewidth](-1,3.5)(1,5.5)
+\rput(0,4.5){\Huge\sffamily X}
+\uput[270](0,5.5){\sffamily AD633}
+\pnode(-5,0){M1}\pnode(-2,0){M2}
+\pnode(0,0){O}\noeud(O)\noeud(M1)\noeud(M2)
+\rput(O){\masse}
+\uput[0](-1,5){1}
+\uput[0](-1,4){3}
+\uput[180](1,4.5){7}
+\psset{linewidth=0.5\pslinewidth}
+\psline{->}(-5,0.1)(-5,4.9)
+\uput[0](-5,2.5){$u_p$}
+\psline{->}(-2,0.1)(-2,3.9)
+\uput[0](-2,2){$u_m$}
+\psline{->}(2,0.1)(2,4.4)
+\uput[0](2,2.25){$u_s$}
+\uput[0](3,4.5){\psscalebox{0.2}{\psAM[SignalModule,enveloppe,frequencePorteuse=1e4,
+    voltDivY2=0.5,timeDiv=5e-4,linewidth=2\pslinewidth]}}
+\uput[l](-2,4){\psscalebox{0.2}{\psAM[SignalModulant,timeDiv=5e-4,linewidth=5\pslinewidth]}}
+\uput[l](-5,5){\psscalebox{0.2}{\psAM[SignalPorteuse,timeDiv=2e-4,
+    frequencePorteuse=1e4,linewidth=5\pslinewidth]}}
+%\psgrid
+\end{pspicture}
+\end{center}
+\begin{compactitem}
+  \item l'onde \textbf{porteuse}, onde sinusoïdale de haute fréquence(H.F.) et
+  d'amplitude constante.
+
+  Elle est produite par l'oscillateur de l'émetteur :
+  \[
+  u_p(t)=U_p\cos2\pi F_p t
+  \]
+  \item \textbf{le signal modulant}(signal B.F. à transmettre), considéré comme une onde sinusoïdale
+  de la forme :
+  \[
+  u_m(t)=U_m\cos2\pi F_m t + U_0
+  \]
+\begin{compactitem}
+  \item Le premier terme $u_m(t)=U_m\cos2\pi F_m t$ représente le signal à
+  transmettre.
+  \item $U_0$ est la tension de décalage ou \textit{offset}.
+\end{compactitem}
+
+\end{compactitem}
+Un circuit électronique, appelé \textbf{multiplieur}, donne en sortie une
+tension :
+\[
+ u_s(t)=k\times u_p(t)\times u_m(t)
+\]
+La tension obtenue à la sortie est de la forme :
+\[
+u_s=k.U_p\cos2\pi F_p t.(U_m\cos2\pi F_m t+U_0)
+\]
+Cette expression est mise sous la forme :
+\[
+u_s(t)=A(1+m\cos2\pi F_m  t)\cos2\pi F_p t
+\]
+avec :
+\begin{itemize}
+  \item $A=kU_0.U_p$ ;
+  \item $m=\displaystyle\frac{U_m}{U_0}$ : \textbf{taux de modulation}
+\end{itemize}
+
+\subsection{Schéma de principe du montage de la démodulation}
+\begin{center}
+\begin{pspicture}(-1,-1)(16,6)
+\pnode(-1,4){A1}
+\pnode(-0.5,4){A2}
+\pnode(0,4){A3}
+\pnode(-1,2){B1}
+\pnode(-0.5,2){B2}
+\pnode(0,2){B3}
+\pnode(-0.5,0){M1}
+\pnode(2,4){C1}
+\pnode(2,3){C2}
+\pnode(1.4,2){C3}
+\pnode(4,2){C4}
+\pnode(4,3.4){C5}
+\pnode(1.4,0){C6}
+\pnode(3.4,3.4){S1}
+\pnode(6,3.4){D1}
+\pnode(7,3.4){D2}
+\pnode(6,0){D3}
+\pnode(7,0){D4}
+\pnode(9,3.4){D5}
+\pnode(11,3.4){E1}
+\pnode(11,4.4){E2}
+\pnode(13.6,4.4){E3}
+\pnode(11,2.4){E10}
+\pnode(11.6,2.4){E9}
+\pnode(11,0){E11}
+\pnode(13.6,3){E4}
+\pnode(13.6,2.6){E7}
+\pnode(13.6,0){E12}
+\pnode(14.4,3){E5}
+\pnode(11.6,3.4){E8}
+\pnode(14.4,2.6){E6}
+\pnode(14.4,3){E5}
+\pnode(13,3){S2}
+\psframe[linewidth=2\pslinewidth](2,2.8)(3.4,4.2)
+\psframe[linewidth=2\pslinewidth](11.6,2.2)(13,3.6)
+\psline(5,3)(5,3.8)(5.6,3.4)(5,3)
+\psline(5.6,3)(5.6,3.8)
+\psline(14.4,2.4)(14.4,3.2)(14.6,3.2)(15,3.4)(15,2.2)(14.6,2.4)(14.4,2.4)
+\psline(14.6,2.4)(14.6,3.2)
+\psline(-2,0)(14,0)
+\circput(A1)(B1){\selfA}
+\circput(A3)(B3){\condensateur}
+\psline(A1)(C1)
+\noeud(A1)
+\noeud(B1)
+\noeud(B3)
+\noeud(A3)
+\noeud(A2)
+\noeud(M1)
+\noeud(C5)
+\noeud(D1)
+\noeud(D3)
+\noeud(D2)
+\noeud(D4)
+\noeud(D5)
+\noeud(E1)
+\noeud(E10)
+\noeud(C6)
+\psline(A2)(-0.5,6.4)
+\psline(-0.8,6.2)(-0.5,6)(-0.2,6.4)
+\noeud(E11)
+\noeud(E4)
+\noeud(E7)
+\noeud(E12)
+\psline(B1)(B3)
+\psline(B2)(M1)
+\psline(C3)(1.4,3)(C2)
+\psline(C3)(C4)(C5)
+\psline(S1)(E8)
+\psline(S2)(E5)
+\psline(E6)(E5)
+\psline(E6)(E7)(E12)
+\psline(E9)(E10)(E11)
+\psline(E1)(E2)(E3)(E4)(E5)
+\circput(C3)(C6){\resistor}
+\circput(C3)(C4){\resistor}
+\circput(D1)(D3){\resistor}
+\circput(E2)(E3){\resistor}
+\circput(D5)(E1){\resistor}
+\circput(D2)(D4){\condensateur}
+\circput(D2)(D5){\condensateur}
+\psline{->}(-0.4,2.4)(0.4,3.6)
+\psline[linestyle=dashed](1,-0.5)(1,6)
+\psline[linestyle=dashed](4.5,-0.5)(4.5,6)
+\psline[linestyle=dashed](9,-0.5)(9,6)
+\psline[linestyle=dashed](14,-0.5)(14,6)
+%\uput[180](-1.3,3){L}
+%\uput[0](0.4,3){C}
+\uput[90](5.3,3.6){D}
+\uput[180](5.8,1.65){R}
+\uput[0](7.4,1.65){C}
+\uput[90](8,3.8){C$'$}
+\rput(-0.5,-0.5){$\underbrace{\rule{3cm}{0cm}}$}
+\uput[90](-0.5,-1.2){réception-filtrage}
+\rput(2.75,-0.5){$\underbrace{\rule{3.5cm}{0cm}}$}
+\uput[90](2.75,-1.2){préamplification}
+\rput(6.75,-0.5){$\underbrace{\rule{4.5cm}{0cm}}$}
+\uput[90](6.75,-1.2){démodulation}
+\rput(11.5,-0.5){$\underbrace{\rule{5cm}{0cm}}$}
+\uput[90](11.5,-1.2){amplification}
+\pspolygon(2.2,3.6)(2.2,3.8)(2.4,3.7)\uput[0](2.4,3.7){$\infty$}
+\pspolygon(11.8,3)(11.8,3.2)(12,3.1)\uput[0](12,3.1){$\infty$}
+\rput(6.9,5.2){\psscalebox{0.2}{\psAM[SignalModulant,SignalRedresse,
+  SignalDemodule,timeDiv=2e-4,frequencePorteuse=2e4,voltDivY2=0.5,traceU]}}
+\rput(9,5.2){\psscalebox{0.2}{\psAM[SignalModulant,SignalFinal,
+  voltDivY2=0.5,frequencePorteuse=4e4,R=4.7e3]}}
+%\psgrid
+\end{pspicture}
+\end{center}
+
+
+\section{Optional arguments}
+
+\begin{center}
+\begin{tabularx}{\linewidth}{@{} lc>{\ttfamily}c X@{}}\toprule
+  \emph{Name} & \emph{type} & \emph{default} & \emph{description}\\\toprule
+  \Lkeyword{Up}             &number   &3.5           & carrier amplitude in V \\
+  \Lkeyword{Um}             &number   &1             & smodulated ignal amplitude in V\\
+  \Lkeyword{Fp}             &number   &2e4           & frequency of carrier wave in Hz\\
+  \Lkeyword{Fm}             &number   &1e3           & frequency of modulated signal in Hz\\
+  \Lkeyword{U0}             &number   &2             & offset in V\\
+  \Lkeyword{R}              &number   &3.3e3         & resistor in $\Omega$\\
+  \Lkeyword{C}              &number   &3.9e-8        & capacitor in F\\
+  \Lkeyword{timeDiv}        &number   &2e-4          & time base in s/div\\
+  \Lkeyword{voltDivY1}      &number   &1             & coefficient for the amplification 1 in V/div\\
+  \Lkeyword{voltDivY2}      &number   &1             & coefficient for the amplification 2 en V/div\\\midrule
+  \Lkeyword{SignalModulant} &boolean   &false        & trace of signal modulant (curve 1)\\
+  \Lkeyword{SignalModule}   &boolean   &false        & trace of signal module (curve 2)\\
+  \Lkeyword{SignalPorteuse} &boolean   &false        & trace of signal module (curve 2)\\
+  \Lkeyword{SignalRedresse} &boolean   &false        & trace of signal redressé (curve 2)\\
+  \Lkeyword{SignalDemodule} &boolean   &false        & trace of signal demodulte (curve 2)\\
+  \Lkeyword{XY}             &boolean   &false        & positionne l'écran en mode XY\\
+  \Lkeyword{traceU}         &boolean   &false        & trace la ligne de décalage $U_0$\\
+  \Lkeyword{UMandUm}        &boolean   &false        & pour permettre le calcul de $m$\\\midrule
+  \Lkeyword{values}         &boolean   &false         & values as a tabular under the image\\
+  \Lkeyword{BW}             &boolean   &false        & output curves in black on white\\
+  \Lkeyword{Centering}      &boolean   &false        & image and optional values are centered\\\bottomrule
+  \Lkeyword{title}          &text     &\{\}          & a title for the lower line\\\bottomrule
+\end{tabularx}
+\end{center}
+
+\newpage
+\section{Possibility of drawing the curves in black on white}
+Avec l'option \Lkeyword{BW}. Lorsqu'on souhaite afficher une courbe, 
+il suffit de rajouter son nom dans la liste des options.
+
+\begin{LTXexample}[pos=t]
+\psAM[SignalModulant,SignalPorteuse,Up=2.8,frequencePorteuse=1e4,values,BW]
+\end{LTXexample}
+\newpage
+
+
+\section{Le dessin de l'enveloppe}
+Avec l'option \Lkeyword{enveloppe}.
+\begin{LTXexample}[pos=t]
+\psAM[SignalModule,enveloppe,frequencePorteuse=1e4,voltDivY2=0.5,timeDiv=5e-4]
+\end{LTXexample}
+L'option \Lkeyword{UMandUm} permettra de déterminer facilement le taux de modulation.
+
+\begin{LTXexample}
+\psAM[SignalModule,enveloppe,UMandUm]
+\end{LTXexample}
+
+\newpage
+
+\section{Le signal redressé}
+Avec l'option \Lkeyword{SignalRedresse}.
+\begin{LTXexample}[pos=t]
+\psAM[SignalModulant,timeDiv=1e-4,SignalRedresse,voltDivY2=0.5,values]
+\end{LTXexample}
+\newpage
+
+\section{Le signal démodulé}
+Avec l'option \Lkeyword{SignalDemodule} et, en exemple, deux possibilités en fonction du choix de la base de temps.
+\begin{LTXexample}[pos=t]
+\psAM[SignalModulant,timeDiv=0.5e-4,SignalRedresse,SignalDemodule,values]
+\end{LTXexample}
+%
+%\psline[linecolor=blue,linestyle=dashed](U01)(U02)
+%\uput[l](U01){$U_0$}
+\begin{LTXexample}[pos=t]
+\psAM[SignalModulant,SignalRedresse,SignalDemodule,timeDiv=2e-4,
+  frequencePorteuse=2e4,voltDivY2=0.5,values,traceU]
+\end{LTXexample}
+
+\newpage
+\section{L'influence de R et C sur la qualité de la démodulation}
+Avec les paramètres \Lkeyword{R} et \Lkeyword{C}.
+\begin{LTXexample}[pos=t]
+\psAM[SignalModulant,SignalRedresse,SignalDemodule,timeDiv=2e-4,
+  frequencePorteuse=2e4,voltDivY2=0.5,R=1e4,values]
+\psline[linecolor=blue,linestyle=dashed](U01)(U02)
+\uput[l](U01){$U_0$}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+\psAM[SignalModulant,SignalRedresse,SignalDemodule,timeDiv=2e-4,
+  frequencePorteuse=2e4,voltDivY2=0.5,R=470,values]
+\end{LTXexample}
+
+\newpage
+\section{Suppression de la composante continue}
+Avec l'option \Lkeyword{SignalFinal}.
+\begin{LTXexample}[pos=t]
+\psAM[SignalModulant,SignalFinal,timeDiv=2e-4,voltDivY2=0.5,frequencePorteuse=4e4,R=4.7e3,values]
+\end{LTXexample}
+
+\clearpage
+\section{Le phénomène de surmodulation}
+\begin{LTXexample}[pos=t]
+\psAM[SignalModulant,SignalModule,timeDiv=2e-4,U0=0.5,frequencePorteuse=4e4,
+  Up=4,Um=2,voltDivY2=0.5,values]
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+\psAM[SignalModulant,SignalRedresse,SignalDemodule,timeDiv=1e-4,U0=0.5,
+  frequencePorteuse=4e4,voltDivY2=0.2,voltDivY1=0.5]
+\end{LTXexample}
+
+\clearpage
+\section{XY mode}
+\begin{LTXexample}[pos=t]
+\psAM[XY,U0=0.5,frequencePorteuse=4e4,Up=4,Um=2,voltDivY2=0.5]
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+\psAM[XY,frequencePorteuse=4e4,voltDivY2=0.5,voltDivY1=1]
+\end{LTXexample}
+
+\clearpage
+\section{Deux autres exemples}
+\begin{LTXexample}[pos=t]
+\psAM[SignalModulant,SignalRedresse,SignalDemodule,voltDivY2=1,voltDivY1=5,
+  timeDiv=2e-4,U0=2,R=4700,frequencePorteuse=1e4,Up=2,Um=10,values,traceU,values]
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+\psAM[SignalModulant,SignalRedresse,SignalDemodule,timeDiv=1e-4,U0=1.5,
+  frequencePorteuse=4e4,Up=3,voltDivY2=0.2,traceU,values]
+\end{LTXexample}
+
+\newpage
+\section{Les styles}
+À chaque courbe est associée un style, ce qui permet de les différencier.
+Le style du tracé d'une courbe pourra donc être modifié, simplement, en redéfinissant 
+le \Lcs{newpstyle} associé à la courbe avant son tracé.
+
+De même, il sera possible de modifier l'allure de l'écran en redéfinissant les styles associés :
+\begin{LTXexample}[pos=t]
+\newpsstyle{signalModulant}{plotpoints=1000,linecolor=green,linewidth=2\pslinewidth}
+\newpsstyle{signalPorteuse}{plotpoints=2000,linecolor=blue}
+\newpsstyle{signalRedresse}{plotpoints=2000,linecolor=Bleu}
+\newpsstyle{signalDemodule}{plotpoints=4000,linecolor=red}
+\newpsstyle{signalModule}{plotpoints=4000,linecolor=blue}
+\newpsstyle{XY}{plotpoints=4000,linecolor=blue}
+\newpsstyle{cadre}{framearc=0.05,linecolor=black}
+\newpsstyle{screen}{fillstyle=solid,fillcolor=yellow!70!white!30}
+\end{LTXexample}
+
+
+\clearpage
+\section{List of all optional arguments for \texttt{pst-am}}
+
+\xkvview{family=pst-am,columns={key,type,default}}
+
+
+
+
+
+\nocite{*}
+\bgroup
+\RaggedRight
+\bibliographystyle{plain}
+\bibliography{pst-am-doc}
+\egroup
+
+\printindex
+
+
+
+
+\end{document}

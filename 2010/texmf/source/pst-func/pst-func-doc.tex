@@ -1,0 +1,1988 @@
+%% $Id: pst-func-doc.tex 621 2012-01-01 15:26:33Z herbert $
+\documentclass[11pt,english,BCOR10mm,DIV12,bibliography=totoc,parskip=false,
+   smallheadings, headexclude,footexclude,oneside]{pst-doc}
+\usepackage[utf8]{inputenc}
+\usepackage{pst-func}
+\let\pstFuncFV\fileversion
+\usepackage{pst-math}
+\usepackage{pstricks-add}
+\renewcommand\bgImage{%
+\psset{yunit=4cm,xunit=3}
+\begin{pspicture}(-2,-0.2)(2,1.4)
+  \psaxes[Dy=0.25]{->}(0,0)(-2,0)(2,1.25)[$x$,0][$y$,90]
+  \rput[lb](1,0.75){\textcolor{red}{$\sigma =0.5$}}
+  \rput[lb](1,0.5){\textcolor{blue}{$\sigma =1$}}
+  \rput[lb](-2,0.5){$f(x)=\dfrac{1}{\sigma\sqrt{2\pi}}\,e^{-\dfrac{(x-\mu)^2}{2\sigma{}^2}}$}
+  \psGauss[linecolor=red, linewidth=2pt]{-1.75}{1.75}%
+  \psGaussI[linewidth=1pt]{-2}{2}%
+  \psGauss[linecolor=cyan, mue=0.5, linewidth=2pt]{-1.75}{1.75}%
+  \psGauss[sigma=1, linecolor=blue, linewidth=2pt]{-1.75}{1.75}
+\end{pspicture}}
+
+\lstset{language=PSTricks,
+    morekeywords={psGammaDist,psChiIIDist,psTDist,psFDist,psBetaDist,psPlotImpl},basicstyle=\footnotesize\ttfamily}
+%
+\def\pshlabel#1{\footnotesize#1}
+\def\psvlabel#1{\footnotesize#1}
+%
+\begin{document}
+
+\title{\texttt{pst-func}}
+\subtitle{Plotting special mathematical functions; v.\pstFuncFV}
+\author{Herbert Vo\ss}
+\docauthor{}
+\date{\today}
+\maketitle
+
+\tableofcontents
+\psset{unit=1cm}
+
+\clearpage
+
+\begin{abstract}
+\noindent
+\LPack{pst-func} loads by default the following packages: \LPack{pst-plot}, 
+\LPack{pstricks-add}, \LPack{pst-math}, \LPack{pst-xkey}, and, of course \LPack{pstricks}.
+All should be already part of your local \TeX\ installation. If not, or in case
+of having older versions, go to \url{http://www.CTAN.org/} and load the newest version.
+
+\vfill\noindent
+Thanks to: \\
+Rafal Bartczuk,
+    Jean-C\^ome Charpentier,
+    Martin Chicoine, 
+    Gerry Coombes, 
+    Denis Girou,
+    John Frampton, 
+    Attila Gati, 
+    Horst Gierhardt,  
+    Christophe Jorssen,
+    Lars Kotthoff, 
+    Buddy Ledger,
+    Manuel Luque,
+    Patrice Mégret,
+    Matthias Rüss,
+    Jose-Emilio Vila-Forcen,
+Timothy Van Zandt, 
+Michael Zedler,
+and last but not least \url{http://mathworld.wolfram.com}
+
+\end{abstract}
+
+
+\section{\nxLcs{psBezier\#}}
+This macro can plot a B\'ezier spline from order 1 up to 9 which needs
+(order+1) pairs of given coordinates.
+
+Given a set of $n+1$ control points $P_0$, $P_1$, \ldots, $P_n$, the corresponding \Index{B\'ezier} curve 
+(or \Index{Bernstein-B\'ezier} curve) is given by 
+%
+\begin{align}
+C(t)=\sum_{i=0}^n P_i B_{i,n}(t)
+\end{align}
+%
+Where $B_{i,n}(t)$ is a Bernstein polynomial $B_{i,n}(t)=\binom{n}{i}t^i(1-t)^{n-i}$, 
+ and $t \in [0,1]$. 
+The Bézier curve starts through the first and last given point and 
+lies within the convex hull of all control points. The curve is tangent 
+to $P_1-P_0$ and $P_n-P_{n-1}$ at the endpoint.
+Undesirable properties of \Index{Bézier curve}s are their numerical instability for 
+large numbers of control points, and the fact that moving a single control 
+point changes the global shape of the curve. The former is sometimes avoided 
+by smoothly patching together low-order Bézier curves. 
+
+The macro \Lcs{psBezier} (note the upper case B) expects the number of the order 
+and $n=order+1$ pairs of coordinates:
+
+\begin{BDef}
+\Lcs{psBezier}\Larg{\#}\OptArgs\coord0\coord1\coordn
+\end{BDef}
+
+The number of steps between the first and last control points is given
+by the keyword \Lkeyword{plotpoints} and preset to 200. It can be
+changed in the usual way. 
+
+
+\begin{lstlisting}
+\psset{showpoints=true,linewidth=1.5pt}
+\begin{pspicture}(-2,-2)(2,2)% order 1 -- linear
+  \psBezier1{<->}(-2,0)(-2,2)
+\end{pspicture}\qquad
+%
+\begin{pspicture}(-2,-2)(2,2)% order 2 -- quadratric
+  \psBezier2{<->}(-2,0)(-2,2)(0,2)
+\end{pspicture}\qquad
+%
+\begin{pspicture}(-2,-2)(2,2)% order 3 -- cubic
+  \psBezier3{<->}(-2,0)(-2,2)(0,2)(2,2)
+\end{pspicture}\qquad
+
+\vspace{1cm}
+\begin{pspicture}(-2,-2)(2,2)% order 4 -- quartic
+  \psBezier4{<->}(-2,0)(-2,2)(0,2)(2,2)(2,0)
+\end{pspicture}\qquad
+%
+\begin{pspicture}(-2,-2)(2,2)% order 5 -- quintic
+  \psBezier5{<->}(-2,0)(-2,2)(0,2)(2,2)(2,0)(2,-2)
+\end{pspicture}\qquad
+%
+\begin{pspicture}(-2,-2)(2,2)% order 6
+  \psBezier6{<->}(-2,0)(-2,2)(0,2)(2,2)(2,0)(2,-2)(0,-2)
+\end{pspicture}\qquad
+
+\vspace{1cm}
+\begin{pspicture}(-2,-2)(2,2)% order 7
+  \psBezier7{<->}(-2,0)(-2,2)(0,2)(2,2)(2,0)(2,-2)(0,-2)(-2,-2)
+\end{pspicture}\qquad
+%
+\begin{pspicture}(-2,-2)(2,2)% order 8
+  \psBezier8{<->}(-2,0)(-2,2)(0,2)(2,2)(2,0)(2,-2)(0,-2)(-2,-2)(-2,0)
+\end{pspicture}\qquad
+%
+\begin{pspicture}(-2,-2)(2,2)% order 9
+  \psBezier9{<->}(-2,0)(-2,2)(0,2)(2,2)(2,0)(2,-2)(0,-2)(-2,-2)(-2,0)(0,0)
+\end{pspicture}
+\end{lstlisting}
+
+
+\begingroup
+\psset{showpoints=true,linewidth=1.5pt}
+\begin{pspicture}(-2,-2)(2,2)% order 1 -- linear
+  \psBezier1{<->}(-2,0)(-2,2)
+\end{pspicture}\qquad
+%
+\begin{pspicture}(-2,-2)(2,2)% order 2 -- quadratric
+  \psBezier2{<->}(-2,0)(-2,2)(0,2)
+\end{pspicture}\qquad
+%
+\begin{pspicture}(-2,-2)(2,2)% order 3 -- cubic
+  \psBezier3{<->}(-2,0)(-2,2)(0,2)(2,2)
+\end{pspicture}\qquad
+
+\vspace{1cm}
+\begin{pspicture}(-2,-2)(2,2)% order 4 -- quartic
+  \psBezier4{<->}(-2,0)(-2,2)(0,2)(2,2)(2,0)
+\end{pspicture}\qquad
+%
+\begin{pspicture}(-2,-2)(2,2)% order 5 -- quintic
+  \psBezier5{<->}(-2,0)(-2,2)(0,2)(2,2)(2,0)(2,-2)
+\end{pspicture}\qquad
+%
+\begin{pspicture}(-2,-2)(2,2)% order 6
+  \psBezier6{<->}(-2,0)(-2,2)(0,2)(2,2)(2,0)(2,-2)(0,-2)
+\end{pspicture}\qquad
+
+\vspace{1cm}
+\begin{pspicture}(-2,-2)(2,2)% order 7
+  \psBezier7{<->}(-2,0)(-2,2)(0,2)(2,2)(2,0)(2,-2)(0,-2)(-2,-2)
+\end{pspicture}\qquad
+%
+\begin{pspicture}(-2,-2)(2,2)% order 8
+  \psBezier8{<->}(-2,0)(-2,2)(0,2)(2,2)(2,0)(2,-2)(0,-2)(-2,-2)(-2,0)
+\end{pspicture}\qquad
+%
+\begin{pspicture}(-2,-2)(2,2)% order 9
+  \psBezier9{<->}(-2,0)(-2,2)(0,2)(2,2)(2,0)(2,-2)(0,-2)(-2,-2)(-2,0)(0,0)
+\end{pspicture}
+\endgroup
+
+\clearpage
+\section{Polynomials}
+
+\subsection{Chebyshev polynomials}
+
+The polynomials of the first (\Lps{ChebyshevT}) kind are defined through the identity
+
+\[ T_n(\cos\theta)=\cos(n\theta)\] 
+
+They can be obtained from the generating functions
+\begin{align}
+  g_1(t,x) &= \frac{1-t^2}{1-2xt+t^2}\\
+	   &= T_0(x)+2\sum_{n=1}^\infty T_n(x)t^n
+\end{align}
+
+and
+
+\begin{align}
+  g_2(t,x) &= \frac{1-xt}{1-2xt+t^2}\\
+           &= \sum_{n=0}^\infty T_n(x)t^n
+\end{align}
+
+The polynomials of second kind (\Lps{ChebyshevU}) can be generated by
+
+\begin{align}
+  g(t,x) &= \frac{1}{1-2xt+t^2}\\
+         &= \sum_{n=0}^\infty U_n(x)t^n
+\end{align}
+
+\LPack{pst-func} defines the \TeX-macros \Lcs{ChebyshevT} for the
+first kind and \Lcs{ChebyshevU} for the second kind of \Index{Chebyshev polynomials}.
+These \TeX-macros cannot be used outside of PostScript, they are only wrappers
+for \verb+tx@FuncDict begin ChebyshevT end+ and the same for \Lcs{ChebyshevU}.
+
+\begin{center}
+\bgroup
+\psset{arrowscale=1.5,unit=3cm}
+\begin{pspicture}(-1.5,-1.5)(1.5,1.5)
+  \psaxes[ticks=none,labels=none]{->}(0,0)(-1.25,-1.25)(1.25,1.25)%
+    [Re$\{s_{21}\}$,0][Im$\{s_{21}\}$,90]
+  \pscircle(0,0){1}
+  \parametricplot[linecolor=blue,plotpoints=10000]{0}{1.5}{
+    /N 9 def
+    /x 2 N mul t \ChebyshevT def
+    /y 2 N mul 1 sub t \ChebyshevU def
+    x x 2 exp y 2 exp add div
+    y x 2 exp y 2 exp add div
+  }
+\end{pspicture}
+\egroup
+\end{center}
+
+\begin{lstlisting}
+\psset{arrowscale=1.5,unit=3cm}
+\begin{pspicture}(-1.5,-1.5)(1.5,1.5)
+  \psaxes[ticks=none,labels=none]{->}(0,0)(-1.25,-1.25)(1.25,1.25)%
+    [Re$\{s_{21}\}$,0][Im$\{s_{21}\}$,90]
+  \pscircle(0,0){1}
+  \parametricplot[linecolor=blue,plotpoints=10000]{0}{1.5}{
+    /N 9 def
+    /x 2 N mul t \ChebyshevT def
+    /y 2 N mul 1 sub t \ChebyshevU def
+    x x 2 exp y 2 exp add div
+    y x 2 exp y 2 exp add div
+  }
+\end{pspicture}
+\end{lstlisting}
+
+\begin{center}
+\bgroup
+\psset{xunit=4cm,yunit=3cm,plotpoints=1000}
+\begin{pspicture}(-1.2,-2)(2,1.5)
+  \psaxes[Dx=0.2]{->}(0,0)(-1.25,-1.2)(1.25,1.2)
+  \psset{linewidth=1.5pt}
+  \psplot[linestyle=dashed]{-1}{1}{1 x \ChebyshevT}
+  \psplot[linecolor=black]{-1}{1}{2 x \ChebyshevT}
+  \psplot[linecolor=black]{-1}{1}{3 x \ChebyshevT}
+  \psplot[linecolor=blue]{-1}{1}{4 x \ChebyshevT }
+  \psplot[linecolor=red]{-1}{1}{5 x \ChebyshevT }
+\end{pspicture}
+\egroup
+\end{center}
+
+
+
+\begin{lstlisting}
+\psset{xunit=4cm,yunit=3cm,plotpoints=1000}
+\begin{pspicture}(-1.2,-2)(2,1.5)
+  \psaxes[Dx=0.2]{->}(0,0)(-1.25,-1.2)(1.25,1.2)
+  \psset{linewidth=1.5pt}
+  \psplot[linestyle=dashed]{-1}{1}{1 x \ChebyshevT}
+  \psplot[linecolor=black]{-1}{1}{2 x \ChebyshevT}
+  \psplot[linecolor=black]{-1}{1}{3 x \ChebyshevT}
+  \psplot[linecolor=blue]{-1}{1}{4 x \ChebyshevT }
+  \psplot[linecolor=red]{-1}{1}{5 x \ChebyshevT }
+\end{pspicture}
+\end{lstlisting}
+
+\begin{center}
+\bgroup
+\psset{xunit=4cm,yunit=3cm,plotpoints=1000}
+\begin{pspicture*}(-1.5,-1.5)(1.5,1.5)
+  \psaxes[Dx=0.2]{->}(0,0)(-1.15,-1.1)(1.15,1.1)
+  \psset{linewidth=1.5pt}
+  \psplot[linecolor=black]{-1}{1}{2 x \ChebyshevU}
+  \psplot[linecolor=black]{-1}{1}{3 x \ChebyshevU}
+  \psplot[linecolor=blue]{-1}{1}{4 x \ChebyshevU }
+  \psplot[linecolor=red]{-1}{1}{5 x \ChebyshevU }
+\end{pspicture*}
+\egroup
+\end{center}
+
+
+
+\begin{lstlisting}
+\psset{xunit=4cm,yunit=3cm,plotpoints=1000}
+\begin{pspicture*}(-1.5,-1.5)(1.5,1.5)
+  \psaxes[Dx=0.2]{->}(0,0)(-1.15,-1.1)(1.15,1.1)
+  \psaxes[Dx=0.2]{->}(0,0)(-1.25,-1.2)(1.25,1.2)
+  \psset{linewidth=1.5pt}
+  \psplot[linecolor=black]{-1}{1}{2 x \ChebyshevU}
+  \psplot[linecolor=black]{-1}{1}{3 x \ChebyshevU}
+  \psplot[linecolor=blue]{-1}{1}{4 x \ChebyshevU }
+  \psplot[linecolor=red]{-1}{1}{5 x \ChebyshevU }
+\end{pspicture*}
+\end{lstlisting}
+
+\begin{center}
+\bgroup
+\psset{xunit=4cm,yunit=3cm,plotpoints=1000}
+\begin{pspicture}(-1.25,-1.2)(1.25,1.2)
+  \psaxes[Dx=0.2]{->}(0,0)(-1.25,-1.1)(1.25,1.1)
+  \psset{linewidth=1.5pt}
+  \psplot[linecolor=black]{-1}{1}{x ACOS 2 mul RadtoDeg cos}
+  \psplot[linecolor=black]{-1}{1}{x ACOS 3 mul RadtoDeg cos}
+  \psplot[linecolor=blue]{-1}{1}{x ACOS 4 mul RadtoDeg cos}
+  \psplot[linecolor=red]{-1}{1}{x ACOS 5 mul RadtoDeg cos}
+\end{pspicture}
+\egroup
+\end{center}
+
+\begin{lstlisting}
+\psset{xunit=4cm,yunit=3cm,plotpoints=1000}
+\begin{pspicture}(-1.25,-1.2)(1.25,1.2)
+  \psaxes[Dx=0.2]{->}(0,0)(-1.25,-1.2)(1.25,1.2)
+  \psset{linewidth=1.5pt}
+  \psplot[linecolor=black]{-1}{1}{x ACOS 2 mul RadtoDeg cos}
+  \psplot[linecolor=black]{-1}{1}{x ACOS 3 mul RadtoDeg cos}
+  \psplot[linecolor=blue]{-1}{1}{x ACOS 4 mul RadtoDeg cos}
+  \psplot[linecolor=red]{-1}{1}{x ACOS 5 mul RadtoDeg cos}
+\end{pspicture}
+\end{lstlisting}
+
+\subsection{\Lcs{psPolynomial}}
+The polynomial function is defined as
+%
+\begin{align}
+f(x) &= a_0 + a_1x + a_2x^2 + a_3x^3 + \ldots +a_{n-1}x^{n-1} + a_nx^n\\
+f^{\prime}(x) &= a_1 + 2a_2x + 3a_3x^2 + \ldots +(n-1)a_{n-1}x^{n-2} + na_nx^{n-1}\\
+f^{\prime\prime}(x) &= 2a_2 + 6a_3x + \ldots +(n-1)(n-2)a_{n-1}x^{n-3} + n(n-1)a_nx^{n-2}
+\end{align}
+
+
+\noindent so \LPack{pst-func} needs only the \Index{coefficients} of the
+polynomial to calculate the function. The syntax is
+
+\begin{BDef}
+\Lcs{psPolynomial}\OptArgs\Largb{xStart}\Largb{xEnd}
+\end{BDef}
+
+With the option \Lkeyword{xShift} one can do a horizontal shift to the graph of the function. With another
+than the predefined value the macro replaces $x$ by $x-x\mathrm{Shift}$; \Lkeyword{xShift}=1
+moves the graph of the \Index{polynomial function} one unit to the right.
+
+
+\begin{center}
+\bgroup
+\psset{yunit=0.5cm,xunit=1cm}
+\begin{pspicture*}(-3,-5)(5,10)
+  \psaxes[Dy=2]{->}(0,0)(-3,-5)(5,10)
+  \psset{linewidth=1.5pt}
+  \psPolynomial[coeff=6 3 -1,linecolor=red]{-3}{5}
+  \psPolynomial[coeff=2 -1 -1 .5 -.1 .025,linecolor=blue]{-2}{4}
+  \psPolynomial[coeff=-2 1 -1 .5 .1 .025 .2 ,linecolor=magenta]{-2}{4}
+  \psPolynomial[coeff=-2 1 -1 .5 .1 .025 .2 ,linecolor=magenta,xShift=1,linestyle=dashed]{-2}{4}
+  \rput[lb](4,4){\textcolor{red}{$f(x)$}}
+  \rput[lb](4,8){\textcolor{blue}{$g(x)$}}
+  \rput[lb](2,4){\textcolor{magenta}{$h(x)$}}
+\end{pspicture*}
+\egroup
+\end{center}
+
+
+\begin{lstlisting}
+\psset{yunit=0.5cm,xunit=1cm}
+\begin{pspicture*}(-3,-5)(5,10)
+  \psaxes[Dy=2]{->}(0,0)(-3,-5)(5,10)
+  \psset{linewidth=1.5pt}
+  \psPolynomial[coeff=6 3 -1,linecolor=red]{-3}{5}
+  \psPolynomial[coeff=2 -1 -1 .5 -.1 .025,linecolor=blue]{-2}{4}
+  \psPolynomial[coeff=-2 1 -1 .5 .1 .025 .2 ,linecolor=magenta]{-2}{4}
+  \psPolynomial[coeff=-2 1 -1 .5 .1 .025 .2 ,linecolor=magenta,xShift=1,linestyle=dashed]{-2}{4}
+  \rput[lb](4,4){\textcolor{red}{$f(x)$}}
+  \rput[lb](4,8){\textcolor{blue}{$g(x)$}}
+  \rput[lb](2,4){\textcolor{magenta}{$h(x)$}}
+\end{pspicture*}
+\end{lstlisting}
+
+
+The plot is easily clipped using the star version of the
+\Lenv{pspicture} environment, so that points whose coordinates
+are outside of the desired range are not plotted.
+The plotted polynomials are:
+%
+\begin{align}
+f(x) & = 6 + 3x -x^2 \\
+g(x) & = 2 -x -x^2 +0.5x^3 -0.1x^4 +0.025x^5\\
+h(x) & = -2 +x -x^2 +0.5x^3 +0.1x^4 +0.025x^5+0.2x^6\\
+h^*(x) & = -2 +(x-1) -(x-1)^2 +0.5(x-1)^3 +\nonumber\\
+       & \phantom{ = }+0.1(x-1)^4 +0.025(x-1)^5+0.2(x-1)^6
+\end{align}
+%
+There are the following new options:
+
+\noindent\medskip
+{\tabcolsep=2pt
+\begin{tabularx}{\linewidth}{@{}l>{\ttfamily}l>{\ttfamily}lX@{}}
+Name & \textrm{Value}  & \textrm{Default}\\\hline
+\Lkeyword{coeff}        & a0 a1 a2 ... & 0 0 1 & The coefficients must have the order $a_0\ a_1\ a_2 \ldots$ and
+be separated by \textbf{spaces}. The number of coefficients
+is limited only by the memory of the computer ... The default
+value of the parameter \Lkeyword{coeff} is \verb+0 0 1+, which gives
+the parabola $y=a_0+a_1x+a_2x^2=x^2$.\\
+\Lkeyword{xShift} & <number>     & 0     & $(x-xShift)$ for the horizontal shift of the polynomial\\
+\Lkeyword{Derivation} & <number>     & 0     & the default is the function itself\\
+\Lkeyword{markZeros}    & false|true       & false & dotstyle can be changed\\
+\Lkeyword{epsZero}      & <value> &  0.1 & The distance between two zeros, important for
+                                  the iteration function to test, if the zero value still
+				  exists\\
+\Lkeyword{dZero}      & <value> &  0.1 & When searching for all zero values, the function is scanned
+                              with this step\\
+\Lkeyword{zeroLineTo}    & <number>  & false & plots a line from the zero point to the value of the
+                                    zeroLineTo's Derivation of the polynomial function\\
+\Lkeyword{zeroLineStyle}    & <line style>  & \Lkeyval{dashed} & the style is one of the for \PST valid styles.\\
+\Lkeyword{zeroLineColor}  & <color>  & \Lkeyval{black} & any valid xolor is possible\\
+\Lkeyword{zeroLineWidth}  & <width> & \rlap{0.5\textbackslash pslinewidth} & \\
+\end{tabularx}
+}
+
+
+
+\bigskip
+The above parameters are only 
+valid for the \Lcs{psPolynomial} macro, except \verb+x0+, which can also be used for the Gauss function. All
+options can be set in the usual way with \Lcs{psset}. 
+
+
+\bigskip
+\begin{LTXexample}
+\psset{yunit=0.5cm,xunit=2cm}
+\begin{pspicture*}(-3,-5)(3,10)
+  \psaxes[Dy=2]{->}(0,0)(-3,-5)(3,10)
+  \psset{linewidth=1.5pt}
+  \psPolynomial[coeff=-2 1 -1 .5 .1 .025 .2 ,linecolor=magenta]{-2}{4}
+  \psPolynomial[coeff=-2 1 -1 .5 .1 .025 .2 ,linecolor=red,%
+    linestyle=dashed,Derivation=1]{-2}{4}
+  \psPolynomial[coeff=-2 1 -1 .5 .1 .025 .2 ,linecolor=blue,%
+    linestyle=dotted,Derivation=2]{-2}{4}
+  \rput[lb](2,4){\textcolor{magenta}{$h(x)$}}
+  \rput[lb](1,1){\textcolor{red}{$h^{\prime}(x)$}}
+  \rput[lb](-1,6){\textcolor{blue}{$h^{\prime\prime}(x)$}}
+\end{pspicture*}
+\end{LTXexample}
+%$
+
+
+\begin{LTXexample}
+\psset{yunit=0.5cm,xunit=2cm}
+\begin{pspicture*}(-3,-5)(3,10)
+  \psaxes[Dy=2]{->}(0,0)(-3,-5)(3,10)
+  \psset{linewidth=1.5pt}
+  \psPolynomial[coeff=0 0 0 1,linecolor=blue]{-2}{4}
+  \psPolynomial[coeff=0 0 0 1,linecolor=red,%
+    linestyle=dashed,Derivation=2]{-2}{4}
+  \psPolynomial[coeff=0 0 0 1,linecolor=cyan,%
+    linestyle=dotted,Derivation=3]{-2}{4}
+  \rput[lb](1.8,4){\textcolor{blue}{$f(x)=x^3$}}
+  \rput[lb](0.2,8){\textcolor{red}{$f^{\prime\prime}(x)=6x$}}
+  \rput[lb](-2,5){\textcolor{cyan}{$f^{\prime\prime\prime}(x)=6$}}
+\end{pspicture*}
+\end{LTXexample}
+%$
+
+\begin{LTXexample}
+\begin{pspicture*}(-5,-5)(5,5)
+  \psaxes{->}(0,0)(-5,-5)(5,5)%
+  \psset{dotscale=2}
+  \psPolynomial[markZeros,linecolor=red,linewidth=2pt,coeff=-1 1 -1 0 0.15]{-4}{3}%
+  \psPolynomial[markZeros,linecolor=blue,linewidth=1pt,linestyle=dashed,%
+    coeff=-1 1 -1 0 0.15,Derivation=1,zeroLineTo=0]{-4}{3}%
+  \psPolynomial[markZeros,linecolor=magenta,linewidth=1pt,linestyle=dotted,%
+    coeff=-1 1 -1 0 0.15,Derivation=2,zeroLineTo=0]{-4}{3}%
+  \psPolynomial[markZeros,linecolor=magenta,linewidth=1pt,linestyle=dotted,%
+    coeff=-1 1 -1 0 0.15,Derivation=2,zeroLineTo=1]{-4}{3}%
+\end{pspicture*}
+\end{LTXexample}
+
+\begin{LTXexample}
+\psset{xunit=1.5}
+\begin{pspicture*}(-5,-5)(5,5)
+  \psaxes{->}(0,0)(-5,-5)(5,5)%
+  \psset{dotscale=2,dotstyle=x,zeroLineStyle=dotted,zeroLineWidth=1pt}
+  \psPolynomial[markZeros,linecolor=red,linewidth=2pt,coeff=-1 1 -1 0 0.15]{-4}{3}%
+  \psPolynomial[markZeros,linecolor=blue,linewidth=1pt,linestyle=dashed,%
+    coeff=-1 1 -1 0 0.15,Derivation=1,zeroLineTo=0]{-4}{3}%
+  \psPolynomial[markZeros,linecolor=magenta,linewidth=1pt,linestyle=dotted,%
+    coeff=-1 1 -1 0 0.15,Derivation=2,zeroLineTo=0]{-4}{3}%
+  \psPolynomial[markZeros,linecolor=magenta,linewidth=1pt,linestyle=dotted,%
+    coeff=-1 1 -1 0 0.15,Derivation=2,zeroLineTo=1]{-4}{3}%
+\end{pspicture*}
+\end{LTXexample}
+
+\clearpage
+\subsection{\Lcs{psBernstein}}
+The polynomials defined by
+%
+\[ B_{i,n}(t)=\binom{n}{i}t^i(1-t)^{n-i} \]
+%
+where $\tbinom{n}{k}$ is a binomial coefficient are named Bernstein polynomials of degree $n$.
+They form a basis for the power polynomials of degree $n$.
+The Bernstein polynomials satisfy symmetry
+\[B_{i,n}(t)=B_{n-i,n}(1-t)\]
+positivity \[B_{i,n}(t)\ge0 \mbox{\qquad for } 0\le t\le1\]
+normalization \[\sum_{i=0}^nB_{i,n}(t)=1\] 	
+and $B_{i,n}$ with $i!=0$, $n$ has a single unique local maximum of
+\[i^in^{-n}(n-i)^{n-i}\binom{n}{i}\]	
+occurring at $t=\frac{i}{n}$.
+The envelope $f_n(x)$ of the Bernstein polynomials $B_{i,n}(x)$ for $i=0,1,\ldots,n$ 
+is given by \[f_n(x)=\frac{1}{\sqrt{\pi n\cdot x(1-x)}}\] 	
+illustrated below for $n=20$. 
+
+\begin{BDef}
+\Lcs{psBernstein}\OptArgs\Largr{tStart,tEnd}\Largr{i,n}
+\end{BDef}
+
+The (\Lkeyword{tStart}, \Lkeyword{tEnd}) are \emph{optional} and preset by \verb=(0,1)=. The only new optional
+argument is the boolean key \Lkeyword{envelope}, which plots the envelope curve instead
+of the Bernstein polynomial.
+
+\begin{LTXexample}[width=5cm,pos=l]
+\psset{xunit=4.5cm,yunit=3cm}
+\begin{pspicture}(1,1.1)
+  \psaxes{->}(0,0)(1,1)[$t$,0][$B_{0,0}$,90]
+  \psBernstein[linecolor=red,linewidth=1pt](0,0)
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=5cm,pos=l]
+\psset{xunit=4.5cm,yunit=3cm}
+\begin{pspicture}(1,1.1)
+  \psaxes{->}(0,0)(1,1)[$t$,0][$B_{i,1}$,90]
+  \psBernstein[linecolor=blue,linewidth=1pt](0,1)
+  \psBernstein[linecolor=blue,linewidth=1pt](1,1)
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=5cm,pos=l]
+\psset{xunit=4.5cm,yunit=3cm}
+\begin{pspicture}(1,1.1)
+  \psaxes{->}(0,0)(1,1)[$t$,0][$B_{i,2}$,90]
+  \multido{\i=0+1}{3}{\psBernstein[linecolor=red,
+    linewidth=1pt](\i,2)}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=5cm,pos=l]
+\psset{xunit=4.5cm,yunit=3cm}
+\begin{pspicture}(1,1.1)
+  \psaxes{->}(0,0)(1,1)[$t$,0][$B_{i,3}$,90]
+  \multido{\i=0+1}{4}{\psBernstein[linecolor=magenta,
+    linewidth=1pt](\i,3)}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=5cm,pos=l]
+\psset{xunit=4.5cm,yunit=3cm}
+\begin{pspicture}(1,1.1)
+  \psaxes{->}(0,0)(1,1)[$t$,0][$B_{i,4}$,90]
+  \multido{\i=0+1}{5}{\psBernstein[linecolor=cyan,
+    linewidth=1pt](\i,4)}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=5cm,pos=l]
+\psset{xunit=4.5cm,yunit=3cm}
+\begin{pspicture}(-0.1,-0.05)(1.1,1.1)
+  \multido{\i=0+1}{20}{\psBernstein[linecolor=green,
+    linewidth=1pt](\i,20)}
+  \psBernstein[envelope,linecolor=black](0.02,0.98)(0,20)
+  \psaxes{->}(0,0)(1,1)[$t$,0][$B_{i,20}$,180]
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=5cm,pos=l]
+\psset{xunit=4.5cm,yunit=3cm}
+\begin{pspicture*}(-0.2,-0.05)(1.1,1.1)
+  \psaxes{->}(0,0)(1,1)[$t$,0][$B_{env}$,180]
+  \multido{\i=2+1}{20}{\psBernstein[envelope,
+    linewidth=1pt](0.01,0.99)(0,\i)}
+\end{pspicture*}
+\end{LTXexample}
+
+
+\psset{unit=1cm}
+\clearpage
+\section{\Lcs{psFourier}}
+
+A Fourier sum has the form:
+%
+\begin{align}
+s(x) = \frac{a_0}{2} & + a_1\cos{\omega x} + a_2\cos{2\omega x} +
+   a_3\cos{3\omega x} +
+	\ldots + a_n\cos{n\omega x}\\
+	& + b_1\sin{\omega x} + b_2\sin{2\omega x} + b_3\sin{3\omega x} +
+	\ldots + b_m\sin{m\omega x}
+\end{align}
+%
+\noindent The macro \Lcs{psFourier} plots \Index{Fourier sums}. The
+syntax is similiar to \Lcs{psPolynomial}, except that there are
+two kinds of coefficients:
+
+\begin{BDef}
+\Lcs{psFourier}\OptArgs\Largb{xStart}\Largb{xEnd}
+\end{BDef}
+
+The coefficients must have the orders $cosCoeff=a_0\ a_1\ a_2\ \ldots$
+and $sinCoeff=b_1\ b_2\ b_3\ \ldots$ and be separated by
+\textbf{spaces}. The default is \Lkeyword{cosCoeff}=0,\Lkeyword{sinCoeff}=1,
+which gives the standard \verb+sin+ function. Note that
+%%JF, I think it is better without the angle brackets, but
+%%you know the conventions used better than I do, so you
+%%may disagree.
+%the constant value can only be set with \verb+cosCoeff=<a0>+.
+the constant value can only be set with \Lkeyword{cosCoeff}=\verb+a0+.
+
+\begin{LTXexample}
+\begin{pspicture}(-5,-3)(5,5.5)
+\psaxes{->}(0,0)(-5,-2)(5,4.5)
+\psset{plotpoints=500,linewidth=1pt}
+\psFourier[cosCoeff=2, linecolor=green]{-4.5}{4.5}
+\psFourier[cosCoeff=0 0 2, linecolor=magenta]{-4.5}{4.5}
+\psFourier[cosCoeff=2 0 2, linecolor=red]{-4.5}{4.5}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}
+\psset{yunit=0.75}
+\begin{pspicture}(-5,-6)(5,7)
+\psaxes{->}(0,0)(-5,-6)(5,7)
+\psset{plotpoints=500}
+\psFourier[linecolor=red,linewidth=1pt]{-4.5}{4.5}
+\psFourier[sinCoeff= -1 1 -1 1 -1 1 -1 1,%
+	linecolor=blue,linewidth=1.5pt]{-4.5}{4.5}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}
+\begin{pspicture}(-5,-5)(5,5.5)
+\psaxes{->}(0,0)(-5,-5)(5,5)
+\psset{plotpoints=500,linewidth=1.5pt}
+\psFourier[sinCoeff=-.5 1 1 1 1 ,cosCoeff=-.5 1 1 1 1 1,%
+	linecolor=blue]{-4.5}{4.5}
+\end{pspicture}
+\end{LTXexample}
+
+\clearpage
+\section{\Lcs{psBessel}}
+The Bessel function of order $n$ is defined as
+%
+\begin{align}
+J_n(x) &=\frac{1}{\pi}\int_0^\pi\cos(x\sin t-nt)\dt\\
+       &=\sum_{k=0}^{\infty}\frac{(-1)^k \left(\frac{x}{2}\right)^{n+2k}}{k!\Gamma(n+k+1)}
+\end{align}
+%
+\noindent The syntax of the macro is
+
+\begin{BDef}
+\Lcs{psBessel}\OptArgs\Largb{order}\Largb{xStart}\Largb{xEnd}
+\end{BDef}
+
+There are two special parameters for the Bessel function, and also the
+settings of many \LPack{pst-plot} or \LPack{pstricks} parameters
+affect the plot. 
+These two ,,constants`` have the following meaning:
+%
+\[
+f(t) = constI \cdot J_n + constII
+\]
+%
+\noindent
+where \Lkeyword{constI} and \Lkeyword{constII} must be real PostScript expressions, e.g.:
+
+\begin{lstlisting}[style=syntax]
+\psset{constI=2.3,constII=t k sin 1.2 mul 0.37 add}
+\end{lstlisting}
+
+The Bessel function is plotted with the parametricplot macro, this is the
+reason why the variable is named \verb+t+. The internal procedure \verb+k+ 
+converts the value t from radian into degrees. The above setting is
+the same as
+%
+\[
+f(t) = 2.3 \cdot J_n + 1.2\cdot \sin t + 0.37
+\]
+%
+In particular, note that the default for
+\Lkeyword{plotpoints} is $500$. If the plotting computations are too
+time consuming at this setting, it can be decreased in the usual
+way, at the cost of some reduction in graphics resolution.
+
+\begin{LTXexample}
+{
+\psset{xunit=0.25,yunit=5}
+\begin{pspicture}(-13,-.85)(13,1.25)
+\rput(13,0.8){%
+	$\displaystyle J_n(x)=\frac{1}{\pi}\int_0^\pi\cos(x\sin t-nt)\dt$%
+}
+\psaxes[Dy=0.2,Dx=4]{->}(0,0)(-30,-.8)(30,1.2)
+\psset{linewidth=1pt}
+\psBessel[linecolor=red]{0}{-28}{28}%
+\psBessel[linecolor=blue]{1}{-28}{28}%
+\psBessel[linecolor=green]{2}{-28}{28}%
+\psBessel[linecolor=magenta]{3}{-28}{28}%
+\end{pspicture}
+}
+\end{LTXexample}
+
+
+\begin{LTXexample}
+{
+\psset{xunit=0.25,yunit=2.5}
+\begin{pspicture}(-13,-1.5)(13,3)
+\rput(13,0.8){%
+	$\displaystyle f(t) = 2.3 \cdot J_0 + 1.2\cdot \sin t + 0.37$%
+}
+\psaxes[Dy=0.8,dy=2cm,Dx=4]{->}(0,0)(-30,-1.5)(30,3)
+\psset{linewidth=1pt}
+\psBessel[linecolor=red,constI=2.3,constII={t k sin 1.2 mul 0.37 add}]{0}{-28}{28}%
+\end{pspicture}
+}
+\end{LTXexample}
+
+\clearpage
+
+\clearpage
+\section{Modfied Bessel function of first order}
+The modified Bessel function of first order is defined as
+%
+\begin{align}
+I_\nu(x) &= \left(\frac12 x\right)^\nu
+  \sum\limits_{k=0}^{\infty}  \frac{{\left(\frac14 x^2\right)}^k}{k!\Gamma(\nu+k+1)}
+\end{align}
+%
+\noindent The syntax of the macro is
+
+\begin{BDef}
+\Lcs{psModBessel}\OptArgs\Largb{xStart}\Largb{xEnd}
+\end{BDef}
+
+The only valid optional argument for the function is \Lkeyword{nue}, which
+is preset to 0, it shows $I_0$.
+
+
+\begin{LTXexample}
+\begin{pspicture}(0,-0.5)(5,5)
+\psaxes[ticksize=-5pt 0]{->}(5,5)
+\psModBessel[yMaxValue=5,nue=0,linecolor=red]{0}{5}
+\psModBessel[yMaxValue=5,nue=1,linecolor=green]{0}{5}
+\psModBessel[yMaxValue=5,nue=2,linecolor=blue]{0}{5}
+\psModBessel[yMaxValue=5,nue=3,linecolor=cyan]{0}{5}
+\end{pspicture}
+\end{LTXexample}
+
+
+\clearpage
+\section{\Lcs{psSi}, \Lcs{pssi} and \Lcs{psCi}}
+The integral sin  and cosin are defined as
+%
+\begin{align}
+\mathrm{Si}(x) &= \int_0^x\dfrac{\sin t}{t}\dt\\
+\mathrm{si}(x) &= - \int_x^{\infty}\dfrac{\sin t}{t}\dt=\mathrm{Si}(x)-\frac{\pi}{2}\\
+\mathrm{Ci}(x) &= -\int_x^{\infty}\dfrac{\cos t}{t}\dt=\gamma+\ln x +\int_0^{x}\dfrac{\cos t -1}{t}\dt
+\end{align}
+%
+\noindent The syntax of the macros is
+
+\begin{BDef}
+\Lcs{psSi}\OptArgs\Largb{xStart}\Largb{xEnd}\\
+\Lcs{pssi}\OptArgs\Largb{xStart}\Largb{xEnd}\\
+\Lcs{psCi}\OptArgs\Largb{xStart}\Largb{xEnd}
+\end{BDef}
+
+
+\begin{LTXexample}[pos=t]
+\def\pshlabel#1{\footnotesize#1} \def\psvlabel#1{\footnotesize#1}
+\psset{xunit=0.5}
+\begin{pspicture}(-15,-4.5)(15,2)
+  \psaxes[dx=1cm,Dx=2]{->}(0,0)(-15.1,-4)(15,2)
+  \psplot[plotpoints=1000]{-14.5}{14.5}{ x RadtoDeg sin x div }
+  \psSi[plotpoints=1500,linecolor=red,linewidth=1pt]{-14.5}{14.5}
+  \pssi[plotpoints=1500,linecolor=blue,linewidth=1pt]{-14.5}{14.5}
+  \rput(-5,1.5){\color{red}$Si(x)=\int\limits_{0}^x \frac{\sin(t)}{t}\dt$}  
+  \rput(8,-1.5){\color{blue}$si(x)=-\int\limits_{x}^{\infty} \frac{\sin(t)}{t}\dt=Si(x)-\frac{\pi}{2}$}  
+  \rput(8,.5){$f(x)= \frac{\sin(t)}{t}$}
+\end{pspicture}
+\end{LTXexample}
+
+
+
+\begin{LTXexample}[pos=t]
+\def\pshlabel#1{\footnotesize#1} \def\psvlabel#1{\footnotesize#1}
+\psset{xunit=0.5}
+\begin{pspicture*}(-15,-4.2)(15,4.2)
+  \psaxes[dx=1cm,Dx=2]{->}(0,0)(-15.1,-4)(15,4)
+  \psplot[plotpoints=1000]{-14.5}{14.5}{ x RadtoDeg cos x Div }
+  \psCi[plotpoints=500,linecolor=red,linewidth=1pt]{-11.5}{11.5}
+  \psci[plotpoints=500,linecolor=blue,linewidth=1pt]{-11.5}{11.5}
+  \rput(-8,1.5){\color{red}$Ci(x)=-\int\limits_{x}^{\infty} \frac{\cos(t)}{t}\dt$}  
+  \rput(8,1.5){\color{blue}$ci(x)=-Ci(x)+\ln(x)+\gamma$}  
+\end{pspicture*}
+\end{LTXexample}
+
+
+\clearpage
+\section{\nxLcs{psIntegral}, \nxLcs{psCumIntegral}, and \nxLcs{psConv}}
+These new macros\footnote{Created by Jose-Emilio Vila-Forcen}
+allows to plot the result of an integral using the Simpson numerical integration rule. 
+The first one is the result of the integral of a function with two variables, and 
+the integral is performed over one of them. The second one is the cumulative 
+integral of a function (similar to \Lcs{psGaussI} but valid for all functions). The third 
+one is the result of a convolution. They are defined as:
+%
+\begin{align}
+\text{\Lcs{psIntegral}}(x)    &= \int\limits_a^b f(x,t)\mathrm{d}t \\
+\text{\Lcs{psCumIntegral}}(x) &= \int\limits_{\text{xStart}}^{x} f(t)\mathrm{d}t \\
+\text{\Lcs{psConv}}(x)        &= \int\limits_a^b f(t)g(x-t)\mathrm{d}t
+\end{align}
+%
+In the first one, the integral is performed from $a$ to $b$ and the function $f$ depends 
+on two parameters. In the second one, the function $f$ depends on only one parameter, and the 
+integral is performed from the minimum value specified for $x$ (\Lkeyword{xStart}) and the current 
+value of $x$ in the plot. The third one uses the \Lcs{psIntegral} macro to perform an approximation 
+to the convolution, where the integration is performed from $a$ to $b$.
+
+The syntax of these macros is:
+
+\begin{BDef}
+\Lcs{psIntegral}\OptArgs\Largb{xStart}\Largb{xEnd}\Largr{a,b}\Largb{ function }\\
+\Lcs{psCumIngegral}\OptArgs\Largb{xStart}\Largb{xEnd}\Largb{ function }\\
+\Lcs{psConv}\OptArgs\Largb{xStart}\Largb{xEnd}\Largr{a,b}\Largb{ function f }\Largb{ function g }
+\end{BDef}
+
+In the first macro, the function should be created such that it accepts two values: \verb|<x t function>| 
+should be a value. For the second and the third functions, they only need to accept one 
+parameter: \verb|<x function>| should be a value.
+
+There are no new parameters for these functions. The two most important ones are \Lkeyword{plotpoints}, 
+which controls the number of points of the plot (number of divisions on $x$ for the plot) and 
+\Lkeyword{Simpson}, which controls the precision of the integration (a larger number means a smallest 
+step). The precision and the smoothness of the plot depend strongly on these two parameters.
+
+\bigskip
+\begin{LTXexample}
+%\usepackage{pst-math}
+\psset{xunit=0.5cm,yunit=2cm}
+\begin{pspicture}[linewidth=1pt](-10,-.5)(10,1.5)
+  \psaxes[dx=1cm,Dx=2]{->}(0,0)(-10,0)(10,1.5)
+  \psCumIntegral[plotpoints=200,Simpson=10]{-10}{10}{0 1 GAUSS}
+  \psIntegral[plotpoints=200,Simpson=100,linecolor=green]{.1}{10}(-3,3){0 exch GAUSS}
+  \psIntegral[plotpoints=200,Simpson=10,linecolor=red,
+    fillcolor=red!40,fillstyle=solid,opacity=0.5]{-10}{10}(-4,6){1 GAUSS}
+\end{pspicture}
+\end{LTXexample}
+
+In the example, the cumulative integral of a Gaussian is presented in black. In red, a 
+Gaussian is varying its mean from -10 to 10, and the result is the integral from -4 to 6. 
+Finally, in green it is presented the integral of a Gaussian from -3 to 3, where the 
+variance is varying from .1 to 10.
+
+\begin{LTXexample}
+\psset{xunit=1cm,yunit=4cm}
+\begin{pspicture}[linewidth=1pt](-5,-.2)(5,0.75)
+  \psaxes[dx=1cm,Dx=1,Dy=0.5]{->}(0,0)(-5,0)(5,0.75)
+  \psplot[linecolor=blue,plotpoints=200]{-5}{5}{x abs 2 le {0.25}{0} ifelse}
+  \psplot[linecolor=green,plotpoints=200]{-5}{5}{x abs 1 le {.5}{0} ifelse}
+  \psConv[plotpoints=100,Simpson=1000,linecolor=red]{-5}{5}(-10,10)%
+    {abs 2 le {0.25}{0} ifelse}{abs 1 le {.5} {0} ifelse}
+\end{pspicture}
+\end{LTXexample}
+
+In the second example, a convolution is performed using two rectangle functions. 
+The result (in red) is a \Index{trapezoid function}.
+
+\clearpage
+\section{Distributions}
+All distributions which use the $\Gamma$- or $\ln\Gamma$-function need the \LPack{pst-math} package,
+it defines the PostScript functions \Lps{GAMMA} and \Lps{GAMMALN}. \LPack{pst-func} reads by default the PostScript
+file \LFile{pst-math.pro}. It is part of any \TeX\ distribution and should also be on
+your system, otherwise install or update it from \textsc{CTAN}. It must the latest version. 
+
+\begin{LTXexample}[pos=l,width=7cm]
+\begin{pspicture*}(-0.5,-0.5)(6.2,5.2)
+ \psaxes{->}(0,0)(6,5)
+ \psset{plotpoints=100,linewidth=1pt}
+ \psplot[linecolor=red]{0.01}{4}{ x GAMMA }
+ \psplot[linecolor=blue]{0.01}{5}{ x GAMMALN }
+\end{pspicture*}
+\end{LTXexample}
+
+
+
+\clearpage
+\subsection{Normal distribution (Gauss)}
+The Gauss function is defined as
+%
+\begin{align}
+f(x) &= \dfrac{1}{\sigma\sqrt{2\pi}}\,e^{-\dfrac{\left(x-\mu\right)^2}{2\sigma{}^2}}
+\end{align}
+%
+\noindent The syntax of the macros is
+
+\begin{BDef}
+\Lcs{psGauss}\OptArgs\Largb{xStart}\Largb{xEnd}\\
+\Lcs{psGaussI}\OptArgs\Largb{xStart}\Largb{xEnd}
+\end{BDef}
+
+\noindent where the only new parameter are \Lkeyword{sigma}=<value>+ and  \Lkeyword{mue}=<value>+ for the
+horizontal shift,
+which can also be set in the usual way with \Lcs{psset}. It is
+significant only for the \Lcs{psGauss}- and \Lcs{psGaussI}-macro. The default is
+\Lkeyword{sigma}=0.5 and \Lkeyword{mue}=0. The integral is caclulated wuth the Simson algorithm 
+and has one special option, called \Lkeyword{Simpson}, which defines the number of intervalls per step
+and is predefined with 5.
+
+
+\begin{LTXexample}[pos=t,preset=\centering,wide=true]
+\psset{yunit=4cm,xunit=3}
+\begin{pspicture}(-2,-0.2)(2,1.4)
+%  \psgrid[griddots=10,gridlabels=0pt, subgriddiv=0]
+  \psaxes[Dy=0.25]{->}(0,0)(-2,0)(2,1.25)
+  \uput[-90](6,0){x}\uput[0](0,1){y}
+  \rput[lb](1,0.75){\textcolor{red}{$\sigma =0.5$}}
+  \rput[lb](1,0.5){\textcolor{blue}{$\sigma =1$}}
+  \rput[lb](-2,0.5){$f(x)=\dfrac{1}{\sigma\sqrt{2\pi}}\,e^{-\dfrac{(x-\mu)^2}{2\sigma{}^2}}$}
+  \psGauss[linecolor=red, linewidth=2pt]{-1.75}{1.75}%
+  \psGaussI[linewidth=1pt]{-2}{2}%
+  \psGauss[linecolor=cyan, mue=0.5, linewidth=2pt]{-1.75}{1.75}%
+  \psGauss[sigma=1, linecolor=blue, linewidth=2pt]{-1.75}{1.75}
+\end{pspicture}
+\end{LTXexample}
+
+
+
+\clearpage
+\subsection{Binomial distribution}\label{sec:bindistri}
+
+These two macros plot binomial distribution, \Lcs{psBinomialN} the normalized one. It is always 
+done in the $x$-Intervall $[0;1]$.
+Rescaling to another one can be done by setting the \Lkeyword{xunit} option
+to any other value. 
+
+The binomial distribution gives the discrete probability distribution $P_p(n|N)$ of obtaining
+exactly $n$ successes out of $N$ Bernoulli trials (where the result of each 
+Bernoulli trial is true with probability $p$ and false with probability
+$q=1-p$.  The binomial distribution is therefore given by
+
+\begin{align}
+P_p(n|N) &= \binom{N}{n}p^nq^{N-n} \\
+         &= \frac{N!}{n!(N-n)!}p^n(1-p)^{N-n},
+\end{align}
+where $(N; n)$ is a binomial coefficient and $P$ the probability. 
+
+The syntax is quite easy:
+
+\begin{BDef}
+\Lcs{psBinomial}\OptArgs\Largb{N}\Largb{probability p}\\
+\Lcs{psBinomial}\OptArgs\Largb{m,N}\Largb{probability p}\\
+\Lcs{psBinomial}\OptArgs\Largb{m,n,N}\Largb{probability p}\\
+\Lcs{psBinomialN}\OptArgs\Largb{N}\Largb{probability p}
+\end{BDef}
+
+\begin{itemize}
+\item with one argument $N$ the sequence $0\ldots N$ is calculated and plotted
+\item with two arguments $m,N$ the sequence $0\ldots N$ is calculated and 
+    the sequence $m\ldots N$ is plotted
+\item with three arguments $m,n,N$ the sequence $0\ldots N$ is calculated and 
+    the sequence $m\ldots n$ is plotted
+\end{itemize}
+
+There is a restriction in using the value for N. It depends to the probability, but in general
+one should expect problems with $N>100$. PostScript cannot handle such small values and there will
+be no graph printed. This happens on PostScript side, so \TeX\ doesn't report any problem in
+the log file. The valid options for the macros are \Lkeyword{markZeros} to draw rectangles instead
+of a continous line and \Lkeyword{printValue} for printing the $y$-values on top of the lines,
+rotated by 90\textdegree. For this option all other options from section~\ref{sec:printValue}
+for the macro \Lcs{psPrintValue} are valid, too. The only special option is \Lkeyword{barwidth},
+which is a factor (no dimension) and set by default to 1. This option is only valid for
+the macro \Lcs{psBinomial} and not for the normalized one!
+
+\psset[pst-func]{barwidth=1}
+\begin{LTXexample}[pos=t,preset=\centering]
+\psset{xunit=1cm,yunit=5cm}%
+\begin{pspicture}(-1,-0.15)(7,0.55)%
+\psaxes[Dy=0.2,dy=0.2\psyunit]{->}(0,0)(-1,0)(7,0.5)
+\uput[-90](7,0){$k$} \uput[90](0,0.5){$P(X=k)$}
+\psBinomial[markZeros,printValue,fillstyle=vlines]{6}{0.4}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t,preset=\centering]
+\psset{xunit=1cm,yunit=10cm}%
+\begin{pspicture}(-1,-0.05)(8,0.6)%
+\psaxes[Dy=0.2,dy=0.2\psyunit]{->}(0,0)(-1,0)(8,0.5)
+\uput[-90](8,0){$k$} \uput[90](0,0.5){$P(X=k)$}
+\psBinomial[linecolor=red,markZeros,printValue,fillstyle=solid,
+	fillcolor=blue,barwidth=0.2]{7}{0.6}
+\end{pspicture}
+\end{LTXexample}
+
+
+\begin{LTXexample}[pos=t,preset=\centering]
+\psset{xunit=1cm,yunit=10cm}%
+\begin{pspicture}(-1,-0.05)(8,0.6)%
+\psaxes[Dy=0.2,dy=0.2\psyunit]{->}(0,0)(-1,0)(8,0.5)
+\uput[-90](8,0){$k$} \uput[90](0,0.5){$P(X=k)$}
+\psBinomial[linecolor=black!30]{0,7}{0.6}
+\psBinomial[linecolor=blue,markZeros,printValue,fillstyle=solid,
+	fillcolor=blue,barwidth=0.4]{2,5,7}{0.6}
+\end{pspicture}
+\end{LTXexample}
+
+
+\begin{LTXexample}[pos=t,preset=\centering]
+\psset{xunit=0.25cm,yunit=10cm}
+\begin{pspicture*}(-1,-0.05)(61,0.52)
+\psaxes[Dx=5,dx=5\psxunit,Dy=0.2,dy=0.2\psyunit]{->}(60,0.5)
+\uput[-90](60,0){$k$} \uput[0](0,0.5){$P(X=k)$}
+\psBinomial[markZeros,linecolor=red]{4}{.5}
+\psset{linewidth=1pt}
+\psBinomial[linecolor=green]{5}{.5} \psBinomial[linecolor=blue]{10}{.5}
+\psBinomial[linecolor=red]{20}{.5}  \psBinomial[linecolor=magenta]{50}{.5}
+\psBinomial[linecolor=cyan]{0,55,75}{.5}
+\end{pspicture*}
+\end{LTXexample}
+
+The default binomial distribution has the mean of $\mu=E(X)=N\cdot p$ and a variant of $\sigma^2=\mu\cdot(1-p)$.
+The normalized distribution has a mean of $0$. Instead of $P(X=k)$ we use $P(Z=z)$ with $Z=\dfrac{X-E(X)}{\sigma(X)}$
+and $P\leftarrow P\cdot\sigma$.
+The macros use the rekursive definition of the binomial distribution:
+%
+\begin{align}
+P(k) &= P(k-1)\cdot\frac{N-k+1}{k}\cdot\frac{p}{1-p}
+\end{align}
+
+
+
+\begin{LTXexample}[pos=t,preset=\centering]
+\psset{xunit=1cm,yunit=5cm}%
+\begin{pspicture}(-3,-0.15)(4,0.55)%
+\psaxes[Dy=0.2,dy=0.2\psyunit]{->}(0,0)(-3,0)(4,0.5)
+\uput[-90](4,0){$z$} \uput[0](0,0.5){$P(Z=z)$}
+\psBinomialN[markZeros,fillstyle=vlines]{6}{0.4}
+\end{pspicture}
+\end{LTXexample}
+
+
+
+\begin{LTXexample}[pos=t,preset=\centering]
+\psset{yunit=10}
+\begin{pspicture*}(-8,-0.07)(8.1,0.55)
+\psaxes[Dy=0.2,dy=0.2\psyunit]{->}(0,0)(-8,0)(8,0.5)
+\uput[-90](8,0){$z$} \uput[0](0,0.5){$P(Z=z)$}
+\psBinomialN{125}{.5}
+\psBinomialN[markZeros,linewidth=1pt,linecolor=red]{4}{.5}
+\end{pspicture*}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t,preset=\centering]
+\psset{yunit=10}
+\begin{pspicture*}(-8,-0.07)(8.1,0.52)
+\psaxes[Dy=0.2,dy=0.2\psyunit]{->}(0,0)(-8,0)(8,0.5)
+\uput[-90](8,0){$z$} \uput[0](0,0.5){$P(Z=z)$}
+\psBinomialN[markZeros,linecolor=red]{4}{.5}
+\psset{linewidth=1pt}
+\psBinomialN[linecolor=green]{5}{.5}\psBinomialN[linecolor=blue]{10}{.5}
+\psBinomialN[linecolor=red]{20}{.5} \psBinomialN[linecolor=gray]{50}{.5}
+\end{pspicture*}
+\end{LTXexample}
+
+
+
+For the normalized distribution the plotstyle can be set to \Lkeyval{curve} (\Lkeyset{plotstyle=curve}), 
+then the binomial distribution looks like a normal distribution. This option is only
+valid vor \Lcs{psBinomialN}. The option \Lkeyword{showpoints} is valid if \Lkeyval{curve} was chosen.
+
+
+\begin{LTXexample}[pos=t,preset=\centering]
+\psset{xunit=1cm,yunit=10cm}%
+\begin{pspicture*}(-4,-0.06)(4.1,0.57)%
+\psaxes[Dy=0.2,dy=0.2\psyunit]{->}(0,0)(-4,0)(4,0.5)%
+\uput[-90](4,0){$z$} \uput[90](0,0.5){$P(Z=z)$}%
+\psBinomialN[linecolor=red,fillstyle=vlines,showpoints=true,markZeros]{36}{0.5}%
+\psBinomialN[linecolor=blue,showpoints=true,plotstyle=curve]{36}{0.5}%
+\end{pspicture*}
+\end{LTXexample}
+
+
+\begin{LTXexample}[pos=t,preset=\centering]
+\psset{xunit=1cm,yunit=10cm}%
+\begin{pspicture*}(-4,-0.06)(4.2,0.57)%
+\psaxes[Dy=0.2,dy=0.2\psyunit]{->}(0,0)(-4,0)(4,0.5)%
+\uput[-90](4,0){$z$} \uput[90](0,0.5){$P(Z=z)$}%
+\psBinomialN[linecolor=red]{10}{0.6}%
+\psBinomialN[linecolor=blue,showpoints=true,plotstyle=curve]{10}{0.6}%
+\end{pspicture*}
+\end{LTXexample}
+
+
+\clearpage
+\subsection{Poisson distribution}
+Given a Poisson process\footnote{\url{http://mathworld.wolfram.com/PoissonProcess.html}}, 
+the probability of obtaining exactly $n$ successes in $N$ trials is given by the 
+limit of a binomial distribution (see Section~\ref{sec:bindistri})
+%
+\begin{align}
+P_p(n|N) &= \frac{N!}{n!(N-n)!}\cdot p^n(1-p)^{N-n}\label{eq:normaldistri}
+\end{align}
+%
+Viewing the distribution as a function of the expected number of successes
+%	
+\begin{align}\label{eq:nu}
+\lambda &= n\cdot p
+\end{align}
+%
+instead of the sample size $N$ for fixed $p$, equation (2) then becomes
+eq.~\ref{eq:normaldistri}
+%	
+\begin{align}\label{eq:nuN}
+P_{\frac{\lambda}{n}}(n|N) &= \frac{N!}{n!(N-n)!}{\frac{\lambda}{N}}^n {\frac{1-\lambda}{N}}^{N-n}
+\end{align}
+%
+Viewing the distribution as a function of the expected number of successes
+%
+\[ P_\lambda(X=k)=\frac{\lambda^k}{k!}\,e^{-\lambda} \]
+%
+Letting the sample size  become large ($N\to\infty$), the distribution then 
+approaches (with $p=\frac{\lambda}{n}$)
+%
+\begin{align}
+\lim_{n\to\infty} P(X=k) &= \lim_{n\to\infty}\frac{n!}{(n-k)!\,k!}
+	 \left(\frac{\lambda}{n}\right)^k \left(1-\frac{\lambda}{n}\right)^{n-k} \\
+  &= \lim_{n\to\infty} \left(\frac{(n-k)!\cdot (n-k+1)\cdots(n-2)(n-1)n}{(n-k)!\,n^k}\right)\cdot\\
+  &\qquad \left(\frac{\lambda^k}{k!}\right)\left(1-\frac{\lambda}{n}\right)^n 
+	\left(1-\frac{\lambda}{n}\right)^{-k}\\
+  &= \frac{\lambda^k}{k!}\cdot \lim_{n\to\infty}
+     \underbrace{\left(\frac{n}{n}\cdot \frac{n-1}{n}\cdot\frac{n-2}{n}\cdot\ldots\cdot 
+    	\frac{n-k+1}{n}\right)}_{\to 1} \cdot\\
+  &\qquad   \underbrace{\left(1-\frac{\lambda}{n}\right)^n}_{\to{e^{-\lambda}}}  
+     \underbrace{\left(1-\frac{\lambda}{n}\right)^{-k}}_{\to 1}\\
+  &=  \lambda^k e^{\frac{-\lambda}{k!}}
+\end{align}
+%
+which is known as the Poisson distribution and has the follwing syntax:
+
+
+\begin{BDef}
+\Lcs{psPoisson}\OptArgs\Largb{N}\Largb{lambda}\\
+\Lcs{psPoisson}\OptArgs\Largb{M,N}\Largb{lambda}
+\end{BDef}
+
+in which \texttt{M} is an optional argument with a default of 0.
+
+
+\begin{LTXexample}[pos=t,preset=\centering]
+\psset{xunit=1cm,yunit=20cm}%
+\begin{pspicture}(-1,-0.05)(14,0.25)%
+\uput[-90](14,0){$k$} \uput[90](0,0.2){$P(X=k)$}
+\psPoisson[linecolor=red,markZeros,fillstyle=solid,
+	fillcolor=blue!10,printValue,valuewidth=20]{13}{6} % N lambda
+\psaxes[Dy=0.1,dy=0.1\psyunit]{->}(0,0)(-1,0)(14,0.2)
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t,preset=\centering]
+\psset{xunit=1cm,yunit=20cm}%
+\begin{pspicture}(-1,-0.05)(14,0.25)%
+\uput[-90](14,0){$k$} \uput[90](0,0.2){$P(X=k)$}
+\psPoisson[linecolor=blue,markZeros,fillstyle=solid,barwidth=0.4,
+	fillcolor=blue!10,printValue,valuewidth=20]{10}{6} % N lambda
+\psaxes[Dy=0.1,dy=0.1\psyunit]{->}(0,0)(-1,0)(11,0.2)
+\end{pspicture}
+\end{LTXexample}
+
+
+\begin{LTXexample}[pos=t,preset=\centering]
+\psset{xunit=1cm,yunit=20cm}%
+\begin{pspicture}(-1,-0.05)(14,0.25)%
+\uput[-90](14,0){$k$} \uput[90](0,0.2){$P(X=k)$}
+\psPoisson[printValue,valuewidth=20]{2,11}{6} % M,N lambda
+\psaxes[Dy=0.1,dy=0.1\psyunit]{->}(0,0)(-1,0)(14,0.2)
+\end{pspicture}
+\end{LTXexample}
+
+
+
+\clearpage
+\subsection{Gamma distribution}
+A gamma distribution is a general type of statistical distribution that is related 
+to the beta distribution and arises naturally in processes for which the waiting 
+times between Poisson distributed events are relevant. Gamma distributions have 
+two free parameters, labeled $alpha$ and $beta$. It is defined as
+%
+\[
+f(x)=\frac{\beta(\beta x)^{\alpha-1}e^{-\beta x}}{\Gamma(\alpha)} \qquad
+\text{for $x>0$ and $\alpha$, $\beta>0$}
+\]
+%
+and has the syntax
+
+\begin{BDef}
+\Lcs{psGammaDist}\OptArgs\Largb{x0}\Largb{x1}
+\end{BDef}
+
+\begin{LTXexample}[pos=t,preset=\centering]
+\psset{xunit=1.2cm,yunit=10cm,plotpoints=200}
+\begin{pspicture*}(-0.75,-0.05)(9.5,0.6)
+ \psGammaDist[linewidth=1pt,linecolor=red]{0.01}{9}
+ \psGammaDist[linewidth=1pt,linecolor=blue,alpha=0.3,beta=0.7]{0.01}{9}
+ \psaxes[Dy=0.1]{->}(0,0)(9.5,.6)
+\end{pspicture*}
+\end{LTXexample}
+
+
+\clearpage
+\subsection{$\chi^2$-distribution}
+The $\chi^2$-distribution is a continuous probability distribution. It
+usually arises when a $k$-dimensional vector's orthogonal components are 
+independent and each follow a standard normal distribution. 
+The length of the vector will then have a $\chi^2$-distribution.
+
+\iffalse
+If Y_i have normal independent  distributions with mean 0 and variance 1, then
+chi^2=sum_(i==1)^rY_i^2	
+(1)
+
+is distributed as chi^2 with r degrees of freedom. This makes a chi^2 distribution 
+a gamma distribution with theta=2 and alpha=r/2, where r is the number of degrees of freedom.
+
+More generally, if chi_i^2 are independently distributed according to a chi^2 
+distribution with r_1, r_2, ..., r_k degrees of freedom, then
+sum_(j==1)^kchi_j^2	
+
+is distributed according to chi^2 with r=sum_(j==1)^(k)r_j degrees of freedom. 
+\fi
+
+The $\chi^2$ with parameter $\nu$ is the same as a Gamma distribution 
+ with $\alpha=\nu/2$ and $\beta=1/2$ and the syntax
+
+\begin{BDef}
+\Lcs{psChiIIDist}\OptArgs\Largb{x0}\Largb{x1}
+\end{BDef}
+
+\begin{LTXexample}[pos=t,preset=\centering]
+\psset{xunit=1.2cm,yunit=10cm,plotpoints=200}
+\begin{pspicture*}(-0.75,-0.05)(9.5,.65)
+ \multido{\rnue=0.5+0.5,\iblue=0+10}{10}{%
+   \psChiIIDist[linewidth=1pt,linecolor=blue!\iblue,nue=\rnue]{0.01}{9}}
+ \psaxes[Dy=0.1]{->}(0,0)(9.5,.6)
+\end{pspicture*}
+\end{LTXexample}
+
+\iffalse
+The cumulative distribution function is 
+%
+\begin{align*}
+D_r(\chi^2) &=	int_0^{\chi^2}\frac{t^{r/2-1}e^{-t/2}\mathrm{d}t}{\Gamma(1/2r)2^{r/2}}	\\
+	    &=	1-\frac{\Gamma(1/2r,1/2\chi^2)}{\Gamma(1/2r)}
+\end{align*}
+\fi
+
+
+
+
+\clearpage
+\subsection{Student's $t$-distribution}
+
+A \Index{statistical distribution} published by \Index{William Gosset} in 1908 under his 
+pseudonym ,,Student``. The $t$-distribution with parameter $\nu$ has the \Index{density function}
+%
+\[
+f(x)=\frac1{\sqrt{\nu\pi}}\cdot
+ \frac{\Gamma[(\nu+1)/2]}{\Gamma(\nu/2)}\cdot\frac1{[1+(x^2/\nu)]^{(\nu+1)/2}} \qquad
+\text{for $-\infty<x<\infty$ and $\nu>0$}
+\]
+%
+and the following syntax
+
+\begin{BDef}
+\Lcs{psTDist}\OptArgs\Largb{x0}\Largb{x1}
+\end{BDef}
+
+
+\begin{LTXexample}[pos=t,preset=\centering]
+\psset{xunit=1.25cm,yunit=10cm}
+\begin{pspicture}(-6,-0.1)(6,.5)
+ \psaxes[Dy=0.1]{->}(0,0)(-4.5,0)(5.5,0.5)
+ \psset{linewidth=1pt,plotpoints=100}
+ \psGauss[mue=0,sigma=1]{-4.5}{4.5}
+ \psTDist[linecolor=blue]{-4}{4}
+ \psTDist[linecolor=red,nue=4]{-4}{4}
+\end{pspicture}
+\end{LTXexample}
+
+
+%The $t_\nu$-distribution has mode 0.
+
+\clearpage
+\subsection{$F$-distribution}
+A continuous statistical distribution which arises in the testing of 
+whether two observed samples have the same variance. 
+
+The F-distribution with parameters $\mu$ and $\nu$ has the probability function
+\[
+f_{n,m}(x)=\frac{\Gamma[(\mu+\nu)/2]}{\Gamma(\mu/2)\Gamma(\nu/2)}\cdot
+ \left(\mu/\nu\right)^{\mu/2}\frac{x^{(\mu/2)-1}}{[1+(\mu x/\nu)]^{(\mu+\nu)/2}}\quad
+\text{ for $x>0$ and $\mu$, $\nu>0$}\]
+%
+and the syntax 
+
+\begin{BDef}
+\Lcs{psFDist}\OptArgs\Largb{x0}\Largb{x1}
+\end{BDef}
+%
+The default settings are $\mu=1$ and $\nu=1$.
+
+\begin{LTXexample}[pos=t,preset=\centering]
+\psset{xunit=2cm,yunit=10cm,plotpoints=100}
+\begin{pspicture*}(-0.5,-0.07)(5.5,0.8)
+ \psline[linestyle=dashed](0.5,0)(0.5,0.75)
+ \psline[linestyle=dashed](! 2 7 div 0)(! 2 7 div 0.75)
+ \psset{linewidth=1pt}
+ \psFDist{0.1}{5} 
+ \psFDist[linecolor=red,nue=3,mue=12]{0.01}{5}
+ \psFDist[linecolor=blue,nue=12,mue=3]{0.01}{5}
+ \psaxes[Dy=0.1]{->}(0,0)(5,0.75)
+\end{pspicture*}
+\end{LTXexample}
+
+
+\clearpage
+\subsection{Beta distribution}
+	
+A general type of statistical distribution which is related to the gamma distribution. 
+Beta distributions have two free parameters, which are labeled according to one of two 
+notational conventions. The usual definition calls these $\alpha$ and $\beta$, and the other 
+uses $\beta^\prime=\beta-1$ and $\alpha^\prime=\alpha-1$. The beta distribution is 
+used as a prior distribution for binomial proportions in \Index{Bayesian analysis}. 
+%
+%The plots are for various values of ($\alpha,\beta$) with $\alpha=1$ and $\beta$ ranging from 0.25 to 3.00.
+%
+The domain is $[0,1]$, and the probability function $P(x)$ is given by
+%
+\[
+P(x)	=	\frac{\Gamma(\alpha+\beta)}{\Gamma(\alpha)\Gamma(\beta)}(1-x)^{\beta-1}x^{\alpha-1}
+\quad\text{ $\alpha,\beta>0$}
+\]
+%
+and has the syntax (with a default setting of $\alpha=1$ and $\beta=1$):
+
+\begin{BDef}
+\Lcs{psBetaDist}\OptArgs\Largb{x0}\Largb{x1}
+\end{BDef}
+%
+
+
+\begin{LTXexample}[pos=t,preset=\centering]
+\psset{xunit=10cm,yunit=5cm}
+\begin{pspicture*}(-0.1,-0.1)(1.1,2.05)
+ \psset{linewidth=1pt}
+ \multido{\rbeta=0.25+0.25,\ired=0+5,\rblue=50.0+-2.5}{20}{%
+   \psBetaDist[beta=\rbeta,linecolor=red!\ired!blue!\rblue]{0.01}{0.99}}
+ \psaxes[Dy=0.2,Dx=0.1]{->}(0,0)(1,2.01)
+\end{pspicture*}
+\end{LTXexample}
+
+
+\clearpage
+\subsection{Cauchy distribution}
+The \Index{Cauchy distribution}, also called the \Index{Lorentz distribution}, is a continuous distribution 
+describing resonance behavior. It also describes the distribution of horizontal distances at 
+which a line segment tilted at a random angle cuts the $x$-axis. 
+
+The general Cauchy distribution and its cumulative distribution can be written as
+\begin{align}
+P(x) &= \frac{1}{\pi} \frac{b}{\left(x-m\right)^2+b^2}\\
+D(x) &= \frac12 +\frac{1}{\pi} \arctan\left(\frac{x-m}{b}\right)
+\end{align}
+
+where \Lkeyword{b} is the half width at half maximum and \Lkeyword{m} is the statistical median.
+The macro has the syntax (with a default setting of $m=0$ and $b=1$):
+
+\begin{BDef}
+\Lcs{psCauchy}\OptArgs\Largb{x0}\Largb{x1}\\
+\Lcs{psCauchyI}\OptArgs\Largb{x0}\Largb{x1}\\
+\end{BDef}
+
+\Lcs{psCauchyI} is the integral or the cumulative distribution and often named as $D(x)$.
+
+\begin{LTXexample}[pos=t,preset=\centering]
+\psset{xunit=2,yunit=3cm}
+\begin{pspicture*}(-3,-0.3)(3.1,2.1)
+\psset{linewidth=1pt}
+\multido{\rb=0.1+0.2,\rm=0.0+0.2}{4}{%
+  \psCauchy[b=\rb,m=\rm,linecolor=red]{-2.5}{2.5}
+     \psCauchyI[b=\rb,m=\rm,linecolor=blue]{-2.5}{2.5}}
+\psaxes[Dy=0.4,dy=0.4,Dx=0.5,dx=0.5]{->}(0,0)(-3,0)(3,2)
+\end{pspicture*}
+\end{LTXexample}
+
+
+
+\iffalse
+\clearpage
+\subsection{Bose-Einstein distribution}
+A distribution which arises in the study of integer \Index{spin particles} in physics,
+\[
+P(x)=\frac{x^s}{e^{x-mu}-1}\qquad\text{with $s\in\mathbb{Z}$ and $\mu\in\mathbb{R}}
+\]
+%
+and has the syntax (with a default setting of $s=1$ and $\mu=1$):
+
+\begin{BDef}
+\Lcs{psBoseEinsteinDist}\OptArgs\Largb{x0}\Largb{x1}
+\end{BDef}
+\fi
+
+
+\clearpage
+\subsection{Weibull distribution}
+
+In probability theory and statistics, the Weibull distribution is a continuous probability 
+distribution. The probability density function of a 
+Weibull random variable $x$ is:
+
+\begin{align}
+P(x) &= \alpha\beta^{-\alpha} x^{\alpha-1} e^{-\left(\frac{x}{\beta}\right)^\alpha}\\
+D(x) &= 1-e^{-\left(\frac{x}{\beta}\right)^\alpha}
+\end{align}
+
+or slightly different as
+
+\begin{align}
+P(x) &= \frac{\alpha}{\beta}\,x^{\alpha-1} e^{-\frac{x^\alpha}{\beta}}\\
+D(x) &= 1 - e^{-\frac{x^\alpha}{\beta}}
+\end{align}
+
+always for $x\in[0;\infty)$.
+where $\alpha > 0$ is the shape parameter and $\beta > 0$ is the scale parameter of the distribution. 
+
+$D(x)$ is the cumulative distribution function of the Weibull distribution. The values for
+$\alpha$ and $\beta$ are preset to 1, but can be changed in the usual way.
+
+The Weibull distribution is related to a number of other probability distributions; in 
+particular, it interpolates between the exponential distribution $(\alpha = 1)$ and the 
+Rayleigh distribution $(\alpha = 2)$.
+
+\begin{center}
+\psset{unit=2}
+\begin{pspicture*}(-0.5,-0.5)(2.6,2.6)
+\psaxes{->}(0,0)(2.5,2.5)[$x$,-90][$y$,180]
+\multido{\rAlpha=0.5+0.5}{5}{%
+  \psWeibull[alpha=\rAlpha]{0}{2.5}
+  \psWeibullI[alpha=\rAlpha,linestyle=dashed]{0}{2.4}}
+\end{pspicture*}
+%
+\begin{pspicture*}(-0.5,-0.5)(2.6,2.6)
+\psaxes{->}(0,0)(2.5,2.5)[$x$,-90][$y$,180]
+\multido{\rAlpha=0.5+0.5,\rBeta=0.2+0.2}{5}{%
+  \psWeibull[alpha=\rAlpha,beta=\rBeta]{0}{2.5}
+  \psWeibullI[alpha=\rAlpha,beta=\rBeta,linestyle=dashed]{0}{2.4}}
+\end{pspicture*}
+\end{center}
+
+\begin{lstlisting}
+\psset{unit=2}
+\begin{pspicture*}(-0.5,-0.5)(2.6,2.6)
+\psaxes{->}(0,0)(2.5,2.5)[$x$,-90][$y$,180]
+\multido{\rAlpha=0.5+0.5}{5}{%
+  \psWeibull[alpha=\rAlpha]{0}{2.5}
+  \psWeibullI[alpha=\rAlpha,linestyle=dashed]{0}{2.4}}
+\end{pspicture*}
+%
+\begin{pspicture*}(-0.5,-0.5)(2.6,2.6)
+\psaxes{->}(0,0)(2.5,2.5)[$x$,-90][$y$,180]
+\multido{\rAlpha=0.5+0.5,\rBeta=0.2+0.2}{5}{%
+  \psWeibull[alpha=\rAlpha,beta=\rBeta]{0}{2.5}
+  \psWeibullI[alpha=\rAlpha,beta=\rBeta,linestyle=dashed]{0}{2.4}}
+\end{pspicture*}
+\end{lstlisting}
+\psset{unit=1cm}
+
+The starting value for $x$ should always be 0 or greater, if it is
+less than 0 then the macro draws a line from (\#1,0) to (0,0) and
+starts \Lcs{psWeinbull} with 0.
+
+\clearpage
+\subsection{Vasicek distribution}
+
+For a homogenous portfolio of infinite granularity the portfolio loss 
+distribution is given by 
+
+\[ 
+\mathbb{P}(L(P)<x)=1-\mathcal{N}
+  \left(\frac{\mathcal{N}^{-1}(PD)-\sqrt{1-R2}\cdot\mathcal{N}^{-1}(x)}{R} 
+  \right)
+\]
+$L(P)$ denotes the portfolio loss in percent. $pd$ is the uniform default 
+probability and $R2$ is the uniform asset correlation.
+
+They are preset to $pd=0.22$ and $R2=0.11$ and can be overwritten in the
+usual way. The macro uses the PostScript function norminv from the package 
+pst-math
+which is loaded by default and also shown in the following example.
+
+
+
+\begin{LTXexample}[pos=t]
+\psset{xunit=5}
+\begin{pspicture}(-0.1,-3)(1.1,4)
+\psaxes{->}(0,0)(0,-3)(1.1,4)
+\psVasicek[plotpoints=200,linecolor=blue]{0}{0.9999}
+\psVasicek[plotpoints=200,linecolor=red,pd=0.2,R2=0.3]{0}{0.9999}
+\psplot[plotpoints=200,algebraic,linestyle=dashed]{0}{0.9999}{norminv(x)}
+\end{pspicture}
+\end{LTXexample}
+
+
+
+\clearpage
+\section{The Lorenz curve}
+
+The so-called \Index{Lorenz curve} is used in economics to describe inequality in 
+wealth or size. The Lorenz curve is a function of the cumulative proportion of 
+\textit{ordered individuals} mapped onto the corresponding cumulative proportion 
+of their size. Given a sample of n ordered individuals with $x_i^{\prime}$ the size of 
+individual $i$ and $x_1^{\prime}<x_2^{\prime}<\cdots<x_n^{\prime}$, then the sample Lorenz curve is 
+the \textit{polygon} joining the points $(h/n,L_h/L_n)$, where $h=0, 1, 2,\ldots n, L_0=0$, and 
+$L_h=sum_(i=1)^(h)x_i^{\prime}$. 
+
+\begin{BDef}
+\LcsStar{psLorenz}\OptArgs\Largb{data file}
+\end{BDef}
+
+
+\begin{LTXexample}[pos=t,preset=\centering]
+\psset{lly=-6mm,llx=-5mm}
+\psgraph[Dx=0.2,Dy=0.2,axesstyle=frame](0,0)(1,1){6cm}{6cm}
+\psline[linestyle=dashed](1,1)
+\psLorenz*[linecolor=blue!30,linewidth=1.5pt]{0.50 0.10 0.3 0.09 0.01 }
+\psLorenz[linecolor=blue!30,plotstyle=bezier]{0.50 0.10 0.3 0.09 0.01 }
+\psLorenz[linecolor=red,linewidth=1.5pt]{0.50 0.10 0.3 0.09 0.01 }
+\endpsgraph
+\end{LTXexample}
+
+There exists an optional argument \Lkeyword{Gini} for the output of the \Index{Gini coefficient}.
+It is by default set to \false. With \true the value is caculated and printed below the
+origin of the coordinate system. 
+
+\begin{LTXexample}[pos=t,preset=\centering]
+\psset{lly=-13mm,llx=-5mm}
+\psgraph[Dx=0.2,Dy=0.2,axesstyle=frame](0,0)(1,1){6cm}{6cm}
+\psline[linestyle=dashed](1,1)
+\psLorenz[linewidth=1.5pt,Gini]{0.025 0.275 0.2 0.270 0.230}
+\psLorenz[plotstyle=dots,dotstyle=square,dotscale=1.5]{0.025 0.275 0.2 0.270 0.230}
+\endpsgraph
+\end{LTXexample}
+
+\clearpage
+\section{\nxLcs{psLame} -- Lam\'e Curve, a superellipse}
+A superellipse is a curve with Cartesian equation
+%	
+\begin{align}
+\left|\frac{x}{a}\right|^r + \left|\frac{y}{b}\right|^r & =1
+\end{align}
+%
+first discussed in 1818 by Gabriel Lam\'e (1795--1870)%
+\footnote{Lam\'e worked on a wide variety of different topics. 
+His work on differential geometry and contributions to Fermat's Last Theorem 
+are important. He proved the theorem for $n = 7$ in 1839.}. 
+A superellipse may be described parametrically by
+%
+\begin{align}
+x = a\cdot\cos^{\frac{2}{r}} t\\
+y = b\cdot\sin^{\frac{2}{r}} t
+\end{align}
+%			
+\Index{Superellipses} with $a=b$ are also known as \Index{Lam\'e} curves or Lam\'e ovals and
+the restriction to $r>2$ is sometimes also made. The following 
+table summarizes a few special cases. \Index{Piet Hein} used $\frac{5}{2}$ with a number of different 
+$\frac{a}{b}$ ratios for various of his projects. For example, he used $\frac{a}{b}=\frac{6}{5}$ 
+for Sergels Torg 
+(Sergel's Square) in Stockholm, and $\frac{a}{b}=\frac{3}{2}$ for his table.
+
+\begin{center}
+\begin{tabular}{@{}llm{1.5cm}@{}}
+r & curve type & example\\\hline
+$\frac{2}{3}$ &	(squashed) astroid 
+  & \pspicture(-.5,-.5)(.5,.5)\psLame[radiusA=.5,radiusB=.5]{0.6667}\endpspicture\\
+1             & (squashed) diamond
+  & \pspicture(-.5,-.5)(.5,.5)\psLame[radiusA=.5,radiusB=.5]{1}\endpspicture\\
+2	      & ellipse
+  & \pspicture(-.5,-.5)(.5,.5)\psLame[radiusA=.5,radiusB=.5]{2}\endpspicture\\
+$\frac{5}{2}$ & Piet Hein's ,,superellipse``
+  & \pspicture(-.5,-.5)(.5,.5)\psLame[radiusA=.5,radiusB=.5]{2.5}\endpspicture
+\end{tabular}
+\end{center}
+
+If $r$ is a rational, then a \Index{superellipse} is algebraic. However, for irrational $r$, 
+it is transcendental. For even integers $r=n$, the curve becomes closer to a 
+rectangle as $n$ increases. The syntax of the \Lcs{psLame} macro is:
+
+\begin{BDef}
+\Lcs{psLame}\OptArgs\Largb{r}
+\end{BDef}
+
+It is internally plotted as a \Index{parametric plot} with $0\le\alpha\le360$. Available keywords
+are \Lkeyword{radiusA} and \Lkeyword{radiusB}, both are preset to 1, but can have any valid value
+and unit.
+
+\bgroup
+\begin{LTXexample}[pos=t,preset=\centering]
+\definecolorseries{col}{rgb}{last}{red}{blue}
+\resetcolorseries[41]{col}
+\psset{unit=.5}
+\pspicture(-9,-9)(9,9)
+  \psaxes[Dx=2,Dy=2,tickstyle=bottom,ticksize=2pt]{->}(0,0)(-9,-9)(9,9)
+  \multido{\rA=0.2+0.1,\iA=0+1}{40}{%
+    \psLame[radiusA=8,radiusB=7,linecolor={col!![\iA]},linewidth=.5pt]{\rA}}
+\endpspicture
+\end{LTXexample}
+\egroup
+
+
+\clearpage
+\section{\nxLcs{psThomae} -- the popcorn function}
+
+\Index{Thomae's function}, also known as the \Index{popcorn function}, 
+the \Index{raindrop function}, the \Index{ruler function} or the 
+\Index{Riemann function}, is a modification of the \Index{Dirichlet} function. 
+This real-valued function $f(x)$ is defined as follows:
+%
+\[ f(x)=\begin{cases} 
+	    \frac{1}{q}\mbox{ if }x=\frac{p}{q}\mbox{ is a rational number}\\ 
+	    0\mbox{ if }x\mbox{ is irrational} 
+	\end{cases}
+\]
+%
+It is assumed here that $\mathop{gcd}(p,q) = 1$ and $q > 0$ so that the function is well-defined 
+and nonnegative. The syntax is:
+
+\begin{BDef}
+\Lcs{psThomae}\OptArgs\Largr{x0,x1}\Largb{points}
+\end{BDef}
+
+\verb+(x0,x1)+ is the plotted interval, both values must be grater zero and $x_1>x_0$. 
+The plotted number of points is the third parameter. 
+
+\begin{LTXexample}[width=6cm,wide=false]
+\psset{unit=4cm}
+\begin{pspicture}(-0.1,-0.2)(2.5,1.15)
+    \psaxes{->}(0,0)(2.5,1.1)
+    \psThomae[dotsize=2.5pt,linecolor=red](0,2){300}
+\end{pspicture}
+\end{LTXexample}
+
+
+\clearpage
+\section{\nxLcs{psplotImp} -- plotting implicit defined functions}
+For a given area, the macro calculates in a
+first step row by row for every pixel (1pt) the function $f(x,y)$ and checks for a
+changing of the value from $f(x,y)<0$ to $f(x,y)>0$ or vice versa. If this happens,
+then the pixel must be  part of the curve of the function $f(x,y)=0$. In a second step the same is
+done column by column. This may take some time because an area of $400\times 300$
+pixel needs $120$ thousand calculations of the function value. The user still defines
+this area in his own coordinates, the translation into pixel (pt) is done internally by the
+macro itself.
+The only special keyword is \Lkeyword{stepFactor} which is preset to 0.67 and controls the horizontal
+and vertical step width.
+
+\begin{BDef}
+\Lcs{psplotImp}\OptArgs\Largr{xMin,yMin}\Largr{xMax,yMax}\OptArg{PS code}\Largb{function f(x,y)}
+\end{BDef}
+
+The function must be of $f(x,y)=0$ and described in \PS code, or alternatively with
+the option \Lkeyword{algebraic} (\LPack{pstricks-add}) in an algebraic form. No other value names than $x$ and $y$
+are possible. In general, a starred \Lenv{pspicture*} environment maybe a good choice here.
+
+\medskip
+\noindent
+\begin{tabularx}{\linewidth}{!{\color{Orange!85!Red}\vrule width 5pt} X @{}} 
+The given area for \Lcs{psplotImp} should be \textbf{greater} than the given \Lenv{pspicture} area 
+(see examples).
+\end{tabularx}
+
+\begin{LTXexample}[preset=\centering]
+\begin{pspicture*}(-3,-3.2)(3.5,3.5)
+\psaxes{->}(0,0)(-3,-3)(3.2,3)%
+\psplotImp[linewidth=2pt,linecolor=red](-5,-2.1)(5,2.1){ x dup mul y dup mul add 4 sub }
+\uput[45](0,2){$x^2+y^2-4=0$}
+\psplotImp[linewidth=2pt,linecolor=blue,algebraic](-5,-3)(4,2.4){ (x+1)^2+y^2-4 }
+\end{pspicture*}
+\end{LTXexample}
+
+\begin{LTXexample}[preset=\centering]
+\begin{pspicture*}(-3,-2.2)(3.5,2.5)
+\psaxes{->}(0,0)(-3,-2)(3.2,2)%
+\psplotImp[linewidth=2pt,linecolor=blue](-5,-2.2)(5,2.4){%
+      /xqu x dup mul def
+      /yqu y dup mul def
+      xqu yqu add dup mul 2 dup add 2 mul xqu yqu sub mul sub }
+\uput*[0](-3,2){$\left(x^2+y^2\right)^2-8(x^2-y^2)=0$}
+\psplotImp[linewidth=1pt,linecolor=red,algebraic](-5,-2.2)(5,2.4){% Lemniskate a =2
+    (x^2+y^2)^2-4*(x^2-y^2) }
+\end{pspicture*}
+\end{LTXexample}
+
+\begin{LTXexample}[preset=\centering]
+\begin{pspicture*}(-3,-3.2)(3.5,3.5)
+\psaxes{->}(0,0)(-3,-3)(3.2,3)%
+\psplotImp[linewidth=2pt,linecolor=green](-6,-6)(4,2.4){%
+	 x 3 exp y 3 exp add 4 x y mul mul sub } 
+\uput*[45](-2.5,2){$\left(x^3+y^3\right)-4xy=0$}
+\end{pspicture*}
+\end{LTXexample}
+
+
+\begin{LTXexample}[preset=\centering]
+\begin{pspicture*}(-5,-3.2)(5.5,4.5)
+\psaxes{->}(0,0)(-5,-3)(5.2,4)%
+\psplotImp[algebraic,linecolor=red](-6,-4)(5,4){ y*cos(x*y)-0.2 }
+\psplotImp[algebraic,linecolor=blue](-6,-4)(5,4){ y*cos(x*y)-1.2 }
+\end{pspicture*}
+\end{LTXexample}
+
+
+
+Using the \Lkeyword{polarplot} option implies using the variables $r$ and $phi$ for describing
+the function, $y$ and $x$ are not respected in this case. Using the \Lkeyword{algebraic} option
+for polar plots are also possible (see next example).
+
+\begin{LTXexample}[preset=\centering]
+\begin{pspicture*}(-3,-2.5)(3.75,2.75)\psaxes{->}(0,0)(-3,-2.5)(3.2,2.5)%
+\psplotImp[linewidth=2pt,linecolor=cyan,polarplot](-6,-3)(4,2.4){ r 2 sub }% circle r=2
+\uput*[45](0.25,2){$f(r,\phi)=r-2=0$}
+\psplotImp[polarplot,algebraic](-6,-3)(4,2.4){ r-1 }% circle r=1
+\end{pspicture*}
+\end{LTXexample}
+
+\begin{LTXexample}[preset=\centering]
+\begin{pspicture*}(-5,-2.2)(5.5,3.5)
+\pscircle(0,0){1}% 
+\psaxes{->}(0,0)(-5,-2)(5.2,3)%
+\multido{\rA=0.01+0.2}{5}{%
+\psplotImp[linewidth=1pt,linecolor=blue,polarplot](-6,-6)(5,2.4){%
+	 r dup mul 1.0 r div sub phi sin dup mul mul \rA\space sub }}%
+\uput*[45](0,2){$f(r,\phi)=\left(r^2-\frac{1}{r}\right)\cdot\sin^2\phi=0$}
+\end{pspicture*}
+\end{LTXexample}
+
+\begin{LTXexample}[preset=\centering]
+\begin{pspicture*}(-4,-3.2)(4.5,4.5)
+\psaxes{->}(0,0)(-4,-3)(4.2,4)%
+\psplotImp[algebraic,polarplot,linecolor=red](-5,-4)(5,4){ r+cos(phi/r)-2 }
+\end{pspicture*}
+\end{LTXexample}
+
+
+The data of an implicit plot can be written into an external file for further purposes.
+Use the optional argument \Lkeyword[pstricks-add]{saveData} to write the $x|y$ values
+into the file \nxLcs{jobname.data}. The file name can be changed with the keyword {\Lkeyword[pstricks-add]{filename}.
+When running a \TeX\ file from within a GUI it may be possible that you get a writeaccess error from GhostScript, because
+it prevents writing into a file when called from another program. In this case run GhostScript on the \PS-output from
+the command line.
+
+\psset{mathLabel}
+\begin{LTXexample}[preset=\centering]
+\begin{pspicture*}(-3,-3)(3,3)
+  \psaxes[linewidth=0.25pt,
+   xlabelPos=top,
+   labelFontSize=\scriptscriptstyle,
+   labelsep=2pt,
+   ticksize=0.05]{<->}(0,0)(-2,-1.75)(2,2)[x,0][y,90]
+  \psplotImp[linecolor=red,linewidth=1pt,stepFactor=0.2,saveData,
+     algebraic](-2.5,-1.75)(2.5,2.5){x^2+(5*y/4-sqrt(abs(x)))^2-2.5}
+\end{pspicture*}
+\end{LTXexample}
+
+The values are saved pairwise in an array, e.\,g.:
+\begin{verbatim}
+...
+[
+-1.53237 0.695058
+-1.53237 1.29957
+]
+[
+-1.52534 0.666941
+-1.52534 1.32065
+]
+...
+\end{verbatim}
+
+In one array all $y$ values for the same $x$ value are stored.
+
+\iffalse
+The data then can be read back to get a continous line of the plot.
+
+\begin{LTXexample}[preset=\centering]
+\readdata[nStep=20]{\data}{\jobname.data}
+\begin{pspicture*}(-3,-3)(3,3)
+  \psaxes[linewidth=0.25pt,
+   xlabelPos=top,
+   labelFontSize=\scriptscriptstyle,
+   labelsep=2pt,
+   ticksize=0.05]{<->}(0,0)(-2,-1.75)(2,2)[x,0][y,90]
+  \pslistplot[linecolor=red,linewidth=1pt,plotstyle=curve]{\data}
+\end{pspicture*}
+\end{LTXexample}
+\fi
+
+
+\clearpage
+\section{\nxLcs{psVolume} -- Rotating functions around the x-axis}
+
+This macro shows the behaviour of a \Index{rotated function} around the x-axis.
+
+\begin{BDef}
+\Lcs{psVolume}\OptArgs\Largr{xMin,xMax}\Largb{steps}\Largb{function $f(x)$}
+\end{BDef}
+
+$f(x)$ has to be described as usual for the macro \Lcs{psplot}.
+
+\makebox[\linewidth]{%
+\begin{pspicture}(-0.5,-2)(5,2.5)
+\psaxes{->}(0,0)(0,-2)(3,2.5)
+\psVolume[fillstyle=solid,fillcolor=magenta!30](0,4){1}{x sqrt}
+\psline{->}(4,0)(5,0)
+\end{pspicture}
+%
+\begin{pspicture}(-0.5,-2)(5,2.5)
+\psaxes{->}(0,0)(0,-2)(3,2.5)
+\psVolume[fillstyle=solid,fillcolor=red!40](0,4){2}{x sqrt}
+\psline{->}(4,0)(5,0)
+\end{pspicture}
+%
+\begin{pspicture}(-0.5,-2)(5,2.5)
+\psaxes{->}(0,0)(0,-2)(3,2.5)
+\psVolume[fillstyle=solid,fillcolor=blue!40](0,4){4}{x sqrt}
+\psline{->}(4,0)(5,0)
+\end{pspicture}
+}
+
+\makebox[\linewidth]{%
+\begin{pspicture}(-0.5,-2)(5,2.5)
+\psaxes{->}(0,0)(0,-2)(3,2.5)
+\psVolume[fillstyle=solid,fillcolor=green!40](0,4){8}{x sqrt}
+\psline{->}(4,0)(5,0)
+\end{pspicture}
+%
+\begin{pspicture}(-0.5,-2)(5,2.5)
+\psaxes{->}(0,0)(0,-2)(3,2.5)
+\psVolume[fillstyle=solid,fillcolor=yellow!40](0,4){16}{x sqrt}
+\psline{->}(4,0)(5,0)
+\end{pspicture}
+%
+\begin{pspicture}(-0.5,-2)(5,2.5)
+\psaxes{->}(0,0)(0,-2)(3,2.5)
+\psVolume[fillstyle=solid,fillcolor=cyan!40](0,4){32}{x sqrt}
+\psline{->}(4,0)(5,0)
+\end{pspicture}
+}
+
+\begin{lstlisting} 
+\begin{pspicture}(-0.5,-2)(5,2.5)
+\psaxes{->}(0,0)(0,-2)(3,2.5)
+\psVolume[fillstyle=solid,fillcolor=magenta!30](0,4){1}{x sqrt}
+\psline{->}(4,0)(5,0)
+\end{pspicture}
+%
+\begin{pspicture}(-0.5,-2)(5,2.5)
+\psaxes{->}(0,0)(0,-2)(3,2.5)
+\psVolume[fillstyle=solid,fillcolor=red!40](0,4){2}{x sqrt}
+\psline{->}(4,0)(5,0)
+\end{pspicture}
+%
+\begin{pspicture}(-0.5,-2)(5,2.5)
+\psaxes{->}(0,0)(0,-2)(3,2.5)
+\psVolume[fillstyle=solid,fillcolor=blue!40](0,4){4}{x sqrt}
+\psline{->}(4,0)(5,0)
+\end{pspicture}
+
+\begin{pspicture}(-0.5,-2)(5,2.5)
+\psaxes{->}(0,0)(0,-2)(3,2.5)
+\psVolume[fillstyle=solid,fillcolor=green!40](0,4){8}{x sqrt}
+\psline{->}(4,0)(5,0)
+\end{pspicture}
+%
+\begin{pspicture}(-0.5,-2)(5,2.5)
+\psaxes{->}(0,0)(0,-2)(3,2.5)
+\psVolume[fillstyle=solid,fillcolor=yellow!40](0,4){16}{x sqrt}
+\psline{->}(4,0)(5,0)
+\end{pspicture}
+%
+\begin{pspicture}(-0.5,-2)(5,2.5)
+\psaxes{->}(0,0)(0,-2)(3,2.5)
+\psVolume[fillstyle=solid,fillcolor=cyan!40](0,4){32}{x sqrt}
+\psline{->}(4,0)(5,0)
+\end{pspicture}
+\end{lstlisting} 
+
+
+\psset{xunit=2}
+\makebox[\linewidth]{%
+\begin{pspicture}(-0.5,-4)(3,4)
+  \psaxes{->}(0,0)(0,-4)(3,4)
+  \psVolume[fillstyle=solid,fillcolor=cyan!40](0,1){4}{x}
+  \psVolume[fillstyle=solid,fillcolor=yellow!40](1,2){4}{x dup mul}
+  \psline(2,0)(3,0)
+\end{pspicture}
+%
+\begin{pspicture}(-0.5,-4)(3,4)
+  \psaxes{->}(0,0)(0,-4)(3,4)
+  \psVolume[fillstyle=solid,fillcolor=cyan!40](0,1){20}{x}
+  \psVolume[fillstyle=solid,fillcolor=yellow!40](1,2){20}{x dup mul}
+  \psline(2,0)(3,0)
+\end{pspicture}
+}
+\begin{lstlisting} 
+\psset{xunit=2}
+\begin{pspicture}(-0.5,-4)(3,4)
+  \psaxes{->}(0,0)(0,-4)(3,4)
+  \psVolume[fillstyle=solid,fillcolor=cyan!40](0,1){4}{x}
+  \psVolume[fillstyle=solid,fillcolor=yellow!40](1,2){4}{x dup mul}
+  \psline(2,0)(3,0)
+\end{pspicture}
+%
+\begin{pspicture}(-0.5,-4)(3,4)
+  \psaxes{->}(0,0)(0,-4)(3,4)
+  \psVolume[fillstyle=solid,fillcolor=cyan!40](0,1){20}{x}
+  \psVolume[fillstyle=solid,fillcolor=yellow!40](1,2){20}{x dup mul}
+  \psline(2,0)(3,0)
+\end{pspicture}
+\end{lstlisting} 
+
+\clearpage
+
+\section{Examples}
+
+\begin{LTXexample}[preset=\centering]
+\psset{xunit=0.5cm,yunit=20cm,arrowscale=1.5}
+\begin{pspicture}(-1,-0.1)(21,0.2)
+\psChiIIDist[linewidth=1pt,nue=5]{0.01}{19.5}
+\psaxes[labels=none,ticks=none]{->}(20,0.2)
+\pscustom[fillstyle=solid,fillcolor=red!30]{%
+  \psChiIIDist[linewidth=1pt,nue=5]{8}{19.5}%
+  \psline(20,0)(8,0)}
+\end{pspicture}
+\end{LTXexample}
+
+\clearpage
+\section{List of all optional arguments for \texttt{pst-func}}
+
+\xkvview{family=pst-func,columns={key,type,default}}
+
+
+
+
+\bgroup
+\raggedright
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{pst-func-doc}
+\egroup
+
+\printindex
+
+
+
+\end{document}
+
+

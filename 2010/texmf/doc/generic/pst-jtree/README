@@ -1,0 +1,27 @@
+
+
+The pst-jtree package is based on PSTricks and is intended to be
+used by linguists to typeset complex trees. The core files are 1)
+pst-jtree.tex, the Tex macro file, 2) pst-jtree.sty, a LaTex
+wrapper which calls pst-jtree.tex, and 3) pst-jtree-doc.pdf, the
+documentation.  The complete Tex source for the documentation is
+in the file pst-jtree-doc-source.zip.
+
+The file pst-jtree-examples.tex is a LaTex file which contains
+all the complex examples in the documentation, as well as many of
+the simpler ones.  It very simply formatted (no packages other
+than pstricks, pst-xkey, and pst-jtree are used) in order to
+facilitate user experimentation with pst-jtree typesetting.
+Provided that PSTricks and PST-XKey are installed, users should
+be able to run this file with little difficulty if PST-jTree is
+installed or simply if pst-jtree.tex and pst-jtree.sty are in the
+same directory that pst-jtree-examples.tex is in.
+pst-jtree-examples.pdf shows what the source produces.
+For those interested in tree formatting but not LaTex,
+pst-jtree-examples.tex can be very simply converted into a Tex
+file.
+
+This material is subject to the LaTeX Project Public License. See
+http://www.ctan.org/tex-archive/help/Catalogue/licenses.lppl.html
+for the details of that license.
+

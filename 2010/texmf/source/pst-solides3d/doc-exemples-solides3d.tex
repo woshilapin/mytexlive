@@ -1,0 +1,105 @@
+\documentclass{article}
+\usepackage[dvipsnames]{pstricks}
+\usepackage{pst-plot,pst-eucl}
+\usepackage{pst-solides3d}
+\let\PSTfileversion\fileversion
+\let\PSTfiledate\filedate
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{manfnt}
+\usepackage[garamond]{mathdesign}
+\renewcommand{\ttdefault}{lmtt}
+\usepackage{colortbl}
+\usepackage{multicol}
+\usepackage{url}
+\usepackage[a4paper,bottom=2.5cm,top=2cm,left=2cm]{geometry}
+\usepackage[colorlinks=true]{hyperref}
+\renewcommand{\ttdefault}{lmtt}
+\usepackage{showexpl}
+\usepackage[french]{babel}
+
+\newcommand\quadrillage{%
+\psset{linecolor=red,linewidth=0.5\pslinewidth}\red
+\multido{\ix=-4+1}{9}{%
+    \psPoint(\ix\space,4,-3){X1}
+    \psPoint(\ix\space,4 .2 add,-3){X2}
+    \psline(X1)(X2)
+    \uput[-120](X1){\small\ix}}
+\multido{\iy=-4+1}{9}{%
+    \psPoint(-4,\iy\space,-3){Y1}
+    \psPoint(-4 .2 sub,\iy\space,-3){Y2}
+    \psline(Y1)(Y2)
+    \uput[0](Y1){\small\iy}}
+\multido{\iz=-3+1}{7}{%
+    \psPoint(4,4,\iz\space){Z1}
+    \psPoint(4,4 .2 add,\iz\space){Z2}
+    \psline(Z1)(Z2)
+    \uput[l](Z1){\small\iz}}
+\psPoint(0,4 0.5 add,-3){X0}
+\uput[-120](X0){$x$}
+    \psPoint(-4 .5 sub,0,-3){Y0}
+\uput[0](Y0){$y$}}
+
+
+\def \datapath {%
+%   ../doc/}
+}
+
+\title{\texttt{pst-solides3d} :\\
+       Exemples d'utilisation
+        \\[0.5cm]
+{\normalsize v. \PSTfileversion\ (\PSTfiledate)}\\
+\input \datapath init3d }
+\author{Jean-Paul \textsc{Vignault}, Manuel \textsc{Luque}, Arnaud \textsc{Schmittbuhl}\\
+ \url{<jpv@melusine.eu.org>}, \url{<manuel.luque27@gmail.com>},
+       \url{<aschmittbuhl@libertysurf.fr>}
+\thanks{Avec la collaboration de :
+ Jürgen \textsc{Gilg}\url{<gilg@acrotex.net>},
+ Jean-Michel \textsc{Sarlat}\url{<jm.sarlat@gmail.com>}.}}
+\date{21 décembre 2\,007}
+\begin{document}
+\maketitle
+
+
+
+%\vfill
+%\newpage
+\tableofcontents
+\newpage
+
+\input \datapath ex-avion
+\input \datapath ex-borromee
+\input \datapath ex-chaine_olympique.tex
+\input \datapath ex-lettres3d.tex
+\input \datapath ex-coupe2.tex
+\input \datapath ex-square-ring2.tex
+\input \datapath ex-venus.tex
+\input \datapath ex-mobius2.tex
+\input \datapath ex-labrador.tex
+\input \datapath ex-double_helix_DNA.tex
+\newpage
+\input \datapath ex-linear-molecules.tex
+\input \datapath ex-agu.tex
+\input \datapath ex-chair.tex
+\input \datapath ex-coccinelle.tex
+\input \datapath ex-vw.tex
+\input \datapath ex-pomme.tex
+\input \datapath ex-shu.tex
+\input \datapath ex-sphere.tex
+\input \datapath ex-union_spheres.tex
+\input \datapath ex-tea.tex
+\input \datapath ex-clebsch.tex
+\input \datapath ex-nefertiti2.tex
+\input \datapath ex-champignons.tex  
+\input \datapath ex-demi_coquillage_ligne_niveau.tex
+\input \datapath ex-shell_rotations.tex
+\input \datapath ex-projection_ombre.tex
+\input \datapath ex-toupie.tex
+\input \datapath ex-corne.tex
+\input \datapath ex-trompette.tex
+\input \datapath ex-trompette2.tex
+\input \datapath ex-cercles_villarceau.tex
+\input \datapath ex-torecoupe.tex
+\input \datapath ex-torecoupe2.tex
+
+\end{document}

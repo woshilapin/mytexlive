@@ -1,0 +1,17 @@
+\section {Une sphère}
+\bgroup
+\definecolor{Tan}{cmyk}{0.14,0.42,0.56,0}
+
+\psset{lightsrc=100 0 0}
+
+\psset{SphericalCoor,viewpoint=100 0 0,Decran=100}
+\begin{center}
+\begin{pspicture}(-5,-5)(5,5)
+\psframe(-5,-5)(5,5)
+\psSolid[object=new,RotX=0,RotY=0,RotZ=0,hue=0 1 0.3 1,
+    sommets= (sommets_sphere.dat) run,unit=0.5,
+    faces={(faces_sphere.dat) run}]%
+\end{pspicture}
+\end{center}
+
+\egroup

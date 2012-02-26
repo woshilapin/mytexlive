@@ -1,0 +1,72 @@
+\section {Nommer un solide}
+
+Pour certaines utilisations, on a besoin de stocker un solide en
+mémoire afin de pouvoir y faire référence par la suite. Pour ce faire
+on dispose du booléen \verb+solidmemory+, qui permet la transmission
+d'une variable tout au long de la scène.
+
+En revanche, l'activation de ce booléen désactive le dessin immédiat
+des macros \verb+\psSolid+, \verb+\psSurface+ et
+\verb+\psProjection+. Pour obtenir ce dessin, on utilise la macro
+\verb+\composeSolid+ à la fin de la scène.
+
+Lorsque l'activation \verb+\psset{solidmemory}+ est faite, on peut
+alors utiliser l'option \verb+name+ de la macro \verb+\psSolid+.
+
+Dans l'exemple ci-dessous, on construit un solide coloré, que l'on
+sauvagarde sous le nom $A1$. On le dessine ensuite, après coup, avec
+le code jps \verb+A1 draw**+. 
+
+\`A noter que l'instruction \verb+linecolor=blue+ utilisée lors de la
+construction de notre cube n'a pas d'impact sur le dessin~: seule la
+structure du solide a été sauvegardé (sommets, faces, couleurs des
+faces), pas l'épaisseur de la ligne de tracé ou sa couleur ou la
+position de la source lumineuse. C'est au moment du dessin du solide
+considéré qu'il faut régler ces paramètres.
+
+\begin{multicols}{2}
+\bgroup
+\psset{unit=0.75}
+\psset{lightsrc=10 0 10,SphericalCoor=true,viewpoint=50 -20 10,Decran=50}
+\begin{pspicture*}(-4,-4)(5,4)
+\psframe(-4,-4)(5,4)
+\psset{solidmemory}
+\psSolid[object=cube,
+      linecolor=blue,
+      a=4,fillcolor=red!50,
+      ngrid=3,
+      action=none,
+      name=A1,
+      ](0,0,0)
+\codejps{
+   A1 draw**
+}
+\composeSolid
+\end{pspicture*}
+\egroup
+
+\columnbreak
+
+\begin{verbatim}
+\psset{solidmemory}
+\psSolid[object=cube,
+      linecolor=blue,
+      a=4,fillcolor=red!50,
+      ngrid=3,
+      action=none,
+      name=A1,
+      ](0,0,0)
+\codejps{
+   A1 draw**
+}
+\composeSolid
+\end{verbatim}
+\end{multicols}
+
+
+\llap {\dbend } Il nous reste encore du travail à faire sur ces
+macros, et elles ne permettent pour le moment pas de choisir des noms
+de variables quelconques, car ils risquent d'entrer en conflit avec
+des noms déjà existant. Merci d'utiliser des noms analogues à ceux
+utilisés dans la documentation.
+

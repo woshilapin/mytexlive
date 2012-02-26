@@ -1,0 +1,44 @@
+\section {Le code jps}
+
+Nous appelons \textsl {code jps\/} tout code postscript utilisant la
+bibliothèque développée pour le logiciel \textsl {jps2ps}.
+
+Le fichier \verb+solides.pro+ du package \verb+solides3d+
+est essentiellement constitué d'éléments en provenance de cette 
+bibliothèque, qui contient environ $4\, 500$~fonctions et
+procédures. 
+
+Son utilisation permet de disposer de commandes adaptées au dessin
+mathématique, sans qu'il soit besoin de tout reconstruire à partir des
+primitives \verb+moveto+, \verb+lineto+, \verb+curveto+, etc...
+
+Par exemple, on peut définir une fonction $F$ telle que $F(t) =
+(3\cos^3 t, 3\sin^3 t)$, et demander le tracé de la courbe avec la
+code jps \texttt{0 360 {F} CourbeR2}.
+
+Si on veut seulement le chemin de cette courbe, on utilise le code
+\verb+0 360 {F} CourbeR2_+, et si on veut le dépot sur la pile des
+points de la courbe, on utilise \texttt{0 360 {F} CourbeR2+}.
+
+Dans chacun des $3$~exemples ci-dessus, le nombre de points est
+déterminé par la variable globale \textsl {resolution}.
+
+Autrement dit, avec la fonction $F$ précitée et une résolution fixée à
+36, le code jps 
+\begin{verbatim}
+   0 350 {F} CourbeR2+
+\end{verbatim}
+est  équivalent au code postscript  
+\begin{verbatim}
+   0 10 350 {
+      /angle exch def
+      3 angle cos 3 exp mul
+      3 angle sin 3 exp mul
+   } for
+\end{verbatim}
+
+Nous n'avons pas encore développé la documentation sur la partie
+spécifique de cette bibliothèque embarquée dans le fichier
+\verb+solides.pro+. Pour le moment, nous renvoyons le lecteur
+intéressé au \textsl {Guide de l'utilisateur de jps2ps\/} disponible
+sur le site \url {melusine.eu.org/syracuse/bbgraf}.

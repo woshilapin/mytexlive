@@ -1,0 +1,42 @@
+Save the files pst-circ.sty|tex in a directory, which is part of your 
+local TeX tree. pst-circ.pro should be saved in ../texmf/dvips/pstricks/
+Then do not forget to run texhash to update this tree.
+pst-circ needs pst-node and pstricks, which should be part of your
+local TeX installation, otherwise get it from a CTAN server, f.ex.
+http://mirror.ctan.org
+
+
+Save the files
+
+pst-circ.sty 
+pst-circ.tex
+pst-circ.pro
+
+in any place, where latex or any other TeX program will find it.
+Do not forget to update your database, when installing this
+package the first time.
+
+pst-circ uses the extended version of the keyval package. So
+be sure that you 
+- have installed xkeyval with the special pst-xkey
+  (CTAN: tex-archive/macros/latex/contrib/xkeyval/)
+- do not load another package after pst-circ, which loads
+  the old keyval.sty or pst-key.tex
+
+
+If you like to get the documentation file in another format run 
+
+latex pst-circ-doc.tex
+bibtex pst-circ.doc
+latex pst-circ-doc.tex
+dvips pst-circ-doc.dvi
+
+to get a PostScript file. But pay attention, that the pst-circ
+files are saved in the above mentioned way, before you run
+latex on the documentation file.
+
+The intermediate DVI file works only with viewers which can 
+interprete the embedded PostScript code.
+
+For another PDF output read the Introduction from
+the documentation.

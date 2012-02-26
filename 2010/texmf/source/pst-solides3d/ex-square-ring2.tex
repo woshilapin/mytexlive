@@ -1,0 +1,21 @@
+\section {Anneaux carrés}
+\bgroup
+\begin{LTXexample}[width=8cm]
+\psset{viewpoint=20 10 30,Decran=10,lightsrc=10 20 20}
+\begin{pspicture}(-3,-4)(5,3)
+\psframe*[linecolor=gray!40](-3,-4)(5,3)
+\codejps{
+ /SquareRing {
+    [10 -1 10 1 8 1 8 -1] 4 newanneau
+    {0 0 45 rotateOpoint3d} solidtransform
+    } def
+SquareRing  dup (Apricot) outputcolors
+SquareRing
+         {0 90 0 rotateOpoint3d} solidtransform
+         {0 7.5 0 translatepoint3d} solidtransform
+         dup (SkyBlue) outputcolors
+     solidfuz
+    drawsolid**}
+\end{pspicture}
+\end{LTXexample}
+\egroup

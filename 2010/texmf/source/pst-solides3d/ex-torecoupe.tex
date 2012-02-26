@@ -1,0 +1,32 @@
+\section{Un tore coupé par un plan méridien}
+
+\bgroup
+
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-5,-5)(6,6)
+\psframe(-5,-5)(6,6)
+\psset[pst-solides3d]{viewpoint=20 20 20,SphericalCoor,Decran=20,lightsrc=10 15 0}
+% Parametric Surfaces
+\psSolid[object=grille,base=-3 3 -3 3,action=draw,linecolor=red](0,0,-2)
+\defFunction[algebraic]{torus}(u,v){(1+ 0.5*cos(u))*cos(v)}{(1+ 0.5*cos(u))*sin(v)}{0.5*sin(u)}
+\psSolid[object=surfaceparametree,linecolor={[cmyk]{1,0,1,0.5}},
+   base=0 2 pi mul pi 2 div neg pi 2 div,fillcolor=yellow!50,incolor=green!50,
+   function=torus,linewidth=0.5\pslinewidth,unit=2,RotZ=180,
+   ngrid=20]%
+\defFunction[algebraic]{cercleA}(t){0}{0.5*cos(t)+1}{0.5*sin(t)}
+\psSolid[object=courbe,
+    range=0 2 pi mul,unit=2,
+    linecolor=blue,
+    resolution=360,
+    function=cercleA]%
+\defFunction[algebraic]{cercleB}(t){0}{0.5*cos(t)-1}{0.5*sin(t)}
+\psSolid[object=courbe,
+    range=0 2 pi mul,unit=2,
+    linecolor=blue,
+    resolution=360,
+    function=cercleB]%
+\gridIIID[Zmin=-2,Zmax=2](-3,3)(-3,3)
+\end{pspicture}
+\end{LTXexample}
+
+\egroup

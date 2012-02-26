@@ -1,0 +1,21 @@
+%% Package `pst-labo.tex'
+
+This version of pst-labo needs the xkeyval package. Get it
+from CTAN if it is not part of your local TeX installation.
+
+Save the files
+
+pst-labo.sty   
+pst-labo.tex
+pst-laboObj.tex
+
+in any place, where TeX/LaTeX or any other TeX program will find it.
+Pay attention, that you cannot run the documentation with
+pdflatex, PSTricks is PosTScript Tricks.
+Use latex->dvips->ps2pdf
+
+
+pst-labo-docDE.ltx   german main doc file (preamble)
+pst-labo-docDE.tex   german documentation source
+pstlabo8-tab1.tex    list of parameter
+pst-labo-doc.bib     bibtex file

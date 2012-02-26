@@ -1,0 +1,452 @@
+\csname PSTRUBANSLoaded\endcsname
+\let\PSTRUBANSLoaded\endinput
+% Requires PSTricks, pst-xkey and pst-node packages
+\ifx\PSTSOLIDESIIIDLoaded\endinput\else\input pst-solides3d.tex\fi
+% JPV & ML & AS
+\def\fileversion{1.0}
+\def\filedate{2007/11/27}
+\message{`PSTRUBANS' v\fileversion, \filedate}
+
+
+\edef\PstAtCode{\the\catcode`\@} \catcode`\@=11\relax
+\pst@addfams{pst-solides3d}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Definition des differentes variables pour PSTricks
+%% ruban en helice circulaire
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\define@key[psset]{pst-solides3d}{dZ}{\def\pst@solides@dZ{#1}} % hauteur du ruban
+\psset[pst-solides3d]{dZ=0.5} % hauteur du ruban
+\define@key[psset]{pst-solides3d}{spires}{\def\pst@solides@spires{#1}} %
+\psset[pst-solides3d]{spires=10} % nombre de spires d'un ruban
+\define@key[psset]{pst-solides3d}{rubans}{\def\pst@solides@rubans{#1}} %
+\psset[pst-solides3d]{rubans=1} % nombre de spires d'un ruban
+
+\def\pshelices{\pst@object{pshelices}}
+%% usage : \pshelices[options]
+\def\pshelices@i{\@ifnextchar({\pshelices@ii}{\pshelices@ii(0,0,0)}}
+\def\pshelices@ii(#1,#2,#3){%
+  \pst@killglue%
+  \begingroup%
+  \use@par%
+\pstVerb{/dz \pst@solides@dZ\space def
+/initvar_SpiralHelice {
+         /rubans \pst@solides@rubans\space def
+         /phase {360 rubans div} bind def
+         /Rayon \pst@solides@R\space def
+         /Hauteur \pst@solides@h\space def
+         /PHI 0 def
+         /x0 Rayon PHI cos mul def
+         /y0 Rayon PHI sin mul def
+         /z0 0 def
+         /pulsation {6.28319 Hauteur div \pst@solides@spires\space mul} bind def
+         /x1 {Rayon t pulsation mul 57.295 mul PHI add cos mul} def
+         /y1 {Rayon t pulsation mul 57.295 mul PHI add sin mul} def
+         /z1 {t} def
+         /dA {Hauteur \pst@solides@resolution\space div} bind def
+         /tableau_des_sommets [
+             rubans {
+          dA dA Hauteur{/t exch def
+                     x0 y0 z0
+                     x1 y1 z1
+                     x1 y1 z1 dz add
+                     x0 y0 z0 dz add
+                     /x0 x1 def
+                     /y0 y1 def
+                     /z0 z1 def
+                  } for
+          /PHI PHI phase add def
+          /x0 Rayon PHI cos mul def
+          /y0 Rayon PHI sin mul def
+          /z0 0 def
+          } repeat
+                  ]
+           def
+         /Sommets {tableau_des_sommets aload pop} def
+         /NbrePoints tableau_des_sommets length 3 div cvi def
+        /Faces  {0 4 NbrePoints 4 sub {
+                 /Ni exch def
+               [ Ni Ni 1 add  Ni 2 add Ni 3 add]
+                                     } for
+              } def
+        /Faces_internes {0 4 NbrePoints 4 sub {
+                 /Ni exch def
+               [Ni 3 add Ni 2 add Ni 1 add Ni]
+                                     } for
+             } def
+} def
+}%
+\codejps{
+/ruban_exterieur {
+20 dict begin
+   initvar_SpiralHelice
+/S [
+  Sommets
+  ] def
+/F [
+  Faces
+  ] def
+  S F generesolid
+    RotX 0 ne RotY 0 ne or RotZ 0 ne or  {
+        dup {RotX RotY RotZ rotateOpoint3d} solidtransform
+               } if
+   #1 0 ne #2 0 ne or #3 0 ne or  {
+      dup {#1 #2 #3 translatepoint3d} solidtransform
+              } if
+   solidhue length 0 gt {
+      dup solidhue solidputhuecolors
+   } {
+      dup (fillcolor) outputcolors
+   } ifelse
+end
+} def
+%
+/ruban_interieur {
+20 dict begin
+   initvar_SpiralHelice
+/S [
+  Sommets
+  ] def
+/F [
+  Faces_internes
+  ] def
+  S F generesolid
+    RotX 0 ne RotY 0 ne or RotZ 0 ne or  {
+        dup {RotX RotY RotZ rotateOpoint3d} solidtransform
+               } if
+   #1 0 ne #2 0 ne or #3 0 ne or  {
+      dup {#1 #2 #3 translatepoint3d} solidtransform
+              } if
+  dup
+ (fillincolor) outputcolors
+end
+  } def
+ruban_interieur drawsolid**
+ruban_exterieur drawsolid**}%
+  \endgroup%
+  \ignorespaces%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% ruban en helice torique
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\define@key[psset]{pst-solides3d}{dPHI}{\def\pst@solides@dPHI{#1}} % hauteur du ruban
+\psset[pst-solides3d]{dPHI=5} % hauteur du ruban en degrés
+
+\def\psSpiralRing{\pst@object{psSpiralRing}}
+%% usage : \psSpiralRing[options]
+\def\psSpiralRing@i{\@ifnextchar({\psSpiralRing@ii}{\psSpiralRing@ii(0,0,0)}}
+\def\psSpiralRing@ii(#1,#2,#3){%
+%  \pst@killglue%
+  \begingroup%
+  \use@par%
+\pstVerb{%
+         /ri \pst@solides@rO\space def % rayon intérieur
+         /rm \pst@solides@rI\space def % rayon moyen
+         /spires \pst@solides@spires\space def
+         /dPHI \pst@solides@dPHI\space def
+/initvar_SpiralRing {
+         /THETA {PHI spires 2 mul mul} def
+         /x {rm ri THETA cos mul add PHI cos mul} def
+         /y {rm ri THETA cos mul add PHI sin mul} def
+         /z {ri THETA sin mul} def
+         /dt {360 \pst@solides@resolution\space div} bind def
+         /PHI 0 def
+         x y z /x0 x def /y0 y def /z0 z def % S1
+         /tableau_des_sommets [
+          0 dt 360 dt sub{/t exch def
+                    /PHI t def /THETA0 THETA def
+                     x y z
+                     /PHI t dt add def /THETA1 THETA def
+                     x y z /x1 x def /y1 y def /z1 z def % S2
+                     /PHI PHI dPHI add def
+                     rm ri THETA1 cos mul add PHI cos mul
+                     rm ri THETA1 cos mul add PHI sin mul
+                     ri THETA1 sin mul                 % S3
+                     /PHI PHI dt sub def
+                     rm ri THETA0 cos mul add PHI cos mul
+                     rm ri THETA0 cos mul add PHI sin mul
+                     ri THETA0 sin mul  % S4
+                  } for
+                  ]
+           def
+         /Sommets {tableau_des_sommets aload pop} def
+         /NbrePoints tableau_des_sommets length 3 div cvi def
+        /Faces  {0 4 NbrePoints 4 sub {
+                 /Ni exch def
+               [ Ni Ni 1 add  Ni 2 add Ni 3 add]
+                                     } for
+              } def
+        /Faces_internes {0 4 NbrePoints 4 sub {
+                 /Ni exch def
+               [Ni 3 add Ni 2 add Ni 1 add Ni]
+                                     } for
+             } def
+} def
+}%
+\codejps{
+/ruban_exterieur {
+20 dict begin
+   initvar_SpiralRing
+/S [
+  Sommets
+  ] def
+/F [
+  Faces
+  ] def
+  S F generesolid
+    RotX 0 ne RotY 0 ne or RotZ 0 ne or  {
+        dup {RotX RotY RotZ rotateOpoint3d} solidtransform
+               } if
+   #1 0 ne #2 0 ne or #3 0 ne or  {
+      dup {#1 #2 #3 translatepoint3d} solidtransform
+              } if
+   solidhue length 0 gt {
+      dup solidhue solidputhuecolors
+   } {
+      dup (fillcolor) outputcolors
+   } ifelse
+end
+} def
+%
+/ruban_interieur {
+20 dict begin
+   initvar_SpiralRing
+/S [
+  Sommets
+  ] def
+/F [
+  Faces_internes
+  ] def
+  S F generesolid
+    RotX 0 ne RotY 0 ne or RotZ 0 ne or  {
+        dup {RotX RotY RotZ rotateOpoint3d} solidtransform
+               } if
+   #1 0 ne #2 0 ne or #3 0 ne or  {
+      dup {#1 #2 #3 translatepoint3d} solidtransform
+              } if
+  dup
+ (fillincolor) outputcolors
+end
+  } def
+ruban_interieur drawsolid**
+ruban_exterieur drawsolid**}%
+  \endgroup%
+  \ignorespaces%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% ruban en helice spherique
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\def\psSphericalSpiral{\pst@object{psSphericalSpiral}}
+%% usage : \psSphericalSpiral[options]
+\def\psSphericalSpiral@i{\@ifnextchar({\psSphericalSpiral@ii}{\psSphericalSpiral@ii(0,0,0)}}
+\def\psSphericalSpiral@ii(#1,#2,#3){%
+  \pst@killglue%
+  \begingroup%
+  \use@par%
+\pstVerb{%
+/initvar_SpiralSpherical {
+         /Rayon \pst@solides@R\space def
+         /spires \pst@solides@spires\space def
+         /dPHI \pst@solides@dPHI\space def
+         /THETA {PHI spires 2 mul mul} def
+         /x {Rayon THETA cos mul PHI cos mul} def
+         /y {Rayon THETA sin mul PHI cos mul} def
+         /z {Rayon PHI sin mul} def
+         /dt {180 \pst@solides@resolution\space div} bind def
+         /PHI -90 def
+         x y z /x0 x def /y0 y def /z0 z def % S1
+         /tableau_des_sommets [
+          -90 dt 90 dPHI sub{/t exch def
+                    /PHI t def /THETA0 THETA def
+                     x y z
+                     /PHI t dt add def /THETA1 THETA def
+                     x y z /x1 x def /y1 y def /z1 z def % S2
+                     /PHI PHI dPHI add def
+%                     x1 y1 z                             % S3
+                     Rayon THETA1 cos mul PHI cos mul
+                     Rayon THETA1 sin mul PHI cos mul
+                     z
+                     /PHI PHI dt sub def
+                     Rayon THETA0 cos mul PHI cos mul
+                     Rayon THETA0 sin mul PHI cos mul
+                     z  % S4
+                  } for
+                  ]
+           def
+         /Sommets {tableau_des_sommets aload pop} def
+         /NbrePoints tableau_des_sommets length 3 div cvi def
+        /Faces  {0 4 NbrePoints 4 sub {
+                 /Ni exch def
+               [ Ni Ni 1 add  Ni 2 add Ni 3 add]
+                                     } for
+              } def
+        /Faces_internes {0 4 NbrePoints 4 sub {
+                 /Ni exch def
+               [Ni 3 add Ni 2 add Ni 1 add Ni]
+                                     } for
+             } def
+} def
+}%
+\codejps{
+/ruban_exterieur {
+20 dict begin
+   initvar_SpiralSpherical
+/S [
+  Sommets
+  ] def
+/F [
+  Faces
+  ] def
+  S F generesolid
+   RotX 0 ne RotY 0 ne or RotZ 0 ne or  {
+      dup {RotX RotY RotZ rotateOpoint3d} solidtransform
+   } if
+   #1 0 ne #2 0 ne or #3 0 ne or  {
+      dup {#1 #2 #3 translatepoint3d} solidtransform
+   } if
+   solidhue length 0 gt {
+      dup solidhue solidputhuecolors
+   } {
+      dup (fillcolor) outputcolors
+   } ifelse
+ end
+} def
+%
+/ruban_interieur {
+20 dict begin
+   initvar_SpiralSpherical
+/S [
+  Sommets
+  ] def
+/F [
+  Faces_internes
+  ] def
+  S F generesolid
+   RotX 0 ne RotY 0 ne or RotZ 0 ne or  {
+      dup {RotX RotY RotZ rotateOpoint3d} solidtransform
+   } if
+   #1 0 ne #2 0 ne or #3 0 ne or  {
+      dup {#1 #2 #3 translatepoint3d} solidtransform
+   } if
+  dup
+ (fillincolor) outputcolors
+ end
+  } def
+ruban_interieur drawsolid**
+ruban_exterieur drawsolid**}%
+  \endgroup%
+  \ignorespaces%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% ruban en helice sur un paraboloide
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\define@key[psset]{pst-solides3d}{p}{\def\pst@solides@p{#1}} % parametre de la parabole
+\psset[pst-solides3d]{p=2}
+
+\def\psSpiralParaboloid{\pst@object{psSpiralParaboloid}}
+%% usage : \psSpiralParaboloid[options]
+\def\psSpiralParaboloid@i{\@ifnextchar({\psSpiralParaboloid@ii}{\psSpiralParaboloid@ii(0,0,0)}}
+\def\psSpiralParaboloid@ii(#1,#2,#3){%
+%  \pst@killglue%
+  \begingroup%
+  \use@par%
+\pstVerb{%
+         /dz@ \pst@solides@dZ\space def % hauteur du ruban
+         /p@ {\pst@solides@p\space 2 mul} bind def % paramètre de la parabole x 2
+         /Hauteur \pst@solides@h\space def
+/initvar_SpiralParaboloid {
+         /pulsation {6.28319 Hauteur div \pst@solides@spires\space mul} bind def
+         /x {z p@ mul sqrt t pulsation mul 57.295 mul cos mul} def
+         /y {z p@ mul sqrt t pulsation mul 57.295 mul sin mul} def
+         /dH {Hauteur \pst@solides@resolution\space div} bind def
+         /tableau_des_sommets [
+          0 dH Hauteur {/H exch def
+                        /z H def
+                        /t H def
+                     x y z   % S1
+                       /t t dH add def
+                       /z t def
+                     x y z   % S2
+                     /z z dz@ add def
+                     x y z  % S3
+                       /z H dz@ add def
+                       /t H def
+                     x y z   % S4
+                  } for
+                  ]
+           def
+         /Sommets {tableau_des_sommets aload pop} def
+         /NbrePoints tableau_des_sommets length 3 div cvi def
+        /Faces  {0 4 NbrePoints 4 sub {
+                 /Ni exch def
+               [ Ni Ni 1 add  Ni 2 add Ni 3 add]
+                                     } for
+              } def
+        /Faces_internes {0 4 NbrePoints 4 sub {
+                 /Ni exch def
+               [Ni 3 add Ni 2 add Ni 1 add Ni]
+                                     } for
+             } def
+} def
+}%
+\codejps{
+/ruban_exterieur {
+20 dict begin
+   initvar_SpiralParaboloid
+   /S [
+     Sommets
+   ] def
+   /F [
+     Faces
+   ] def
+   S F generesolid
+   RotX 0 ne RotY 0 ne or RotZ 0 ne or  {
+      dup {RotX RotY RotZ rotateOpoint3d} solidtransform
+   } if
+   #1 0 ne #2 0 ne or #3 0 ne or  {
+      dup {#1 #2 #3 translatepoint3d} solidtransform
+   } if
+   solidhue length 0 gt {
+      dup solidhue solidputhuecolors
+   } {
+      dup (fillcolor) outputcolors
+   } ifelse
+end
+} def
+%
+/ruban_interieur {
+20 dict begin
+   initvar_SpiralParaboloid
+   /S [
+     Sommets
+   ] def
+   /F [
+     Faces_internes
+   ] def
+   S F generesolid
+   RotX RotY RotZ add add abs 0 gt {
+        dup {RotX RotY RotZ rotateOpoint3d} solidtransform
+   } if
+   #1 #2 #3 add add abs 0 gt {
+      dup {#1 #2 #3 translatepoint3d} solidtransform
+   } if
+   dup
+  (fillincolor) outputcolors
+end
+} def
+ruban_interieur drawsolid**
+ruban_exterieur drawsolid**}%
+  \endgroup%
+  \ignorespaces%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\catcode`\@=\PstAtCode\relax
+\endinput

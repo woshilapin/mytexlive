@@ -1,0 +1,144 @@
+\section {Numéroter les facettes}
+
+L'option \verb+numfaces+ permet d'afficher sur chaque face son indice
+rorrespondant. 
+\begin{itemize}
+  \item \texttt{[numfaces=all]} affiche tous les numéros de faces ;
+  \item \texttt{[numefaces=0 1 2 3]} affiche tous les numéros de faces
+  \texttt{[0,1,2 et 3]} ; 
+\end{itemize}
+L'option \verb+fontsize+ permet de fixer la taille de la police
+utilisée.
+Enfin, le booléen \verb+visibility+ permet de spécifier si on doit ou
+non afficher le numéro de face si la face n'est pas visible. Par
+défaut, on a \verb+visibility=true+, et on tient compte de la
+visibilité (ie. numéro pas affiché si la face n'est pas visible)
+
+\begin{multicols}{2}
+\psset{unit=1}
+\psset{SphericalCoor,viewpoint=50 20 30,Decran=50}
+\begin{pspicture}(-4,-3)(3,1.5)
+\psframe(-4,-3)(3,1.5)
+\psSolid[object=grille,
+   base=0 4 -2 2,
+   numfaces=2 6 7 10,
+   linecolor=gray](0,0,0)
+\axesIIID(0,0,0)(4,2,1)
+\end{pspicture}
+
+\columnbreak
+
+\begin{verbatim}
+\psSolid[object=grille,
+   base=0 4 -2 2,
+   numfaces=2 6 7 10,
+   linecolor=gray](0,0,0)
+\end{verbatim}
+\end{multicols}
+
+%% \begin{multicols}{2}
+%% 
+%% \bgroup
+%% \psset{SphericalCoor=true,viewpoint=50 20 30}
+%% \begin{center}
+%% \psset{unit=0.75}
+%% \psset{lightsrc=30 -20 10,SphericalCoor=true,viewpoint=50 -20 10,Decran=50}
+%% \begin{pspicture*}(-5,-4)(6,6)
+%% \psframe(-5,-4)(6,6)
+%% \axesIIID(0,0,0)(4,4,4)
+%% \psSolid[object=cube,
+%%    RotY=90,
+%%    ngrid=4,
+%%    numfaces=2 6 10,
+%%    action=draw**](0,0,0)
+%% \end{pspicture*}
+%% \end{center}
+%% \egroup
+%% 
+%% \columnbreak
+%% 
+%% \begin{verbatim}
+%% \axesIIID(0,0,0)(4,4,4)
+%% \psSolid[object=cube,
+%%    RotY=90,
+%%    ngrid=4,
+%%    numfaces=2 6 10,
+%%    action=draw**](0,0,0)
+%% \end{verbatim}
+%% 
+%% \end{multicols}
+
+\begin{multicols}{2}
+\bgroup
+\psset{unit=0.75}
+\psset{SphericalCoor=true,viewpoint=50 -20 10,Decran=50}
+\begin{pspicture*}(-4,-3)(4,3)
+\psframe(-4,-3)(4,3)
+\psSolid[object=cube,
+   RotY=90,
+   ngrid=4,
+   fontsize=15,
+   action=draw,
+   numfaces=all](0,0,0)
+\end{pspicture*}
+\egroup
+\columnbreak
+
+\begin{verbatim}
+\psSolid[object=cube,
+   RotY=90,
+   ngrid=4,
+   fontsize=15,
+   action=draw,
+   numfaces=all](0,0,0)
+\end{verbatim}
+\end{multicols}
+
+%%% exemple 3
+
+Les options de \verb+\psSolid+ acceptent des commandes postcript, et
+en particulier les boucles \verb+for+. 
+
+Ainsi l'instruction \verb+[numfaces=0 1 5 {} for]+ demande la
+numérotation de toutes les faces dont l'indice est compris entre $0$
+et $5$. L'instruction \verb+[numfaces=8 3 23 {} for]+ demande la
+numérotation d'une face sur $3$ entre les indices $8$ et $23$.
+
+\begin{multicols}{2}
+\bgroup
+\psset{unit=0.75}
+\psset{SphericalCoor=true,viewpoint=50 -20 10,Decran=50}
+\begin{pspicture*}(-4,-3)(4,3)
+\psframe(-4,-3)(4,3)
+\axesIIID(0,0,0)(8,3,2)
+\psSolid[object=grille,
+   RotY=90,
+   RotZ=180,
+   ngrid=1.,
+   fontsize=15,
+   numfaces=
+      0 1 5 {} for
+      8 3 23 {} for,
+   base=-2 2 -3 3,
+   visibility=false,
+   action=draw](0,0,0)
+\end{pspicture*}
+\egroup
+
+\columnbreak
+
+\begin{verbatim}
+\axesIIID(0,0,0)(8,3,2)
+\psSolid[object=grille,
+   RotY=90,
+   RotZ=180,
+   ngrid=1.,
+   fontsize=15,
+   numfaces=
+      0 1 5 {} for
+      8 3 23 {} for,
+   base=-2 2 -3 3,
+   visibility=false,
+   action=draw](0,0,0)
+\end{verbatim}
+\end{multicols}

@@ -1,0 +1,19 @@
+pst-electricfield.sty --------
+2010-05-28  - first version
+
+
+pst-electricfield.tex --------
+0.14  2011-03-26  - allow scaling of the arrows
+0.13  2010-06-09  - changes to the keyword setting
+0.12  2010-06-08  - add posArrow and radius for the charges
+0.11  2010-06-08  - change macro name
+0.10  2010-05-28  - first version
+
+
+pst-electricfield.pro --------
+0.05  2011-03-26  - changes to the Radius and to /Func
+                    allow scaling of the arrows
+0.04  2010-06-08  - allow relative/absolute radii for the charges (hv)
+0.03  2010-06-08  - add test for plotCharge (hv)
+0.02  2010-06-07  - fix bug with /fleche (hv)
+0.01  2010-05-28  - first version

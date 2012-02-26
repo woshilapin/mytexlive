@@ -1,0 +1,85 @@
+\section {Ruban de Möbius}
+\bgroup
+\begin{center}
+\begin{pspicture}(-6,-3)(6,3)
+%%\psset{unit=7.5}
+\defFunction{mobius}(u,v){2 u v Cos mul add 2 v mul Cos mul}{2 u v Cos mul add 2 v mul Sin mul}{u v Sin mul}
+%\defFunction[algebraic]{mobius}(u,v){(2+u*cos(v))*cos(2*v)}{(2+u*cos(v))*sin(2*v)}{u*sin(v)}
+\psframe*[linecolor=green!50](-6,-3)(6,3)
+\psset[pst-solides3d]{viewpoint=20 10 5,Decran=40,lightsrc=20 10 10}
+\psSolid[object=parallelepiped,a=5,b=5,c=0.5](0,0,-0.5)
+\psSolid[object=grille,base=-2.5 2.5 -2.5 2.5,ngrid=0.25,linewidth=0.5\pslinewidth](0,0,-0.25)
+\psSolid[object=surfaceparametree,linewidth=0.75\pslinewidth,
+   base=0.2 0.25 0 pi,linewidth=0.1,
+   function=mobius,
+   ngrid=.025]%
+\psSolid[object=surfaceparametree,linewidth=0.75\pslinewidth,
+   base=-0.25 -0.2 0 pi,linewidth=0.1,
+   function=mobius,
+   ngrid=.025]%
+\psSolid[object=surfaceparametree,linewidth=0.5\pslinewidth,
+   base=-0.25 0.25 0 pi,fillcolor=yellow!50,incolor=yellow!50,
+   function=mobius,
+   ngrid=.05]%
+\psSolid[object=parallelepiped,a=4.5,b=4.5,c=0.5,action=draw](0,0,0)
+\psProjection[object=texte,
+   fontsize=15,
+   text={ruban de Möbius },
+   normal=1 0 0 90](2.5,0,-0.5)
+\psProjection[object=texte,
+   fontsize=15,
+   text={pst-solides3d},
+   normal=0 1 0 180](0,2.5,-0.5)
+\psPoint(2.25,0,0){X1}\psPoint(3.5,0,0){X2}
+\psPoint(0,2.25,0){Y1}\psPoint(0,3.5,0){Y2}
+\psPoint(0,0,0){Z1}\psPoint(0,0,1.5){Z2}
+\psline{->}(X1)(X2)\uput[dl](X2){$x$}
+\psline{->}(Y1)(Y2)\uput[dr](Y2){$y$}
+\psline{->}(Z1)(Z2)\uput[r](Z2){$z$}
+\end{pspicture}
+\end{center}
+%
+\begin{center}
+\begin{pspicture}(-6,-3)(6,4)
+\psframe*[linecolor=blue!20](-6,-3)(6,3)
+\psset[pst-solides3d]{viewpoint=10 20 5,Decran=40,lightsrc=10 20 5}
+\psSolid[object=parallelepiped,a=5,b=5,c=0.5](0,0,-0.5)
+\psSolid[object=grille,base=-2.5 2.5 -2.5 2.5,ngrid=0.25,linewidth=0.5\pslinewidth](0,0,-0.25)
+\defFunction[algebraic]{mobius1}(t){(2+0.25*cos(t))*cos(2*t)}{(2+0.25*cos(t))*sin(2*t)}{0.25*sin(t)}
+\psSolid[object=courbe,
+        linewidth=0.1,
+        resolution=360,range=0 pi,
+        normal=0 0 1,
+        function=mobius1]%
+\defFunction[algebraic]{mobius2}(t){(2-0.25*cos(t))*cos(2*t)}{(2-0.25*cos(t))*sin(2*t)}{-0.25*sin(t)}
+\psSolid[object=courbe,
+        linewidth=0.1,
+        resolution=360,range=0 pi,
+        normal=0 0 1,
+        function=mobius2]%
+% Parametric Surfaces
+\defFunction{mobius}(u,v){2 u v Cos mul add 2 v mul Cos mul}{2 u v Cos mul add 2 v mul Sin mul}{u v Sin mul}
+\psSolid[object=surfaceparametree,linewidth=0.5\pslinewidth,
+   base=-0.25 0.25 0 pi,fillcolor=cyan!50,incolor=red!50,
+   function=mobius,
+   ngrid=.05]%
+\psSolid[object=parallelepiped,a=4.5,b=4.5,c=0.5,action=draw](0,0,0)
+\psProjection[object=texte,
+   fontsize=15,
+   text={ruban de Möbius },
+   normal=1 0 0 90](2.5,0,-0.5)
+\psProjection[object=texte,
+   fontsize=15,
+   text={pst-solides3d},
+   normal=0 1 0 180](0,2.5,-0.5)
+\psPoint(2.25,0,0){X1}\psPoint(3.5,0,0){X2}
+\psPoint(0,2.25,0){Y1}\psPoint(0,3.5,0){Y2}
+\psPoint(0,0,0){Z1}\psPoint(0,0,1.5){Z2}
+\psline{->}(X1)(X2)\uput[dl](X2){$x$}
+\psline{->}(Y1)(Y2)\uput[dr](Y2){$y$}
+\psline{->}(Z1)(Z2)\uput[r](Z2){$z$}
+\end{pspicture}
+\end{center}
+
+
+\egroup

@@ -1,0 +1,33 @@
+pst-coil.sty --------
+ 2010-02-01  message for loading the pro file
+
+pst-coil.tex --------
+v. 1.06  2011-09-18  - fix bug with \pszigzag
+v. 1.05  2011-07-12  - added optional argument bow for circular
+                       zigzags
+v. 1.04  2010-02-02  - allow an absolute value for the period
+                       with a rounding or truncating option
+v. 1.03  2010-02-01  - allow an absolute value for the period
+                       with a rounding option
+v. 1.02  2010-01-31  - allow an absolute value for the period
+                     - rename option frequency to period
+v. 1.01  2010-01-30  added \pcsin and ncsin for trigonometrial
+                     functions which connect two nodes
+v. 1.00  2006-08-11  using pst-xkey for the key handling
+
+pst-coil.pro --------
+v. 1.05  2011-07-12  - added circular function
+v. 1.04  2010-02-02  - allow an absolute value for the period
+                       with a rounding or truncating option
+v. 1.03  2010-02-01  - allow an absolute value for the period
+                       with a rounding option
+v. 1.02  2010-01-31  - allow an absolute value for the period
+                     - rename option frequency to period
+v. 1.01  2010-01-30  added subroutine Sin for trigonometrial
+                     functions which connect two nodes
+v. 1.00  2006-11-05  small tweaks to the code
+
+
+pst-coil-doc.tex --------
+v. 1.01  2010-01-30  update
+v. 1.00  2006-08-11  new documentation

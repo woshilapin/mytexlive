@@ -1,0 +1,333 @@
+%% $Id: pst-electricfield-docFR.tex 336 2010-05-29 18:38:59Z herbert $
+\documentclass[11pt,english,english,BCOR10mm,DIV12,bibliography=totoc,parskip=false,smallheadings
+    headexclude,footexclude,oneside]{pst-doc}
+\usepackage[latin1]{inputenc}
+\usepackage{pst-electricfield}
+\let\pstEFfv\fileversion
+
+\usepackage{pst-func}
+\usepackage{pst-exa}% only when running pst2pdf
+%\let\PSTexample\LTXexample        % when not running pst2pdf
+%\let\endPSTexample\endLTXexample  % when not running pst2pdf
+\usepackage{esint}
+
+
+\lstset{pos=t,language=PSTricks,
+    morekeywords={psElectricfield,psEquipotential},basicstyle=\footnotesize\ttfamily}
+\newcommand\Cadre[1]{\psframebox[fillstyle=solid,fillcolor=black,linestyle=none,framesep=0]{#1}}
+%
+\begin{document}
+
+\title{\texttt{pst-electricfield}}
+\subtitle{Electric field lines of charges; v.\pstEFfv}
+\author{Juergen Gilg\\ Manuel Luque\\Patrice Megret\\Herbert Vo\ss}
+%\docauthor{Juergen Gilg\\Manuel Luque\\Herbert Vo\ss}
+\date{\today}
+\maketitle
+
+
+\section{Method based on electric flux (Patrice Mégret)}
+
+Equipotential surfaces and E-field lines can be drawn by using the package \LPack{pst-func} and the command \Lcs{psplotImp}\verb+[options](x1,y1)(x2,y2)+. 
+
+The following explanations describe the theory on which this is based.
+
+
+Gauss theorem states that the electric flux across a closed surface $S$ and defined by:
+\begin{equation}\label{pm-eq-a}
+\psi = \oiint\limits_S \vec{D} \cdot \vec{u}_n \mathrm{d} S = Q
+\end{equation} 
+is equal to the real charge $Q$ inside $S$. As a consequence, in place where there is no charge ($Q=0$), the electric flux is a conservative quantity.
+
+
+A tube of flux is a tube constructed on D-field lines and without charge, the flux going inside any cross-section of the tube is equal to the flux going outside any cross-section of the tube. This means that, by following a tube of a given flux, we automatically follow a D-field line. By using this technique, it is thus possible to obtain a scalar equation that describes the D-field lines. This equation is an implicit equation and can be derived for systems with simple geometrical properties.
+
+Here the analysis will be limited to point charges and the D-field lines will thus be identical to the E-field lines as there is no electric polarization.
+ 
+
+For a point charge $q$, located at the origin of the coordinate system, the electric field and the potential are given by:
+\begin{equation}\label{pm-eq-b}
+\vec{E} = \frac{1}{4 \pi \varepsilon_0 \varepsilon_r} q \frac{\vec{r}}{|\vec{r}|^3}
+\end{equation}
+\begin{equation}\label{pm-eq-c}
+V = \frac{1}{4 \pi \varepsilon_0 \varepsilon_r} \frac{q}{r} 
+\end{equation}
+
+The flux across a portion of a sphere of surface $S$ and with an aperture angle  $\theta$, is simply given by:
+\begin{equation}\label{pm-eq-d}
+\psi = \varepsilon_0 \varepsilon_r E S = \frac{1}{2} q (1 -\cos\theta) 
+\end{equation} 
+because $S= 2\pi r^2 (1 - \cos\theta)$ and from (\ref{pm-eq-a}) $4 \pi r^2 \varepsilon_0 \varepsilon_r E =q$.
+
+\begin{center}
+\begin{pspicture}(-3,-3)(3,3)
+%\psgrid
+\psdot[dotscale=2](0,0)
+\uput[-135](0,0){$q$}
+\psaxes[labels=none,ticks=none]{->}(0,0)(-2.5,-2.5)(2.5,2.5)[$x$,-90][$y$,0]
+\pswedge(0,0){2}{-30}{30}
+\psarc{->}(0,0){1}{0}{30}
+\rput(1.2,0.2){$\theta$}
+\rput(2.2,0.7){$S$}
+\end{pspicture}
+\end{center}
+
+To find the implicit expression of the E-field lines, it is sufficient to express the flux invariance:
+\begin{equation}\label{pm-eq-e}
+\psi(x,y) = \frac{1}{2} q (1 -\cos\theta) = \mathrm{cte}
+\end{equation}
+This relation simply shows that E-field lines correspond to $\theta=\mathrm{cte}$, so that they are clearly radial lines.
+ 
+For the E-field lines in the $xy$ plane, expression (\ref{pm-eq-e}) in Cartesian coordinates is:
+\begin{equation}\label{pm-eq-f}
+\frac{x}{\sqrt{x^2+y^2}} = \mathrm{cte}
+\end{equation}
+
+For the equipotential surface, relation (\ref{pm-eq-c}) is already in implicit form, therefor $V=\mathrm{cte}$ is the wanted equation:
+\begin{equation}\label{pm-eq-g}
+\frac{1}{\sqrt{x^2+y^2}} = \mathrm{cte}
+\end{equation}
+
+The following graph shows the field and equipotential for this point charge obtained by implicit plotting of functions (\ref{pm-eq-f}) and (\ref{pm-eq-g}). It is clear that the E-field lines are radial ones and the equipotential surfaces cross the $xy$ plane along circles orthogonal to the E-field lines. 
+\begin{center}
+\begin{pspicture*}(-5,-5)(5,5)
+\psframe*[linecolor=green!20](-5,-5)(5,5)
+\psgrid[subgriddiv=0,gridcolor=lightgray,griddots=10]
+% \psElectricfield[Q={[1 0 0]}]
+% \psEquipotential[Q={[1 0 0]}](-5,-5)(5,5)
+\multido{\r=-1+0.1}{20}{%
+\psplotImp[linestyle=solid,linecolor=blue](-6,-6)(6,6){%
+x y 2 exp x 2 exp add sqrt div \r \space sub}}
+\multido{\r=0.0+0.1}{10}{%
+\psplotImp[linestyle=solid,linecolor=red](-6,-6)(6,6){%
+x 2 exp y 2 exp add sqrt 1 exch div \r \space sub}}
+\end{pspicture*}
+\end{center}
+
+
+\begin{verbatim}
+%% E-field lines
+\multido{\r=-1+0.1}{20}{%
+\psplotImp[linestyle=solid,linecolor=blue](-6,-6)(6,6){%
+x y 2 exp x 2 exp add sqrt div \r \space sub}}
+
+%% equipotential
+\multido{\r=0.0+0.1}{10}{%
+\psplotImp[linestyle=solid,linecolor=red](-6,-6)(6,6){%
+x 2 exp y 2 exp add sqrt 1 exch div \r \space sub}}
+\end{verbatim}
+
+
+
+Let's now generalize to point charges distributed arbitrarily along a \textbf{line}.  The charge $i$ is $q_i$ and is placed at $(x_i,0)$. 
+\begin{center}
+\begin{pspicture}(0,-3)(12,3)
+%\psgrid
+\psset{dotscale=2}
+\dotnode(0,0){NA}\nput{-45}{NA}{$q_1$}
+\dotnode(2,0){NB}\nput{-90}{NB}{$q_2$}
+\dotnode(5,0){NC}\nput{-90}{NC}{$q_n$}
+\dotnode[linecolor=red](4,2){ND}\nput{90}{ND}{$P(x,y)$}
+\ncline{NA}{ND}\naput{$r_1,\theta_1$}
+\ncline{NB}{ND}\nbput{$r_2,\theta_2$}
+\ncline{NC}{ND}\nbput{$r_n,\theta_n$}
+\psaxes[labels=none,ticks=none]{->}(0,0)(0,-2.5)(11,2.5)[$x$,-90][$y$,0]
+\psarc{->}(5,0){0.7}{0}{116.5}
+\rput(6,0.5){$\theta_n$}
+\dotnode[linecolor=blue](4,-2){NE}
+\nccurve[ncurv=2,linecolor=green!40!black]{ND}{NE}
+\end{pspicture}
+\end{center}
+
+This problem possesses a cylindrical symmetry: it is thus sufficient to study the field and the potential in $xy$ half-plane and the complete results are obtained by rotation around the $x$-axis. 
+
+By rotation around $x$-axis, the E-field line in $P$ creates a tube of flux. The flux across any surface including $P(x,y)$ and crossing $x$-axis beyond the last charge (the trace of this surface in  the $xy$ plane is drawn in green)  is obtained from (\ref{pm-eq-d}):
+\begin{equation}\label{pm-eq-h}
+\psi = \frac{1}{2} \sum_{i=1}^{n} q_i (1 -\cos\theta_i) 
+\end{equation} 
+
+E-field lines are easily computed by the condition  $\psi = \mathrm{cte}$, which is expressed as:
+\begin{equation}\label{pm-eq-i}
+\sum_{i=1}^{n} q_i \frac{x-x_i}{\sqrt{(x-x_i)^2+y^2}} = \mathrm{cte}
+\end{equation} 
+in Cartesian coordinates.
+
+For the potential, the solution is trivial:
+\begin{equation}\label{pm-eq-j}
+\sum_{i=1}^{n} \frac{q_i}{\sqrt{(x-x_i)^2+y^2}} = \mathrm{cte}
+\end{equation} 
+
+\begin{center}
+\begin{pspicture*}(-5,-5)(5,5)
+\psframe*[linecolor=green!20](-5,-5)(5,5)
+\psgrid[subgriddiv=0,gridcolor=lightgray,griddots=10]
+\psElectricfield[Q={[1 -2 0][-1 2 0]}]
+\psEquipotential[Q={[1 -2 0][-1 2 0]},Vmin=-2,Vmax=2,stepV=0.25](-5,-5)(5,5)
+\multido{\r=-2+0.2}{20}{%
+\psplotImp[linestyle=solid,linecolor=red](-6,-6)(6,6){%
+x 2 add dup 2 exp y 2 exp add sqrt div 1 mul 
+x -2 add dup 2 exp y 2 exp add sqrt div -1 mul add 
+\r \space sub}}
+\multido{\r=-0.5+0.1}{10}{%
+\psplotImp[linestyle=solid,linecolor=blue](-6,-6)(6,6){%
+x 2 add 2 exp y 2 exp add sqrt 1 exch div 1 mul 
+x -2 add 2 exp y 2 exp add sqrt 1 exch div -1 mul add 
+\r \space sub}}
+\end{pspicture*}
+\end{center}
+
+\begin{verbatim}
+%% E-field lines 
+\multido{\r=-2+0.2}{20}{%
+\psplotImp[linestyle=solid,linecolor=red](-6,-6)(6,6){%
+x 2 add dup 2 exp y 2 exp add sqrt div 1 mul 
+x -2 add dup 2 exp y 2 exp add sqrt div -1 mul add 
+\r \space sub}}
+%% equipotential
+\multido{\r=-0.5+0.1}{10}{%
+\psplotImp[linestyle=solid,linecolor=blue](-6,-6)(6,6){%
+x 2 add 2 exp y 2 exp add sqrt 1 exch div 1 mul 
+x -2 add 2 exp y 2 exp add sqrt 1 exch div -1 mul add 
+\r \space sub}}
+\end{verbatim}
+
+
+The last example corresponds to one charge $+1$ in $(-2,0)$ and one charge $-1$ in $(2,0)$. Here we have superposed the results obtained by implicit functions and those obtained by the direct integration of the equations. 
+The superposition is perfect, but the method of implicit function is quite slow. Moreover, this method is limited to problem with cylindrical symmetry.
+
+
+\section{Examples}
+
+\begin{PSTexample}[pos=t]
+\begin{pspicture*}(-6,-6)(6,6)
+\psframe*[linecolor=lightgray!50](-6,-6)(6,6)
+\psgrid[subgriddiv=0,gridcolor=gray,griddots=10]
+\psElectricfield[Q={[-1 -2 2][1 2 2][-1 2 -2][1 -2 -2]},linecolor=red]
+\psEquipotential[Q={[-1 -2 2][1 2 2][-1 2 -2][1 -2 -2]},linecolor=blue](-6.1,-6.1)(6.1,6.1)
+\psEquipotential[Q={[-1 -2 2][1 2 2][-1 2 -2][1 -2 -2]},linecolor=green,linewidth=2\pslinewidth,Vmax=0,Vmin=0](-6.1,-6.1)(6.1,6.1)
+\end{pspicture*}
+\end{PSTexample}
+
+\begin{PSTexample}[pos=t]
+\begin{pspicture*}(-6,-6)(6,6)
+\psframe*[linecolor=lightgray!50](-6,-6)(6,6)
+\psgrid[subgriddiv=0,gridcolor=gray,griddots=10]
+\psElectricfield[Q={[-1 -2 2 false][1 2 2 false][-1 2 -2 false][1 -2 -2 false]},radius=1.5pt,linecolor=red]
+\psEquipotential[Q={[-1 -2 2][1 2 2][-1 2 -2][1 -2 -2]},linecolor=blue](-6,-6)(6,6)
+\psEquipotential[Q={[-1 -2 2][1 2 2][-1 2 -2][1 -2 -2]},linecolor=green,linewidth=2\pslinewidth,Vmax=0,Vmin=0](-6.1,-6.1)(6.1,6.1)
+\end{pspicture*}
+\end{PSTexample}
+
+
+\begin{PSTexample}[pos=t]
+\begin{pspicture*}(-5,-5)(5,5)
+\psframe*[linecolor=lightgray!40](-5,-5)(5,5)
+\psgrid[subgriddiv=0,gridcolor=lightgray,griddots=10]
+\psElectricfield[Q={[-1 -3 1][1 1 -3][-1 2 2]},N=9,linecolor=red,points=1000,posArrow=0.1,Pas=0.015]
+\psEquipotential[Q={[-1 -3 1][1 1 -3][-1 2 2]},linecolor=blue](-6,-6)(6,6)
+\psEquipotential[Q={[-1 -3 1][1 1 -3][-1 2 2]},linecolor=green,Vmin=-5,Vmax=-5,linewidth=2\pslinewidth](-6,-6)(6,6)
+\end{pspicture*}
+\end{PSTexample}
+
+
+
+\begin{PSTexample}[pos=t,vsep=5mm]
+\psset{unit=0.75cm}
+\begin{pspicture*}(-5,-5)(5,5)
+\psframe*[linecolor=green!20](-5,-5)(5,5)
+\psgrid[subgriddiv=0,gridcolor=lightgray,griddots=10]
+\psElectricfield[Q={[1 -2 0][-1 2 0]},linecolor=red]
+\psEquipotential[Q={[1 -2 0][-1 2 0]},linecolor=blue](-5,-5)(5,5)
+\psEquipotential[Q={[1 -2 0][-1 2 0]},linecolor=green,Vmin=0,Vmax=0](-5,-5)(5,5)
+\end{pspicture*}
+\end{PSTexample}
+
+\begin{PSTexample}[pos=t,vsep=5mm]
+\psset{unit=0.75cm}
+\begin{pspicture*}(-5,-5)(5,5)
+\psframe*[linecolor=green!20](-5,-5)(5,5)
+\psgrid[subgriddiv=0,gridcolor=lightgray,griddots=10]
+\psElectricfield[Q={[1 -2 0][1 2 0]},linecolor=red,N=15,points=500]
+\psEquipotential[Q={[1 -2 0][1 2 0]},linecolor=blue,Vmin=0,Vmax=20,stepV=2](-5,-5)(5,5)
+\psEquipotential[Q={[1 -2 0][1 2 0]},linecolor=green,Vmin=9,Vmax=9](-5,-5)(5,5)
+\end{pspicture*}
+\end{PSTexample}
+
+\begin{PSTexample}[pos=t,vsep=5mm]
+\psset{unit=0.75cm}
+\begin{pspicture*}(-10,-5)(6,5)
+\psframe*[linecolor=lightgray!40](-10,-5)(6,5)
+\psgrid[subgriddiv=0,gridcolor=lightgray,griddots=10]
+\psElectricfield[Q={[600 -60 0 false][-4 0 0] },N=50,points=500,runit=0.8]
+\psEquipotential[Q={[600 -60 0 false][-4 0 0]},linecolor=blue,Vmax=100,Vmin=50,stepV=2](-10,-5)(6,5)
+\psframe*(-10,-5)(-9.5,5)
+\rput(0,0){\textcolor{white}{\large$-$}}
+\multido{\rA=4.75+-0.5}{20}{\rput(-9.75,\rA){\textcolor{white}{\large$+$}}}
+\end{pspicture*}
+\end{PSTexample}
+
+\begin{PSTexample}[pos=t,vsep=5mm]
+\psset{unit=0.75cm}
+\begin{pspicture*}(-5,-5)(5,5)
+\psframe*[linecolor=green!20](-6,-5)(6,5)
+\psgrid[subgriddiv=0,gridcolor=lightgray,griddots=10]
+\psElectricfield[Q={[1 -2 -2][1 -2 2][1 2 2][1 2 -2]},linecolor={[HTML]{006633}}]
+\psEquipotential[Q={[1 -2 -2][1 -2 2][1 2 2][1 2 -2]},Vmax=15,Vmin=0,stepV=1,linecolor=blue](-6,-6)(6,6)
+\end{pspicture*}
+\end{PSTexample}
+
+\begin{PSTexample}[pos=t,vsep=5mm]
+\psset{unit=0.75cm}
+\begin{pspicture*}(-5,-5)(5,5)
+\psframe*[linecolor=green!20](-5,-5)(5,5)
+\psgrid[subgriddiv=0,gridcolor=lightgray,griddots=10]
+\psElectricfield[Q={[1 2 0][1 1 1.732][1 -1 1.732][1 -2 0][1 -1 -1.732][1 1 -1.732]},linecolor=red]
+\psEquipotential[Q={[1 2 0][1 1 1.732 12][1 -1 1.732][1 -2 0][1 -1 -1.732][1 1 -1.732]},linecolor=blue,Vmax=50,Vmin=0,stepV=5](-5,-5)(5,5)
+\end{pspicture*}
+\end{PSTexample}
+
+\begin{PSTexample}[pos=t,vsep=5mm]
+\psset{unit=0.75cm}
+\begin{pspicture*}(-5,-5)(5,5)
+\psframe*[linecolor=green!20](-5,-5)(5,5)
+\psgrid[subgriddiv=0,gridcolor=lightgray,griddots=10]
+\psElectricfield[Q={[1 2 0][1 1 1.732][1 -1 1.732][1 -2 0][1 -1 -1.732][1 1 -1.732][-1 0 0]},linecolor=red]
+\psEquipotential[Q={[1 2 0][1 1 1.732 12][1 -1 1.732][1 -2 0][1 -1 -1.732][1 1 -1.732][-1 0 0]},Vmax=40,Vmin=-10,stepV=5,linecolor=blue](-5,-5)(5,5)
+\end{pspicture*}
+\end{PSTexample}
+
+\begin{PSTexample}[pos=t,vsep=5mm]
+\psset{unit=0.75cm}
+\begin{pspicture*}(-6,-5)(6,5)
+\psframe*[linecolor=green!20](-6,-5)(6,5)
+\psgrid[subgriddiv=0,gridcolor=lightgray,griddots=10]
+\psElectricfield[Q={[1 -4 0][1 -2 0 12][1 0 0][1 2 0][1 4 0]},linecolor=red]
+\psEquipotential[Q={[1 -4 0][1 -2 0][1 0 0][1 2 0][1 4 0]},linecolor=blue,Vmax=30,Vmin=0,stepV=2](-7,-5)(7,5)
+\end{pspicture*}
+\end{PSTexample}
+
+
+
+
+\clearpage
+\section{List of all optional arguments for \texttt{pst-electricfield}}
+
+\xkvview{family=pst-electricfield,columns={key,type,default}}
+
+\nocite{*}
+\bgroup
+\raggedright
+\bibliographystyle{plain}
+\bibliography{pst-electricfield-doc}
+\egroup
+
+
+\printindex
+
+
+
+
+
+
+
+\end{document}

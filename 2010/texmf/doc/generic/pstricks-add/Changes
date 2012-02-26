@@ -1,0 +1,273 @@
+%% $Id: Changes 612 2011-12-20 11:54:08Z herbert $
+%%
+pstricks-add.pro ----------- 
+0.23 2009-12-17 - add RGBtoGRAY and WavelengthToGRAY
+                - intiialize the random generator with realtime
+0.22 2009-03-17 - add LineByHand stuff
+0.21 2008-10-13 - add bubblesort macro
+0.20 2008-01-12 - moved the AlgParser into pst-algparser.pro
+                - moved Pyth2 and tan into pstricks.pro
+0.14 2007-09-17 - moved Pyth2 into tx@Add part
+0.13 2007-09-12 - temporarely version for \psbrace, code
+		     will later go into pstricks.pro 
+0.12 2007-09-03 - Added 
+                  RGBtoGRAY, CMYKtoGRAY, HSBtoGRAY (hv) 
+0.11 2007-06-23 - Added wavelengthToCMYK routine (hv)
+                - RGBtoCMYK 
+0.10 2006-10-15 - bug correction, x^-1 (dr)
+                - Constants into tx@Dict to make them global (hv)
+                - small stuff (hv)
+                - define tan
+0.09 2006-10-10 cvi for the wavelength to get an integer (hv)
+0.08 2006-06-17 more improvements to the code (hv)
+0.07 2006-04-03 remove whitespace (dr)
+0.06 2006-01-16 EXP -> Exp, to prevent missmatch with pst-math (hv)
+0.05 2005-11-12 fix bug in GTriangle (hv)
+0.04 2005-10-06 added subroutines for calculating wavelength to rgb color(hv)
+                   changing name of pst-eqdf.pro to pstricks-add.pro
+2005.03  2005/05/16 (hv) small changes to the code
+2005.02  2005/03/05 (dr) white space removal from expression
+2004.02  2004/11/14 (dr) correction of a priority problem ^ before unary - (new rule FS)
+2004.01  2004/09/14 (dr) initial version
+
+
+pstricks-add.sty ----------- (hv)
+ v. 0.14 2010-02-11  move pst-fp message into pstricks.sty
+ v. 0.13 2009-04-17  change pro file version number
+ v. 0.12 2007-11-18  change pro file version number
+ v. 0.11 2007-09-04  add a message for loading the prolouge file pstrick-add.pro
+
+
+pstricks-add.tex ----------- (Dominik Rodriguez/hv)
+ v 3.57  2011-12-20 - added \psparallelogrambox
+ v 3.56  2011-12-12 - added node definitions for \psTangentLine
+ v 3.55  2011-12-11 - fix bug in \psplotTangent for arrows and linewidth
+ v 3.54  2011-08-20 - new optional argument for the vee arrow line style
+ v 3.53  2011-08-03 - use setting of \Pst@Debug for shownode()
+ v 3.52  2011-06-09 - add new optional argument for \psCancel
+ v 3.51  2011-02-02 - add new Macro\psKiviat for Kiviat diagrams
+ v 3.50  2011-01-29 - add new optional argument colorTypeDef for \psMatrix
+ v 3.49  2011-01-18 - add macro \psEllipseTangents for drawing tangent
+                      lines of a point and an ellipse.
+ v 3.48  2010-12-18 - add macro \psCircleTangents for drawing tangent
+                      lines of a point and a circle or two circles.
+ v 3.47  2010-12-14 - save the absolute coordinates of \psVector in node names
+ v 3.46  2010-12-13 - added new macro \psVector for drawing vectors with
+                      relative coordinates (hv)  
+ v 3.45  2010-11-01 - modified \Put for checking coor type (hv)  
+ v 3.44  2010-08-28 - new option XYoffset for \psMatrixPlot (hv)  
+ v 3.43  2010-08-17 - moved option method into pst-plot (hv)  
+ v 3.42  2010-08-01 - fix bug with \newcount\pst@cntC (hv)  
+ v 3.41  2010-06-16 - fix bug with psComment and the \if@star (hv)  
+ v 3.40  2010-03-12 - add macros for ticks on curves (ms)  
+ v 3.39  2010-03-12 - fixed bug with algebraic option in \psplotTangent  
+ v 3.38  2009-12-13 - moved \Pst@algebraic into the base pstricks.tex  
+                    - add SAveFinalState for plots
+ v 3.37  2009-12-01 - fix bug with Tnormal in \psPlotTangent
+ v 3.36  2009-11-14 - fix bug with missing \def\pst@par in objects
+                    - add \pstGetDistance
+ v 3.35  2009-08-13 - fix bug with trailing space in \psaxes@vi
+                    - fix bug with star version of psplotTangent
+                      take care of math mode for comma or dot
+ v 3.34  2009-05-25 - modified macro \psMatrixPlot
+ v 3.33  2009-05-23 - fixed introduced bug with \pstScalePoints
+ v 3.32  2009-05-11 - added psTangentLine for a curve of three points
+                      Tnormal option is valid
+                    - load pst-math for equation solver
+ v 3.31  2009-04-29 - added \pstFPDiv for division int(#1=#2/#3)
+                    - added axes style "polar" \psaxes[axesstyle=polar](5,5)
+                    - fix trailing space with yAxisLabel
+                    - added option decimalSeparator to allow special symbols
+                      for persian language
+ v 3.30  2009-04-17 - rewrote unit calculation for \psgraph. It uses now the
+                      package pst-fp, which has the division macro (stolen 
+                      from the fp package)
+                    - new star option for psPlotTangent
+                    - new optional argument for a x interval for psPlotTangent
+                    . new macro pslineByHand to make "hand drawn lines"
+ v 3.20  2009-03-16 - add option showOriginTick, similiar to showorigin from
+                      the basic pst-plot
+ v 3.19  2009-03-06 - fix introduced bug with division in the \psgraph macro
+ v 3.18  2009-03-03 - fix bug with division in the \psgraph macro
+                    - add macro \psComment 
+                    - add optional argument for \psplot and \parametricplot 
+		      for additional PostScript settings
+		    - add macro \psGetSlope  
+		    - add \psForeach (without grouping its contents)
+ v 3.17  2009-01-17 - add optional argument for \psplot ans \parametricplot 
+		      for additional PostScript settings
+ v 3.16  2008-12-22 - make showorigin also valid for the ticks
+ v 3.15  2008-12-12 - fixed bug with \psgraph and the optional labels
+ v 3.14  2008-12-02 - fixed bug with \psaxes and the optional arguments
+ v 3.13  2008-11-24 - added the PostScript variable ps@Exit to exit loops in
+                      \psaxes and \parametricplot
+                    - added yMaxValue option for plotstyles lines, polygons and beziers
+                      to draw discontinued functions
+ v 3.12  2008-11-14 - modified \psxTick and \psyTick (Martin Chicoine)
+                    - new macro \use@keep@par, which doesn't delete the setting
+                      after using it
+ v 3.11  2008-10-15 - added \psBoxplot
+ v 3.10  2008-08-27 - fix bug with \pslabelsep and \psh(v)label
+ v 3.09  2008-08-06 - fix bug with lineAngle
+		    - make chartNodes variable
+ v 3.08  2008-08-06 - fix bug with xyDecimals
+ v 3.07  2008-07-18 - fix bug with \psdice
+		    - new macro \psChart
+                    - added setlinecap to linestyle dashed
+                    - fix bug with \psGTriangle and fillstyle for \pspolygon
+ v 3.06  2008-06-20 - fix bug with vertical setting of the horizontal labels
+		    - add option value inner for tickstyle
+		    - add Makro \psCancel (Stefano Baroni)
+ v 3.05  2008-06-06 - rewrote the axes-label setting for the psgraph environment
+		    - add \pst@mindim{#1}{#2}#3
+		    - rewrote label setting for \psaxes
+ v 3.04  2008-06-02 - make \pslinewidth and \psfillstyle available in \psbrace
+ v 3.03  2008-05-20 - fix introduced bug with ps.pro
+ v 3.02  2008-04-25 - set correct labelFontSize for math mode
+                    - add macro \psPie with some additional 
+		      optional arguments
+ v 3.01  2008-04-15 - import changes from pst-plot in \ps@axisiv
+		      new option mathLabel for setting labels in text
+		      or math mode
+		    - fix bug with labelstyle
+ v 3.00  2008-01-01 - delete transalpha stuff
+                    - load header file pst-algparser.pro
+ v 2.93  2007-12-23 - fix bug with transpalpha
+ v 2.92  2007-11-18 - fix bug with pst@getcolor for tickcolor option
+ v 2.91  2007-10-20 - add the step types supremum/infimum for showing the
+                      integral of a function
+		    - add \chardef\f@ur=4
+ v 2.90  2007-09-25 - add \DefPSPNodes to defines 9 nodes depending to the
+		      pspciture environment.
+		    - fix bug in psHomothetie and pstRotate for special coor 
+ v 2.89  2007-09-12 - temporarely version for \psbrace, code
+		      will later go into pstricks.tex
+ v 2.88  2007-09-03 - add \psHomothetie for mirroring any object
+		    - add option Tnormal for the \psplotTangent macro
+		    - add \psxTick and \psyTick for single ticks with a label
+		    - add arrowLW (arrowlinewidth for the line ends o and *
+		    - new \psbrace for a better look
+ v 2.87  2007-07-19 - fix bug with \psrotate
+                      add two optional arguments for \psaxes for the xy label
+ v 2.86  2007-06-23 - add option CMYK
+		    - add additional arrow types
+ v 2.85  2007-04-01 - fix bug with labelFontSize (missing in fractions)
+ v 2.84  2007-03-13 - add plotstyle LSM for a Least Square Method to calculate
+                      the values for a line y=v*x+u, which fits best all 
+		      data records (hv)
+ v 2.83  2007-01-22 - write the  x-y values of psDiffEqn to a file (hv)
+                    - fix bug in pst@Triangle
+ v 2.82  2007-01-02 - rename \pstranspalpha to \psk@transpalpha (hv)
+ v 2.81  2006-10-10 - fix a trailing space in \pstScalePoints
+		    - add macro \psforeach
+		    - fix bug in the line macros \length -> \linelength
+ v 2.80  2006-09-25 - fix a trailing space for fillstyle transparent
+ v 2.79  2006-09-21 - make ! not active (for french language and SpecialCoor)
+                    - added macro \psforeach
+		    - added transalpha option for tranparency color
+		    - rename the family name to pstricksadd (pst-xkey)
+		      allows using the interla macros of xkeyval
+ v 2.78  2006-08-07 - allow ! for the y Length in \psgraph
+                      fix bug with undefined \psk@barwidth (missing \psset}
+ v 2.77  2006-07-12 - use of abs(dx) to get labels for negative \pst@dx
+		    - fix bug in trigLabels
+ v 2.76  2006-06-24 - renaming all \Pixxx macros to \psPixx
+                      to prevent mismatches with other packages,
+		      which define also \Pi.
+		      also renamed \RadUnit and \RadUnitInv to \pstRad...
+		      (not valid for pstricks-add.pro)
+ v 2.75  2006-06-17 - plot a derivative of a function by the equation or numerical
+                      (\psplot and \paramericplot)
+                    - delete macro \psLineIII and the two special options
+                    - add macro \psMatrixPlot
+                    - option trigLabelBase for advanced setting of trogonometrical
+		      x-axis labels
+		    - option labelFontSize 
+                    - fix introduced bug with Hook arrow and (-)
+                    - fix bug for Hook arrow with ArrowInside option
+                    - fix bug with readdata
+                    - revert all changes
+                    - fix a bug with lines and psgraph
+ v 2.74  2006-01-02 - add \psdice
+ v 2.73  2005-12-21 - renaming the \setLNode and \setLCNode to
+                      \psLNode and \psLCNode.
+		      new macro \psLDNode
+	 	    - add missing fillstyle for \psStep
+		    - add StepType Riemann
+ v 2.72  2005-11-27 - fix introduced bug in psgraph
+                    - add new macro \psStep with new option StepType
+ v 2.71  2005-10-24 - use \def instead of \edef for subtickcolor
+                      and also using \pst@getcolor
+	 	    - fix bug with Ox and log axes
+ v 2.70  2005-10-20 - use \def instead of \edef for X|YAxisLabel
+                    - make psgraph correct use of the origin values
+		    - added a new macro \psLNode and \nlput for a
+		      node label with absolute position
+ v 2.69  2005-10-12 moving the basic arrows into pstricks )-(,]-[
+                    bugfix for hook arrow
+ v 2.68  2005-10-09 fix a bug with trigLabels and showorigin
+ v 2.67  2005-10-08 rewrote \psrotate macro
+                    added three predefined hatchstyles for simulating transparent colors 
+ 		    TRed, TGreen,TBlue 
+ v 2.66 2005-10-06 add more support for Gouraud-shading, emulate the PS subroutines
+                    if not present in the PS level 
+ v 2.65  2005-10-03 add support for Gouraud-shading 
+ v 2.64  2005-09-25 fix a bug in reading ticksize values (\pst@getdimdim} 
+ v 2.63  2005-09-18 fix another bug with option names 
+ v 2.62  2005-09-08 fix new introduced bug in \psbrace 
+ v 2.61  2005-09-08 fix bug in \psbrace 
+ v 2.60  2005-08-28 added some more line fill styles 
+ v 2.59  2005-08-06 bugfix for option intSeparator
+	  	    add macro \psrotate
+ v 2.58  2005-07-25 ArrowInside=- for \psbrace
+ v 2.57  2005-07-07 some improvements to psgraph
+ v 2.56  2005-06-25 fix bug with \pscustom and poynom
+	 	   fix introduced trailing space in \readdata
+ v 2.55  2005-05-26 some tweeks to the code, updating the documentation
+ v 2.54  2005-05-25 added option ChangeOrder
+ v 2.53  2005-05-23 dito
+ v 2.52  2005-05-22 fix bug in psplotTangent
+ v 2.51  2005-05-21 drop support of option varStep
+ v 2.50  2005-05-20 first try with psplotDiffEqn, plotting differential equation,
+                    needs _newest_ pst-eqdf.pro and pstricks.pro
+ v 2.49  2005-05-19 fix bug in psplotTangent and make option showpointa available
+ v 2.48  2005-05-18 fix some new introduced bugs and make psplotTangent for all
+                    plot macros working 
+ v 2.47  2005-05-17 make psplotTangens also available for the parametric plot 
+                    together with the algebraic option 		   
+ v 2.46  2005-05-16 make psplotTangens also available for the polarplot and
+                    algebraic option 		   
+ v 2.45  2005-05-16 small changes to the code
+ v 2.44  2005-05-15 added macro psplotTangent
+ v 2.43  2005-04-20 some more tweeks to triglabels
+ v 2.42  2005-04-17 small bugfix with the options
+ v 2.41  2005-04-17 new option ignoreLines for  \readdata
+ v 2.40  2005-04-13 new option trigLabels
+ v 2.39  2005-03-17 modify the Rhook subroutine (abs)
+ v 2.38  2005-03-03 move the loading of a config file into pstricks-add.sty
+ v 2.37  2005-02-20 drop support of tickstyle (pst-plot),
+                    fix several bugs in connection with the ticksize option
+	 	    minor code changes
+ v 2.36  2005-02-20 added missing LabelFactor
+ v 2.35  2005-02-19 small improvements
+ v 2.34  2005-02-10 fix bug with comma
+ v 2.33  2005-01-18 add a config file
+ v 2.32  2005-01-16 added hook arrow (for bond lines)
+ v 2.31  2004-12-11 activate \pslinestyle for the axes
+ v 2.30  2004-12-07 make xyAxes run
+ v 2.29  2004-12-04 spurious blank in ArrowInside
+ v 2.28  2004-11-23 small changes to the code
+ v 2.27  2004-11-19 tickstyle now a pstricks-add key
+ v 2.26  2004-11-17 spurious blank in \psbrace
+ v 2.25  2004-11-13 fixed a new introduced bug
+ v 2.24  2004-11-12 added the psRandom macro for random dots
+ v 2.23  2004-11-11 added the star option for psgraph
+ v 2.22  2004-11-04 fixed bug with \psset
+ v 2.21  2004-10-24 added \psParallelLine for lines parallel to another one
+                    added \psIntersectionPoint(#1)(#2)(#3)(#4){nodeName} 
+ v 2.20  2004-10-24 added \psRelLine for lines relative to another one
+ v 2.19  2004-10-20 small changes
+ v 2.18  2004-10-20 add \ncbarr
+ v 2.17	 2004-10-14 new multiple arrows
+
+

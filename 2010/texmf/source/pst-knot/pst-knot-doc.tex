@@ -1,0 +1,148 @@
+%% $Id: pst-knot-doc.tex 137 2009-10-08 18:15:14Z herbert $
+\documentclass[11pt,english,BCOR10mm,DIV12,bibliography=totoc,parskip=false,
+   smallheadings, headexclude,footexclude,oneside]{pst-doc}
+\usepackage[utf8]{inputenc}
+\usepackage{pst-knot}
+\let\pstKnotFV\fileversion
+\renewcommand\bgImage{%
+\begin{pspicture}(-2,-2)(2,2) 
+  \psKnot[knotscale=2,linewidth=5pt,linecolor=blue](0,0){5-1}
+\end{pspicture}
+}
+\lstset{pos=t,wide=false,language=PSTricks,
+    morekeywords={psKnot},basicstyle=\footnotesize\ttfamily}
+%
+\begin{document}
+
+\title{\texttt{pst-knot}}
+\subtitle{Plotting special knots; v.\pstKnotFV}
+\author{Herbert Vo\ss}
+\docauthor{}
+\date{\today}
+\maketitle
+
+\tableofcontents
+
+\section{introduction}
+This is the very first try of drawing knots. The package uses the \PS\ 
+subroutines from the file \LFile{psMath.pro} from Matthias Buch-Kromann.)
+Currentlx there is only one macro with two mandatory arguments, the origin
+of the image and the knot type. The following list shows all available knot types.
+
+\begin{BDef}
+\Lcs{psKnot}\OptArgs\Largr{\CAny}\Largb{knot type}
+\end{BDef}
+
+
+\begin{LTXexample}
+\begin{pspicture}[showgrid=true](-2,-2)(2,2) 
+  \psKnot[linewidth=3pt,linecolor=red](0,0){0-1}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+\begin{pspicture}[showgrid=true](-2,-2)(8,2) 
+  \psKnot[linewidth=3pt,linecolor=red](0,0){3-1}
+  \psKnot[linewidth=3pt,linecolor=blue](4,0){4-1}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-2,-2)(8,2) 
+  \psKnot[linewidth=3pt,linecolor=blue](0,0){5-1}
+  \psKnot[linewidth=3pt,linecolor=blue](4,0){5-2}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-2,-2)(10,2) 
+  \psKnot[linewidth=3pt,linecolor=blue](0,0){6-1}
+  \psKnot[linewidth=3pt,linecolor=blue](4,0){6-2}
+  \psKnot[linewidth=3pt,linecolor=blue](8,0){6-3}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}
+\begin{pspicture}(-2,-2)(10,2) 
+  \psKnot[linewidth=3pt,linecolor=red](0,0){7-1}
+  \psKnot[linewidth=3pt,linecolor=blue](4,0){7-2}
+  \psKnot[linewidth=3pt,linecolor=green](8,0){7-3}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}
+\begin{pspicture}(-2,-2)(10,2) 
+  \psKnot[linewidth=3pt,linecolor=red](0,0){7-4}
+  \psKnot[linewidth=3pt,linecolor=green](4,0){7-5}
+  \psKnot[linewidth=3pt,linecolor=blue](8,0){7-6}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}
+\begin{pspicture}[showgrid=true](-2,-2)(2,2) 
+  \psKnot[linewidth=3pt,linecolor=blue](0,0){7-7}
+\end{pspicture}
+\end{LTXexample}
+
+\section{Special settings}
+There exists three special optional arguments for the macro \Lcs{psKnot}.
+
+\subsection{Scaling}
+The image can be scaled with \Lkeyword{scale}, which can take one or two
+values for x and y scaling. For only one value it is scaled for x and y
+with the same value. The default is 1 1.
+
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-4,-4)(4,4) 
+  \psKnot[linewidth=5pt,linecolor=blue,knotscale=2](0,0){6-1}
+\end{pspicture}
+\end{LTXexample}
+
+\subsection{Border color}
+The background color of the border can be controlled by \Lkeyword{knotbgcolor}
+with only a numerical value of $[0..1]$ for a grayscale color. It makes
+only sense for a colored background to get the same color for the crossing.
+
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-2,-2)(6,2) 
+  \psframe[fillcolor=black!20,fillstyle=solid](-2,-2)(6,2)
+  \psKnot[linewidth=5pt,linecolor=red!50](0,0){7-4}
+  \psKnot[linewidth=5pt,linecolor=red!50,
+    knotbgcolor=0.8](4,0){7-4}
+\end{pspicture}
+\end{LTXexample}
+
+Pay attention that black!20 is the same as 0,8 of gray.
+
+\subsection{Border width}
+The width of the border is controlled by the keyword \Lkeyword{knotborder} and
+it is preset to 2 as a factor to the current linewidth. 
+It must at least be the currentlinewidth (1.0).
+
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-2,-2)(6,2) 
+  \psKnot[linewidth=3pt,linecolor=cyan!60](0,0){6-3}
+  \psKnot[linewidth=3pt,linecolor=red!50,
+    knotborder=5](4,0){6-3}
+\end{pspicture}
+\end{LTXexample}
+
+
+\clearpage
+\section{List of all optional arguments for \nxLPack{pst-knot}}
+
+\xkvview{family=pst-knot,columns={key,type,default}}
+
+
+\bgroup
+\raggedright
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{\jobname}
+\egroup
+
+\printindex
+
+\end{document}
+
+

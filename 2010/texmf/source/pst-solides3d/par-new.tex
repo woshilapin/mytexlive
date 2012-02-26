@@ -1,0 +1,255 @@
+\section {Construire à partir du scratch}
+
+L'objet \verb+new+ permet de construire son propre solide. Deux
+paramètres sont utilisés~: \verb+sommets+ qui indique la liste des
+coordonnées des différents sommets, et \verb+faces+ qui donne la liste
+de toutes les faces du solide, une face de solide étant caractérisée
+par la liste des indices des sommets la constituant, ceux-ci étant
+\textbf {rangés dans le sens trigonométrique lorsque l'on ragarde la
+face du coté extérieur}.
+
+\subsection {Exemple 1 : une maison}
+
+%% exemple 1
+
+\begin{multicols}{2}
+
+\bgroup
+\psset{unit=0.5}
+\psset{lightsrc=10 -20 50,SphericalCoor,viewpoint=50 -20 30,Decran=50}
+\begin{pspicture*}(-7,-4)(7,9)
+\psframe(-7,-4)(7,9)
+\psSolid[object=new,
+    sommets=
+       2  4  3    -2  4  3
+      -2 -4  3     2 -4  3
+       2  4  0    -2  4  0
+      -2 -4  0     2 -4  0
+       0  4  5     0 -4  5,
+    faces={
+      [0 1 2 3]    [7 6 5 4]
+      [0 3 7 4]    [3 9 2]
+      [1 8 0]      [8 9 3 0]
+      [9 8 1 2]    [6 7 3 2]
+      [2 1 5 6]},
+    num=all,
+    show=all,
+    action=draw
+]%
+\end{pspicture*}
+\egroup
+
+\columnbreak
+
+\begin{verbatim}
+\psSolid[object=new,
+    sommets=
+       2  4  3    -2  4  3
+      -2 -4  3     2 -4  3
+       2  4  0    -2  4  0
+      -2 -4  0     2 -4  0
+       0  4  5     0 -4  5,
+    faces={
+      [0 1 2 3]    [7 6 5 4]
+      [0 3 7 4]    [3 9 2]
+      [1 8 0]      [8 9 3 0]
+      [9 8 1 2]    [6 7 3 2]
+      [2 1 5 6]},
+    num=all,show=all,action=draw]
+\end{verbatim}
+\end{multicols}
+
+Il est à remarquer que le solide \verb+new+ accepte les mêmes options
+que les autres solides. Par exemple, on a représenté ci-dessous le
+solide précédent en utilisant les paramètres \verb+hollow+,
+\verb+incolor+, \verb+fillcolor+ et \verb+rm+.
+
+%% exemple 2
+
+\begin{multicols}{2}
+
+\bgroup
+\psset{unit=0.5}
+\psset{lightsrc=10 -20 50,SphericalCoor,viewpoint=50 -20 30,Decran=50}
+\begin{pspicture*}(-7,-4)(7,9)
+\psframe(-7,-4)(7,9)
+\psSolid[object=new,fillcolor=red!50,incolor=yellow,
+    action=draw**,
+    hollow,
+    rm=2,
+    sommets=
+       2  4  3
+      -2  4  3
+      -2 -4  3
+       2 -4  3
+       2  4  0
+      -2  4  0
+      -2 -4  0
+       2 -4  0
+       0  4  5
+       0 -4  5,
+    faces={
+      [0 1 2 3]
+      [7 6 5 4]
+      [0 3 7 4]
+      [3 9 2]
+      [1 8 0]
+      [8 9 3 0]
+      [9 8 1 2]
+      [6 7 3 2]
+      [2 1 5 6]},
+    num=all,
+    show=all
+      ]%
+\end{pspicture*}
+\egroup
+
+\columnbreak
+
+\begin{verbatim}
+\psSolid[object=new,fillcolor=red!50,
+    incolor=yellow,
+    action=draw**,
+    hollow,
+    rm=2,
+    ...
+\end{verbatim}
+\end{multicols}
+
+\subsection {Exemple 2 : Hyperboloïde de rayon fixe}
+
+%\psset{lightsrc=10 20 30,SphericalCoor=true,viewpoint=50 20 30}
+%\psset{SphericalCoor=true,viewpoint=50 20 30}
+
+\begin{multicols}{2}
+
+Comme à chaque fois, les options de la macro \verb+\psSolid+ peuvent
+embarquer du code postscript, voire du code jps.
+
+Ci-contre un exemple en pur postscript, où on utilise les variables
+$a$, $b$ et $h$ qui sont transmises par les options de PSTricks. On
+obtient ainsi un solide variable construit à partir du scratch.
+
+Remarque~: le code utilisé provient d'un source jps pratiquement
+utilisé tel que~: \url{http://melusine.eu.org/lab/bjps/solide/tour.jps}
+
+\columnbreak
+
+\bgroup
+\psset{unit=0.75}
+\psset{lightsrc=10 -20 20,SphericalCoor,viewpoint=50 -20 30,Decran=50}
+\begin{pspicture*}(-3,-5)(3,6)
+\psframe(-3,-5)(3,6)
+\psSolid[object=new,fillcolor=red!50,incolor=yellow,
+    hollow,
+    a=10, %% nb d'etages
+    b=20, %% diviseur de 360, nb de meridiens
+    h=8,  %% hauteur
+    action=draw**,
+    sommets=
+      /z0 h neg 2 div def
+      a -1 0 {
+         /k exch def
+         0 1 b 1 sub {
+             /i exch def
+             /r z0 h a div k mul add dup mul 4 div 1 add sqrt def
+             360 b idiv i mul cos r mul
+             360 b idiv i mul sin r mul
+             z0 h a div k mul add
+         } for
+      } for,
+    faces={
+      0 1 a 1 sub {
+      /k exch def
+         k b mul 1 add 1 k 1 add b mul 1 sub {
+             /i exch def
+             [i i 1 sub b i add 1 sub b i add]
+         } for
+         [k b mul k 1 add b mul 1 sub k 2 add b mul 1 sub k 1 add b mul]
+      } for
+    },
+]
+\end{pspicture*}
+\egroup
+
+\end{multicols}
+
+Le code utilisé est le suivant~:
+\begin{verbatim}
+\psSolid[object=new,fillcolor=red!50,incolor=yellow,
+    hollow,
+    a=10, %% nb d'etages
+    b=20, %% diviseur de 360, nb de meridiens
+    h=8,  %% hauteur
+    action=draw**,
+    sommets=
+      /z0 h neg 2 div def
+      a -1 0 {
+         /k exch def
+         0 1 b 1 sub {
+             /i exch def
+             /r z0 h a div k mul add dup mul 4 div 1 add sqrt def
+             360 b idiv i mul cos r mul
+             360 b idiv i mul sin r mul
+             z0 h a div k mul add
+         } for
+      } for,
+    faces={
+      0 1 a 1 sub {
+      /k exch def
+         k b mul 1 add 1 k 1 add b mul 1 sub {
+             /i exch def
+             [i i 1 sub b i add 1 sub b i add]
+         } for
+         [k b mul k 1 add b mul 1 sub k 2 add b mul 1 sub k 1 add b mul]
+      } for
+    }]
+\end{verbatim}
+
+\subsection {Exemple 3 : Import de fichiers externes}
+
+Il est possible de faire lire les données dans des fichiers
+externes. Dans l'exemple ci-dessous, les fichiers
+\verb+sommets_nefer.dat+ et \verb+faces_nefer.dat+ ont été plcés
+dans le répertoire de compilation.
+
+\bgroup
+\psset{unit=0.5}
+\definecolor{AntiqueWhite}{rgb}{0.98,0.92,0.84}
+\begin{pspicture}(-7,-7)(7,9)
+\psset{lightsrc=30 -40 10}
+\psset{SphericalCoor,viewpoint=50 -50 20,Decran=50}
+\psframe(-7,-7)(7,9)
+\psset{RotX=90,sommets= (sommets_nefer.dat) run}
+\psSolid[object=new,fillcolor=AntiqueWhite,linewidth=0.5\pslinewidth,
+    faces={(faces_nefer.dat) run}]%
+\psSolid[object=new,fillcolor=red,linewidth=0.5\pslinewidth,
+    faces={(faces_nefer_levres.dat) run}]%
+\psSolid[object=new,fillcolor=black,
+    faces={(faces_nefer_sourcils.dat) run}]%
+\end{pspicture}
+\hfill
+\begin{pspicture}(-7,-7)(7,9)
+\psset{lightsrc=-10 -40 -5,lightintensity=.5}
+\psset{SphericalCoor,viewpoint=50 -80 10,Decran=50}
+\psframe(-7,-7)(7,9)
+\psset{RotX=90,RotZ=30,sommets= (sommets_nefer.dat) run}
+\psSolid[object=new,fillcolor=AntiqueWhite,linewidth=0.5\pslinewidth,
+    grid,
+    faces={(faces_nefer.dat) run}]%
+\psSolid[object=new,fillcolor=red,linewidth=0.5\pslinewidth,grid,
+    faces={(faces_nefer_levres.dat) run}]%
+\psSolid[object=new,fillcolor=black,
+    faces={(faces_nefer_sourcils.dat) run}]%
+\end{pspicture}
+\egroup
+
+\begin{verbatim}
+\definecolor{AntiqueWhite}{rgb}{0.98,0.92,0.84}
+\psset{lightsrc=30 -40 10}
+\psset{SphericalCoor,viewpoint=50 -50 20,Decran=50}
+\psframe(-7,-7)(7,9)
+\psSolid[object=new,RotX=90,fillcolor=AntiqueWhite,linewidth=0.5\pslinewidth,
+    sommets= (sommets_nefer.dat) run,
+    faces={(faces_nefer.dat) run}]%
+\end{verbatim}

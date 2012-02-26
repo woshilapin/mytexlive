@@ -1,0 +1,185 @@
+\documentclass{book}
+\usepackage[dvipsnames,svgnames,prologue]{pstricks}
+\usepackage{pst-plot,pst-eucl}
+\usepackage{pst-solides3d,pstricks-add}
+\let\PSTfileversion\fileversion
+\let\PSTfiledate\filedate
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{manfnt}
+\usepackage[garamond]{mathdesign}
+\renewcommand{\ttdefault}{lmtt}
+\usepackage{colortbl}
+\usepackage{multicol}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{arrayjob}
+\usepackage{url}
+\usepackage[a4paper,bottom=2.5cm,top=2cm,left=2cm]{geometry}
+\usepackage[colorlinks=true]{hyperref}
+\renewcommand{\ttdefault}{lmtt}
+\usepackage{showexpl}
+\usepackage[french]{babel}
+\DeclareFixedFont{\timesnormal}{T1}{ptm}{m}{n}{2cm}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\makeatletter
+%% macro H.Voss sur :
+%%http://tug.org/mailman/htdig/pstricks/2007/004640.html
+
+\def\GetCenter#1{ tx@NodeDict begin /N@#1 load GetCenter end
+  \pst@number\psyunit div /#1.y ED
+  \pst@number\psxunit div /#1.x ED }
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand\Cadre[1]{\psframebox[fillstyle=solid,fillcolor=yellow,linecolor={[cmyk]{0,0,1,0.1}}]{\texttt{#1}}}
+
+\newcommand\toptableau{
+\rowcolor{yellow}
+  \textbf{solide} & \begin{tabular}{c}
+                      \textbf{paramètres}\\
+                      \textbf{par défaut}
+                      \end{tabular} &
+                      \begin{minipage}{4cm}
+                      \centerline{\textbf{vue}}
+                      \end{minipage}&
+                      \begin{minipage}{4cm}
+                      \centerline{\textbf{code}}
+                      \end{minipage}}
+
+\newarray\colors
+\readarray{colors}{%
+Apricot&Aquamarine%
+&Bittersweet&Black&Blue&BlueGreen&BlueViolet&BrickRed&Brown&BurntOrange%
+&CadetBlue&CarnationPink&Cerulean&CornflowerBlue&Cyan&Dandelion&DarkOrchid%
+&Emerald&ForestGreen&Fuchsia&Goldenrod&Gray&Green&GreenYellow&JungleGreen%
+&Lavender&LimeGreen&Magenta&Mahogany&Maroon&Melon&MidnightBlue&Mulberry%
+&NavyBlue&OliveGreen&Orange&OrangeRed&Orchid&Peach&Periwinkle&PineGreen%
+&Plum&ProcessBlue&Purple&RawSienna&Red&RedOrange&RedViolet&Rhodamine&RoyalBlue%
+&RoyalPurple&RubineRed&Salmon&SeaGreen&Sepia&SkyBlue&SpringGreen&Tan&TealBlue%
+&Thistle&Turquoise&Violet&VioletRed&White&WildStrawberry&Yellow&YellowGreen&YellowOrange}
+
+
+\edef\colorfaces{}%
+\multido{\i=0+1}{67}{%
+ \checkcolors(\i)
+\xdef\colorfaces{\colorfaces\i\space(\cachedata)\space}}
+
+\definecolor{bleuciel}{rgb}{0.78,0.84,0.99}
+
+% pour le dessin du point de vue
+\def\PointEcran(#1,#2,#3)#4{% position du point sur l'écran
+\pstVerb{/xM #1 def /yM #2 def /zM #3 def
+         /kC dE dup mul xM xE mul yM yE mul zM zE mul add add sub
+           xV xE mul xM xE mul sub
+           yV yE mul yM yE mul sub add
+           zV zE mul zM zE mul sub add
+           div def
+         /x_E kC xV xM sub mul xM add def
+         /y_E kC yV yM sub mul yM add def
+         /z_E kC zV zM sub mul zM add def}%
+\psPoint(x_E,y_E,z_E){#4}}
+
+
+\def \datapath {%
+%   ../doc/}
+}
+
+\title{\texttt{pst-solides3d} :\\
+       guide de l'utilisateur
+        \\[0.5cm]
+{\normalsize v. \PSTfileversion\ (\PSTfiledate)}\\
+\input \datapath init3d }
+\author{Jean-Paul \textsc{Vignault}, Manuel \textsc{Luque}, Arnaud \textsc{Schmittbuhl}\\
+ \url{<jpv@melusine.eu.org>}, \url{<manuel.luque27@gmail.com>},
+       \url{<aschmittbuhl@libertysurf.fr>}
+\thanks{Avec la collaboration de :
+ Jürgen \textsc{Gilg}\url{<gilg@acrotex.net>},
+ Jean-Michel \textsc{Sarlat}\url{<jm.sarlat@gmail.com>}.}}
+\date{21 décembre 2\,007}
+\begin{document}
+\maketitle
+
+
+%\input[tore-damier}
+%\input{methane}
+%\input{anneaux}
+%\vfill
+%\input{S2O3}
+%\input \datapath init3d
+%\vfill
+%\newpage
+\tableofcontents
+\newpage
+
+
+\input \datapath par-constitution
+\input \datapath par-preambule
+\input \datapath par-presentation
+\input \datapath par-changements
+
+\chapter{Commandes de bases}
+\input \datapath par-choixpointdevue
+\input \datapath par-axes3D
+\input \datapath par-solidespredefinis
+\input \datapath par-positionnersolide
+\input \datapath par-grille
+
+\chapter{Les options de \textbackslash{}psSolid}
+
+\input \datapath par-commandestrace
+\input \datapath par-solidescreux
+\input \datapath par-numeroterfacettes
+\input \datapath par-enleverfacettes
+\input \datapath par-pointagesommets
+\input \datapath par-couleurs
+\input \datapath par-colorierfacettes
+\input \datapath par-definitionmaillage
+\input \datapath par-modes
+\input \datapath par-eclairageponctuel
+\input \datapath par-lignedeniveau
+
+\chapter{Fabriquer de nouveaux solides}
+
+\input \datapath par-codejps
+\input \datapath par-definirfonction
+
+\input \datapath par-courbeR3
+\input \datapath par-prisme
+\input \datapath par-new
+\input \datapath par-face
+\input \datapath par-ruban
+\newpage
+\input \datapath par-anneaux
+\input \datapath par-surfacesparametrees
+\chapter{Surfaces définies par une fonction $z=f(x,y)$}
+
+\input \datapath par-surfaces
+
+%%
+\chapter{Utilisation avancée}
+\input \datapath par-nommersolide
+\input \datapath par-fusion
+\input \datapath par-fusionjps
+\chapter{Interaction avec PSTricks}
+\input \datapath par-positionnerpointconnu
+\input \datapath par-ligne3D
+\input \datapath par-tracerpolygone
+\input \datapath par-transformpointconnu
+\input \datapath par-annoterschema
+%%\input \datapath par-composervue
+
+\chapter{Projections}
+
+\input \datapath par-projectionvisibility
+\input \datapath par-definirplanquelconque
+\newpage
+\input \datapath par-definirfacesolideproj
+\newpage
+\input \datapath par-projectioncourbe
+\input \datapath par-projectionchemin
+\input \datapath par-projectiontexte
+
+\chapter{Annexe}
+\input \datapath par-parametres
+
+\end{document}

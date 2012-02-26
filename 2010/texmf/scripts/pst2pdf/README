@@ -1,0 +1,51 @@
+<pre>
+pst2pdf is a Perl script which isolates all PostScript or
+PSTricks related parts of the TeX document into single
+LaTeX files, for which an eps and pdf image is created. 
+The pdf ones are then imported in a last pdflatex run
+for the pdf output of the main document. The eps and
+pdf files are saved in a subdirectory images.
+
+Syntax: pst2pdf.pl file[.tex] [options] 
+
+alternative: perl pst2pdf.pl file[.tex] [options]
+
+
+Some restrictions:
+\begin{postscript}
+...
+\begin{pspicture}
+....
+\end{pspicture}
+...
+\end{postscript}
+
+The pspicture environment can be nested, the postscript one NOT! 
+pspicture can be inside of a postscript environment, but 
+not vice versa.
+
+The postscript environment should be used for all other
+PostScript related commands, which are not part of
+a pspicture environment, e.g. nodes inside normal text.
+
+pst2pdf creates a document file-pdf.tex for use with
+pdflatex, which then creates file-pdf.pdf. The created
+images are named file-tmp-<No>.pdf
+
+Options:
+--imageDir=<path>
+--Iext=<.ext>
+--DPI=<int>
+--Iscale=<real>
+--tempDir=<dir>
+--verbose 
+--clear 
+--noImages 
+--runBibtex
+--runBiber
+
+for more documentation => perldoc pst2pdf or read the documentation
+
+--
+Herbert Voss 2010-01-04
+</pre>

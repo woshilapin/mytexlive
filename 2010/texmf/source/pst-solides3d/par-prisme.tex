@@ -1,0 +1,306 @@
+\section {Le prisme}
+
+Deux paramètres sont propres au prisme :
+\begin{itemize}
+  \item La base du prisme peut-être définie librement par les
+  coordonnées des sommets dans le plan $Oxy$. Attention, il est
+  nécessaire que les quatres premiers sommets soient rangés dans le
+  sens trigonométrique par rapport à l'isobarycentre des sommets de
+  cette base ;
+  \item la direction de l'axe du prime par les coordonnées du vecteur
+  directeur. 
+\end{itemize}
+
+\subsubsection {Exemple 1 : prisme droit et prisme oblique à section
+  polygonale} 
+
+\begin{center}
+\psset{unit=0.5}
+\psset{lightsrc=10 5 50,SphericalCoor,viewpoint=50 20 30,Decran=50}
+\begin{minipage}{5cm}
+\begin{pspicture*}(-4,-4)(6,9)
+\psframe(-4,-4)(6,9)
+\psSolid[object=grille,base=-4 4 -4 4,action=draw]%
+\psSolid[object=prisme,h=6,base=0 1 -1 0 0 -2 1 -1 0 0]%
+ \axesIIID(4,4,6)(4.5,4.5,8)
+\end{pspicture*}
+
+\small\texttt{[base=\psframebox[fillstyle=solid,fillcolor=black]{\textcolor{white}{0 1 -1 0 0 -2 1 -1 0 0}},h=6]}
+\\
+\end{minipage}
+\hspace{2cm}
+\begin{minipage}{5cm}
+\begin{pspicture*}(-4,-4)(6,9)
+\psframe(-4,-4)(6,9)
+\psSolid[object=grille,base=-4 4 -4 4,action=draw]%
+\psSolid[object=prisme,axe=0 1 2,h=8,base=0 -2 1 -1 0 0 0 1 -1 0]%
+ \axesIIID(4,4,4)(4.5,4.5,8)
+\psPoint(0,4,8){V}
+\psPoint(0,4,0){Vy}
+\psPoint(0,0,8){Vz}
+\uput[l](Vz){8}
+\uput[ur](Vy){4}
+\psline[linecolor=blue]{->}(O)(V)
+\psline[linestyle=dashed](Vz)(V)(Vy)
+\end{pspicture*}
+
+\small\texttt{[base=\psframebox[fillstyle=solid,fillcolor=black]{\textcolor{white}{0 -2 1 -1 0 0 0 1 -1 0}},}%
+\\
+ \texttt{ axe=\psframebox[fillstyle=solid,fillcolor=black]{\textcolor{white}{0 4 8}},h=8]}
+\end{minipage}
+\end{center}
+
+\subsubsection{Exemple 2 : prisme droit à section carrée arrondie}
+
+\begin{minipage}{5cm}
+\psset{unit=0.5}
+\psset{lightsrc=10 -20 50,SphericalCoor,viewpoint=50 -20 30,Decran=50}
+\begin{pspicture}(-6,-4)(6,9)
+%\psframe(-5,-4)(6,9)
+\psSolid[object=grille,base=-4 4 -4 4,action=draw]%
+\psSolid[object=prisme,h=6,fillcolor=yellow,%
+         base=%
+           0 10 90 {/i exch def i cos 1 add i sin 1 add } for
+           %
+           90 10 180 {/i exch def i cos 1 sub i sin 1 add} for
+           %
+           180 10 270 {/i exch def i cos 1 sub i sin 1 sub} for
+           %
+           270 10 360 {/i exch def i cos 1 add i sin 1 sub} for
+      ]%
+ \axesIIID(4,4,6)(6,6,8)
+\end{pspicture}
+\end{minipage}
+\hfill
+\begin{minipage}{9cm}
+\small
+\begin{verbatim}
+\psSolid[object=grille,base=-4 4 -4 4,action=draw]%
+\psSolid[object=prisme,h=6,fillcolor=yellow,%
+         base=%
+           0 10 90 {/i exch def i cos 1 add i sin 1 add } for
+           %
+           90 10 180 {/i exch def i cos 1 sub i sin 1 add} for
+           %
+           180 10 270 {/i exch def i cos 1 sub i sin 1 sub} for
+           %
+           270 10 360 {/i exch def i cos 1 add i sin 1 sub} for
+      ]%
+ \axesIIID(4,4,6)(6,6,8)
+\end{verbatim}
+\end{minipage}
+%\newpage
+
+\subsubsection{Exemple 3 : prisme droit creux à section astroïdale}
+
+\begin{minipage}{5cm}
+\psset{unit=0.5}
+\psset{lightsrc=10 -20 50,SphericalCoor,viewpoint=50 -20 30,Decran=50}
+\begin{pspicture*}(-5,-4)(6,9)
+\psframe(-5,-4)(6,9)
+\defFunction{F}(t){3 t cos 3 exp mul}{3 t sin 3 exp mul}{}
+\psSolid[object=grille,base=-4 4 -4 4,action=draw]%
+\psSolid[object=prismecreux,h=8,fillcolor=red!50,
+       resolution=36,
+       base=0 350 {F} CourbeR2+
+      ]%
+\end{pspicture*}
+\end{minipage}
+\hfill
+\begin{minipage}{9cm}
+\small
+\begin{verbatim}
+\defFunction{F}(t){3 t cos 3 exp mul}{3 t sin 3 exp mul}{}
+\psSolid[object=grille,base=-4 4 -4 4,action=draw]%
+\psSolid[object=prismecreux,h=8,fillcolor=red!50,
+       resolution=36,
+       base=0 350 {F} CourbeR2+
+      ]%
+\end{verbatim}
+\end{minipage}
+
+\subsubsection{Exemple 4 : prisme à section elliptique}
+
+\begin{minipage}{6cm}
+\psset{unit=0.5}
+\psset{lightsrc=10 20 30,SphericalCoor,viewpoint=50 20 25,Decran=50}
+\begin{pspicture}(-6,-3)(6,10)
+%\psframe(-6,-3)(6,8)
+\defFunction{F}(t){t cos 4 mul}{t sin 2 mul}{}
+\psSolid[object=grille,base=-6 6 -4 4,action=draw]%
+\psSolid[object=prisme,h=8,fillcolor=green!20,%
+       base=0 350 {F} CourbeR2+]%
+\defFunction{F}(t){t cos 4 mul}{t sin 2 mul}{8}
+\psSolid[object=courbe,
+   function=F,range=0 360,
+   linewidth=2\pslinewidth,
+   linecolor=green]
+%% \makeatletter
+%% \parametricplot[linecolor=green,linewidth=2\pslinewidth]{0}{360}{%
+%%    \tx@optionssolides
+%%     SolidesDict begin
+%%     4 t cos  mul
+%%     2 t sin mul
+%%     8 % z
+%%    3dto2d cm_1 exch cm_1 exch
+%%    end}
+%% \makeatother
+\axesIIID(6,4,8)(8,6,10)
+\end{pspicture}
+\end{minipage}
+\hfill
+\begin{minipage}{8cm}
+\small
+\begin{verbatim}
+\defFunction{F}(t){t cos 4 mul}{t sin 2 mul}{}
+\psSolid[object=grille,base=-6 6 -4 4,action=draw]%
+\psSolid[object=prisme,h=8,fillcolor=green!20,%
+       base=0 350 {F} CourbeR2+]%
+\defFunction{F}(t){t cos 4 mul}{t sin 2 mul}{8}
+\psSolid[object=courbe,
+   function=F,range=0 360,
+   linewidth=2\pslinewidth,
+   linecolor=green]
+\end{verbatim}
+\end{minipage}
+%\newpage
+
+\subsubsection{Exemple 5 : une gouttière, section semi-circulaire à plat}
+
+\begin{minipage}{6cm}
+\psset{unit=0.5}
+\psset{lightsrc=10 20 30,SphericalCoor,viewpoint=50 30 25,Decran=50}
+\begin{pspicture}(-6,-5)(6,10)
+%\psframe(-6,-3)(6,8)
+\defFunction[algebraic]{F}(t)
+   {3*cos(t)}{3*sin(t)}{}
+\defFunction[algebraic]{G}(t)
+   {2.5*cos(t)}{2.5*sin(t)}{}
+\psSolid[object=grille,
+  base=-6 6 -6 6,action=draw]%
+\psSolid[object=prisme,h=12,
+   fillcolor=blue!30,RotX=-90,
+   resolution=19,
+   base=0 pi {F} CourbeR2+
+        pi 0 {G} CourbeR2+
+      ](0,-6,3)
+\axesIIID(6,6,2)(8,8,8)
+\end{pspicture}
+\end{minipage}
+\hfill
+\begin{minipage}{6cm}
+\small
+\begin{verbatim}
+\defFunction[algebraic]{F}(t)
+   {3*cos(t)}{3*sin(t)}{}
+\defFunction[algebraic]{G}(t)
+   {2.5*cos(t)}{2.5*sin(t)}{}
+\psSolid[object=grille,
+  base=-6 6 -6 6,action=draw]%
+\psSolid[object=prisme,h=12,
+   fillcolor=blue!30,RotX=-90,
+   resolution=19,
+   base=0 pi {F} CourbeR2+
+        pi 0 {G} CourbeR2+
+      ](0,-6,3)
+\axesIIID(6,6,2)(8,8,10)
+\end{verbatim}
+\end{minipage}
+
+On dessine d'abord la face extérieure (demi-cercle de rayon 3~cm), en
+tournant dans le sens trigonométrique~: \texttt{0 pi {F} CourbeR2+}
+
+Puis la face intérieure (demi-cercle de rayon 2{,}5~cm), en tournant
+cette fois dans le sens inverse du sens trigonométrique :
+\texttt{pi 0 {G} CourbeR2+}
+
+On fait tourner le solide de $-90^{\mathrm{o}}$ en le plaçant au point $(0,-6,3)$.
+
+\textdbend{} Comme on a utilisé l'option \verb+algebraic+ pour la
+définition des fontions $F$ et $G$, les fonctions $\sin $ et $\cos $
+utilisées fonctionnent en radian.
+
+\subsubsection{Le paramètre \texttt {decal}}
+
+Nous avons écrit plus haut qu'il était nécessaire que les quatres
+premiers sommets soient rangés dans le sens trigonométrique par
+rapport à l'isobarycentre des sommets de cette base. En fait, c'est la
+règle du comportement par défaut car la règle véritable est celle-ci~:
+Si la base comporte $n+1$ sommets $(s_0, s_1, s_2, \dots , s_{n-1},
+s_n)$, et si $G$ est l'isobarycentre des sommets, alors $(s_0, s_1)$
+d'une part, et $(s_{n-1}, s_n)$ d'autre part, doivent être rangés dans
+le sens trigonométrique par rapport à $G$.
+
+Cette règle induit des contraintes sur le codage de la base du prisme,
+rendant parfois ce dernier inesthétique. C'est pourquoi nous avons
+introduit l'argument \texttt{[decal]} (valeur par défaut$=-2$) qui
+permet de considérer la liste des sommets de la base comme une file
+circulaire que l'on décalera au besoin.
+
+Un exemple~: comportement par défaut avec $decal=-2$~:\par
+\begin{minipage}{6cm}
+\psset{unit=0.5}
+\psset{lightsrc=10 20 30,SphericalCoor,viewpoint=50 80 35,Decran=50}
+\begin{pspicture}(-6,-4)(6,7)
+\psframe(-7,-3)(6,6)
+\defFunction{F}(t){t cos 3 mul}{t sin 3 mul}{}
+\psSolid[object=prisme,h=8,
+      fillcolor=yellow,RotX=-90,
+      num=0 1 2 3 4 5 6,
+      show=0 1 2 3 4 5 6,
+      resolution=7,
+      base=0 180 {F} CourbeR2+
+      ](0,-10,0)
+\end{pspicture}
+\end{minipage}
+\hfill
+\begin{minipage}{8cm}
+\small
+\begin{verbatim}
+\defFunction{F}(t){t cos 3 mul}{t sin 3 mul}{}
+\psSolid[object=prisme,h=8,
+      fillcolor=yellow,RotX=-90,
+      num=0 1 2 3 4 5 6,
+      show=0 1 2 3 4 5 6,
+      resolution=7,
+      base=0 180 {F} CourbeR2+
+      ](0,-10,0)
+\end{verbatim}
+\end{minipage}
+
+On voit que le sommet d'indice~$0$ n'est pas là où on s'attendrait à
+le trouver.
+
+Recommençons, mais cette fois-ci en supprimant le décalage~:\par
+\begin{minipage}{6cm}
+\psset{unit=0.5}
+\psset{lightsrc=10 20 30,SphericalCoor,viewpoint=50 80 35,Decran=50}
+\begin{pspicture}(-6,-4)(6,7)
+\psframe(-7,-3)(6,6)
+\defFunction{F}(t){t cos 3 mul}{t sin 3 mul}{}
+\psSolid[object=prisme,h=8,
+      fillcolor=yellow,RotX=-90,
+      decal=0,
+      num=0 1 2 3 4 5 6,
+      show=0 1 2 3 4 5 6,
+      resolution=7,
+      base=0 180 {F} CourbeR2+
+      ](0,-10,0)
+\end{pspicture}
+\end{minipage}
+\hfill
+\begin{minipage}{8cm}
+\small
+\begin{verbatim}
+\defFunction{F}(t){t cos 3 mul}{t sin 3 mul}{}
+\psSolid[object=prisme,h=8,
+      fillcolor=yellow,RotX=-90,
+      decal=0,
+      num=0 1 2 3 4 5 6,
+      show=0 1 2 3 4 5 6,
+      resolution=7,
+      base=0 180 {F} CourbeR2+
+      ](0,-10,0)
+\end{verbatim}
+\end{minipage}
+

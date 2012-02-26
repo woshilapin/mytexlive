@@ -1,0 +1,35 @@
+\section {Une coupe}
+\bgroup
+\newcommand\SectionCoupe{
+0 0
+1.5 0
+1.5 0.2
+1.5 0.2
+   -90 -10 -180{
+      /Angle exch def
+      0.3 Angle cos mul 0.5 add % y=0.3cos(A) + 0.5
+      0.3 Angle sin mul 0.5 add % z=0.3sin(A) + 0.5
+   } for
+0.2 3.1
+-85 10 0{
+      /Angle exch def
+      2 Angle cos mul % y=2cos(A) + 0.5
+      2 Angle sin mul 5 add % z=2sin(A) + 5
+   } for
+2 5
+0 -10 -90{
+      /Angle exch def
+      1.9 Angle cos mul % y=2cos(A) + 0.5
+      1.9 Angle sin mul 5 add % z=2sin(A) + 5
+   } for
+   }
+\begin{LTXexample}[width=10cm]
+\begin{pspicture}(-4,-3)(4,6)
+\psframe(-4,-3)(4,6)
+\psset[pst-solides3d]{SphericalCoor,viewpoint=70 40 30,Decran=50,lightsrc=50 40 35}
+\psSolid[object=grille,base=-4 4 -4 4,fillcolor=green!30]%
+\psSolid[object=anneau,section=\SectionCoupe,fillcolor=cyan!30,linecolor=blue]%
+\axesIIID(1.5,1.5,4)(4,4,7)
+\end{pspicture}
+\end{LTXexample}
+\egroup

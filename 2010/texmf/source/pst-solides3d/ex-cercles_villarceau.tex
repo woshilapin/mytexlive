@@ -1,0 +1,41 @@
+\section{Les cercles de Villarceau}
+\bgroup\def\Radius{2}\def\radius{0.75}
+\begin{LTXexample}[pos=t]
+\psset{unit=0.75}
+\begin{pspicture}(-6,-8)(6,6)
+\psframe*[linecolor=gray!50](-6,-8)(6,6)
+\psset[pst-solides3d]{viewpoint=20 10 30,SphericalCoor,Decran=20,lightsrc=10 15 10}
+\psSolid[object=grille,base=-4 4 -4 4,action=draw*,linecolor=red](0,0,-6)
+\defFunction[algebraic]{torus}(u,v){(\Radius+ \radius*cos(u))*cos(v)}{(\Radius+ \radius*cos(u))*sin(v)}{\radius*sin(u)}
+\psSolid[object=surfaceparametree,
+   base=0 2 pi mul 0 2 pi mul ,action=draw**,fillcolor=yellow!50,linecolor=yellow,incolor=yellow!50,grid,
+   function=torus,linewidth=0.5\pslinewidth,grid,
+   ngrid=25]%
+\multido{\r=0+0.3927}{16}{%
+\defFunction[algebraic]{villarceauxy}(t){sqrt(\Radius^2-\radius^2)*cos(\r)*sin(t)-(\radius+\Radius*cos(t))*sin(\r)}{sqrt(\Radius^2-\radius^2)*sin(\r)*sin(t)+(\radius+\Radius*cos(t))*cos(\r)}{-6}
+\psSolid[object=courbe,
+    range=0 2 pi mul,linecolor=blue,
+    resolution=360,function=villarceauxy]%
+\defFunction[algebraic]{villarceau}(t){sqrt(\Radius^2-\radius^2)*cos(\r)*sin(t)-(\radius+\Radius*cos(t))*sin(\r)}{sqrt(\Radius^2-\radius^2)*sin(\r)*sin(t)+(\radius+\Radius*cos(t))*cos(\r)}{\radius*sin(t)}
+\psSolid[object=courbe,
+    range=0 2 pi mul,
+    linecolor={[cmyk]{1,0,1,0.5}},linewidth=0.75\pslinewidth,
+    resolution=360,
+    function=villarceau]%
+\defFunction[algebraic]{villarceau}(t){sqrt(\Radius^2-\radius^2)*cos(\r)*sin(t)+(\radius+\Radius*cos(t))*sin(\r)}{sqrt(\Radius^2-\radius^2)*sin(\r)*sin(t)-(\radius+\Radius*cos(t))*cos(\r)}{\radius*sin(t)}
+\psSolid[object=courbe,
+    range=0 2 pi mul,
+    linecolor={[cmyk]{1,0,1,0.5}},linewidth=0.75\pslinewidth,
+    resolution=360,
+    function=villarceau]%
+\defFunction[algebraic]{villarceauyz}(t){sqrt(\Radius^2-\radius^2)*cos(\r)*sin(t)-(\radius+\Radius*cos(t))*sin(\r)}{-4}{\radius*sin(t)}
+\psSolid[object=courbe,
+    range=0 2 pi mul,
+    resolution=360,
+    function=villarceauyz]}
+\gridIIID[Zmin=-6,Zmax=2,QZ=-2](-4,4)(-4,4)
+\end{pspicture}
+\end{LTXexample}
+
+
+\egroup

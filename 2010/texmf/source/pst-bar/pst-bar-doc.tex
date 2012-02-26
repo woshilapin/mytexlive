@@ -1,0 +1,746 @@
+%% $Id: pstricks-add-doc.tex 62 2008-11-25 19:52:07Z herbert $
+\documentclass[11pt,english,BCOR10mm,DIV12,bibliography=totoc,parskip=false,smallheadings
+    headexclude,footexclude,oneside]{pst-doc}
+\listfiles
+\usepackage{pst-bar}%
+\let\pstBarVersion\fileversion
+\usepackage{booktabs}%
+\usepackage{filecontents}%
+\usepackage{verbatim}%
+\makeatletter
+\def\kernhack#1#2{%
+    \begingroup
+	\setbox\z@\hbox{#1#2}%
+	\dimen@\wd\z@
+	\setbox\z@\hbox{#1{}#2}\advance\dimen@-\wd\z@
+	\ifdim\dimen@=\z@\else\kern\dimen@\fi
+    \endgroup
+}
+\def\switch#1#2{%
+    \begingroup
+	\def\@switch##1#1##2\@nil#1##3\@stop{%
+	    \def\reserved@a{##3}%
+	    \ifx\reserved@a\@empty#2\else
+		\setbox\z@\hbox{##1#1}%
+		\setbox\tw@\hbox{\kernhack{#1}{##2}\switch{#1}{##2}}%
+		\dimen@\wd\tw@\advance\dimen@\wd\z@%
+		\wd\z@\dimen@%
+		\rlap{\hb@xt@\dimen@{\hfil\unhbox\tw@}}%
+		\box\z@
+	    \fi
+	}%
+	\@switch#2\@nil#1\@nil#1\@stop
+    \endgroup
+}
+% Given an e-mail address of the form abc@def.ghi.jkl, reverses it to be jkl
+% ghi. def. abc@
+\def\switchemail#1{\expandafter\@switchemail#1\@stop}
+% Helper function for \switchemail. Note the \copy, because \kernhack will
+% destroy the box otherwise. Need to do some funky stuff because of catcodes.
+\begingroup
+\makeatother
+\def\tmp#1#2#3{%
+    \gdef#1##1@##2#2{%
+	\begingroup
+	\setbox#3\hbox{\switch{.}{##2}}%
+	\switch{@}{##1@\copy#3}%
+	\endgroup
+    }%
+}
+\makeatletter
+\tmp\@switchemail\@stop\@tempboxa
+\endgroup
+\makeatother
+
+\usepackage[T1]{fontenc}%
+
+\begin{filecontents*}{example1.csv}
+    Set 1, Set 2, Set 3
+    1, 2, 3
+    1, 2, 3
+\end{filecontents*}
+
+\begin{filecontents*}{example2.csv}
+    Set 1, Set 2, Set 3
+    1, 2, 3
+    0.5, 1.5, 1
+\end{filecontents*}
+
+\begin{filecontents*}{example3.csv}
+    Set 1, Set 2, Set 3
+    1, 2, 3
+    0.5, 1.5, 1
+    0.75, 1.6, 0.9
+    0.9, 2.2, 2.5
+\end{filecontents*}
+
+\begin{filecontents*}{example4.csv}
+    Set 1, Set 2, Set 3
+    1, 0, 3
+\end{filecontents*}
+
+\begin{filecontents*}{example5.csv}
+    0, 2, 0
+\end{filecontents*}
+
+\begin{filecontents*}{example6.csv}
+    Set 1, Set 2, Set 3
+    1.3, 2.5, 0.9
+\end{filecontents*}
+
+\begin{filecontents*}{example7.csv}
+    0.7, 1.9, 0.4
+    1.2, 2.7, 1.4
+\end{filecontents*}
+
+\setlength{\oddsidemargin}{0.25in}%
+\setlength{\evensidemargin}{0.25in}%
+\setlength{\textwidth}{6in}%
+\setlength{\topmargin}{0in}%
+\setlength{\headheight}{0in}%
+\setlength{\headsep}{0in}%
+\setlength{\textheight}{9in}%
+
+
+% TODO:
+% 1. Add notice that pst-bar may only work with the latest pstricks.
+% 2. Make clear that \psxunit must be set using \psset{xunit}.
+
+\begin{document}
+\title{\texttt{pst-bar}\\ Bar charts for \texttt{pstricks}\\
+    {\small v.\pstBarVersion}}
+\author{Alan Ristow\\
+    \texttt{\switchemail{ristow@ee.gatech.edu}}}
+\date{October 20, 2008}
+\maketitle
+
+  \begin{abstract}
+    With \LPack{pst-bar}, one may use \LPack{pstricks} to produce bar charts
+    directly from a data file. This package is still in the beta stage --- the
+    usual caveats pertaining to beta software apply. Additional features and
+    improved (in both content and layout) documentation will be provided as the
+    code stabilizes.
+  \end{abstract}
+
+\section{Introduction}
+    \verb|pst-bar| uses the power and flexibility of
+    \verb|pstricks|~\cite{vanzandt:93} to draw bar charts from data stored in a
+    comma-delimited file. Several solutions exist for drawing bar charts for
+    \TeX\ and \LaTeX\ documents. The obvious solution is to use an external
+    program, such as gnuplot or Matlab, that can save bar charts in a format
+    that may be read directly into \TeX\ or \LaTeX. This approach has the
+    disadvantage that extra effort is required to produce charts with a uniform
+    appearance that blend well with the other graphics in a document. In many
+    cases the text in the chart can be typeset by \LaTeX\ with the aid of the
+    \LPack{psfrag} or \verb|psfragx| packages (for diagrams created with Matlab,
+    this process can be accelerated by LaPrint, a Matlab program written
+    specifically for this purpose~\cite{linneman:04}). However, some programs
+    write the text elements in Encapsulated Postscript files in such a way that
+    the \verb|psfrag|-based options cannot work.
+
+    Bar charts may also be drawn using the built-in drawing tools provided by
+    \TeX\ and \LaTeX. This is the approach used by the \verb|histogr|
+    package~\cite{schopf:97}, which is intended to draw histograms, but can be
+    used to draw very simple bar charts. It also appears to be the approach
+    used by the \verb|bar| package~\cite{bleser:94} for \LaTeX\ 2.09, which
+    defines an environment for drawing bar charts. However, the built-in
+    drawing tools are quite limited and work on the \verb|bar| package appears
+    to have ceased after 1994.
+
+    More sophisticated drawing tools have been developed for use with \TeX\ and
+    \LaTeX, notably \verb|eepic|, \verb|texdraw| and \verb|latexdraw|,
+    \verb|LaTeXPiX|, MetaPost, \verb|mfpic|, and \verb|pstricks|. Any of these
+    tools might be used to create bar charts; however, none of them has
+    built-in support for doing so, and bar charts must be drawn using the
+    ``brute force'' method --- manually drawing boxes to represent the bars in
+    the chart. Depending on the tool, the axes of the chart might also need to
+    be drawn manually. The \verb|pst-bar| package is intended to automate the
+    process of drawing bar charts using \verb|pstricks|.
+
+    There are currently two existing solutions for producing bar charts using
+    \verb|pstricks|. One is the aforementioned brute force method in which a
+    series of \Lcs{psframe}s are drawn with suitable heights, widths, and
+    colors to produce the desired chart~\cite{voss:barcharts}. While this
+    method works admirably and provides maximum flexibility, it is tedious and
+    labor-intensive. The other option is the \verb|bardiag| package, which
+    essentially automates this approach~\cite{stepanyan:03}. While effective,
+    \verb|bardiag| requires a number of external packages to function, uses
+    \LaTeX\ to perform its mathematical operations, and is not compatible with
+    plain \TeX.
+
+    These issues are all avoided by \verb|pst-bar|. It calls only on packages
+    that are part of the \verb|pstricks| family, provides extensive
+    customization features, relies on Postscript for nearly all mathematical
+    operations, and should be compatible with plain \TeX\ (untested).
+    \verb|pst-bar| provides commands for reading data from a comma-delimited
+    file to produce and label a bar chart. Multiple series of data may be
+    plotted in either clustered or stacked form, and bars may be plotted either
+    horizontally or vertically. An additional option allows block charts that
+    display the differences between subsequent rows of data in the data file
+    (see Section~\ref{sec:block}).
+
+    At this stage, \verb|pst-bar| should be regarded as beta software.
+    Revisions to the code between this release and the first stable release are
+    not guaranteed to be backward compatible.
+
+  \section{Drawing a Bar Chart}
+    Drawing a bar chart with \verb|pst-bar| is a three-step process: (i) read
+    the data file, (ii) draw the bars, and (iii) draw the axes. The first two
+    step are accomplished directly with \verb|pst-bar|; the third requires the
+    \verb|pst-plot| package, a standard part of \verb|pstricks|.
+
+    The following sections address the data file format, how to load data from
+    the file, and how to use the data to produce a bar chart.
+
+    \subsection{Data File Format}
+      The data file must be comma-delimited with each row containing the same
+      number of entries. A header row is permitted, but no header entry may
+      contain commas or \verb|\par| commands (including \verb|\\|). One of the
+      data files used for the examples in this manual looks like
+        \verbatiminput{example1.csv}%
+      In this case, \verb|Set 1|, \verb|Set 2|, and \verb|Set 3| are the
+      headers. The subsequent rows, hereafter referred to as \emph{data rows},
+      contain the data associated with these headers. The file is arranged in a
+      pseudo-columnar fashion, so that the data associated with \verb|Set 1|
+      are \verb|1| and \verb|1|, those with \verb|Set 2| are \verb|2| and
+      \verb|2|, and so on. After these data are plotted, the bars will be
+      labeled with the text from the header row.
+
+      \emph{Warning!} There are two very important conditions on the data
+      within the file:
+      \begin{itemize}
+        \item All data outside of the header must be numeric. If there is no
+          header row, all data in the file must be numeric.
+        \item Each row must contain the same number of entries.
+      \end{itemize}
+      Failure to meet these conditions may result in Postscript errors or (less
+      frequently) incorrectly labeled or drawn bar charts.
+
+      How these data are plotted depends on the type of plot desired. See
+      Sections~\ref{sec:cluster}--\ref{sec:block} and the examples in
+      Section~\ref{sec:examples} for more on this.
+
+    \subsection{Reading the Data File}
+      Use the command \verb|\readpsbardata| to read from a data file:
+      \begin{verbatim}
+    \readpsbardata[<options>]{<data>}{<filename>}\end{verbatim}
+      For the data, simply specify a macro name not currently in use.
+
+      The available options are:
+      \begin{center}
+        \begin{tabular}{ll}
+          \toprule
+            Parameter     & Definition\\
+          \midrule
+            \verb|header| & \verb|true| if first line of data file is header
+                            row\\
+                          & \verb|false| otherwise\\
+                          & Default: \verb|true|\\
+          \bottomrule
+        \end{tabular}
+      \end{center}
+      If \verb|header| is set to \verb|false|, \verb|pst-bar| will assume that
+      no header is present and treat the first line of the file as data.
+
+    \subsection{Drawing the Bars}
+      \label{sec:drawing_bars}%
+      The command \verb|\psbarchart| draws the bars for the bar chart.
+      \begin{verbatim}
+    \psbarchart[<options>]{<data>}\end{verbatim}
+      For \verb|<data>|, use the macro name supplied to \verb|\readpsbardata|.
+      Bars are grouped in columns that are one \verb|\psxunit| wide, and the
+      number of bars appearing in a single column is equal to the number of
+      data rows in the data file. It labels the bottom of each column with the
+      headers from the data file if \verb|header| was set to to \verb|true|
+      during \verb|\readpsbardata|. It only creates the bars and the column
+      labels --- axes and frames must be provided separately.
+
+      The available options are:
+      \begin{center}
+        \begin{tabular}{ll}
+          \toprule
+            Parameter           & Definition\\
+          \midrule
+            \verb|chartstyle|   & \verb|cluster| produces a cluster of bars\\
+                                & \verb|stack| stacks the cluster into a single
+                                  column\\
+                                & \verb|block| prints a ``floating'' bar with a
+                                  nonzero minimum\\
+                                & Default: \verb|cluster|\\
+            \verb|barstyle|     & Name(s) of bar style(s) to use for each bar\\
+                                & Default: \verb|{black,darkgray,gray,lightgray,white,red,green,blue}|\\
+            \verb|barcolsep|    & Factor determining whitespace between
+                                  columns\\
+                                & Default: \verb|0.4|\\
+            \verb|barsep|       & Factor determining whitespace between bars\\
+                                & (\verb|cluster| and \verb|block| charts)\\
+                                & Default: \verb|0.0|\\
+            \verb|barlabelrot|  & Angle of rotation of the column labels\\
+                                & Default: \verb|0|\\
+            \verb|orientation|  & \verb|vertical| for vertically drawn bars\\
+                                & \verb|horizontal| for horizontally drawn
+                                  bars\\
+                                & Default: \verb|vertical|\\
+          \bottomrule%
+        \end{tabular}
+      \end{center}
+
+      The number of \verb|barstyle|s specified must equal or exceed the number
+      of bar segments in each column; otherwise, a Postscript error will
+      result. For the \verb|cluster| and \verb|stack| \verb|chartstyle|s, this
+      is equal to the number of data rows in the data file; for the
+      \verb|block| \verb|chartstyle|, it is equal to half the number of data
+      rows. Furthermore, when specifying the list of \verb|barstyle|s, the
+      styles must be listed between curly braces, e.g.,
+      \begin{verbatim}
+    \psbarchart[barstyles={black,gray,white},...]{...}\end{verbatim}
+
+      The \verb|barstyle|s available by default are \verb|red|, \verb|green|,
+      \verb|blue|, \verb|black|, \verb|white|, \verb|gray|, \verb|lightgray|,
+      and \verb|darkgray|. Each of these plots a bar of the named color with
+      square corners and a black outline. New \verb|barstyle|s may be defined
+      using the \verb|\newpsbarstyle| command described in
+      Section~\ref{sec:customizing}.
+
+      Figure~\ref{fig:bar_layout} shows how the \verb|\psbarchart| lays out the
+      bars for the default \verb|chartstyle|, \verb|cluster|. For the
+      \verb|stack| \verb|chartstyle|, the \verb|barsep| option is ignored.
+
+      \begin{figure}[t]
+        \centering%
+        \begin{pspicture}(0,0)(4in,2in)%
+          \psframe[linestyle=dashed](0,0)(4in,2in)%
+          \psframe[linestyle=none,fillstyle=hlines,hatchangle=45,%
+            hatchcolor=lightgray,hatchwidth=0.4pt,hatchsep=8pt](0,0)(1in,2in)%
+          \psframe[fillcolor=darkgray,fillstyle=solid](0.2in,0in)(0.45in,0.8in)%
+          \psframe[fillcolor=lightgray,fillstyle=solid](0.55in,0in)(0.8in,1.1in)%
+          \psline[linestyle=dotted](1in,0in)(1in,2in)%
+          \psframe[fillcolor=darkgray,fillstyle=solid](1.2in,0in)(1.45in,0.6in)%
+          \psframe[fillcolor=lightgray,fillstyle=solid](1.55in,0in)(1.8in,0.4in)%
+          \psline[linestyle=dotted](2in,0in)(2in,2in)%
+          \psframe[fillcolor=darkgray,fillstyle=solid](2.2in,0in)(2.45in,0.4in)%
+          \psframe[fillcolor=lightgray,fillstyle=solid](2.55in,0in)(2.8in,0.3in)%
+          \psline[linestyle=dotted](3in,0in)(3in,2in)%
+          \psframe[fillcolor=darkgray,fillstyle=solid](3.2in,0in)(3.45in,1.1in)%
+          \psframe[fillcolor=lightgray,fillstyle=solid](3.55in,0in)(3.8in,0.9in)%
+          \rput[b](0.5in,1.8in){\small$\mathtt{\backslash psxunit}$}%
+          \psline{->}(0.2in,1.87in)(0in,1.87in)%
+          \psline{->}(0.8in,1.87in)(1in,1.87in)%
+          \psline(0.45in,0.85in)(0.45in,1.3in)%
+          \psline(0.55in,1.15in)(0.55in,1.3in)%
+          \rput[l](0.8in,1.25in){\small$\mathtt{barsep} \times
+            \mathtt{\backslash psxunit}$}%
+          \psline{->}(0.75in,1.25in)(0.55in,1.25in)%
+          \psline{->}(0.25in,1.25in)(0.45in,1.25in)%
+          \psline{->}(0.6in,0.9in)(0.8in,0.9in)%
+          \psline{->}(1.2in,0.9in)(1in,0.9in)%
+          \rput[l](1.25in,0.9in){\small$0.5 \times \mathtt{barcolsep} \times
+            \mathtt{\backslash psxunit}$}%
+        \end{pspicture}
+        \caption{\label{fig:bar_layout}%
+          Schematic diagram for the layout of the bar chart. The hatched area
+          marks the region in which data from the first column of the data file
+          will be plotted. Bar width is equal to $[(1 - \mathtt{barsep} - 0.5
+          \times \mathtt{barcolsep}) \times \mathtt{\backslash psxunit}] / N$,
+          where $N$ is the number of bars in the column.
+        }%
+      \end{figure}
+
+    \subsection{Customizing the Chart}
+      \label{sec:customizing}%
+      To add a custom bar style, use the command \verb|\newpsbarstyle|,
+      \begin{verbatim}
+    \newpsbarstyle{<name>}{<definition>}\end{verbatim}
+      The name is a text string not currently used by any other
+      \verb|barstyle|, and the definition may consist of any \verb|pstricks|
+      key or group of keys applicable to \verb|\psframe|. For example, the
+      \verb|red| \verb|barstyle| is defined as
+      \begin{verbatim}
+    \newpsbarstyle{red}{fillcolor=red,fillstyle=solid,framearc=0}\end{verbatim}
+
+      To customize the type used to set the column labels, redefine
+      \verb|\psbarlabel|. For example, to have the label set in small italics,
+      use
+      \begin{verbatim}
+    \renewcommand*{\psbarlabel}{\small\itshape}\end{verbatim}
+      By default, \verb|\psbarlabel| sets the column label in the current text
+      font.
+
+      To adjust the spacing between the bars and the column labels, redefine
+      \verb|\psbarlabelsep|. Note that it is defined as a command, not a
+      length, and should be redefined using \verb|\renewcommand*|. By default
+      it is \verb|0pt|.
+
+      Finally, the data from the file may be scaled and manipulated using the
+      command \verb|\psbarscale|,
+      \begin{verbatim}
+    \psbarscale(<scale>){<Postscript code>}\end{verbatim}
+      inspired by Herbert Vo\ss' \verb|\pstScale| from
+      \verb|pstricks-add|~\cite{voss:04}. The data are scaled by the value in
+      parentheses and may be further manipulated with Postscript code. For
+      example, to plot the logarithm of the input data one would use
+      \verb|\psbarscale(1){log}|. The Postscript code is applied to the data
+      prior to scaling.
+
+  \section{The Chart Styles}
+    As described in Section~\ref{sec:drawing_bars}, there are three different
+    \verb|chartstyle| options. The default, \verb|cluster| is the common bar
+    chart with bars clustered into groups of related data. The second option,
+    \verb|stack|, draws a series of bars stacked atop one another instead of
+    sitting side-by-side in a cluster. The third, \verb|block|, draws clustered
+    bars between two data points, thus displaying a range of values instead of
+    a single value.
+
+    The following sections describe each \verb|chartstyle| in detail, including
+    how it uses the input data. Examples of use are provided in each case. Full
+    examples, including axes, appear in Section~\ref{sec:examples}.
+
+    \subsection{\texttt{cluster}}
+      \label{sec:cluster}%
+      For a \verb|cluster| chart, each comma-delimited variable within a given
+      row represents a bar in a different column. Each row represents a new set
+      of bars. Thus the file
+      \verbatiminput{example1.csv}%
+      produces the bars
+
+      \hfill%
+      \begin{minipage}[b]{1.5in}%
+        \psset{unit=0.5in}%
+        \begin{pspicture}(0,-0.5)(3,3)%
+          \readpsbardata{\data}{example1.csv}%
+          \psbarchart[barstyle={red,blue}]{\data}%
+        \end{pspicture}
+      \end{minipage}%
+      \hfill%
+      \begin{minipage}[b][1.75in][c]{3.5in}%
+        \begin{verbatim}
+\psset{unit=0.5in}%
+\begin{pspicture}(0,-0.5)(3,3)%
+  \readpsbardata{\data}{example1.csv}%
+  \psbarchart[barstyle={red,blue}]{\data}%
+\end{pspicture}\end{verbatim}
+      \end{minipage}%
+      \hfill%
+
+    \subsection{\texttt{stack}}
+      For a \verb|stack| chart, each column of the chart has only one bar. This
+      bar consists of as many segments as the data file has data rows, with the
+      data from each row stacked onto the previous row. Thus, the file
+      \verbatiminput{example2.csv}%
+      produces the bars
+
+      \hfill%
+      \begin{minipage}[b]{1.5in}%
+        \psset{unit=0.5in}%
+        \begin{pspicture}(0,-0.5)(3,4)%
+          \readpsbardata{\data}{example2.csv}%
+          \psbarchart[barstyle={red,blue},chartstyle=stack]{\data}%
+        \end{pspicture}
+      \end{minipage}
+      \hfill%
+      \begin{minipage}[b][2.25in][c]{3.5in}%
+        \begin{verbatim}
+\psset{unit=0.5in}%
+\begin{pspicture}(0,-0.5)(3,4)%
+  \readpsbardata{\data}{example2.csv}%
+  \psbarchart[barstyle={red,blue},%
+    chartstyle=stack]{\data}%
+\end{pspicture}\end{verbatim}
+      \end{minipage}
+      \hfill%
+
+      Notice that these bars are wider than those produced by
+      \verb|[chartstyle=cluster]| because the bars are stacked vertically
+      instead of being clustered along the bottom axis. A bar width similar to
+      that of the \verb|cluster| chart in the previous section could be
+      obtained by setting \verb|xunit=0.25in|.
+
+    \subsection{\texttt{block}}
+      \label{sec:block}%
+      For a \verb|block| chart, each bar represents a range of values. As such,
+      each bar requires two data lines from the data file, one denoting the
+      upper limit and the other the lower limit. If there are multiple pairs of
+      data lines, they are plotted in a clustered fashion. If there are an odd
+      number of data lines, the last line of the data file is ignored. Thus,
+      the file
+      \verbatiminput{example3.csv}%
+      produces the bars
+
+      \hfill%
+      \begin{minipage}[b]{1.5in}%
+        \psset{unit=0.5in}%
+        \begin{pspicture}(0,-0.5)(3,3.5)%
+          \readpsbardata{\data}{example3.csv}%
+          \psbarchart[barstyle={red,blue},chartstyle=block]{\data}%
+        \end{pspicture}
+      \end{minipage}%
+      \hfill%
+      \begin{minipage}[b][1.5in][c]{3.5in}%
+        \begin{verbatim}
+\psset{unit=0.5in}%
+\begin{pspicture}(0,-0.5)(3,3.5)%
+  \readpsbardata{\data}{example3.csv}%
+  \psbarchart[barstyle={red,blue},%
+    chartstyle=block]{\data}%
+\end{pspicture}\end{verbatim}
+      \end{minipage}
+
+  \section{Examples}
+    \label{sec:examples}%
+    Basic examples of each type including axes and gridlines:
+
+    \begin{verbatim}
+\begin{filecontents*}{example2.csv}
+  Set 1, Set 2, Set 3
+  1, 2, 3
+  0.5, 1.5, 1
+\end{filecontents*}\end{verbatim}
+
+    \hfill%
+    \begin{minipage}[b]{1.5in}%
+      \psset{unit=0.5in}%
+      \begin{pspicture}(0,-0.5)(3,4.5)%
+        \psgrid[xunit=1.5in,gridlabels=0,subgriddiv=0,griddots=30](0,0)(1,4)%
+        \psaxes[axesstyle=frame,Ox=0,Dx=1,labels=y,ticks=y](0,0)(3,4)%
+        \readpsbardata{\data}{example2.csv}%
+        \psbarchart[barstyle={red,blue}]{\data}%
+      \end{pspicture}
+    \end{minipage}%
+    \hfill%
+    \begin{minipage}[b][2.25in][c]{3.5in}%
+      \begin{verbatim}
+\psset{unit=0.5in}%
+\begin{pspicture}(0,-0.5)(3,4.5)%
+  \psgrid[xunit=1.5in,gridlabels=0,%
+    subgriddiv=0,griddots=30](0,0)(1,4)%
+  \psaxes[axesstyle=frame,Ox=0,Dx=1,labels=y,%
+    ticks=y](0,0)(3,4)%
+  \readpsbardata{\data}{example2.csv}%
+  \psbarchart[barstyle={red,blue}]{\data}%
+\end{pspicture}\end{verbatim}
+    \end{minipage}
+
+    \hfill%
+    \begin{minipage}[b]{1.5in}%
+      \psset{unit=0.5in}%
+      \begin{pspicture}(0,-0.5)(3,4.5)%
+        \psgrid[xunit=1.5in,gridlabels=0,subgriddiv=0,griddots=30](0,0)(1,4)%
+        \psaxes[axesstyle=frame,Ox=0,Dx=1,labels=y,ticks=y](0,0)(3,4)%
+        \readpsbardata{\data}{example2.csv}%
+        \psbarchart[barstyle={red,blue},chartstyle=stack]{\data}%
+      \end{pspicture}
+    \end{minipage}%
+    \hfill%
+    \begin{minipage}[b][2.25in][c]{3.5in}%
+      \begin{verbatim}
+\psset{unit=0.5in}%
+\begin{pspicture}(0,-0.5)(3,4.5)%
+  \psgrid[xunit=1.5in,gridlabels=0,%
+    subgriddiv=0,griddots=30](0,0)(1,4)%
+  \psaxes[axesstyle=frame,Ox=0,Dx=1,labels=y,%
+    ticks=y](0,0)(3,4)%
+  \readpsbardata{\data}{example2.csv}%
+  \psbarchart[barstyle={red,blue},%
+    chartstyle=stack]{\data}%
+\end{pspicture}\end{verbatim}
+    \end{minipage}
+
+    \hfill%
+    \begin{minipage}[b]{1.5in}%
+      \psset{unit=0.5in}%
+      \begin{pspicture}(0,-0.5)(3,4.5)%
+        \psgrid[xunit=1.5in,gridlabels=0,subgriddiv=0,griddots=30](0,0)(1,4)%
+        \psaxes[axesstyle=frame,Ox=0,Dx=1,labels=y,ticks=y](0,0)(3,4)%
+        \readpsbardata{\data}{example2.csv}%
+        \psbarchart[barstyle={red,blue},chartstyle=block]{\data}%
+      \end{pspicture}
+    \end{minipage}%
+    \hfill%
+    \begin{minipage}[b][2.25in][c]{3.5in}%
+      \begin{verbatim}
+\psset{unit=0.5in}%
+\begin{pspicture}(0,-0.5)(3,4.5)%
+  \psgrid[xunit=1.5in,gridlabels=0,%
+    subgriddiv=0,griddots=30](0,0)(1,4)%
+  \psaxes[axesstyle=frame,Ox=0,Dx=1,labels=y,%
+    ticks=y](0,0)(3,4)%
+  \readpsbardata{\data}{example2.csv}%
+  \psbarchart[barstyle={red,blue},%
+    chartstyle=block]{\data}%
+\end{pspicture}\end{verbatim}
+    \end{minipage}
+
+    Using \verb|\newpsbarstyle|:
+
+    \hfill%
+    \begin{minipage}[b]{1.5in}%
+      \psset{unit=0.5in}%
+      \newpsbarstyle{yellowhatch}{framearc=0.5,fillstyle=hlines*,rot=45,fillcolor=yellow}%
+      \newpsbarstyle{redoutline}{framearc=0.5,fillcolor=black,linecolor=red,linewidth=1.5pt}%
+      \begin{pspicture}(0,-0.5)(3,4.5)%
+        \psgrid[xunit=1.5in,gridlabels=0,subgriddiv=0,griddots=30](0,0)(1,4)%
+        \psaxes[axesstyle=frame,Ox=0,Dx=1,labels=y,ticks=y](0,0)(3,4)%
+        \readpsbardata{\data}{example2.csv}%
+        \psbarchart[barstyle={yellowhatch,redoutline}]{\data}%
+      \end{pspicture}
+    \end{minipage}%
+    \hfill%
+    \begin{minipage}[b][2.75in][c]{3.5in}%
+      \begin{verbatim}
+\psset{unit=0.5in}%
+\newpsbarstyle{yellowhatch}{framearc=0.5,%
+  fillstyle=hlines*,rot=45,fillcolor=yellow}%
+\newpsbarstyle{redoutline}{framearc=0.5,%
+  fillcolor=black,linecolor=red,%
+  linewidth=1.5pt}%
+\begin{pspicture}(0,-0.5)(3,4.5)%
+  \psgrid[xunit=1.5in,gridlabels=0,%
+    subgriddiv=0,griddots=30](0,0)(1,4)%
+  \psaxes[axesstyle=frame,Ox=0,Dx=1,labels=y,%
+    ticks=y](0,0)(3,4)%
+  \readpsbardata{\data}{example2.csv}%
+  \psbarchart[barstyle={yellowhatch,%
+    redoutline}]{\data}%
+\end{pspicture}\end{verbatim}
+    \end{minipage}
+
+    Using \verb|[orientation=horizontal]|:
+
+    \hfill%
+    \begin{minipage}[b]{2in}%
+      \psset{unit=0.5in}%
+      \newpsbarstyle{yellowhatch}{framearc=0.5,fillstyle=hlines*,rot=45,fillcolor=yellow}%
+      \newpsbarstyle{redoutline}{framearc=0.5,fillcolor=black,linecolor=red,linewidth=1.5pt}%
+      \begin{pspicture}(0,-0.5)(4,3.5)%
+        \psgrid[yunit=1.5in,gridlabels=0,subgriddiv=0,griddots=30](0,0)(3,1)%
+        \psaxes[axesstyle=frame,Ox=0,Dx=1,labels=x,ticks=x](0,0)(3,3)%
+        \readpsbardata{\data}{example2.csv}%
+        \psbarchart[barstyle={yellowhatch,redoutline},orientation=horizontal]{\data}%
+      \end{pspicture}
+    \end{minipage}%
+    \hfill%
+    \begin{minipage}[b][2.75in][c]{3.5in}%
+      \begin{verbatim}
+\psset{unit=0.5in}%
+\newpsbarstyle{yellowhatch}{framearc=0.5,%
+  fillstyle=hlines*,rot=45,fillcolor=yellow}%
+\newpsbarstyle{redoutline}{framearc=0.5,%
+  fillcolor=black,linecolor=red,%
+  linewidth=1.5pt}%
+\begin{pspicture}(0,-0.5)(3,4.5)%
+  \psgrid[xunit=1.5in,gridlabels=0,%
+    subgriddiv=0,griddots=30](0,0)(1,4)%
+  \psaxes[axesstyle=frame,Ox=0,Dx=1,labels=y,%
+    ticks=y](0,0)(3,4)%
+  \readpsbardata{\data}{example2.csv}%
+  \psbarchart[barstyle={yellowhatch,%
+    redoutline}]{\data}%
+\end{pspicture}\end{verbatim}
+    \end{minipage}
+
+    Sophisticated effects are possible using multiple calls to
+    \verb|\psbarchart| in a single chart. For example, a particular important
+    bar may be highlighted in green by splitting the data into two files, one
+    containing a zero for the data value to be highlighted, and the other
+    containing zeros for all of the data \emph{except} the value to be
+    highlighted.
+
+    \vspace*{2ex}%
+
+    File 1 (\verb|example4.csv|):
+    \verbatiminput{example4.csv}%
+
+    File 2 (\verb|example5.csv|):
+    \verbatiminput{example5.csv}%
+    Notice that the second file has no header row in order to prevent the bar
+    labels from being printed twice.
+
+    \hfill%
+    \begin{minipage}[b]{1.5in}%
+      \psset{unit=0.5in}%
+      \begin{pspicture}(0,-0.5)(3,4.5)%
+        \psgrid[xunit=1.5in,gridlabels=0,subgriddiv=0,griddots=30](0,0)(1,4)%
+        \psaxes[axesstyle=frame,Ox=0,Dx=1,labels=y,ticks=y](0,0)(3,4)%
+        \readpsbardata{\data}{example4.csv}%
+        \psbarchart[barstyle={blue}]{\data}%
+        \readpsbardata[header=false]{\data}{example5.csv}%
+        \psbarchart[barstyle={green}]{\data}%
+      \end{pspicture}
+    \end{minipage}%
+    \hfill%
+    \begin{minipage}[b][2.25in][c]{3.5in}%
+      \begin{verbatim}
+\psset{unit=0.5in}%
+\begin{pspicture}(0,-0.5)(3,4.5)%
+  \psgrid[xunit=1.5in,gridlabels=0,%
+    subgriddiv=0,griddots=30](0,0)(1,4)%
+  \psaxes[axesstyle=frame,Ox=0,Dx=1,labels=y,%
+    ticks=y](0,0)(3,4)%
+  \readpsbardata{\data}{example4.csv}%
+  \psbarchart[barstyle={blue}]{\data}%
+  \readpsbardata[header=false]{\data}%
+    {example5.csv}%
+  \psbarchart[barstyle={green}]{\data}%
+\end{pspicture}\end{verbatim}
+    \end{minipage}
+
+    Different chart styles may also be combined in a single bar chart.
+
+    \vspace*{2ex}%
+
+    File 1 (\verb|example6.csv|): \verbatiminput{example6.csv}%
+
+    File 2 (\verb|example7.csv|): \verbatiminput{example7.csv}%
+
+    \hfill%
+    \begin{minipage}[b]{1.5in}%
+      \psset{unit=0.5in}%
+      \begin{pspicture}(0,-0.5)(3,4.5)%
+        \psgrid[xunit=1.5in,gridlabels=0,subgriddiv=0,griddots=30](0,0)(1,4)%
+        \psaxes[axesstyle=frame,Ox=0,Dx=1,labels=y,ticks=y](0,0)(3,4)%
+        \readpsbardata{\data}{example6.csv}%
+        \psbarchart[barstyle={black}]{\data}%
+        \readpsbardata[header=false]{\data}{example7.csv}%
+        \psbarchart[barstyle={red},chartstyle=block,barcolsep=0.8]{\data}%
+      \end{pspicture}
+    \end{minipage}%
+    \hfill%
+    \begin{minipage}[b][2.25in][c]{3.5in}%
+      \begin{verbatim}
+\psset{unit=0.5in}%
+\begin{pspicture}(0,-0.5)(3,4.5)%
+  \psgrid[xunit=1.5in,gridlabels=0,%
+    subgriddiv=0,griddots=30](0,0)(1,4)%
+  \psaxes[axesstyle=frame,Ox=0,Dx=1,labels=y,%
+    ticks=y](0,0)(3,4)%
+  \readpsbardata{\data}{example6.csv}%
+  \psbarchart[barstyle={black}]{\data}%
+  \readpsbardata[header=false]{\data}%
+    {example7.csv}%
+  \psbarchart[barstyle={red},chartstyle=block,%
+    barcolsep=0.8]{\data}%
+\end{pspicture}
+\end{pspicture}\end{verbatim}
+    \end{minipage}
+
+  \section{To Do}
+    \begin{itemize}
+      \item Provide commands to facilitate legend creation and placement.
+      \item Allow the automatic labeling of bars with values from the data
+        file.
+      \item Allow the automatic labeling of bars with labels of the user's
+        choice.
+      \item Improve header parsing to allow commas within header entries.
+      \item Add error-checking to ensure that each row of the data file
+        contains the same number of entries, throwing an error in \TeX\ or
+        \LaTeX\ if not.
+      \item Improve documentation.
+    \end{itemize}
+
+  \bibliographystyle{plain}%
+  \bibliography{\jobname}%
+
+\printindex
+
+
+\end{document}

@@ -1,0 +1,72 @@
+2.02 2011-05-11 - fix bug with \psdot in transistor module
+2.01 2011-03-03 - typos
+2.00 2011-01-28 - new IEEE symbols for integrated circuits
+                - some more new symbols
+1.57 2010-11-06 - new optional argument for a schottky diode
+                - improved FET transistor symbol 
+1.56 2010-09-18 - fixed bug with \circledipole 
+1.55 2010-08-15 - circledipole with variable radius 
+                - added macro \newCircDipole (cb)
+1.54 2010-03-29 - fix bug in \Transformer
+                - allow any coordinate type in \Transformer
+1.53 2010-02-13 - add OpenDipol and OpenTripol
+1.52 2010-01-15 - add photo diode symbol
+                      quadripol symbol
+                      RelayNOP symbol (Relay normally open)
+                      Suppressor symbol
+                      Arrestor symbol 
+1.51 2009-02-21 - add SQUID symbol
+1.50 2009-02-01 - add RFLine symbol
+                - internal changes to the code
+                - make all microwave symbols work with
+                  multinode
+                - fix several bugs in the documentation  
+1.49 2008-11-18 (hv) - fix bug with edge, renamed to circedge
+                     - fixed bug with the current arrows of transsistor type
+                     - renamed \next to \circnext
+1.48 2008-09-26 (hv) - new option memory for a FET, suggested by 
+                       Christoph Friederich (doesn't really work)
+                     - fix bug with TRot for FET type 
+                     - added dipolestyle twoCircles for Icc
+1.47 2008-08-06 (hv) - fix bug with \newcommand instead of \def 
+1.46 2008-07-15 (hv) - optional dot for the (new)ground symbol (rw) 
+		     - added dipolstyle crystal for the capacitor 
+1.45 2008-03-16 (hv) - fix bug with a switch as multidipole 
+1.44 2008-02-28 (hv) - added the microwave part (Francois Boone)
+1.43 2007-12-18 (hv) - fixed bug with \@empty
+1.42 2007-10-15 (hv) - added better FET support (Ted Pavlic)
+                     - small changes to draw@dipole (Alan Ristow)
+1.41 2007-04-23 (hv) added dipolestyle varistor
+1.40 2007-03-23 (hv) fix bug with \@empty in the psset part
+1.39 2005-04-03 (hv) fixed introduced bug in wire
+1.38 2005-03-07 (hv) added an option for the OA and some more
+		     types for dipoles
+1.37 2005-03-06 (hv) fix bug with wire and arrows
+1.36 2005-02-14 (hv) add another zener symbol
+1.35 2005-02-06 (hv) fix some bugs in the documentation
+1.34 2004-12-31 (hv) new transistormacro
+1.33 2004-12-28 (hv) fix bug for specialCoor in transistor
+1.32 2004-12-28 (hv) make transistor changeLR option run
+1.31 2004-12-27 (hv) make transistor run
+1.30 2004-12-28 (hv) make option arrows=... available, but
+                     transistor is broken for this version
+1.22 2004-10-31 (hv) use pst-xkey instead of pst-key
+1.21 2004-06-10 (hv) option for the logic symbol
+1.20 2004-04-30 (hv) options for the logic part
+1.2b 2003-08-30 (hv) new tripole potentiometer,
+                     fixes some typos in the doc
+1.2a 2003-08-28 (hv) added options for ground
+1.2  2003-07-28 (hv) added dipolestyle "optoCoupler" and the logic part (Flip Flops)
+1.1b 2003-07-24 (hv) added dipolestyle "triac" and use "rectangle" also for the
+                      quadrupol transformer; added quadrupol optoCoupler
+1.1a 2003-07-22 (hv) fix a bug with tension
+1.1  2003-07-18 (hv) fix some bugs and added new dipolestyles for the diode/resistor
+1.0  2003-07-10 (cj) first CTAN version
+
+
+-- pst-circ.sty ---
+2007-03-23 (hv) added message for pst-circ.pro
+
+
+-- pst-circ.pro ---
+0.01  2007-03-23 (hv) first version

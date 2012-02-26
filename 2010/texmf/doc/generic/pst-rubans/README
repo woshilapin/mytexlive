@@ -1,0 +1,44 @@
+%% Package `pst-rubans.tex'
+%%
+%% Manuel Luque <Manuel.Luque27@gmail.com>
+%% Herbert Voss <hvoss@tug.org> (Germany)
+%%
+%% 2011-02-10
+%%
+
+PSTricks offers excellent macros to insert more or less complex 
+graphics into a document. pstricks.tex itself is the base for several 
+other additional packages, which are mostly named pst-xxxx, 
+like pst-rubans. 
+
+Save the files
+
+pst-rubans.sty 
+pst-rubans.tex
+
+in any place, where latex or any other TeX program will find it.
+
+pst-rubans uses the extended version of the keyval package. So
+be sure that you 
+- have installed xkeyval with the special pst-xkey
+  (CTAN: tex-archive/macros/latex/contrib/xkeyval/)
+- do not load another package after pst-rubans, which loads
+  the old keyval.sty or pst-key.tex
+
+
+If you like to get the documentation file in another format run 
+
+latex pst-rubans-doc.tex
+bibtex pst-rubans-doc
+latex pst-rubans-doc.tex
+dvips pst-rubans-doc.dvi
+
+to get a PostScript file. But pay attention, that the pst-rubans
+files are saved in the above mentioned way, before you run
+latex on the documentation file.
+
+The intermediate DVI file works only with viewers which can 
+interprete the embedded PostScript code.
+
+For another PDF output read the introduction from
+the documentation.

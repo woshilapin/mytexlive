@@ -1,0 +1,621 @@
+\documentclass[11pt,english,BCOR10mm,DIV12,bibliography=totoc,parskip=false,smallheadings
+    headexclude,footexclude,oneside]{pst-doc}
+\usepackage[utf8]{inputenc}
+\usepackage{pst-poly}
+\let\pstDocFV\fileversion
+
+\def\bgImage{\PstPolygon[unit=3,linecolor=red,PolyOffset=2,linewidth=0.001,
+    PolyNbSides=72,PolyEpicycloid]}
+
+\lstset{explpreset={pos=t,width=-99pt,overhang=0pt,hsep=\columnsep,vsep=\bigskipamount,rframe={}}}
+\begin{document}
+
+\title{\texttt{pst-poly}}
+\subtitle{A PSTricks package for drawing polygons; v.\pstDocFV}
+\author{Denis Girou\\Herbert Vo\ss}
+%\docauthor{Herbert Vo\ss}
+\date{\today}
+\maketitle
+
+\tableofcontents
+
+\clearpage
+
+\begin{abstract}
+\noindent
+\LPack{pst-poly} allows to draw easily various kinds of regular or non regular
+polygons, using the unique macro \Lcs{PstPolygon}, with various customization
+parameters.
+It is also a good example of the great power and flexibility of PSTricks,
+as in fact it is a very short program (it body is only 100 lines long) but
+nevertheless really powerful.
+    And last, it is also a good pedagogical example of how to design and
+program high level graphic objects above PSTricks own ones.
+\end{abstract}
+
+\clearpage
+
+\section{Introduction}
+%
+\LPack{pst-poly} offers a unique macro (plus some aliases to define
+some often used polygons) with few parameters to interact on it. But we can
+also use all the relevant PSTricks parameters to change the size, the
+characteristics of lines, to add filling, etc.
+The polygons are always drawn counter clockwise.
+%
+The syntax is simply:
+\begin{BDef}
+\LcsStar{PstPolygon}\OptArgs\\
+\Lcs{PstTriangle}\OptArgs\\
+\Lcs{PstSquare}\OptArgs\\
+\Lcs{PstPentagon}\OptArgs\\
+\Lcs{PstHexagon}\OptArgs\\
+\Lcs{PstHeptagon}\OptArgs\\
+\Lcs{PstOctogon}\OptArgs\\
+\Lcs{PstNonagon}\OptArgs\\
+\Lcs{PstDecagon}\OptArgs\\
+\Lcs{PstDodecagon}\OptArgs\\%
+\Lcs{PstStarFiveLines}\OptArgs\\
+\Lcs{PstStarFive}\OptArgs\\
+\Lcs{pspolygonbox}\OptArgs\Largb{Text}\\
+\end{BDef}
+
+As for PSTricks closed objects, the \texttt{*} version uses a solid style
+to fill the polygon, use the line color for fill color and set the linewidth
+to 0.
+
+By default the polygons are set with a radius of 1 unit for the outer circle.
+
+\bigskip
+\begin{LTXexample}[pos=l,width=0.3\linewidth]
+\begin{pspicture}[showgrid=true](-1,-1)(1,1)
+  \PstPolygon[PstPicture=false]
+  \pscircle[linestyle=dashed]{1}
+\end{pspicture}
+\end{LTXexample}
+
+There is no special optional argument for this radius, the polygon can
+be scaled by using the key \Lkeyword{unit}. With \Lkeyword{unit}=1.5, the outer
+radius will be of 1.5cm when the current unit is set to 1cm.
+
+
+\section{Optional arguments}
+%
+There are eight specific optional arguments defined to change the way the
+polygons are defined:
+
+\begin{compactdesc}
+  \item [\Lkeyword{PstPicture}] (boolean): to define or not a \Lenv{pspicture}
+  environment for the polygon. We have to define this parameter to
+  \false\ if we want to mix the polygon with other PSTricks objects
+  --- see examples later
+  (\emph{Default:~\true} --- which is not the case for basic PSTricks
+  objects). With \Lkeyset{PstPicture=false} the image doesn't reserve
+  any space, it overwrites the text. The resulting box has a width and a height of 0pt.
+
+\bigskip
+\begin{LTXexample}[pos=t]
+  foo\PstPolygon bar\hfill foo\PstPolygon[PstPicture=false] bar
+\end{LTXexample}
+
+\bigskip
+  \item [\Lkeyword{PolyRotation}] (real): rotation angle applied to the polygon
+  (\emph{Default:~0} --- no rotation).
+
+\bigskip
+\begin{LTXexample}[pos=t]
+  \PstPolygon\hfill
+  \PstPolygon[PolyRotation=18]\hfill
+  \PstPolygon[PolyRotation=36]\hfill
+  \PstPolygon[PolyRotation=45]
+\end{LTXexample}
+
+\bigskip
+  \item [\Lkeyword{PolyNbSides}] (integer): number of sides of the polygon
+  (\emph{Default:~5}).
+
+\bigskip
+\begin{LTXexample}[pos=t]
+  \PstPolygon\hfill
+  \PstPolygon[PolyNbSides=3]\hfill
+  \PstPolygon[PolyNbSides=4]\hfill
+  \PstPolygon[PolyNbSides=5]\hfill
+  \PstPolygon[PolyNbSides=8]\hfill
+  \PstPolygon[PolyNbSides=50]
+\end{LTXexample}
+
+\bigskip
+  \item [\Lkeyword{PolyOffset}] (integer): number of nodes to bypass to obtain each
+  time the next one (\emph{Default:~1} --- no node bypassed).
+
+\bigskip
+\begin{LTXexample}[pos=t]
+  \PstPolygon
+  \PstPolygon[PolyOffset=2]
+  \PstPolygon[PolyOffset=3]
+  \PstPolygon[PolyNbSides=7,PolyOffset=2]
+  \PstPolygon[PolyNbSides=9,PolyOffset=4]
+  \PstPolygon[PolyNbSides=17,PolyOffset=6]
+\end{LTXexample}
+
+\bigskip
+  \item [\Lkeyword{PolyIntermediatePoint}] (real): position of the intermediate point
+  used to join each time the next node (\emph{Default:~empty} --- not used).
+
+\bigskip
+\begin{LTXexample}[pos=t]
+  \PstPolygon
+  \PstPolygon[PolyIntermediatePoint=0.38]
+  \PstPolygon[PolyIntermediatePoint=0.2]
+  \PstPolygon[PolyIntermediatePoint=1.2]
+  \PstPolygon[PolyNbSides=7,PolyOffset=2,
+              PolyIntermediatePoint=0.38]
+  \PstPolygon[PolyNbSides=21,PolyOffset=2,
+              PolyIntermediatePoint=-1.25]
+\end{LTXexample}
+
+\bigskip
+  \item [\Lkeyword{PolyCurves}] (boolean): boolean value to choose between straight
+  line and curve to join each time the next node (\emph{Default:~\false} --- straight lines).
+
+\bigskip
+\begin{LTXexample}[pos=t]
+  \psset{PolyCurves=true}
+  \PstPolygon[PolyNbSides=7,PolyIntermediatePoint=0.38]\hfill
+  \PstPolygon[PolyNbSides=11,PolyIntermediatePoint=0.6]\hfill
+  \PstPolygon[PolyNbSides=7,PolyIntermediatePoint=0.2,
+              PolyOffset=2]\hfill
+  \PstPolygon[PolyNbSides=9,PolyIntermediatePoint=0.1]\hfill
+  \PstPolygon[PolyNbSides=15,PolyIntermediatePoint=1.2]
+\end{LTXexample}
+
+\bigskip
+  \item [\Lkeyword{PolyEpicycloid}] (boolean): boolean value to choose between
+  polygon and epicycloid (\emph{Default:~\false} --- polygon).
+
+\bigskip
+\begin{LTXexample}[pos=t]
+  \psset{linewidth=0.001,PolyNbSides=72,PolyEpicycloid=true}
+%  Epicycloid of factor 1 is cardioid and of factor 2 nephroid
+  \multido{\i=2+1}{4}{\PstPolygon[PolyOffset=\i]\hfill}
+  \PstPolygon[PolyOffset=72]\hfill% Epicycloid of factor 71
+  \PstPolygon[PolyOffset=73]      % Epicycloid of factor 72
+\end{LTXexample}
+
+\bigskip
+  \item [\Lkeyword{PolyName}] (string): name of the polygon, useful to have different
+  names for the nodes of different polygons (\emph{Default:~empty} --- no name).
+
+  The center of the polygon has name \texttt{PolyName0} and the nodes
+(vertices) have names \texttt{PolyName1} to \texttt{PolyNameN}.
+  With this parameter, we can connect as we want nodes of different polygons:
+
+\bigskip
+\begin{LTXexample}[pos=l,width=0.3\linewidth,pos=l]
+  \psset{PstPicture=false}
+  \begin{pspicture}(-1,-1)(1,1)
+    \PstPolygon[unit=0.8,PolyName=A,PolyNbSides=6]
+    \PstPolygon[unit=1.2,PolyName=B,PolyNbSides=12]
+  \end{pspicture}
+  \multido{\i=1+2}{6}{%
+    \ncline{A\the\multidocount}{B\i}}
+\end{LTXexample}
+
+It is also a way (limited in fact...) to define three dimensional objects in perspective:
+
+\bigskip
+\begin{LTXexample}[pos=l,width=0.3\linewidth,pos=l]
+\psset{unit=0.8}
+\begin{pspicture}(3,2.5)
+%  \PstSquare is described later
+  \rput[lb](0,0){\PstSquare[PolyName=A]}
+    \rput[lb](2.5,2){\PstSquare[unit=0.5,PolyName=B]}
+    \multido{\i=1+1}{4}{\ncline{A\i}{B\i}}
+  \end{pspicture}
+\end{LTXexample}
+
+\end{compactdesc}
+
+\bigskip
+  Of course, we can mix specific parameters of \LPack{pst-poly} with
+relevant PSTricks ones and combine it with other generic macros
+(for repetitions, projection in the 3d space, etc.)
+
+
+\begin{LTXexample}[pos=t]
+  \PstPolygon[unit=1.5]
+  \PstPolygon[linewidth=1mm]
+  \PstPolygon[fillstyle=crosshatch,PolyNbSides=6]
+  \PstPolygon[linecolor=red,fillstyle=solid,fillcolor=yellow,
+              PolyRotation=18,PolyOffset=2]
+  \PstPolygon*[linecolor=cyan,PolyNbSides=7,PolyOffset=2]
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+  \multido{\i=5+2}{6}{%
+    \PstPolygon[PolyNbSides=\i,PolyCurves=true,
+                PolyIntermediatePoint=0.1,PolyOffset=3]}
+\end{LTXexample}
+
+
+\section{Pre-defined polygons}
+%
+  Some often used polygons and other related geometric objects are
+pre-defined, for immediate usage :
+
+\begin{LTXexample}[pos=t]
+  \PstTriangle 
+  \PstSquare
+  \PstPentagon[unit=0.5,linestyle=dotted]
+  \PstHexagon[fillstyle=hlines,hatchangle=90]
+  \PstHeptagon[fillstyle=vlines]
+  \PstOctogon*[unit=0.8,linecolor=red]
+  \PstNonagon[unit=0.5]
+  \PstDecagon
+  \PstDodecagon[linecolor=green] \par
+  \PstStarFiveLines
+  \PstStarFive
+\end{LTXexample}
+
+
+\section{Non regular polygons}
+
+Until now, we have described only the so-called \emph{regular} polygons,
+which are from far the most useful ones (all of them have equal edges and
+angles). Nevertheless, it is not so difficult to extend these polygon to
+\emph{non regular} ones, using a different value for horizontal and vertical
+units (nevertheless, the code is more tricky, as we must do all the
+trigonometry explicitely...)
+%
+\begin{LTXexample}[pos=t]
+  \PstPentagon[xunit=0.5]\hfill
+  \PstHexagon[yunit=0.5]\hfill
+  \PstStarFive[xunit=0.5,yunit=1.5]\hfill
+  \PstPolygon[xunit=0.8,yunit=1.5,PolyNbSides=9,PolyOffset=2,
+              PolyIntermediatePoint=0.1,PolyCurves=true]
+\end{LTXexample}
+%
+\section{Nodes (vertices)}
+%
+And another powerful possibility is to define a command
+\Lcs{PstPolygonNode}  which will be excuted at each node (\emph{Default:~empty} --- nothing executed). 
+The counter name for nodes is \Lctr{INode}, starting from 0. The \Lcs{multidocount} counter, from the
+\Lcs{multido} command, start itself from 1.
+
+\begin{LTXexample}[width=0.3\linewidth,pos=l]
+  \providecommand{\PstPolygonNode}{%
+    \psdots[dotsize=0.2,linecolor=cyan](1;\INode)}
+  \PstPentagon
+\end{LTXexample}
+%
+\begin{LTXexample}[width=0.3\linewidth,pos=l]
+  \newcounter{Letter}
+  \providecommand{\PstPolygonNode}{%
+    \setcounter{Letter}{\the\multidocount}%
+    \rput*{*0}(1;\INode){\small\Alph{Letter}}}
+  \PstHeptagon[PolyOffset=3]
+\end{LTXexample}
+%
+\begin{LTXexample}[pos=l,width=0.3\linewidth]
+  \providecommand{\PstPolygonNode}{%
+    \psdots[dotstyle=o,dotsize=0.2](1;\INode)
+    \psline[linecolor=red]{->}(0.9;\INode)}
+  \PstPolygon[PolyNbSides=8]
+\end{LTXexample}
+%
+\vspace{3mm}
+  It is also a way to nest polygons:
+\vspace{3mm}
+%
+\begin{LTXexample}[pos=l,width=0.3\linewidth]
+  \newbox{\Star}
+  \savebox{\Star}{%
+    \PstStarFive*[unit=0.15,linecolor=red]}
+  \providecommand{\PstPolygonNode}{%
+    \rput{*0}(1;\INode){\usebox{\Star}}}
+  \shortstack{\PstNonagon\\[5mm]
+              \PstDodecagon[linestyle=none]}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+  \psset{unit=2,PstPicture=false}
+  \begin{pspicture}(-1.6,-1.6)(1.6,1.6)
+%    Just to name the nodes, to be able to join some of them.
+%    by solid curves. We can't draw the polygons now,
+%    as the node numbers must erase the solid curves...
+    \PstHexagon[unit=0.8,linestyle=none,PolyName=H]\PstDodecagon[unit=1.2,linestyle=none,PolyName=D]
+    {\SpecialCoor
+     \psset{linewidth=0.4pt,border=2pt,nodesep=0.45}
+     \psccurve(H1)(H4)(D8)([angle=-30]D9)(D11)\psccurve(D3)(H3)(H6)(D12)([angle=90]D1)
+     \psccurve(D4)(H2)(H5)(D7)([angle=90]D6)}
+    \psset{linestyle=dotted,framesep=1pt}
+    \PstTriangle[unit=0.23]
+    \providecommand{\PstPolygonNode}{\rput*{*0}(1;\INode){\small\the\multidocount}}
+    \PstHexagon[unit=0.8] \PstDodecagon[unit=1.2] \PstDodecagon[unit=1.6]
+  \end{pspicture}
+\end{LTXexample}
+%
+\section{Polygonbox}
+
+The valid options with the predefined values are \Lkeyword{PolyNbSides}=3 and \Lkeyword{PolyRotation}=0
+
+\begin{compactitem}
+\item There maybe some problems with linearcs and rounding errors. 
+\item To rotate the text inside the box, one can use the \Lcs{rotatebox} macro from
+      the \LPack{rotating} package (see examples).
+\end{compactitem}
+
+\begin{LTXexample}[pos=t]
+  \multido{\nA=3+1}{8}{%
+     \pspolygonbox[PolyNbSides=\nA,framesep=3mm]{Text}~}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+   \multido{\nA=3+1}{8}{\pspolygonbox[PolyNbSides=\nA,%
+        framesep=2mm,doubleline=true]{Text}~}
+\end{LTXexample}
+
+
+\begin{LTXexample}[pos=t]
+  \psset{PolyNbSides=4}
+  \multido{\nA=0+60}{8}{\pspolygonbox[PolyRotation=\nA,%
+      framesep=2mm,doubleline=true,%
+      linecolor=red,doublecolor=blue]{\magenta Text}~}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+  \multido{\nA=0+60,\nB=45+60}{8}{\pspolygonbox%
+     [PolyRotation=\nA,framesep=2mm,doubleline=true,%
+       linecolor=red,doublecolor=blue,linearc=0.4]%
+       {\rotatebox{\nB}{\blue Text}}~}\\[1cm]
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+  \multido{\nA=3+1}{8}{%
+    \pspolygonbox[PolyNbSides=\nA,rot=60,framesep=2pt,%
+      doubleline=true,linearc=0.2]{Text}~}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+  \multido{\nA=3+1}{8}{%
+     \pspolygonbox[PolyNbSides=\nA,framesep=10pt,%
+     fillstyle=solid,fillcolor=cyan,linearc=0.2]{Text}~}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+  \multido{\nA=-5+5}{8}{\pspolygonbox[framesep=\nA pt,%
+     PolyRotation=90]{\Huge\red T}~}
+\end{LTXexample}
+
+\vspace{1cm}
+\begin{LTXexample}[pos=t]
+  \multido{\nA=-5+5}{7}{\pspolygonbox[framesep=\nA pt,%
+     PolyRotation=90,boxsep=false]{\Huge\red T}~}\par
+  \rule{0pt}{1cm}
+\end{LTXexample}
+
+\section{Some more examples}
+
+\begin{LTXexample}[pos=t]
+  \multido{\i=3+1}{6}{%
+    \PstPolygon[PolyNbSides=\i]\hspace{5mm}}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+  \multido{\i=3+2}{6}{%
+    \PstPolygon[PolyOffset=2,PolyNbSides=\i]\hspace{5mm}}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+  \multido{\i=3+1}{10}{%
+    \PstPolygon[PolyOffset=3,PolyNbSides=\i]\hspace{5mm}}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+  \multido{\i=5+1}{10}{%
+    \PstPolygon[PolyOffset=4,PolyNbSides=\i]\hspace{5mm}}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+  \multido{\i=5+2}{10}{%
+    \PstPolygon[PolyOffset=5,PolyNbSides=\i]\hspace{5mm}}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+  \multido{\i=5+2}{10}{%
+    \PstPolygon[PolyOffset=7,PolyNbSides=\i]\hspace{5mm}}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+  \multido{\i=5+2}{10}{%
+    \PstPolygon[PolyOffset=8,PolyNbSides=\i]\hspace{5mm}}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+  \multido{\i=1+1}{10}{%
+    \PstPolygon[PolyOffset=\i,PolyNbSides=5]\hspace{5mm}}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+  \multido{\i=1+1}{10}{%
+    \PstPolygon[PolyOffset=\i,PolyNbSides=7]\hspace{5mm}}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+  \multido{\i=5+1}{10}{%
+    \PstPolygon[PolyCurves,PolyIntermediatePoint=0.1,PolyNbSides=\i]
+    \hspace{5mm}}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+  \multido{\i=5+1}{10}{%
+    \PstPolygon[PolyCurves,PolyIntermediatePoint=0.2,
+                PolyOffset=2,PolyNbSides=\i]\hspace{5mm}}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+  \multido{\i=5+2}{10}{%
+    \PstPolygon[PolyCurves,PolyIntermediatePoint=0.1,
+                PolyOffset=3,PolyNbSides=\i]\hspace{5mm}}
+\end{LTXexample}
+
+% Second serie
+
+\begin{LTXexample}[pos=t]
+  \multido{\n=-1.4+0.5}{10}{%
+    \PstPolygon[PolyNbSides=3,PolyOffset=2,PolyIntermediatePoint=\n]
+    \hspace{5mm}}\par
+    \vspace{0pt}{2cm}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+  \multido{\n=-1.4+0.5}{6}{%
+    \PstPolygon[PolyNbSides=5,PolyOffset=2,PolyIntermediatePoint=\n]
+    \hspace{5mm}}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+  \multido{\n=-1.4+0.5}{6}{%
+    \PstPolygon[PolyNbSides=13,PolyOffset=2,PolyIntermediatePoint=\n]
+    \hspace{5mm}}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+  \multido{\n=-1.4+0.5}{6}{%
+    \PstPolygon[PolyNbSides=21,PolyOffset=2,PolyIntermediatePoint=\n]
+    \hspace{5mm}}
+\end{LTXexample}
+
+% Third serie
+
+\begin{LTXexample}[pos=t]
+  \psset{unit=1.4,linewidth=0.001,PolyNbSides=72,PolyEpicycloid}
+  \multido{\i=2+1}{4}{%
+    % Epicycloid of factor 1 is cardioid and of factor 2 nephroid
+    \PstPolygon[PolyOffset=\i]\hspace{5mm}}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=l,width=0.3\linewidth]
+  % Epicycloid of factor 10
+  \PstPolygon[unit=2,linewidth=0.003,
+              PolyEpicycloid,PolyNbSides=72,PolyOffset=11]
+\end{LTXexample}
+
+\begin{LTXexample}[pos=l,width=0.3\linewidth]
+  % Epicycloid of factor 22
+  \PstPolygon[unit=2,linewidth=0.003,
+              PolyEpicycloid,PolyNbSides=72,PolyOffset=23]
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+  \psset{unit=1.9,linewidth=0.001,PolyNbSides=72,PolyEpicycloid}
+  \multido{\i=71+1}{3}{%
+    \PstPolygon[PolyOffset=\i]\hspace{5mm}}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=l,width=0.3\linewidth]
+  % Epicycloid of factor 100
+  \PstPolygon[unit=2,linewidth=0.003,
+              PolyEpicycloid,PolyNbSides=72,PolyOffset=101]
+\end{LTXexample}
+
+\begin{LTXexample}[pos=l,width=0.3\linewidth]
+  % Epicycloid of factor 153
+  \PstPolygon[unit=2,linewidth=0.003,
+              PolyEpicycloid,PolyNbSides=72,PolyOffset=154]
+\end{LTXexample}
+
+% Fourth serie
+
+\begin{LTXexample}[pos=l,width=0.3\linewidth]
+  \providecommand{\PstPolygonNode}{%
+    \psdots[dotsize=0.2,linecolor=cyan](1;\INode)}
+  \PstPentagon[unit=2]
+\end{LTXexample}
+
+\begin{LTXexample}[pos=l,width=0.3\linewidth]
+  \providecommand{\PstPolygonNode}{%
+    \rput{*0}(1.2;\INode){\small\the\multidocount}}
+  \PstPolygon[unit=2,PolyNbSides=7,PolyOffset=2]
+\end{LTXexample}
+
+\begin{LTXexample}[pos=l,width=0.3\linewidth]
+  \providecommand{\PstPolygonNode}{%
+    \rput*{*0}(1;\INode){\small\the\multidocount}}
+  \PstHeptagon[unit=2,PolyOffset=2]
+\end{LTXexample}
+
+\begin{LTXexample}[pos=l,width=0.3\linewidth]
+%  \newcounter{Letter}
+  \providecommand{\PstPolygonNode}{%
+    \setcounter{Letter}{\the\multidocount}%
+    \rput*{*0}(1;\INode){\small\Alph{Letter}}}
+  \PstHeptagon[unit=2,PolyOffset=3]
+\end{LTXexample}
+
+\begin{LTXexample}[pos=l,width=0.3\linewidth]
+  \providecommand{\PstPolygonNode}{%
+    \SpecialCoor
+    \degrees[3]
+    \rput{0.5}(0.5;\INode){%
+      \pspolygon*(0.5;0.5)(0.5;1.5)(0.5;2.5)}}
+  \PstTriangle
+\end{LTXexample}
+
+\begin{LTXexample}[pos=l,width=0.3\linewidth]
+  \providecommand{\PstPolygonNode}{%
+    \psdots[dotstyle=o,dotsize=0.2](1;\INode)
+    \psline[linecolor=red]{->}(0.9;\INode)}
+  \PstPolygon[unit=2,PolyNbSides=8]
+\end{LTXexample}
+
+\begin{LTXexample}[pos=l,width=0.3\linewidth]
+  \providecommand{\PstPolygonNode}{%
+    \psline[linewidth=0.1mm,doubleline=true,
+            linecolor=green]{<->}(0;0)(1;\INode)}
+  \PstHexagon[unit=2]
+\end{LTXexample}
+
+\begin{LTXexample}[pos=l,width=0.3\linewidth]
+  \newbox{\Star}
+  \savebox{\Star}{%
+    \PstStarFive*[unit=0.15,linecolor=red]}
+  \providecommand{\PstPolygonNode}{%
+    \rput{*0}(1;\INode){\usebox{\Star}}}
+  \shortstack{%
+    \PstNonagon\\[5mm]
+    \PstDodecagon[linestyle=none]}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=l,width=5cm]
+%\newcounter{Letter}% if not defined
+\setcounter{Letter}{\the\multidocount}%
+\begin{pspicture}(-2.5,-2.5)(2.5,2.5)
+\PstPolygon[PolyName=A,fillstyle=solid,fillcolor=lightgray,linewidth=2pt,PolyNbSides=5,unit=0.5,PstPicture=false]
+\PstPolygon[PolyName=B,PolyNbSides=5,linewidth=2pt,PstPicture=false,unit=2.5]
+\multido{\iA=1+1,\iB=2+1}{5}{%
+  \setcounter{Letter}{\the\multidocount}%
+  \ncline{A\iA}{B\iA}\ncput*{\bf\alph{Letter}}%
+  \ifnum\iB>5 \def\iB{1}\fi%
+  \pcline[linestyle=none](B\iA)(B\iB)\ncput*{\bf\iA}}
+\end{pspicture}
+\end{LTXexample}
+
+\clearpage
+\section{List of all optional arguments for \texttt{pst-poly}}
+
+\xkvview{family=pst-poly,columns={key,type,default}}
+
+
+\nocite{*}
+\bgroup
+\RaggedRight
+\bibliographystyle{plain}
+\bibliography{pst-poly-doc}
+\egroup
+
+\printindex
+
+\end{document}
+
+

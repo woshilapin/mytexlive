@@ -1,0 +1,107 @@
+pst-3dplot.pro --------
+0.30  2010-01-01 - add the subroutine /tx@ProjThreeD from pst-3d
+                   to get rid of the dependency
+0.29  2009-10-06 add option SphericalCoorType
+0.28  2009-07-28 add option showgrid for sphere, paraboloid and cylinder
+0.27  2008-11-12 add routine for scalar and vector product
+0.26  2007-01-03 add routine for vector length
+0.25  2007-12-22 add code for special rotating (Darrell Lamm)
+0.24  2007-08-30 add code for special node calculating
+0.23  2007-08-18 add coorType 0,1,2,3 code for convertTo2D
+		 - add code IIIDCylinder and cylindrical coordinates
+		 - add code for \psBox and \psCylinder
+0.22  2006-01-11 add code for left-Handed coor (experimental)
+0.21  2005-10-10 add code for 3D sphere
+0.20  2005-01-14 add rotPoint subroutine with RotSequenz option
+0.11  2005-01-11 add rotPoint subroutine
+
+
+pst-3dplot.tex --------
+1.96  2011-12-10  - added \pstThreeDPrism
+1.95  2011-08-10  - fix bug with setting drawstyle for htlatex
+1.94  2011-03-01  - fix bug with \pstThreeDSquare and filling/drawCoor
+1.93  2010-09-27  - experimental \psplotImpIIID
+1.92  2010-04-14  - enable the IIIDshowgrid optional argument
+1.91  2010-02-19  - make the origin argument for \paParaboloid and
+                    \psIIIDCylinder work
+1.90  2010-02-18  - enable the comma option
+                  - fix bug with tx@addDict for AlgParser
+1.89  2010-01-28  - enable coordinates for calculations
+1.88  2009-11-24  - new optional argument CoorOffset
+1.87  2009-11-12  - fix problem with \def\pst@par{} for objects
+                  - new boolean CheckCoor=true
+1.86  2009-10-06  - add option SphericalCoorType for different Handling
+		    of spherical coordinates  
+1.85  2009-08-14  - add option Hincrement for \psCylinder, preset to 0.5 
+1.84  2009-07-28  - add option showgrid for sphere, paraboloid 
+                    and cylinder
+                  - fix bug with \psBox
+1.83  2008-11-18  - fix for a missing \if@IIIDlabels for x labels
+1.82  2008-11-12  - rewrote \pstThreeDCircle to allow non perpendicular vectors
+                    for the circle plane
+1.81  2008-04-05  - rename the internal variablesIIID to prevent clash
+		    with other packages
+		  - change name off for planecorr to none
+1.80  2008-02-08  - do not define the algebraic option, use the
+                    one from pstricks-add
+1.79  2008-01-03  - add option algebraic for 3d plots
+		  - fix bug with ellipse phi=f(alpha)!
+1.78  2007-10-11  - fix bug in \parametricPlotThreeD
+		  - add option Debug=false|true for addtional
+		    comments written into the log file
+		  - add extended rotation stuff (Darrell Lamm)
+1.77  2007-10-03  - fix trailing spaces in \pstThreeDNode
+1.76  2007-08-30  - add optional argument nodeType for different setting
+                    the node depending to a line and a plain
+1.75  2007-08-18  - add optional argument coorType for different
+		    types of coordinates
+		  - add \psCylinder and \psBox with inside/outside view
+		  - fix bug with the subticks option
+1.74  2007-06-12  - fix bug with the optional argument of plane
+                  - fix typo for pstParaboloid
+	          - add macro pstIIIDCylinder
+		  - add cylindrical coordinates
+		  - revert Changes to the hidden line support
+1.73  2007-02-12  better support for hidden lines of a box
+1.72  2006-02-07  - allow negative direction for ellipse
+                  - add code for left-Handed coor (experimental
+		    and not documented)
+1.71  2005-11-10  - latest xcolor needs ...={[cmyk]{.3,.4,.1,0}}
+                  - fix a bug with Dx
+		  - new macro for pstThreeDSphere which needs no pst-vue3d
+1.70  2005-10-16  fixes a bug with \pst@tempa
+1.69  2005-09-25  - add macro \pstParaboloid
+                  - some modifications to the code
+1.68  2005-08-02  fix a bug in \pstRotIIIDPoint
+1.67  2005-07-23  add an option zCoor, to plot Lines like const=f(x,y)
+1.66  2005-06-21  use the trig macros of trig.sty to prevent wrong values
+                  for sin/cos(90) and 270 degrees
+1.65  2005-02-24  set \def\pst@linetype{2} to prevent a undefined macro
+1.64  2005-02-21  fix bug in pstThreeDPlaneGrid with the start
+		  values, which should be in pt
+1.63  2005-02-19  spurious blank
+1.62  2005-02-16  some modifications to \pstThreeDEllipse
+1.61  2005-02-08  spurious blanks in drawStyle
+1.60  2005-02-03  whitespace and bug in parametric
+1.59  2005-01-25  changes \variablesIIID
+1.58  2005-01-18  more tests for the rotating option
+1.57  2005-01-15  make showCoor run with the new rotate options
+1.56  2005-01-14  option RotSequenz now available for all macros
+1.55  2005-01-11  options RotX RotY RotZ now available for all macros
+1.54  2005-01-03  pstRotPointIIID as a real TeX solution and fix a spurious blank
+                  in ThreeDBox
+1.53  2005-01-03  pstRotPointIIID returns the 3D coordinates of the rotated point.
+                  pstRotPointIIID[RotX=..,RotY=..,RotZ=..](x,y,z)\xVal\yVal\zVal
+1.52  2004-12-05  uncomment the moveto in psThreeDPlot, change all \edef to \def
+1.51  2004-12-03  bugfix in parametricplotThreeD, use \pst@dima instead of \pst@cnta
+1.50  2004-11-24  spurious blank in \pstThreeDBox
+1.49  2004-11-18  mostly rewrite \parametricplot
+1.48  2004-11-16  drawStyle was ignored
+1.47  2004-11-16  change the subprocedure for specialplot
+1.46  2004-11-16  change the subprocedure for quick plot
+1.45  2004-11-15  some more tweaks to parametricplotThreeD
+1.44  2004-11-15  bugfix in parametricplotThreeD
+1.43  2004-11-07  bugfix in parametric plot  
+1.42  2004-11-04  added macro \psPlaneGrid  
+1.41  2004-10-31  modification to \psplane (Torsten Suhling)
+1.40  2004-10-31  use pst-xkey 

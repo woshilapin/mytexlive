@@ -1,0 +1,40 @@
+\section {Présentation}
+
+Le package \texttt{pst-solides3d} permet d'obtenir, avec PSTricks, des
+vues en 3d de solides prédéfinis ou construits par
+l'utilisateur. On trouvera la plupart des solides usuels que l'on peut
+représenter avec ou sans les arêtes cacheés et dont la couleur peut
+varier avec l'éclairage.
+
+Ce package permet également de projeter des textes ou des dessins
+simples en 2d sur un plan quelconque ou sur une face d'un solide déjà
+construit.
+
+Du point de vue utilisateur, la plupart des fonctionnalités sont
+accessibles par trois macros \TeX~: \verb+\psSolid+, qui sert à
+manipuler les objets à $3$ dimensions, \verb+\psSurface+, cousine de
+la première et dédiée à la représentation de surfaces définies par une
+équation du type $f (x, y) = z$, et \verb+\psProjection+ qui permet de
+projeter un dessin en $2$~dimensions sur un plan quelconque de la
+scène $3$d représentée.
+
+Dans l'utilisation, deux langages cohabitent~: d'une part PSTricks et
+ses macros où l'utilisateur retrouvera la syntaxe usuelle, d'autre
+part Postscript que l'on voit apparaître dans les argument optionnels
+des précédentes.
+
+Le parti pris a été de limiter strictement le champ d'action de
+PSTricks, pour le cantonner au rôle d'interface entre \TeX {} et
+Postscript. Plus précisément, le rôle de PSTricks a
+strictement été circonscrit à celui de la transmission des paramètres
+vers Postscript, ce dernier s'occupant de la totalité des calculs
+nécessaires puis de l'affichage.
+
+Pour l'ensemble de ces procédures de calculs et d'affichages, nous
+utilisons une librairie Postscript développée pour
+une autre application (le logiciel \textsl {jps2ps}).
+Le code postscript utilisant cette librairie est appelé \textsl{code
+jps}. 
+
+Le but de ce présent document est de décrire la syntaxe PSTricks pour
+chacune des opérations offertes par le package.

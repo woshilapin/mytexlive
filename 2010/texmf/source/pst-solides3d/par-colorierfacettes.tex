@@ -1,0 +1,247 @@
+\section {Colorier les facettes une à une}
+
+L'argument \texttt{[fcol=}%
+   $i_0$~\verb+(+$c_0$\verb+)+~%
+   $i_1$~\verb+(+$c_1$\verb+)+~%
+   \dots
+   $i_n$~\verb+(+$c_n$\verb+)+~%
+   \texttt{]},
+où les $i_k$ sont des entiers et les $c_k$ des noms de couleurs,
+permet de spécifier la couleur de faces particulières. \` A la face
+d'incice $i_k$ correspond la couleur $c_k$. L'entier $n$ doit être
+inférieur à l'indice maximum des faces du solide considéré.
+
+
+
+%% L'option \texttt{[fcol=1 (OliveGreen) 0 (color1) 4 (color2) etc.]}
+%% permet de spécifier dans l'ordre :
+%% \begin{itemize}
+%%   \item le numéro de la facette  de \texttt{0} à \texttt{n-1}, pour \texttt{n} facettes ;
+%%   \item la couleur de la facette.
+%% \end{itemize}
+
+Pour les noms de couleurs $c_k$, il y a $68$~valeurs
+prédéfinies (soit tous les noms définis dans le fichier
+\verb+color.pro+ au $12$~octobre $2007$). Ces valeurs sont~:
+\textsl{GreenYellow},
+\textsl{Yellow},
+\textsl{Goldenrod},
+\textsl{Dandelion},
+\textsl{Apricot},
+\textsl{Peach},
+\textsl{Melon},
+\textsl{YellowOrange},
+\textsl{Orange},
+\textsl{BurntOrange},
+\textsl{Bittersweet},
+\textsl{RedOrange},
+\textsl{Mahogany},
+\textsl{Maroon},
+\textsl{BrickRed},
+\textsl{Red},
+\textsl{OrangeRed},
+\textsl{RubineRed},
+\textsl{WildStrawberry},
+\textsl{Salmon},
+\textsl{CarnationPink},
+\textsl{Magenta},
+\textsl{VioletRed},
+\textsl{Rhodamine},
+\textsl{Mulberry},
+\textsl{RedViolet},
+\textsl{Fuchsia},
+\textsl{Lavender},
+\textsl{Thistle},
+\textsl{Orchid},
+\textsl{DarkOrchid},
+\textsl{Purple},
+\textsl{Plum},
+\textsl{Violet},
+\textsl{RoyalPurple},
+\textsl{BlueViolet},
+\textsl{Periwinkle},
+\textsl{CadetBlue},
+\textsl{CornflowerBlue},
+\textsl{MidnightBlue},
+\textsl{NavyBlue},
+\textsl{RoyalBlue},
+\textsl{Blue},
+\textsl{Cerulean},
+\textsl{Cyan},
+\textsl{ProcessBlue},
+\textsl{SkyBlue},
+\textsl{Turquoise},
+\textsl{TealBlue},
+\textsl{Aquamarine},
+\textsl{BlueGreen},
+\textsl{Emerald},
+\textsl{JungleGreen},
+\textsl{SeaGreen},
+\textsl{Green},
+\textsl{ForestGreen},
+\textsl{PineGreen},
+\textsl{LimeGreen},
+\textsl{YellowGreen},
+\textsl{SpringGreen},
+\textsl{OliveGreen},
+\textsl{RawSienna},
+\textsl{Sepia},
+\textsl{Brown},
+\textsl{Tan},
+\textsl{Gray},
+\textsl{Black},
+\textsl{White}.
+La liste de ces $68$ couleurs est disponible dans la commande
+\verb+\colorfaces+ (voir exemple d'utilisation dans le paragraphe sur
+le maillage du cube).
+
+\textdbend{} Prévoir dans ce cas que le nombre de faces
+$\mathtt{n_1\times n_2}+2\texttt{(faces supérieure et inférieure)}$
+soit plus petit que 68~!
+
+L'utilisateur peut également définir ses propres couleurs. Il dispose
+pour cela de deux méthodes~:
+
+\begin{itemize}
+
+\item Il utilise l'un des $4$~arguments optionnels \texttt{[color1]},
+  \texttt{[color2]}, \texttt{[color3]}, \texttt{[color4]} de
+  \verb+\psSolid+, puis il transmet à \verb+fcol+ une paire du type
+  $i$~\verb+(color1)+ où $i$ est l'indice de la face considérée. Les
+  arguments \texttt{[color1]}, etc\dots s'utilisent de la même façon
+  que les arguments \texttt{color} et \texttt{incolor}.\hfill \break
+  Par exemple, la commande suivante est une commande valide~:
+  \begin{verbatim}
+   \psSolid[a=1,object=cube,color1=red!60!yellow!20,fcol=0 (color1)]%
+  \end{verbatim}
+
+
+\item Il définit ses propres noms de couleurs avec la commande
+  \verb+\pstVerb+ puis utilise ces noms avec l'argument
+  \texttt{[fcol]}. Par exemple~:
+\begin{verbatim}
+\pstVerb{/hetre {0.764 0.6 0.204 setrgbcolor} def
+         /chene {0.568 0.427 0.086 setrgbcolor} def
+         /cheneclair {0.956 0.921 0.65 setrgbcolor} def
+         }%
+\end{verbatim}
+Puis ensuite~:
+\begin{verbatim}
+fcol=0 (hetre) 1 (chene)  2 (cheneclair)
+\end{verbatim}
+
+\end{itemize}
+
+
+Les $4$~arguments
+\verb+color1+,
+\verb+color2+,
+\verb+color3+,
+\verb+color4+ ont des valeurs par défaut~:
+\begin{itemize}
+    \item \textcolor{cyan!50}{color1=cyan!50}
+    \item \textcolor{magenta!60}{color2=magenta!60}
+    \item \textcolor{blue!30}{color3=blue!30}
+    \item \textcolor{red!50}{color4=red!50}
+\end{itemize}
+
+\newpage
+
+\begin{multicols}{2}
+\setlength{\columnseprule}{1pt}
+\psset{unit=0.45}
+\psset{Decran=20,viewpoint=10 5 10}
+\centerline{
+\begin{pspicture}(-5,-5)(5,5)
+\psframe(-5,-5)(5,5)
+\psSolid[
+   fcol=0 (Apricot) 1 (Aquamarine)  2 (Bittersweet)
+        3 (ForestGreen) 4 (Goldenrod)
+        13 (GreenYellow)
+        40 (Mulberry),
+   object=cube,mode=3
+]%
+\end{pspicture}}
+\columnbreak
+\begin{verbatim}
+\psSolid[
+   fcol=0 (Apricot)
+        1 (Aquamarine)
+        2 (Bittersweet)
+        3 (ForestGreen)
+        4 (Goldenrod)
+        13 (GreenYellow)
+        40 (Mulberry),
+  object=cube,mode=3
+    ]%
+\end{verbatim}
+\end{multicols}
+\begin{multicols}{2}
+\setlength{\columnseprule}{1pt}
+\psset{unit=0.45}
+\psset{Decran=20,viewpoint=10 5 10}
+\centerline{
+\begin{pspicture}(-5,-5)(5,5)
+\psframe(-5,-5)(5,5)
+\psSolid[
+   fcol=0 (Apricot) 2 (Lavender) 3 (SkyBlue)  11 (LimeGreen) 12 (OliveGreen) ,
+   object=cylindre,
+   h=4,
+   ngrid=4 10,
+](0,0,-2)
+\end{pspicture}}
+\columnbreak
+\begin{verbatim}
+\psSolid[
+  fcol= 0 (Apricot)
+        2 (Lavender)
+        3 (SkyBlue)
+        10 (LimeGreen)
+        12 (OliveGreen),
+  object=cylindre,
+   h=4,
+   ngrid=4 10,
+](0,0,-2)
+\end{verbatim}
+\end{multicols}
+
+Le choix des faces à colorier peut se faire en utilisant un code \texttt{PostScript} :
+\begin{verbatim}
+fcol=48 {i (Black) i 1 add (LimeGreen) i 2 add (Yellow) /i i 3 add store} repeat
+\end{verbatim}
+qui va colorier alternativement en noir, en vert et en jaune les facettes.
+\begin{center}
+\psset{Decran=10,viewpoint=10 10 5,unit=0.8}
+\begin{pspicture}(-5,-4)(5,3)
+\psframe(-5,-4)(5,3)
+\pstVerb{/iface 0 store}%
+\psSolid[
+fcol=48 {iface (Black) iface 1 add (LimeGreen) iface 2 add (Yellow) /iface iface 3 add store} repeat,
+   r1=4,r0=1,
+   object=tore,
+   ngrid=8 18,
+   RotY=30
+  ]%
+\end{pspicture}
+\end{center}
+Si l'option \textbf{\texttt{hue}} est activée, les facettes du solide sont coloriées avec le dégradé de couleurs de l'arc-en-ciel.
+\begin{multicols}{2}
+\setlength{\columnseprule}{1pt}
+\centerline{
+%%
+\psset{unit=0.5}
+%%
+\begin{pspicture}(-6,-5)(6,5)
+\psframe(-6,-5)(6,5)
+\psset[pst-solides3d]{viewpoint=50 50 50,Decran=86,lightsrc=50 20 1e2}
+\psSolid[r1=5,r0=1,object=tore,ngrid=16 18,hue=0 1]%
+%\psgrid[subgriddiv=0]%
+\end{pspicture}}
+\columnbreak
+\begin{verbatim}
+\psset{viewpoint=50 50 50,Decran=86,
+       lightsrc=50 20 1e2}
+\psSolid[r1=5,r0=1,object=tore,
+         ngrid=16 18,hue=0 1]%
+\end{verbatim}
+\end{multicols}

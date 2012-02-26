@@ -1,0 +1,186 @@
+\section {Courbes de fonctions de $R$ vers $R^3$}
+
+%% \section{Fonctions R --> R\textsuperscript{3}}
+
+Le tracé de la fonction ainsi définie fait appel à l'objet
+\Cadre{courbe} et à l'option \Cadre{function}. 
+
+On pourra réaliser le tracé de l'hélice :
+
+%% \[
+%% \left\{
+%% \begin{array}{lcl}
+%% x&=&3\cos(4t)\\
+%% y&=&3\sin(4t)\\
+%% z&=&t
+%% \end{array}
+%% \right.
+%% \]
+en notation algébrique avec la fonction :
+
+%%\begin{boxedverbatim}
+\begin{verbatim}
+\defFunction[algebraic]{helice}(t){3*cos(4*t)}{3*sin(4*t)}{t}
+\end{verbatim}
+%%\end{boxedverbatim}
+
+%\defFunction[algebraic]{f}(t){t}{(t^2)/10-1}{}
+\begin{minipage}{0.4\linewidth}
+\psset{unit=0.5}
+\psset{lightsrc=10 -20 50,SphericalCoor,viewpoint=50 -20 20,Decran=50}
+\begin{pspicture}(-6,-3)(6,8)
+\psframe*[linecolor=blue!50](-6,-3)(6,8)
+\psSolid[object=grille,base=-4 4 -4 4,linecolor=red,linewidth=0.5\pslinewidth]%
+\axesIIID(0,0,0)(4,4,7)
+\defFunction[algebraic]{helice}(t){3*cos(4*t)}{3*sin(4*t)}{t}
+\psSolid[object=courbe,
+        range=0 6,
+        linecolor=blue,linewidth=0.1,
+        resolution=360,
+        function=helice]%
+\end{pspicture}
+\end{minipage}
+\hfill
+\begin{minipage}{0.6\linewidth}
+%%\begin{boxedverbatim}
+\begin{verbatim}
+\defFunction[algebraic]%
+   {helice}(t){cos(3*t)}{sin(3*t)}{t}
+\psSolid[object=courbe,
+        range=0 6,
+        linecolor=blue,
+        resolution=360,
+        function=helice]%
+\end{verbatim}
+%%\end{boxedverbatim}
+\end{minipage}
+
+\begin{minipage}{0.4\linewidth}
+\psset{unit=0.5}
+\begin{pspicture}(-6,-3)(6,8)
+\psframe*[linecolor=blue!50](-6,-3)(6,8)
+\psset{lightsrc=10 -20 50,SphericalCoor,viewpoint=50 -20 30,Decran=50}
+\defFunction{CosRad}(t){t 2 mul Cos 4 mul}{t}{0}
+\psSolid[object=grille,base=-4 4 -4 4,linecolor=red,linewidth=0.5\pslinewidth]%
+\axesIIID(0,0,0)(4,4,7)
+\psset{range=-4 4}
+\psSolid[object=courbe,linewidth=0.1,
+        linecolor=red,
+        resolution=360,
+        function=CosRad]%
+\psSolid[object=grille,base=-4 4 -4 4,linecolor=blue,linewidth=0.5\pslinewidth](0,0,3)
+\psPoint(0,0,3){O1}\psPoint(0,0,7){Z1}\psline(O1)(Z1)\psline[linestyle=dashed](O1)(O)
+\pstVerb{/tmin -4 def /tmax 4 def}%
+\defFunction{sinRad}(t){t}{t Sin 3 mul}{3}
+\psSolid[object=courbe,linewidth=0.1,
+        linecolor=blue,
+        resolution=30,
+        function=sinRad]%
+\end{pspicture}
+\end{minipage}
+\hfill
+\begin{minipage}{0.6\linewidth}
+%%\begin{boxedverbatim}
+\begin{verbatim}
+\psset{range=-4 4}
+\defFunction{CosRad}(t){t 2 mul Cos 4 mul}{t}{0}
+\psSolid[object=grille,base=-4 4 -4 4]%
+\psSolid[object=courbe,linewidth=0.1,
+        linecolor=red,
+        resolution=360,
+        function=CosRad]%
+\defFunction{sinRad}(t){t}{t Sin 3 mul}{3}
+\psSolid[object=grille,base=-4 4 -4 4](0,0,3)
+\psSolid[object=courbe,
+        linecolor=blue,
+        resolution=360,
+        function=sinRad]
+\end{verbatim}
+%%\end{boxedverbatim}
+\end{minipage}
+
+\begin{minipage}{0.4\linewidth}
+\psset{unit=0.5}
+\begin{pspicture}(-5,0)(7,9)
+\psset{lightsrc=10 -20 50,SphericalCoor,viewpoint=50 -20 20,Decran=50}
+\psSolid[object=grille,base=-4 4 -4 4,linecolor=lightgray,linewidth=0.5\pslinewidth]%
+\psSolid[object=grille,base=-4 4 0 8,linecolor=lightgray,RotX=90,linewidth=0.5\pslinewidth](0,4,0)
+\psSolid[object=grille,base=-4 4 -4 4,linecolor=lightgray,RotY=90,linewidth=0.5\pslinewidth](-4,0,4)
+\defFunction[algebraic]{helice}%
+(t){1.3*(1-cos(2.5*t))*cos(6*t)}{1.3*(1-cos(2.5*t))*sin(6*t)}{t}
+\defFunction[algebraic]{helice_xy}(t){1.3*(1-cos(2.5*t))*cos(6*t)}{1.3*(1-cos(2.5*t))*sin(6*t)}{0}
+\defFunction[algebraic]{helice_xz}(t){1.3*(1-cos(2.5*t))*cos(6*t)}{4}{t}
+\defFunction[algebraic]{helice_yz}(t){-4}{1.3*(1-cos(2.5*t))*sin(6*t)}{t}
+\psset{range=0 8}
+\psSolid[object=courbe,
+        linecolor=blue,
+        linewidth=0.05,
+        resolution=360,
+        normal=0 0 1,
+        function=helice_xy]%
+\psSolid[object=courbe,
+        linecolor=green,
+        linewidth=0.05,
+        resolution=360,
+        normal=0 0 1,
+        function=helice_xz]%
+\psSolid[object=courbe,
+        linewidth=0.05,
+        resolution=360,
+        normal=0 0 1,
+        function=helice_yz]%
+\psSolid[object=courbe,
+        linecolor=red,
+        linewidth=0.1,
+        resolution=360,
+        function=helice]%
+ \end{pspicture}
+\end{minipage}
+\hfill
+\begin{minipage}{0.6\linewidth}
+\footnotesize
+%%\begin{boxedverbatim}
+\begin{verbatim}
+\psSolid[object=grille,base=-4 4 -4 4]%
+\psSolid[object=grille,base=-4 4 0 8](0,4,0)
+\psSolid[object=grille,base=-4 4 -4 4](-4,0,4)
+\defFunction[algebraic]{helice}%
+(t){1.3*(1-cos(2.5*t))*cos(6*t)}{1.3*(1-cos(2.5*t))*sin(6*t)}{t}
+\defFunction[algebraic]{helice_xy}%
+(t){1.3*(1-cos(2.5*t))*cos(6*t)}{1.3*(1-cos(2.5*t))*sin(6*t)}{0}
+\defFunction[algebraic]{helice_xz}%
+(t){1.3*(1-cos(2.5*t))*cos(6*t)}{4}{t}
+\defFunction[algebraic]{helice_yz}%
+(t){-4}{1.3*(1-cos(2.5*t))*sin(6*t)}{t}
+\psset{range=0 8}
+\psSolid[object=courbe,
+        linecolor=blue,
+        linewidth=0.05,
+        resolution=360,
+        normal=0 0 1,
+        function=helice_xy]%
+\psSolid[object=courbe,
+        linecolor=green,
+        linewidth=0.05,
+        resolution=360,
+        normal=0 0 1,
+        function=helice_xz]%
+\psSolid[object=courbe,
+        linewidth=0.05,
+        resolution=360,
+        normal=0 0 1,
+        function=helice_yz]%
+\psSolid[object=courbe,
+        linecolor=red,
+        linewidth=0.1,
+        resolution=360,
+        function=helice]%
+\end{verbatim}
+%%\end{boxedverbatim}
+\end{minipage}
+
+Ces dernières courbes se trouvent sous forme d'animations sur la page :
+
+\centerline{\url{http://melusine.eu.org/syracuse/pstricks/pst-solides3d/animations/}}
+
+

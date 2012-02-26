@@ -1,0 +1,2450 @@
+%% $Id: pst-node-doc.tex 568 2011-08-20 08:15:04Z herbert $
+\documentclass[11pt,english,BCOR10mm,DIV12,bibliography=totoc,parskip=false,smallheadings
+    headexclude,footexclude,oneside]{pst-doc}
+\listfiles
+
+\usepackage[utf8]{inputenc}
+\usepackage{pst-plot}
+\usepackage{pst-node}
+%\usepackage{pax}
+\let\pstFV\fileversion
+\let\belowcaptionskip\abovecaptionskip
+%
+\newcommand\xstrut{\vphantom{\tabular{c}Üg\\Üg\endtabular}}
+\newcommand\psBox[3][white]{\rput(#2){\rnode{#2}{%
+  \psframebox[fillcolor=#1]{\xstrut\makebox[3.2cm]{\tabular{c}#3\endtabular}}}}}
+\def\bgImage{%
+\psscalebox{0.85}{%
+\begin{pspicture}(-1,-1)(21,7)
+\psset{framearc=0.2,shadow=true,fillstyle=solid,shadowcolor=black!55}
+\psBox[blue!30]{7,6}{politische\\Kommunikation}
+\psBox[red!30]{3,4}{interpersonale\\Kommunikation} 
+	\psBox[red!30]{13,4}{massenmediale\\Kommunikation} 
+\psBox[green!30]{1,2}{starke\\Beziehung}
+	\psBox[green!30]{5,2}{schwache\\Beziehung} 
+	\psBox[green!30]{9,2}{Fernsehen}
+	\psBox[green!30]{17,2}{Zeitungen}
+\psBox[cyan!30]{7,0}{öffentlich-rechtl.\\Fernsehen}
+	\psBox[cyan!30]{11,0}{privates\\Fernsehen}
+	\psBox[cyan!30]{15,0}{Boulevard-\\Zeitungen}
+	\psBox[cyan!30]{19,0}{Abonnement-\\Zeitungen}
+\end{pspicture}
+\psset{shadow=false,angleA=-90,angleB=90,linewidth=2pt}
+\ncangles{7,6}{3,4}\ncangles{7,6}{13,4}
+\ncangles{3,4}{1,2}\ncangles{3,4}{5,2}
+\ncangles{13,4}{9,2}\ncangles{13,4}{17,2}
+\ncangles{9,2}{7,0}\ncangles{9,2}{11,0}
+\ncangles{17,2}{15,0}\ncangles{17,2}{19,0}}
+}
+\newbox\filebox
+\setbox\filebox=\hbox{%
+  \pspicture(-1,-.5)(1,.7)
+  \pspolygon[linearc=2pt,shadow=true,shadowangle=45,xunit=1.1]%
+    (-1,-.55)(-1,.5)(-.8,.5)(-.8,.65)(-.2,.65)(-.2,.5)(1,.5)(1,-.55)
+   \endpspicture}
+
+\lstset{explpreset={pos=l,width=-99pt,overhang=0pt,hsep=\columnsep,vsep=\bigskipamount,rframe={}}}
+
+\begin{document}
+\title{\texttt{pst-node}\\Nodes and node connections%
+\\\small v.\pstFV}
+%\docauthor{Michael Sharpe\\Herbert Vo\ss}
+\author{Timothy Van Zandt\\Michael Sharpe\\Herbert Vo\ss}
+\date{\today}
+
+\maketitle
+
+\begin{abstract}
+This version of \LPack{pst-node} uses the extended keyval handling
+of pst-xkey and has a lot of the macros which were recently in
+the package \LPack{pstricks-add}. This documentation describes in the first part
+the basic node commands and connection from the old PSTricks documentation.
+The second part describes only the
+new and changed stuff. .
+
+For some copatibility reason you can use the optional argument \Loption{97}
+for the package, it loads the version from 1997, which only makes sense
+when also running the main package \LPack{pstricks} with this option.
+
+\vfill
+\noindent
+Thanks to:  Marco Daniel; Denis Girou; Rolf Niepraschk; Sebastian Rahtz;
+\end{abstract}
+
+\clearpage
+\tableofcontents
+
+\clearpage
+\part{Basic commands, connections and labels}
+
+\leavevmode
+\marginpar{%
+  \leavevmode\lower 20pt\hbox{%
+    \hbox to0pt{\hbox to \linewidth{\hss\rnode{file}{\copy\filebox}\hss}\hss}%
+    \raise 10pt\hbox to \linewidth{\hss\large\bfseries\sffamily pst-node\hss}}}%
+
+The node and node connection macros let you connect information and place
+labels, without knowing the exact position of what you are connecting or where
+the lines should connect. These macros are useful for making graphs and trees,
+mathematical diagrams, linguistic syntax diagrams, and connecting ideas of any
+kind. They are the trickiest tricks in PSTricks!
+
+There are three components to the node macros:
+\begin{description}
+  \item[Node definitions] The node definitions let you assign a name and shape
+  to an object. See Section \ref{S-nodes}.
+  \item[Node connections] The node connections connect two nodes, identified
+  by their names. See Section \ref{S-nc}.
+  \item[Node labels] The node label commands let you affix labels to the node
+  connections. See Section \ref{S-nodelabels}.
+\end{description}
+
+You can use these macros just about anywhere. The best way to position them
+depends on the application. For greatest flexibility, you can use the nodes in
+a \Lenv{pspicture}, positioning and rotating them with \Lcs{rput}. You can also use
+them in alignment environments. \LPack{pst-node} contains a special alignment
+environment, \Lenv{psmatrix}, which is designed for positioning nodes in a grid,
+such as in mathematical diagrams and some graphs. \Lcs{psmatrix} is described in
+Section \ref{S-psmatrix}. \LPack{pst-node} also contains high-level macros for
+trees. These are described in the documentation of \LPack{pst-tree}.
+
+But don't restrict yourself to these more obvious uses. For example:
+\begin{center}
+  \rnode{A}{%
+    \parbox{12cm}{\raggedright
+      I made the file symbol a node. Now I can draw an
+      arrow so that you know what I am talking about.}}
+  \ncarc[nodesep=8pt]{->}{A}{file}
+\end{center}
+
+\begin{lstlisting}
+  \rnode{A}{%
+    \parbox{4cm}{\raggedright
+      I made the file symbol a node. Now I can draw an
+      arrow so that you know what I am talking about.}}
+  \ncarc[nodesep=8pt]{->}{A}{file}
+\end{lstlisting}
+
+\section{Nodes}\label{S-nodes}
+
+Nodes have a name. a boundary and a center.
+The center of a node is where node connections point to. The boundary is for
+determining where to connect a node connection. The various nodes differ in
+how they determine the center and boundary. They also differ in what kind of
+visable object they create.
+
+
+The\XInfoDanger[0]{} name is for refering to the node when making node connections and labels.
+You specify the name as an argument to the node commands. The name must
+contain only letters and numbers, and must begin with a letter. Bad node names
+can cause PostScript errors.
+
+
+Here are the nodes:
+
+\begin{BDef}
+\Lcs{rnode}\OptArg{refpoint}\Largb{name}\Largb{stuff}
+\end{BDef}
+
+  \Lcs{rnode} puts \Larg{stuff} in a box. The center of the node is \Larg{refpoint}, which
+you can specify the same way as for \Lcs{rput}.
+
+\begin{BDef}
+\Lcs{Rnode}\Largb{name}\Largb{stuff}
+\end{BDef}
+
+  \Lcs{Rnode} also makes a box, but the center is set differently. If you align
+\Lcs{rnode}'s by their baseline, differences in the height and depth of the nodes
+can cause connecting lines to be not quite parallel, such as in the following
+example:
+
+\begin{LTXexample}[width=0.4\linewidth]
+  \Large
+  \rnode{A}{sp} \hskip 2cm \rnode{B}{Bit}
+  \ncline{A}{B}
+\end{LTXexample}
+
+With \Lcs{Rnode}, the center is determined relative to the baseline:
+
+\begin{LTXexample}[width=0.4\linewidth]
+  \Large
+  \Rnode{A}{sp} \hskip 2cm \Rnode{B}{Bit}
+  \ncline{A}{B}
+\end{LTXexample}
+
+You can usually get by without fiddling with the center of the node, but to
+modify it you set the
+  \LKeyword{href=num} or 
+  \LKeyword{vref=dim}
+parameters. In the horizontal direction, the center is located fraction
+\Lkeyword{href} from the center to the edge. E.g, if \LKeyword{href=-1}, the center is on
+the left edge of the box. In the vertical direction, the center is located
+distance \Lkeyword{vref} from the baseline. The \Lkeyword{vref} parameter is evaluated each
+time \Lcs{Rnode} is used, so that you can use \verb|ex| units to have the distance
+adjust itself to the size of the current font (but without being sensitive to
+differences in the size of letters within the current font).
+
+The command \Lcs{pnode}  creates a zero dimensional node at \Largr{\CAny}.
+It 
+knows an optional argument for an \CAny\ offset, which
+expects the two values for $x$ and $y$ separated by a comma:
+
+\begin{BDef}
+\Lcs{pnode}\OptArg*{\Largs{\Larga{offset}}}\Largr{\CAny}\Largb{\Larga{node name}}
+\end{BDef}
+
+
+\begin{LTXexample}[width=6cm]
+\begin{pspicture}[showgrid](0,-2)(6,2)
+\pnode{A}\psdot(A)\uput[90](A){A} 
+\pnode[0,-2]{B}\psdot(B)\uput[90](B){B} 
+\pnode(2,0){C}\psdot(C)\uput[90](C){C} 
+\pnode[1,-2](2,0){D}\psdot(D)\uput[90](D){D} 
+\pnode[2,2](3.5,0){E}\psdot(E)\uput[90](E){E} 
+\end{pspicture}
+\end{LTXexample}
+
+
+The command \Lcs{psnode}  is a combination of using \Lcs{rput} and \Lcs{rnode}.
+
+\begin{BDef}
+\Lcs{psnode}\OptArgs\Largr{\CAny}\Largb{\Larga{node name}}\Largb{\Larga{node contents}}
+\end{BDef}
+
+\begin{LTXexample}
+\begin{pspicture}[showgrid](0,0)(4,4)
+\psnode(0.5,3){A}{Foo}
+\psnode(3,0){B}{Bar}
+\ncdiag[arm=5mm,angleA=-90,
+        angleB=90]{->}{A}{B}
+\end{pspicture}
+\end{LTXexample}
+
+
+\begin{BDef}
+\LcsStar{cnode}\OptArgs\Largr{\CAny}\Largb{radius}\Largb{name}
+\end{BDef}
+
+  This draws a circle. Here is an example with \Lcs{pnode} and \Lcs{cnode}:
+  
+\begin{LTXexample}
+\begin{pspicture}[showgrid](3,1.25)
+  \cnode(0,1){.25}{A}
+  \pnode(3,0){B}
+  \ncline{<-}{A}{B}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{BDef}
+\LcsStar{Cnode}\OptArgs\Largr{\CAny}\Largb{name}
+\end{BDef}
+
+  This is like \Lcs{cnode}, but the radius is the value of \LKeyword{radius=dim}
+This is convenient when you want many circle nodes of the same radius.
+
+\begin{BDef}
+\LcsStar{circlenode}\OptArgs\Largb{name}\Largb{stuff}
+\end{BDef}
+
+  This is a variant of \Lcs{pscirclebox} that gives the node the shape of the
+circle.
+
+\begin{BDef}
+ \LcsStar{cnodeput}\OptArgs\Largb{angle}\Largr{\CAny}\Largb{name}\Largb{stuff}
+\end{BDef}
+
+  This is a variant of \Lcs{cput} that gives the node the shape of the
+circle. That is, it is like
+\begin{lstlisting}
+  \rput{<angle>}(<x>,<y>){\circlenode{<name>}{<stuff>}}
+\end{lstlisting}
+
+
+\begin{BDef}
+\LcsStar{ovalnode}\OptArgs\Largb{name}\Largb{stuff}
+\end{BDef}
+
+  This is a variant of \Lcs{psovalbox} that gives the node the shape of an
+ellipse. Here is an example with \Lcs{circlenode} and \Lcs{ovalnode}:
+
+\begin{LTXexample}[width=0.3\textwidth]
+\circlenode{A}{Circle} and \ovalnode{B}{Oval}
+\ncbar[angle=90]{A}{B}
+\end{LTXexample}
+
+
+\begin{BDef}
+\LcsStar{dianode}\OptArgs\Largb{name}\Largb{stuff}
+\end{BDef}
+
+  This is like \Lcs{diabox}.
+
+
+\begin{BDef}
+\LcsStar{trinode}\OptArgs\Largb{name}\Largb{stuff}
+\end{BDef}
+
+  This is like \Lcs{tribox}.
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(4,3)
+  \rput[tl](0,3){\dianode{A}{Diamond}}
+  \rput[br](4,0){\trinode[trimode=L]{B}{Triangle}}
+  \nccurve[angleA=-135,angleB=90]{A}{B}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{BDef}
+\LcsStar{dotnode}\OptArgs\Largr{\CAny}\Largb{name}
+\end{BDef}
+
+  This is a variant of \Lcs{psdot}. For example:
+\begin{LTXexample}
+\begin{pspicture}(3,2)
+  \dotnode[dotstyle=triangle*,dotscale=2 1](0,0){A}
+  \dotnode[dotstyle=+](3,2){B}
+  \ncline[nodesep=3pt]{A}{B}
+\end{pspicture}
+\end{LTXexample}
+
+
+\begin{BDef}
+\LcsStar{fnode}\OptArgs\Largr{\CAny}\Largb{name}
+\end{BDef}
+
+  The ``f'' stands for ``frame''. This is like, but easier than, putting a
+\Lcs{psframe} in an \Lcs{rnode}.
+
+\begin{LTXexample}
+\begin{pspicture}(3,2)
+  \fnode{A}
+  \fnode*[framesize=1 5pt](2,2){B}
+  \ncline[nodesep=3pt]{A}{B}
+\end{pspicture}
+\end{LTXexample}
+
+There are two differences between \Lcs{fnode} and \Lcs{psframe}:
+\begin{itemize}
+  \item There is a single (optional) coordinate argument, that gives the
+  \emph{center} of the frame.
+  \item The width and height of the frame are set by the
+  \LKeyword{framesize=dim1 `dim2'} parameter. If you omit <dim2>, you get a square frame.
+\end{itemize}
+
+
+\section{Node connections}\label{S-nc}
+
+All the node connection commands begin with \nxLcs{nc}, and they all have the same
+syntax:\footnote{%
+The node connections can be used with \Lcs{pscustom}. The beginning of the node
+connection is attached to the current point by a straight line, as with
+\Lcs{psarc}.}$^,$\footnote{%
+See page  \protect\pageref{S-SpecialCoor} if you want to use the nodes as
+coordinates in other PSTricks macros.}
+
+\begin{BDef}
+  \nxLcs{<nodeconnection>*}\OptArgs\Largb{<arrows>}\Largb{<nodeA>}\Largb{<nodeB>}
+\end{BDef}
+
+A line of some sort is drawn from <nodeA> to <nodeB>. Some of the node
+connection commands are a little confusing, but with a little experimentation
+you will figure them out, and you will be amazed at the things you can do.
+When we refer to the \verb|A| and \verb|B| nodes below, we are referring only to the
+order in which the names are given as arguments to the node connection
+macros.\footnote{%
+When a node name cannot be found on the same page as the node connection
+command, you get either no node connection or a nonsense node connection.
+However, \TeX{} will not report any errors.}
+
+The node connections use many of the usual graphics parameters, plus a few
+special ones. Let's start with one that applies to all the node connections:
+  \LKeyword{nodesep=dim}
+
+\Lkeyword{nodesep} is the border around the nodes that is added for the purpose of
+determining where to connect the lines.
+
+For this and other node connection parameters, you can set different values
+for the two ends of the node connection. Set the parameter \Lkeyword{nodesepA} for
+the first node, and set \Lkeyword{nodesepB} for the second node.
+
+The first two node connections draw a line or arc directly between the two
+nodes:
+
+\begin{BDef}
+\LcsStar{ncline}\OptArgs\OptArg*{\Largb{arrows}}\Largb{nodeA}\Largb{nodeB}
+\end{BDef}
+
+This draws a straight line between the nodes. For example:
+\begin{LTXexample}
+\begin{pspicture}(4,3)
+  \rput[bl](0,0){\rnode{A}{Idea 1}}
+  \rput[tr](4,3){\rnode{B}{Idea 2}}
+  \ncline[nodesep=3pt]{<->}{A}{B}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{BDef}
+\LcsStar{ncarc}\OptArgs\OptArg*{\Largb{arrows}}\Largb{nodeA}\Largb{nodeB}
+\end{BDef}
+
+This connects the two nodes with an arc.
+\begin{LTXexample}
+\begin{pspicture}[shift=*](3.5,2.5)
+  \cnodeput(0,0){A}{X}
+  \cnodeput(3,2){B}{Y}
+  \psset{nodesep=3pt}
+  \ncarc{->}{A}{B}
+  \ncarc{->}{B}{A}
+\end{pspicture}
+\end{LTXexample}
+
+The angle between the arc and the line between the two nodes is\footnote{%
+Rather than using a true arc, \Lcs{ncarc} actually draws a bezier curve. When
+connecting two circular nodes using the default parameter values, the curve
+will be indistinguishable from a true arc. However, \Lcs{ncarc} is more
+flexible than an arc, and works right connecting nodes of different shapes and
+sizes. You can set \Lkeyword{arcangleA} and \Lkeyword{arcangleB} separately, and you can
+control the curvature with the \Lkeyword{ncurv} parameter, which is described on page
+\pageref{p+ncurv}.} \LKeyword{arcangle=angle}
+
+
+\Lcs{ncline} and \Lcs{ncarc} both determine the angle at which the node
+connections join by the relative position of the two nodes. With the next
+group of node connections, you specify one or both of the angles in absolute
+terms, by setting the
+  \LKeyword{angle=angle}
+(and \Lkeyword{angleA} and \Lkeyword{angleB}) parameter.
+
+You also specify the length of the line segment where the node connection
+joins at one or both of the ends (the ``arms'') by setting the
+  \LKeyword{arm=dim}
+(and \Lkeyword{armA} and \Lkeyword{armB}) parameter.
+
+These node connections all consist of several line segments, including the
+arms. The value of \Lkeyword{linearc} is used for rounding the corners.
+
+Here they are, starting with the simplest one:
+
+\begin{BDef}
+\LcsStar{ncdiag}\OptArgs\OptArg*{\Largb{arrows}}\Largb{nodeA}\Largb{nodeB}
+\end{BDef}
+
+
+An arm is drawn at each node, joining at angle \Lkeyword{angleA} or \Lkeyword{angleB},
+and with a length of \Lkeyword{armA} or \Lkeyword{armB}. Then the two arms are connected
+by a straight line, so that the whole line has three line segments.
+For example:
+
+\begin{LTXexample}[width=0.4\textwidth]
+\begin{pspicture}(4,3)
+  \rput[tl](0,3){\rnode{A}{\psframebox{Node A}}}
+  \rput[br](4,0){\ovalnode{B}{Node B}}
+  \ncdiag[angleA=-90, angleB=90, arm=.5, linearc=.2]{A}{B}
+\end{pspicture}
+\end{LTXexample}
+
+You can also set one or both of the arms to zero length. For example, if you
+set \LKeyword{arm=0}, the nodes are connected by a straight line, but you get to
+determine where the line connects (whereas the connection point is determined
+automatically by \Lcs{ncline}. Compare this use of \Lcs{ncdiag} with \Lcs{ncline}
+in the following example:
+
+\begin{LTXexample}[width=0.4\textwidth]
+\begin{pspicture}[shift=*](4,2.5)
+  \rput[r](4,1){\ovalnode{R}{Root}}
+  \cnodeput(1,2){A}{XX}
+  \cnodeput(1,0){B}{YY}
+  \ncdiag[angleB=180, arm=0]{<-}{A}{R}
+  \ncline{<-}{B}{R}
+\end{pspicture}
+\end{LTXexample}
+
+(Note that in this example, the default value \LKeyword{angleA=0} is used.)
+
+\begin{BDef}
+\LcsStar{ncdiagg}\OptArgs\OptArg*{\Largb{arrows}}\Largb{nodeA}\Largb{nodeB}
+\end{BDef}
+
+\Lcs{ncdiagg} is similar to \Lcs{ncdiag}, but only the arm for node A is drawn.
+The end of this arm is then connected directly to node B. Compare
+\Lcs{ncdiagg} with \Lcs{ncdiag} when \LKeyword{armB=0}:
+
+\begin{LTXexample}[width=0.4\textwidth]
+\begin{pspicture}[shift=*](3.5,1)
+\cnode(0,0){12pt}{a}
+\rput[l](3,1){\rnode{b}{H}}
+\rput[l](3,-1){\rnode{c}{T}}
+\ncdiagg[angleA=180,armA=1.5,nodesepA=3pt]{b}{a}
+\nbput[npos=1.2]{\texttt{\string\ncdiagg}}
+\ncdiag[angleA=180,armA=1.5,armB=0,
+        nodesepA=3pt]{c}{a}
+\naput[npos=1.2]{\texttt{\string\ncdiag}}
+\end{pspicture}
+\end{LTXexample}
+
+  You can use \Lcs{ncdiagg} with \LKeyword{armA=0} if you want a straight line that
+joins to node A at the angle you specify, and to node B at an angle that is
+determined automatically.
+
+\begin{BDef}
+\LcsStar{ncbar}\OptArgs\OptArg*{\Largb{arrows}}\Largb{nodeA}\Largb{nodeB}
+\end{BDef}
+
+  This node connection consists of a line with arms dropping ``down'', at
+right angles, to meet two nodes at an angle \Lkeyword{angleA}. Each arm is at least
+of length \Lkeyword{armA} or \Lkeyword{armB}, but one may be need to be longer.
+
+\begin{LTXexample}[width=0.4\textwidth]
+\rnode{A}{Connect} some \rnode{B}{words}!
+\ncbar[nodesep=3pt,angle=-90]{<-**}{A}{B}
+\ncbar[nodesep=3pt,angle=70]{A}{B}
+\end{LTXexample}
+
+ Generally, the whole line has three straight segments.
+
+\begin{BDef}
+\LcsStar{ncangle}\OptArgs\OptArg*{\Largb{arrows}}\Largb{nodeA}\Largb{nodeB}
+\end{BDef}
+
+
+  Now we get to a more complicated node connection. \Lcs{ncangle} typically
+draws three line segments, like \Lcs{ncdiag}. However, rather than fixing the
+length of arm A, we adjust arm A so that the line joining the two arms meets
+arm A at a right angle. For example:
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(4,3)
+  \rput[tl](0,3){\rnode{A}{\psframebox{Node A}}}
+  \rput[br](4,0){\ovalnode{B}{Node B}}
+  \ncangle[angleA=-90,angleB=90,armB=1cm]{A}{B}
+\end{pspicture}
+\end{LTXexample}
+
+Now watch what happens when we change \Lkeyword{angleA}:
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(4,3)
+  \rput[tl](0,3){\rnode{A}{\psframebox{Node A}}}
+  \nput[labelsep=0]{-70}{A}{%
+     \psarcn(0,0){.4cm}{0}{-70}
+     \uput{.4cm}[-35](0,0){\texttt{angleA}}}
+  \rput[br](4,0){\ovalnode{B}{Node B}}
+  \ncangle[angleA=-70,angleB=90,armB=1cm,linewidth=1.2pt]{A}{B}
+  \nput[labelsep=0]{90}{B}{%
+    \rput[bl](2pt,1pt){%
+      \valign{%
+        \vfil#\vfil\cr
+        \hbox{\psscaleboxto(.3,.95cm){\}}}\cr%
+        \hbox{\kern 1pt{\texttt{armB}}}\cr}}}
+  \ncput[nrot=:U,npos=1]{\psframe[dimen=middle](0,0)(.35,.35)}
+\end{pspicture}
+\end{LTXexample}
+
+\Lcs{ncangle} is also a good way to join nodes by a right angle, with just two
+line segments, as in this example:
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(4,2)
+  \rput[tl](0,2){\rnode{A}{\psframebox{Node A}}}
+  \rput[br](4,0){\ovalnode{B}{Node B}}
+  \ncangle[angleB=90, armB=0, linearc=.5]{A}{B}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{BDef}
+\LcsStar{ncangles}\OptArgs\OptArg*{\Largb{arrows}}\Largb{nodeA}\Largb{nodeB}
+\end{BDef}
+
+ \Lcs{ncangles} is similar to \Lcs{ncangle}, but the length of arm A is fixed by
+he \Lkeyword{armA} parameter. Arm A is connected to arm B by two line segments that
+eet arm A and each other at right angles. The angle at which they join arm B,
+and the length of the connecting segments, depends on the positions of the two
+arms. \Lcs{ncangles} generally draws a total of four line segments.\footnote{%
+Hence there is one more angle than \Lcs{ncangle}, and hence the \texttt|s| in
+\Lcs{ncangles}.}
+For example:
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(4,4)
+  \rput[tl](0,4){\rnode{A}{\psframebox{Node A}}}
+  \rput[br](4,0){\ovalnode{B}{Node B}}
+  \ncangles[angleA=-90, armA=1cm, armB=.5cm, linearc=.15]{A}{B}
+\end{pspicture}
+\end{LTXexample}
+
+Let's see what happens to the previous example when we change \Lkeyword{angleB}:
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(4,4)
+  \rput[tl](0,4){\rnode{A}{\psframebox{Node A}}}
+  \rput[br](4,0){\ovalnode{B}{Node B}}
+  \ncangles[angleA=-90, angleB=135, armA=1cm, armB=.5cm,
+     linearc=.15]{A}{B}
+  \nput[labelsep=0]{-90}{A}{%
+    \psarcn(0,0){.4cm}{0}{-90}
+    \uput{.4cm}[-45](0,0){\texttt{angleA}}
+    \rput[tr](-2pt,0){%
+      \valign{%
+        \vfil#\vfil\cr
+        \hbox{\texttt{armA}\kern 1pt}\cr
+        \hbox{\psscaleboxto(.28,.95cm){\{}}\cr\cr}}}
+  \nput[labelsep=0]{135}{B}{%
+    \psarc(0,0){.4cm}{0}{133}
+    \uput{.4cm}[50.5](0,0){\texttt{angleB}}}
+  \ncput[nrot=:L,npos=2]{\psline(0,-.35)(-.35,-.35)(-.35,0)}
+  \ncput[npos=3.5]{%
+    \rput[r](-.8,0){\rnode{arm}{\texttt{armB}}}
+    \pnode{brak}}%
+  \ncline[nodesep=3pt]{->}{arm}{brak}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{BDef}
+\LcsStar{ncloop}\OptArgs\OptArg*{\Largb{arrows}}\Largb{nodeA}\Largb{nodeB}
+\end{BDef}
+
+  \Lcs{ncloop} is also in the same family as \Lcs{ncangle} and \Lcs{ncangles}, but
+now typically 5 line segments are drawn. Hence, \Lcs{ncloop} can reach around
+to opposite sides of the nodes. The lengths of the arms are fixed by \Lkeyword{armA}
+and \Lkeyword{armB}. Starting at arm A, \Lcs{ncloop} makes a 90 degree turn to the
+left, drawing a segment of length
+  \LKeyword{loopsize=dim}
+This segment connects to arm B the way arm A connects to arm B with \Lcs{ncline};
+that is, two more segments are drawn, which join the first segment and each
+other at right angles, and then join arm B. For example:
+
+\begin{LTXexample}[pos=t]
+  \vrule width 0pt height 1cm
+  \rnode{a}{\psframebox{\Huge A loop}}
+  \ncloop[angleB=180,loopsize=1,arm=.5,linearc=.2]{->}{a}{a}
+  \ncput[npos=3.5,nrot=:U]{\psline{|<->|}(.5,-.2)(-.5,-.2)}
+  \nbput[npos=3.5,nrot=:D,labelsep=.35cm]{{\tt loopsize}}
+  \kern .5cm
+\end{LTXexample}
+
+In this example, node A and node B are the same node! You can do this with all
+the node connections (but it doesn't always make sense).
+Here is an example where \Lcs{ncloop} connects two different nodes:
+
+\begin{LTXexample}[pos=t]
+  \parbox{3cm}{%
+  \rnode{A}{\psframebox{\large\textbf{Begin}}}
+  \vspace{1cm}\hspace*{\fill}
+  \rnode{B}{\psframebox{\large\textbf{End}}}
+  \ncloop[angleA=180,loopsize=.9,arm=.5,linearc=.2]{->}{A}{B}}
+  \ncput[npos=1.5,nrot=:U]{\psline{|<->|}(.45,-.2)(-.45,-.2)}
+  \nbput[npos=1.5,nrot=:D,labelsep=.35cm]{\texttt{loopsize}}
+  \kern .5cm
+\end{LTXexample}
+
+
+The next two node connections are a little different from the rest.
+
+\begin{BDef}
+\LcsStar{nccurve}\OptArgs\OptArg*{\Largb{arrows}}\Largb{nodeA}\Largb{nodeB}
+\end{BDef}
+
+  \Lcs{nccurve} draws a bezier curve between the nodes.
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(4,3)
+  \rput[bl](0,0){\rnode{A}{\psframebox{Node A}}}
+  \rput[tr](4,3){\ovalnode{B}{Node B}}
+  \nccurve[angleB=180]{A}{B}
+\end{pspicture}
+\end{LTXexample}
+
+You specify the angle at which the curve joins the nodes by setting the
+\Lkeyword{angle} (and \Lkeyword{angleA} and \Lkeyword{angleB}) parameter. The distance to the
+control points is set with the
+  \LKeyword{ncurv=num}
+(and \Lkeyword{ncurvA} and \Lkeyword{ncurvB}) parameter. A lower number gives a tighter
+curve. (The distance between the beginning of the arc and the first control
+point is one-half \Lkeyword{ncurvA} times the distance between the two endpoints.)
+
+\begin{BDef}
+\LcsStar{nccircle}\OptArgs\OptArg*{\Largb{arrows}}\Largb{nodeA}\Largb{nodeB}
+\end{BDef}
+
+\Lcs{nccircle} draws a circle, or part of a circle, that, if complete, would
+pass through the center of the node counterclockwise, at an angle of
+\Lkeyword{angleA}.
+
+\begin{LTXexample}
+\vrule width 0pt height 1.4cm
+\rnode{A}{\textbf{back}}
+\nccircle[nodesep=3pt]{->}{A}{.7cm}
+\end{LTXexample}
+
+\Lcs{nccircle} can only connect a node to itself; it is the only node
+connection with this property. \Lcs{nccircle} is also special because it has an
+additional argument, for specifying the radius of the circle.
+
+
+The last two node connections are also special. Rather than connecting the
+nodes with an open curve, they enclose the nodes in a box or curved box. You
+can think of them as variants of \Lcs{ncline} and \Lcs{ncarc}. In both cases, the
+half the width of the box is
+  \LKeyword{boxsize=dim}
+You have to set this yourself to the right size, so that the nodes fit inside
+the box. The \Lkeyword{boxsize} parameter actually sets the \Lkeyword{boxheight} and
+\Lkeyword{boxdepth} parameters. The ends of the boxes extend beyond the nodes by
+\Lkeyword{nodesepA} and \Lkeyword{nodesepB}.
+
+
+\begin{BDef}
+\LcsStar{ncbox}\OptArgs\Largb{nodeA}\Largb{nodeB}
+\end{BDef}
+
+  \Lcs{ncbox} encloses the nodes in a box with straight sides. For example:
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}[shift=*](4,2.5)
+  \rput[bl](.5,0){\rnode{A}{Idea 1}}
+  \rput[tr](3.5,2){\rnode{B}{Idea 2}}
+  \ncbox[nodesep=.5cm,boxsize=.6,linearc=.2,
+    linestyle=dashed]{A}{B}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{BDef}
+\LcsStar{ncarcbox}\OptArgs\Largb{nodeA}\Largb{nodeB}
+\end{BDef}
+
+  \Lcs{ncarcbox} encloses the nodes in a curved box that is \Lkeyword{arcangleA} away
+from the line connecting the two nodes.
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}[shift=*](4,2.5)
+  \rput[bl](.5,0){\rnode{A}{1}}
+  \rput[tr](3.5,2){\rnode{B}{2}}
+  \ncarcbox[nodesep=.2cm,boxsize=.4,linearc=.4,
+    arcangle=50]{<->}{A}{B}
+\end{pspicture}
+\end{LTXexample}
+
+The arc is drawn counterclockwise from node A to node B.
+
+
+There is one other node connection parameter that applies to all the node
+connections, except \Lcs{ncarcbox}:
+  \LKeyword{offset=dim}
+(You can also set \Lkeyword{offsetA} and \Lkeyword{offsetB} independently.) This shifts the
+point where the connection joins up by <dim> (given the convention that
+connections go from left to right).
+
+There are two main uses for this parameter. First, it lets you make two
+parallel lines with \Lcs{ncline}, as in the following example:
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}[shift=*](3.5,2.5)
+  \cnodeput(0,0){A}{X}
+  \cnodeput(3,2){B}{Y}
+  \psset{nodesep=3pt,offset=4pt,arrows=->}
+  \ncline{A}{B}
+  \ncline{B}{A}
+\end{pspicture}
+\end{LTXexample}
+
+Second, it lets you join a node connection to a rectangular node at a right
+angle, without limiting yourself to positions that lie directly above, below,
+or to either side of the center of the node. This is useful, for example, if
+you are making several connections to the same node, as in the following
+example:
+
+\begin{LTXexample}
+  \rnode{A}{Word1} and \rnode{B}{Word2} and \rnode{C}{Word3}
+  \ncbar[offsetB=4pt,angleA=-90,nodesep=3pt]{->}{A}{B}
+  \ncbar[offsetA=4pt,angleA=-90,nodesep=3pt]{->}{B}{C}
+\end{LTXexample}
+
+Sometimes you might be aligning several nodes, such as in a tree, and you want
+to ends or the arms of the node connections to line up. This won't happen
+naturally if the nodes are of different size, as you can see in this example:
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}[shift=*](3.5,3)
+  \psset{unit=.9}
+  \Huge
+  \cnode(1,3){4pt}{a}
+  \rput[B](0,0){\Rnode{b}{H}}
+  \rput[B](2,0){\Rnode{c}{a}}
+  \psset{angleA=90,armA=1,nodesepA=3pt}
+  \ncdiagg{b}{a}
+  \ncdiagg{c}{a}
+\end{pspicture}
+\end{LTXexample}
+
+%%??? FIXME
+If you set the \Lkeyword{nodesep} or \Lkeyword{arm} parameter to a negative value, PSTricks
+will measure the distance to the beginning of the node connection or to the
+end of the arm relative to the center of the node, rather than relative to the
+boundary of the node or the beginning of the arm. Here is how we fix the
+previous example:
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}[shift=*](3.5,3)
+  \psset{unit=.9}
+  \Huge
+  \cnode(1,3){4pt}{a}
+  \rput[B](0,0){\Rnode{b}{H}}
+  \rput[B](2,0){\Rnode{c}{a}}
+  \psset{angleA=90,armA=1,YnodesepA=12pt}
+  \ncdiagg{b}{a}
+  \ncdiagg{c}{a}
+\end{pspicture}
+\end{LTXexample}
+
+Note also the use of \Lcs{Rnode}.
+
+One more parameter trick: By using the \Lkeyword{border} parameter, you can create
+the impression that one node connection passes over another.
+
+The node connection commands make interesting drawing tools as well, as an
+alternative to \Lcs{psline} for connecting two points. There are variants of
+the node connection commands for this purpose. Each begins with \verb|pc| (for
+``point connection'') rather than \verb|nc|. E.g.,
+  \verb|\pcarc{<->}(3,4)(6,9)|
+gives the same result as
+
+\begin{lstlisting}
+  \pnode(3,4){A}
+  \pnode(6,9){B}
+  \pcarc{<->}{A}{B}
+\end{lstlisting}
+
+Only \Lcs{nccircle} does not have a \nxLcs{pc} variant:
+
+
+
+
+\begin{center}
+\addtolength{\tabcolsep}{8pt}
+\def\c#1{\Largb{node#1}}
+\begin{tabular}{ll}\bottomrule
+  \emph{Command} & \emph{Corresponds to:}\\\midrule
+
+  \Lcs{pcline}\OptArg*{\Largb{arrows}}\c1\c2    & \Lcs{ncline}\\
+
+  \Lcs{pccurve}\OptArg*{\Largb{arrows}}\c1\c2    & \Lcs{nccurve}\\
+
+  \Lcs{pcarc}\OptArg*{\Largb{arrows}}\c1\c2    & \Lcs{ncarc}\\
+
+  \Lcs{pcbar}\OptArg*{\Largb{arrows}}\c1\c2    & \Lcs{ncbar}\\
+
+  \Lcs{pcdiag}\OptArg*{\Largb{arrows}}\c1\c2    & \Lcs{ncdiag}\\
+
+  \Lcs{pcdiagg}\OptArg*{\Largb{arrows}}\c1\c2    & \Lcs{ncdiagg}\\
+
+  \Lcs{pcangle}\OptArg*{\Largb{arrows}}\c1\c2    & \Lcs{ncangle}\\
+
+  \Lcs{pcangles}\OptArg*{\Largb{arrows}}\c1\c2    & \Lcs{ncangles}\\
+
+  \Lcs{pcloop}\OptArg*{\Largb{arrows}}\c1\c2    & \Lcs{ncloop}\\
+
+  \Lcs{pcbox}\c1\c2    & \Lcs{ncbox}\\
+
+  \Lcs{pcarcbox}\c1\c2
+    & \Lcs{ncarcbox}
+\end{tabular}
+\end{center}
+
+
+
+
+\section{Node connections labels: I}\label{S-nodelabels}
+
+Now we come to the commands for attaching labels to the node connections. The
+label command must come right after the node connection to which the label is
+to be attached. You can attach more than one label to a node connection, and a
+label can include more nodes.
+
+The node label commands must end up on the same \TeX{} page as the node
+connection to which the label corresponds.
+
+There are two groups of connection labels, which differ in how they select the
+point on the node connection. In this section we describe the first group:
+
+\begin{BDef}
+  \LcsStar{ncput}\OptArgs\Largb{stuff}\\
+  \LcsStar{naput}\OptArgs\Largb{stuff}\\
+  \LcsStar{nbput}\OptArgs\Largb{stuff}
+\end{BDef}
+
+
+These three command differ in where the labels end up with respect to the line:
+
+\begin{tabular}{@{}ll}
+  \Lcs{ncput} & \emph{on} the line\\
+  \Lcs{naput} & \emph{above} the line\\
+  \Lcs{nbput} & \emph{below} the line
+\end{tabular}
+
+(using the convention that node connections go from left to right).
+
+Here is an example:
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(3.5,1.5)
+  \cnode(0,0){.5cm}{root}
+  \cnode*(3,1.5){4pt}{A}
+  \cnode*(3,0){4pt}{B}
+  \cnode*(3,-1.5){4pt}{C}
+  \psset{nodesep=3pt}
+  \ncline{root}{A}
+  \naput{above}
+  \ncline{root}{B}
+  \ncput*{on}
+  \ncline{root}{C}
+  \nbput{below}
+\end{pspicture}
+\end{LTXexample}
+
+\Lcs{naput} and \Lcs{nbput} use the same algorithm as \Lcs{uput} for displacing
+the labels, and the distance beteen the line and labels is \Lkeyword{labelsep} (at
+least if the lines are straight).
+
+\Lcs{ncput} uses the same system as \Lcs{rput} for setting the reference
+point. You change the reference point by setting the
+  \LKeyword{ref=ref}
+parameter.
+
+Rotation is also controlled by a graphics parameter:
+  \LKeyword{nrot=rot}
+<rot> can be in any of the forms suitable for \Lcs{rput}, and you can also use
+the form
+\verb|{:<angle>}|
+
+The angle is then measured with respect to the node connection. E.g., if the
+angle is \verb|{:U}|, then the label runs parallel to the node connection. Since
+the label can include other put commands, you really have a lot of control
+over the label position.
+
+The next example illustrates the use \verb|{:<angle>}|, the \Lkeyword{offset} parameter,
+and \Lcs{pcline}:
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(4,2.3)
+  \pspolygon(0,0)(4,2)(4,0)
+  \pcline[offset=12pt]{|-|}(0,0)(4,2)
+  \ncput*[nrot=:U]{Length}
+\end{pspicture}
+\end{LTXexample}
+
+Here is a repeat of an earlier example, now using \verb|{:<angle>}|:
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(3.5,1.5)
+  \cnode(0,0){.5cm}{root}
+  \cnode*(3,1.5){4pt}{A}
+  \cnode*(3,0){4pt}{B}
+  \cnode*(3,-1.5){4pt}{C}
+  \psset{nodesep=3pt,nrot=:U}
+  \ncline{root}{A}
+  \naput{above}
+  \ncline{root}{B}
+  \ncput*{on}
+  \ncline{root}{C}
+  \nbput{below}
+\end{pspicture}
+\end{LTXexample}
+
+The position on the node connection is set by the
+  \LKeyword{npos=num}
+parameter, roughly according to the following scheme: Each node connection has
+potentially one or more segments, including the arms and connecting lines.
+A number \Lkeyword{npos} between 0 and 1 picks a point on the first segment from node
+\verb|A| to \verb|B| (fraction \Lkeyword{npos} from the beginning to the end of the segment),
+a number between 1 and 2 picks a number on the second segment, and so on.
+
+Each node connection has its own default value of \Lkeyword{npos}. If you leave the
+\Lkeyword{npos} parameter value empty (e.g., \verb|[npos=]|), then the default is
+substituted. This is the default mode.
+
+Here are the details for each node connection:
+\begin{center}
+%  \catcode`\@=11\setbox\@tempboxa=\hbox{1.5}%
+%  \edef\t#1{\noexpand\hbox to \the\wd\@tempboxa{\noexpand\tt\noexpand\hss#1}}
+  \begin{tabular}{lccc}
+    \emph{Connection} & \emph{Segments} & \emph{Range} & \emph{Default}\\[2pt]
+    \Lcs{ncline}         & 1               & $0\leq pos\leq 1$ & 0.5\\
+    \Lcs{nccurve}        & 1               & $0\leq pos\leq 1$ & 0.5\\
+    \Lcs{ncarc}          & 1               & $0\leq pos\leq 1$ & 0.5\\
+    \Lcs{ncbar}          & 3               & $0\leq pos\leq 3$ & 1.5\\
+    \Lcs{ncdiag}         & 3               & $0\leq pos\leq 3$ & 1.5\\
+    \Lcs{ncdiagg}        & 2               & $0\leq pos\leq 2$ & 0.5\\
+    \Lcs{ncangle}        & 3               & $0\leq pos\leq 3$ & 1.5\\
+    \Lcs{ncangles}       & 4               & $0\leq pos\leq 4$ &1.5\\
+    \Lcs{ncloop}         & 5               & $0\leq pos\leq 5$ & 2.5\\
+    \Lcs{nccircle}       & 1               & $0\leq pos\leq 1$ & 0.5\\
+    \Lcs{ncbox}          & 4               & $0\leq pos\leq 4$ & 0.5\\
+    \Lcs{ncarcbox}       & 4               & $0\leq pos\leq 4$ & 0.5
+  \end{tabular}
+\end{center}
+
+
+Here is an example:
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(4,3)
+\rput[tl](0,3){\rnode{A}{\psframebox{Node A}}}
+\rput[br](3.5,0){\ovalnode{B}{Node B}}
+\ncangles[angleA=-90,arm=.4cm,linearc=.15]{A}{B}
+\ncput*{d}
+\nbput[nrot=:D,npos=2.5]{par}
+\end{pspicture}
+\end{LTXexample}
+
+With \Lcs{ncbox} and \Lcs{ncarcbox}\, the segments run counterclockwise, starting
+with the lower side of the box. Hence, with \Lcs{nbput} the label ends up
+outside the box, and with \Lcs{naput} the label ends up inside the box.
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}[shift=*](4,2.5)
+  \rput[bl](.5,0){\rnode{A}{1}}
+  \rput[tr](3.5,2){\rnode{B}{2}}
+  \ncarcbox[nodesep=.2cm,boxsize=.4,linearc=.4,
+    arcangle=50,linestyle=dashed]{<->}{A}{B}
+  \nbput[nrot=:U]{set}
+  \nbput[npos=2]{II}
+\end{pspicture}
+\end{LTXexample}
+
+If you set the parameter
+  \LKeyword{shortput=none/nab/tablr/tab}
+to \Lkeyval{nab}, then immediately following a node connection or another node
+connection label you can use \verb|^| instead of \Lcs{naput} and \verb|_| instead of
+\Lcs{nbput}.
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}[shift=*](3.5,1.5)
+  \cnode(0,0){.5cm}{root}
+  \cnode*(3,1.5){4pt}{A}
+  \cnode*(3,-1.5){4pt}{C}
+  \psset{nodesep=3pt,shortput=nab}
+  \ncline{root}{A}^{$x$}
+  \ncline{root}{C}_{$y$}
+\end{pspicture}
+\end{LTXexample}
+
+You can still have parameter changes with the short \verb|^| and \verb|_| forms. Another
+example is given on page~\pageref{nab-example}.
+
+If you have set \Lkeyset{shortput=nab}, and then you want to use a true \verb|^| or \verb|_|
+character right after a node connection, you must precede the \verb|^| or \verb|_| by
+\verb|{}| so that PSTricks does not convert it to \Lcs{naput} or \Lcs{nbput}.
+
+You can change the characters that you use for the short form with the
+
+\begin{BDef}
+\Lcs{MakeShortNab}\Largb{<char1>}\Largb{<char2>}
+\end{BDef}
+
+command.\footnote{%
+You can also use \Lcs{MakeShortNab} if you want to use \texttt{\textasciicircum} and \texttt{\_} with
+non-standard category codes. Just invoke the command after you have made your
+\Lcs{catcode} changes.}
+
+The \Lkeyset{shortput=tablr} and \Lkeyset{shortput=tab} options are described on 
+pages~\pageref{tablr} and \pageref{tab}, respectively.
+
+\section{Node connection labels: II}
+
+Now the second group of node connections:
+\begin{BDef}
+\LcsStar{tvput}\OptArgs\Largb{stuff}\\
+\LcsStar{tlput}\OptArgs\Largb{stuff}\\
+\LcsStar{trput}\OptArgs\Largb{stuff}\\
+\LcsStar{thput}\OptArgs\Largb{stuff}\\
+\LcsStar{taput}\OptArgs\Largb{stuff}\\
+\LcsStar{tbput}\OptArgs\Largb{stuff}
+\end{BDef}
+
+The difference between these commands and the \verb|\n*put| commands is that these
+find the position as an intermediate point between the centers of the nodes,
+either in the horizontal or vertical direction. These are good for trees and
+mathematical diagrams, where it can sometimes be nice to have the labels be
+horizontally or vertically aligned. The \verb|t| stands for ``tree''.
+
+You specify the position by setting the
+  \LKeyword{tpos=num}
+parameter.
+
+\Lcs{tvput}, \Lcs{tlput} and \Lcs{trput} find the position that lies fraction
+<tpos> in the \emph{vertical} direction from the upper node to the lower
+node. \Lcs{thput}, \Lcs{taput} and \Lcs{tbput} find the position that lies fraction
+<tpos> in the \emph{horizontal} direction from the left node to the right
+node.
+Then the commands put the label on or next to the line, as follows:
+\begin{center}
+\begin{tabular}{lll}\toprule
+  \emph{Command} & \emph{Direction} & \emph{Placement}\\\midrule
+  \Lcs{tvput}       & vertical         & middle\\
+  \Lcs{tlput}       & vertical         & left\\
+  \Lcs{trput}       & vertical         & right\\
+  \Lcs{thput}       & horizontal       & middle\\
+  \Lcs{taput}       & horizontal       & above\\
+  \Lcs{tbput}       & horizontal       & below\\\bottomrule
+\end{tabular}
+\end{center}
+
+Here is an example:
+\begin{LTXexample}[pos=t]
+  \[
+    \setlength{\arraycolsep}{1.1cm}
+    \begin{array}{cc}
+      \Rnode{a}{(X-A)} & \Rnode{b}{A} \\[1.5cm]
+      \Rnode{c}{x} & \Rnode{d}{\tilde{X}}
+    \end{array}
+    \psset{nodesep=5pt,arrows=->} \everypsbox{\scriptstyle}
+    \ncline{a}{c}\tlput{r} \ncline{a}{b}\taput{u}
+    \ncline[linestyle=dashed]{c}{d}\tbput{b}
+    \ncline{b}{d}\trput{s}
+   \everypsbox{}
+   \begin{array}{cc}
+     \rnode{a}{(X-A)} & \rnode{b}{a} \\[1.5cm]
+     \rnode{c}{x} & \rnode{d}{\tilde{X}}
+    \end{array}
+    \psset{nodesep=5pt,arrows=->}\everypsbox{\scriptstyle}
+    \ncline{a}{c}\nbput{r} \ncline{a}{b}\naput{u}
+    \ncline[linestyle=dashed]{c}{d}\nbput{b}
+    \ncline{b}{d}\naput{s}
+  \]
+\end{LTXexample}
+
+On the left is the diagram with \Lcs{tlput}, \Lcs{trput}, \Lcs{tbput} and \Lcs{Rnode},
+as shown in the code. On the right is the same diagram, but with \Lcs{naput},
+\Lcs{nbput} and \Lcs{rnode}.
+
+These do not have a rotation argument or parameter. However, you can rotate
+\Larg{<stuff>} in 90 degree increments using box rotations (e.g., \Lcs{rotateleft}).
+
+If you set \Lkeyset{shortput=tablr}, then you can use the following single-character
+abbreviations for the \verb|t| put commands:\label{tablr}
+\begin{center}
+  \begin{tabular}{rl}\toprule
+    \emph{Char.}         & \emph{Short for:}\\\midrule
+\rule{0pt}{4ex}
+    \verb|^|                  & \Lcs{taput} \\
+    \verb|_|                  & \Lcs{tbput} \\
+    \verb|<|                  & \Lcs{tlput} \\
+    \verb|>|                  & \Lcs{trput}\\\bottomrule
+  \end{tabular}
+\end{center}
+
+
+You can change the character abbreviations with
+
+\begin{BDef}
+\Lcs{MakeShortTablr}\Largb{<char1>}\Largb{<char2>}\Largb{<char3>}\Largb{<char4>}
+\end{BDef}
+
+The \verb|t| put commands, including an example of \Lkeyset{shortput=tablr}, will be
+shown further when we get to mathematical diagrams and trees.
+
+The\XInfoDanger{~} node macros use \Lcs{pstVerb} and \Lcs{pstverbscale}.
+
+\section{Attaching labels to nodes}
+
+The command
+
+\begin{BDef}
+\LcsStar{nput}\OptArgs\Largb{refangle}\Largb{name}\Larg{stuff}
+\end{BDef}
+
+
+affixes \Largb{<stuff>} to node \Largb{<name>}. It is positioned distance \Lkeyword{labelsep} from
+the node, in the direction \Largb{<refangle>} from the center of the node. The
+algorithm is the same as for \Lcs{uput}. If you want to rotate the node, set the
+  \LKeyword{rot=rot}
+parameter, where \Larg{<rot>} is a rotation that would be valid for \Lcs{rput}.%
+\footnote{Not to be confused with the \Lkeyword{nput} parameter.}
+The position of the label also takes into account the \Lkeyword{offsetA}
+parameter. If \Lkeyword{labelsep} is negative, then the distance is from the center
+of the node rather than from the boundary, as with \Lkeyword{nodesep}.
+
+Here is how I used \Lcs{nput} to mark an angle in a previous example:
+
+\begin{LTXexample}[width=4cm]
+\begin{pspicture}(4,3)
+\rput[br](4,0){\ovalnode{B}{Node B}}
+\rput[tl](0,3){\rnode{A}{\psframebox{Node A}}}
+\nput[labelsep=0]{-70}{A}{%
+  \psarcn(0,0){.4cm}{0}{-70}
+  \uput{.4cm}[-35](0,0){\texttt{angleA}}}
+\ncangle[angleA=-70,angleB=90,armB=1cm,linewidth=1.2pt]{A}{B}
+\ncput[nrot=:U,npos=1]{\psframe[dimen=middle](0,0)(.35,.35)}
+\end{pspicture}
+\end{LTXexample}
+
+\section{Mathematical diagrams and graphs}\label{S-psmatrix}
+
+For some applications, such as mathematical diagrams and graphs, it is useful
+to arrange nodes on a grid. You can do this with alignment environments, such
+as \TeX's  \Lcs{halign} primitive, \LaTeX's \Lenv{tabular} environment, and \AmS-\TeX's
+\Lcs{matrix}, but PSTricks contains its own alignment environment that is
+especially adapted for this purpose:
+
+\begin{BDef}
+\Lcs{psmatrix}\OptArgs \ldots \Lcs{endpsmatrix}
+\end{BDef}
+
+Here is an example
+\begin{LTXexample}[width=5cm]
+  $
+  \psmatrix[colsep=1cm,rowsep=1cm]
+      & A \\
+    B & E & C \\
+      & D &
+  \endpsmatrix
+  $
+\end{LTXexample}
+
+As an alignment environment, \Lcs{psmatrix} is similar to \AmS-\TeX's
+\Lcs{matrix}. There is no argument for specifying the columns. Instead, you can
+just use as many columns as you need. The entries are horizontally centered.
+Rows are ended by \verb|\\|. \Lcs{psmatrix} can be used in or out of math mode.
+
+Our first example wasn't very interesting, because we didn't make use of the
+nodes. Actually, each entry is a node. The name of the node in row <row> and
+column \Largb{<col>} is \verb|{<row>,<col>}|, with no spaces. Let's see some node
+connections:
+
+\begin{LTXexample}[width=5cm]
+  $
+  \psmatrix[colsep=1cm]
+      & X \\
+    Y & Z
+  \endpsmatrix
+  \everypsbox{\scriptstyle}%
+  \psset{nodesep=3pt,arrows=->}
+  \ncline{1,2}{2,1}
+  \tlput{f}
+  \ncline{1,2}{2,2}
+  \trput{g}
+  \ncline[linestyle=dotted]{2,1}{2,2}
+  \tbput{h}
+  $
+\end{LTXexample}
+
+You can include the node connections inside the \Lcs{psmatrix}, in the last entry
+and right before \Lcs{endpsmatrix}. One advantage to doing this is that
+\Lkeyset{shortput=tab} is the default within a \Lcs{psmatrix}.
+
+\begin{LTXexample}
+$ \begin{psmatrix}
+  U \\
+ &  X\times_Z Y & X \\
+ &      Y       & Z
+ \psset{arrows=->,nodesep=3pt}
+ \everypsbox{\scriptstyle}
+ \ncline{1,1}{2,2}_{y}
+ \ncline[doubleline=true,linestyle=dashed]{-}{1,1}{2,3}^{x}
+ \ncline{2,2}{3,2}<{q}
+ \ncline{2,2}{2,3}_{p}
+ \ncline{2,3}{3,3}>{f}
+ \ncline{3,2}{3,3}_{g}
+ \end{psmatrix} $
+\end{LTXexample}
+
+You can change the kind of nodes that are made by setting the
+  \LKeyword{mnode=type}
+parameter. Valid types are \Lkeyval{R}, 
+\Lkeyval{r}, 
+\Lkeyval{C}, 
+\Lkeyval{f}, \Lkeyval{p}, \Lkeyval{circle}, \Lkeyval{oval}, \Lkeyval{dia},
+\Lkeyval{tri}, \Lkeyval{dot} and \Lkeyval{none}, 
+standing for \Lcs{Rnode}, \Lcs{rnode}, \Lcs{Cnode}, \Lcs{fnode},
+\Lcs{pnode}, \Lcs{circlenode}, \Lcs{ovalnode}, \Lcs{dotnode} and no node,
+respectively. Note that for circles, you use \Lkeyset{mnode=C} and set the radius
+with the \Lkeyword{radius} parameter.
+
+For example:\label{nab-example}
+\begin{LTXexample}
+  \psmatrix[mnode=circle,colsep=1]
+      & A \\
+    B & E & C \\
+      & D &
+  \endpsmatrix
+  \psset{shortput=nab,arrows=->,labelsep=3pt}
+  \small
+  \ncline{2,2}{2,3}^[npos=.75]{a}
+  \ncline{2,2}{2,1}^{b}
+  \ncline{3,2}{2,1}^{c}
+  \ncarc[arcangle=-40,border=3pt]{3,2}{1,2}%
+    _[npos=.3]{d}^[npos=.7]{e}
+  \ncarc[arcangle=12]{1,2}{2,1}^{f}
+  \ncarc[arcangle=12]{2,1}{1,2}^{g}
+\end{LTXexample}
+
+Note that a node is made only for the non-empty entries. You can also specify
+a node for the empty entries by setting the
+  \LKeyword{emnode=type}
+parameter.
+
+You can change parameters for a single entry by starting this entry with the
+parameter changes, enclosed in square brackets. Note that the changes affect
+the way the node is made, but not contents of the entry (use \Lcs{psset} for
+this purpose). For example:
+\begin{LTXexample}
+$ \psmatrix[colsep=1cm]
+      & [mnode=circle] X \\
+    Y & Z
+  \endpsmatrix
+  \psset{nodesep=3pt,arrows=->}
+  \ncline{1,2}{2,1}
+  \ncline{1,2}{2,2}
+  \ncline[linestyle=dotted]{2,1}{2,2} $
+\end{LTXexample}
+
+If you want your entry to begin with a \verb|[| that is not meant to indicate
+parameter changes, the precede it by \verb|{}|.
+
+You can assign your own name to a node by setting the
+  \LKeyword{name=<name>}
+parameter at the beginning of the entry, as described above. You can still
+refer to the node by \verb|{<row>,<col>}|, but here are a few reasons for giving
+your own name to a node:
+\begin{itemize}
+  \item The name may be easier to keep track of;
+  \item Unlike the  \verb|{<row>,<col>}|  names, the names you give remain valid
+  even when you add extra rows or columns to your matrix.
+  \item The names remain valid even when you start a new \Lcs{psmatrix} that
+  reuses the \verb|{<row>,<col>}| names.
+\end{itemize}
+
+
+Here a few more things you should know:
+\begin{itemize}
+ \item The baselines of the nodes pass through the centers of the
+ nodes. \Lcs{psmatrix} achieves this by setting the
+  \LKeyword{nodealign=true/false}
+parameter to \verb|true|. You can also set this parameter outside of \Lcs{psmatrix}
+when you want this kind of alignment.
+
+ \item You can left or right-justify the nodes by setting the
+  \LKeyword{mcol=l/r/c}
+parameter. \verb|l|, \verb|r| and \verb|c| stand for \verb|left|, \verb|right| and \verb|center|,
+respectively.
+
+ \item The space between rows and columns is set by the
+  \LKeyword{rowsep=dim} and 
+  \LKeyword{colsep=dim}
+parameters.
+
+ \item If you want all the nodes to have a fixed width, set
+  \LKeyword{mnodesize=dim}
+to a positive value.
+
+ \item If \Lcs{psmatrix} is used in math mode, all the entries are set in math
+ mode, but you can switch a single entry out of math mode by starting and
+ ending the entry with \verb|$|. %$
+
+ \item The radius of the \verb|c| \Lkeyword{mnode} (corresponding to \Lcs{cnode}) is set by
+the \Lkeyword{radius} parameter.
+
+ \item Like in \LaTeX, you can end a row with \verb|\\[<dim>]| to insert an extra
+ space <dim> between rows.
+
+ \item The command \Lcs{psrowhookii} is executed, if defined, at the beginning of
+ every entry in row \verb|ii| (row 2), and the command \Lcs{pscolhookv} is executed at
+ athe beginning of every entry in column \verb|v| (etc.). You can use these hooks,
+ for example, to change the spacing between two columns, or to use a special
+ \Lkeyword{mnode} for all the entries in a particular row.
+
+ \item An entry can itself be a node. You might do this if you want an entry
+ to have two shapes.
+
+ \item If you want an entry to stretch across several (\Largb{<int>}) columns, use the
+
+\begin{BDef}
+\Lcs{psspan}\Largb{int}
+\end{BDef}
+
+ \emph{at the end of the entry}. This is like Plain \TeX's \Lcs{multispan}, or
+ \LaTeX's \Lcs{multicolumn}, but the template for the current column (the first
+  column that is spanned) is still used. If you want wipe out the template as
+  well, use \Lcs{multispan}\Largb{<int>} \emph{at the beginning of the entry} instead.
+  If you just want to wipe out the template, use \Lcs{omit} before the entry.
+
+  \item \Lcs{psmatrix} can be nested, but then all node connections and other
+  references to the nodes in the \verb|{<row>,<col>}| form for the nested matrix
+  \emph{must go inside} the \Lcs{psmatrix}. This is how  PSTricks decides which
+  matrix you are referring to. It is still neatest to put all the node
+  connections towards the end; just be sure to put them before \Lcs{endpsmatrix}.
+  Be careful also not to refer to a node until it actually appears. The whole
+  matrix can itself go inside a node, and node connections can be made as
+  usual. This is not the same as connecting nodes from two different
+  \Lcs{psmatrix}'s. To do this, you must give the nodes names and refer to them
+  by these names.
+
+\end{itemize}
+
+\section{Obsolete put commands}
+
+This is old documentation, but these commands will continue to be supported.
+
+There is also an obsolete command \Lcs{Lput} for putting labels
+next to node connections. The syntax is
+
+\begin{BDef}
+  \Lcs{Lput}\Largb{<labelsep>}\Largs{<refpoint>}\Largb{<rotation>}\Largr(<pos>)\Largb{<stuff>}
+\end{BDef}
+
+It is a combination of \Lcs{Rput} and \Lcs{lput}, equivalent to
+
+\begin{BDef}
+  \Lcs{lput}\Largr{<pos>}\Largb{\Lcs{Rput}\Largb{<labelsep>}\Largs{<refpoint>}\Largb{<rotation>}\Largr{0,0}\Largb{<stuff>}}
+\end{BDef}
+
+\Lcs{Mput} is a short version of \Lcs{Lput} with no
+\verb|{<rotation>}| or \verb|(<pos>)| argument. \Lcs{Lput} and \Lcs{Mput} remain part of
+PSTricks only for backwards compatibility.
+
+Here are the node label commands:
+
+\begin{BDef}
+\LcsStar{lput}\OptArgs\Largs{refpoint}\Largb{rotation}\Largr{pos}\Largb{stuff}
+\end{BDef}
+
+The \verb|l| stands for ``label''. Here is an example illustrating the use of the
+optional star and \verb|:<angle>| with \Lcs{lput}, as well as the use of the
+\Lkeyword{offset} parameter with \Lcs{pcline}:
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(4,2.3)
+  \pspolygon(0,0)(4,2)(4,0)
+  \pcline[offset=12pt]{|-|}(0,0)(4,2)
+  \lput*{:U}{Length}
+\end{pspicture}
+\end{LTXexample}
+
+(Remember that with the \nxLcs{?put} commands, you can omit the coordinate if you
+include the angle of rotation. You are likely to use this feature with the
+node label commands.)
+
+With \Lcs{lput} and \Lcs{rput}, you have a lot of control over the position of the
+label. E.\,g.,
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(4,2)
+  \pcline(0,0)(4,2)
+  \lput{:U}{\rput[r]{N}(0,.4){label}}
+\end{pspicture}
+\end{LTXexample}
+
+puts the label upright on the page, with right side located .4 centimeters
+``above'' the position 0.5 of the node connection (above if the node
+connection points to the right). However, the \Lcs{aput} and \Lcs{bput} commands
+described below handle the most common cases without \Lcs{rput}.\footnote{%
+There is also an obsolete command \Lcs{Lput} for putting labels
+next to node connections. The syntax is
+
+\begin{BDef}
+  \LcsStar{Lput}\Largb{<labelsep>}\Largs{<refpoint>}\Largb{<rotation>}\Largr{<pos>}\Largb{<stuff>}
+\end{BDef}
+
+It is a combination of \Lcs{Rput} and \Lcs{lput}, equivalent to
+
+\begin{BDef}
+  \LcsStar{lput}\Largr{<pos>}\Largb{\Lcs{Rput}\Largb{<labelsep>}\Largs{<refpoint>}\Largb{<rotation>}\Largr{0,0}\Largb{<stuff>}}
+\end{BDef}
+
+\Lcs{Mput} is a short version of \Lcs{Lput} with no
+\texttt{\{<rotation>\}} or \texttt{(<pos>)} argument. \Lcs{Lput} and \Lcs{Mput} remain part of
+PSTricks only for backwards compatibility.}
+
+\begin{BDef}
+\LcsStar{aput}\Largs{labelsep}\Largb{angle}\Largr{pos}\Largb{stuff}
+\end{BDef}
+
+  \Largb{<stuff>} is positioned distance \Lcs{pslabelsep} \emph{above} the node
+connection, given the convention that node connections point to the right.
+\Lcs{aput} is a node-connection variant of \Lcs{uput}. For example:
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(4,2)
+  \pspolygon(0,0)(4,2)(4,0)
+  \pcline[linestyle=none](0,0)(4,2)
+  \aput{:U}{Hypotenuse}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{BDef}
+\LcsStar{bput}\Largs{labelsep}\Largb{angle}\Largr{pos}\Largb{stuff}
+\end{BDef}
+
+  This is like \Lcs{aput}, but \Largb{<stuff>} is positioned \emph{below} the node
+connection.
+
+
+  It is fairly common to want to use the default position and rotation with
+these node connections, but you have to include at least one of these
+arguments. Therefore, PSTricks contains some variants:
+
+\begin{BDef}
+\Lcs{mput}\Largs{refpoint}\Largb{stuff}\\
+\Lcs{Aput}\Largs{labelsep}\Largb{stuff}\\
+\Lcs{Bput}\Largs{labelsep}\Largb{stuff}
+\end{BDef}
+
+of \Lcs{lput}, \Lcs{aput} and \Lcs{bput}, respectively, that have no angle or
+positioning argument. For example:
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(4,2)
+  \cnode*(0,0){3pt}{A}
+  \cnode*(4,2){3pt}{B}
+  \ncline[nodesep=3pt]{A}{B}
+  \mput*{1}
+\end{pspicture}
+\end{LTXexample}
+
+Here is another:
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(4,2)
+  \pcline{<->}(0,0)(4,2)
+  \Aput{Label}
+\end{pspicture}
+\end{LTXexample}
+
+\clearpage
+\part{New commands}
+
+\section{Setting bounding box nodes with \nxLcs{psDefBoxNodes}}
+
+\begin{BDef}
+\Lcs{psDefBoxNodes}\Largb{node name}\Largb{text}\\
+\end{BDef}
+
+Setting nodes for a bounding box of a given text. There will be 12 nodes defined,
+with the name that has the suffixes 
+\texttt{:tl, :tC, :tr, 
+:Cl, :C, :Cr,  
+:Bl, :BC, :Br, 
+:bl, :bc, :br}. The prefix is always the given node name. The node name shouldn't contain spaces or special
+characters, like umlauts or an active \PS\ character, like \texttt{(}.
+
+\lstset{style=code}
+\begin{LTXexample}[pos=t,wide,vsep=10mm,preset=\centering,columns=fixed]
+\psscalebox{15}{\psDefBoxNodes{Age}{\color{red!50}\sffamily \"Age}}%
+\pspolygon[fillstyle=solid,
+  fillcolor=blue!30,opacity=0.3](Age:tl)(Age:tr)(Age:br)(Age:bl)%
+\psline[linestyle=dashed](Age:Bl)(Age:Br)%
+\psdots(Age:tl)(Age:tC)(Age:tr)(Age:Cl)(Age:C)(Age:Cr)%
+       (Age:Bl)(Age:BC)(Age:Br)(Age:bl)(Age:bC)(Age:br)%
+\pcline[arrows=<->,linecolor=blue,arrowscale=1.25](Age:tC)(Age:Br)
+\uput[180](Age:tl){tl}\uput[180](Age:Cl){Cl}\uput[180](Age:Bl){Bl}\uput[180](Age:bl){bl}
+\uput[90](Age:tC){tC} \uput[0](Age:C){C}    \uput[0](Age:BC){BC}  \uput[-90](Age:bC){bC}
+\uput[0](Age:tr){tr}  \uput[0](Age:Cr){Cr}  \uput[0](Age:Br){Br}  \uput[0](Age:br){br}
+\end{LTXexample}
+
+
+
+
+\clearpage
+
+%--------------------------------------------------------------------------------------
+\section{Relative nodes with \nxLcs{psGetNodeCenter}}
+%--------------------------------------------------------------------------------------
+
+\begin{BDef}
+\Lcs{psGetNodeCenter}\Largb{node name}\\
+%\Lcs{psGetNodeEdgeA}\Largb{node type}\Largb{node name}
+\end{BDef}
+
+This command makes sense only at
+the PostScript level. It defines the two variables \Larg{node.x}
+and \Larg{node.y} which can be used to define relative nodes. The
+following example defines the node \verb+MyNode+ and a second one
+relative to the first one, with 4 units left and 4 units up.
+\Larg{node} must be an existing node name.
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}[showgrid=true,arrowscale=2](5,5)
+\pnode(4.5,0.5){MyNode}
+\psdot(MyNode)
+\pnode(! \psGetNodeCenter{MyNode}
+   MyNode.x 4 sub MyNode.y 4 add){MySecondNode}
+\psdot(MySecondNode)
+\ncline[linecolor=red]{<->}{MyNode}{MySecondNode}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}[showgrid=true](5,5)
+\rput(1.5,0.5){\trinode{CN}{NodeA}}
+\rput(3.5,2.5){\trinode{EN}{NodeB}}
+\pnode(! \psGetNodeCenter{CN}
+   CN.x 2 add CN.y 1 add ){MyCNode}
+\ncline[linecolor=red]{<->}{MyCNode}{EN}
+\ncline[linecolor=blue]{<->}{CN}{EN}
+\end{pspicture}
+\end{LTXexample}
+
+\clearpage
+
+
+%--------------------------------------------------------------------------------------
+\section{Getting node edges with \nxLcs{psGetNodeEdgeA} and \nxLcs{psGetNodeEdgeB}}
+%--------------------------------------------------------------------------------------
+
+\begin{BDef}
+\Lcs{psGetNodeEdgeA}\Largb{node name}\\
+\Lcs{psGetNodeEdgeB}\Largb{node name}\\
+\end{BDef}
+
+When two nodes are connected the line often did not use the center of the defined
+nodes. Values as \Lkeyword{nodesep} or \Lkeyword{offset} are also taken into account
+as a surrounding border of a node. With these new macros one can get the edge coordinates
+of two given nodes. The coordinates are saved on \PS side in the values \Larg{node.x}
+and \Larg{node.y}.
+
+
+\begin{LTXexample}[pos=t]
+\Huge
+\hspace*{4cm}\rnode{B}{Node B}
+
+\vspace{2cm}
+\rnode{A}{Node A}
+\ncline{A}{B}
+\pscircle*[linecolor=blue,opacity=0.4](!\psGetEdgeA{A}{B}){10pt}
+\pscircle*[linecolor=blue,opacity=0.4](!\psGetEdgeB{A}{B}){10pt}
+\end{LTXexample}
+
+
+
+
+%--------------------------------------------------------------------------------------
+\section{\nxLcs{ncdiag} and \nxLcs{pcdiag}}
+%--------------------------------------------------------------------------------------
+With the new option \Lkeyword{lineAngle} the lines drawn by the \Lcs{ncdiag} macro
+can now have a specified gradient. Without this option one has to define the two
+arms (which maybe zero) and PSTricks draws the connection between them. Now there
+is only a static \Lkeyword{armA}, the second one \Lkeyword{armB} is calculated when an angle
+\Lkeyword{lineAngle} is defined. This angle is the gradient of the intermediate line
+between the two arms. The syntax of \Lcs{ncdiag} is
+
+\begin{BDef}
+\Lcs{ncdiag}\OptArgs\Largb{node A}\Largb{node B}\\
+\Lcs{pcdiag}\OptArgs\Largs{node A}\Largs{node B}
+\end{BDef}
+
+
+\begin{tabularx}{\linewidth}{l|X}
+name & meaning\\\hline
+\Lkeyword{lineAngle} & angle of the intermediate line segment. Default is 0, which is the same 
+than using \Lcs{ncdiag} without the \Lkeyword{lineAngle} option.\tabularnewline
+\end{tabularx}
+
+
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(5,6)
+  \circlenode{A}{A}\quad\circlenode{C}{C}%
+    \quad\circlenode{E}{E}
+  \rput(0,4){\circlenode{B}{B}}
+  \rput(1,5){\circlenode{D}{D}}
+  \rput(2,6){\circlenode{F}{F}}
+  \psset{arrowscale=2,linearc=0.2,%
+    linecolor=red,armA=0.5, angleA=90,angleB=-90}
+  \ncdiag[lineAngle=20]{->}{A}{B}
+  \ncput*[nrot=:U]{line I}
+  \ncdiag[lineAngle=20]{->}{C}{D}
+  \ncput*[nrot=:U]{line II}
+  \ncdiag[lineAngle=20]{->}{E}{F}
+  \ncput*[nrot=:U]{line III}
+\end{pspicture}
+\end{LTXexample}
+
+
+The \Lcs{ncdiag} macro sets the \Lkeyword{armB} dynamically to the calculated value. Any
+user setting of \Lkeyword{armB} is overwritten by the macro. The \Lkeyword{armA} could be set to
+a zero length:
+
+
+\begin{LTXexample}[width=4.5cm]
+\begin{pspicture}(4,3)
+  \rput(0.5,0.5){\circlenode{A}{A}}
+  \rput(3.5,3){\circlenode{B}{B}}
+  {\psset{linecolor=red,arrows=<-,arrowscale=2}
+  \ncdiag[lineAngle=60,%
+      armA=0,angleA=0,angleB=180]{A}{B}
+  \ncdiag[lineAngle=60,%
+      armA=0,angleA=90,angleB=180]{A}{B}}
+\end{pspicture}
+\end{LTXexample}
+
+
+\begin{LTXexample}[width=4.5cm]
+\begin{pspicture}(4,3)
+  \rput(1,0.5){\circlenode{A}{A}}
+  \rput(4,3){\circlenode{B}{B}}
+  {\psset{linecolor=red,arrows=<-,arrowscale=2}
+  \ncdiag[lineAngle=60,
+      armA=0.5,angleA=0,angleB=180]{A}{B}
+  \ncdiag[lineAngle=60,
+      armA=0,angleA=70,angleB=180]{A}{B}
+  \ncdiag[lineAngle=60,
+      armA=0.5,angleA=180,angleB=180]{A}{B}}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=4.5cm]
+\begin{pspicture}(4,5.5)
+  \cnode*(0,0){2pt}{A}  \cnode*(0.25,0){2pt}{C}
+  \cnode*(0.5,0){2pt}{E}\cnode*(0.75,0){2pt}{G}
+  \cnode*(2,4){2pt}{B}  \cnode*(2.5,4.5){2pt}{D}
+  \cnode*(3,5){2pt}{F}  \cnode*(3.5,5.5){2pt}{H}
+  {\psset{arrowscale=2,linearc=0.2,
+    linecolor=red,armA=0.5, angleA=90,angleB=-90}
+  \pcdiag[lineAngle=20]{->}(A)(B)
+  \pcdiag[lineAngle=20]{->}(C)(D)
+  \pcdiag[lineAngle=20]{->}(E)(F)
+  \pcdiag[lineAngle=20]{->}(G)(H)}
+\end{pspicture}
+\end{LTXexample}
+
+
+%--------------------------------------------------------------------------------------
+\section{\nxLcs{ncdiagg} and \nxLcs{pcdiagg}}
+%--------------------------------------------------------------------------------------
+This is nearly the same as \Lcs{ncdiag} except that
+\Lkeyword{armB}=0 and the \Lkeyword{angleB} value is computed by the
+macro, so that the line ends at the node with an angle like a
+\Lcs{pcdiagg} line. The syntax of \Lcs{ncdiagg}/\Lcs{pcdiagg}
+is
+
+\begin{BDef}
+\Lcs{ncdiag}\OptArgs\Largb{node A}\Largb{node B}\\
+\Lcs{pcdiag}\OptArgs\Largs{node A}\Largs{node B}
+\end{BDef}
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(4,6)
+  \psset{linecolor=black}
+  \circlenode{A}{A}\quad\circlenode{C}{C}\quad%
+    \circlenode{E}{E}
+  \rput(0,4){\circlenode{B}{B}}
+  \rput(1,5){\circlenode{D}{D}}
+  \rput(2,6){\circlenode{F}{F}}
+  {\psset{arrowscale=2,linearc=0.2,
+    linecolor=red,armA=0.5, angleA=90}
+  \ncdiagg[lineAngle=-160]{->}{A}{B}
+  \ncput*[nrot=:U]{line I}
+  \ncdiagg[lineAngle=-160]{->}{C}{D}
+  \ncput*[nrot=:U]{line II}
+  \ncdiagg[lineAngle=-160]{->}{E}{F}
+  \ncput*[nrot=:U]{line III}}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(4,6)
+  \psset{linecolor=black}
+  \cnode*(0,0){2pt}{A}  \cnode*(0.25,0){2pt}{C}
+  \cnode*(0.5,0){2pt}{E}\cnode*(0.75,0){2pt}{G}
+  \cnode*(2,4){2pt}{B}  \cnode*(2.5,4.5){2pt}{D}
+  \cnode*(3,5){2pt}{F}  \cnode*(3.5,5.5){2pt}{H}
+  {\psset{arrowscale=2,linearc=0.2,
+    linecolor=red,armA=0.5, angleA=90}
+  \pcdiagg[lineAngle=20]{->}(A)(B)
+  \pcdiagg[lineAngle=20]{->}(C)(D)
+  \pcdiagg[lineAngle=20]{->}(E)(F)
+  \pcdiagg[lineAngle=20]{->}(G)(H)}
+\end{pspicture}
+\end{LTXexample}
+
+The only catch for \Lcs{ncdiagg} is that you need the right
+value for \Lkeyword{lineAngle}. If the node connection is on the wrong
+side of the second node, then choose the corresponding angle,
+e.\,g.: if $20$ is wrong then take $-160$, which differs by $180$.
+
+
+\begin{LTXexample}[width=4cm]
+\begin{pspicture}(4,1.5)
+  \circlenode{a}{A}
+  \rput[l](3,1){\rnode{b}{H}}
+  \ncdiagg[lineAngle=60,angleA=180,armA=.5,nodesepA=3pt,linecolor=blue]{b}{a}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=4cm]
+\begin{pspicture}(4,1.5)
+  \circlenode{a}{A}
+  \rput[l](3,1){\rnode{b}{H}}
+  \ncdiagg[lineAngle=60,armA=.5,nodesepB=3pt,linecolor=blue]{a}{b}
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[width=4cm]
+\begin{pspicture}(4,1.5)
+  \circlenode{a}{A}
+  \rput[l](3,1){\rnode{b}{H}}
+  \ncdiagg[lineAngle=-120,armA=.5,nodesepB=3pt,linecolor=blue]{a}{b}
+\end{pspicture}
+\end{LTXexample}
+
+%--------------------------------------------------------------------------------------
+\section{\nxLcs{ncbarr}}
+%--------------------------------------------------------------------------------------
+This has the same behaviour as \Lcs{ncbar}, but has 5 segments
+and all are horizontal ones. This is the reason why \Lkeyword{angleA}
+must be $0$ or alternatively $180$. All other values are set to
+$0$ by the macro. The intermediate horizontal line is symmetrical
+to the distance of the two nodes.
+
+\begin{BDef}
+\Lcs{ncbarr}\OptArgs\Largb{node A}\Largb{node B}\\
+\end{BDef}
+
+\begin{LTXexample}[width=3.5cm]
+\psset{arrowscale=2}%
+\circlenode{X}{X}\\[1cm]
+\circlenode{Y}{Y}
+\ncbarr[angleA=0,arrows=->,arrowscale=2]{X}{Y}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm]
+\psset{arrowscale=2}%
+\ovalnode{X}{Xxxxx}\\[1cm]
+\circlenode{Y}{Yyyy}
+\ncbarr[angleA=180,arrows=->,arrowscale=2,linecolor=red]{X}{Y}
+\end{LTXexample}
+
+\begin{LTXexample}[width=3.5cm]
+\psset{arrowscale=2}%
+\ovalnode{X}{Xxxxx}\\[1cm]
+\circlenode{Y}{Yyyy}
+\ncbarr[angleA=20,arm=1cm,arrows=->,arrowscale=2]{X}{Y}
+\end{LTXexample}
+
+%--------------------------------------------------------------------------------------
+\section{\nxLcs{psLNode} and \nxLcs{psLCNode}}
+%--------------------------------------------------------------------------------------
+\Lcs{psLNode} interpolates the Line $\overline{AB}$ by the given value and sets a node at this
+point. The syntax is
+%
+\begin{BDef}
+\Lcs{psLNode}\Largs{P1}\Largs{P2}\Largb{value}\Largb{node name}\\
+\Lcs{psLCNode}\Largs{P1}\Largb{value 1}\Largs{P2}\Largb{value 2}\Largb{node name}
+\end{BDef}
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(5,5)
+\psgrid[subgriddiv=0,griddots=10]
+\psset{linecolor=red}
+\psline{o-o}(1,1)(5,5)
+\psLNode(1,1)(5,5){0.75}{PI}
+\qdisk(PI){4pt}
+\psset{linecolor=blue}
+\psline{o-o}(4,3)(2,5)
+\psLNode(4,3)(2,5){-0.5}{PII}
+\qdisk(PII){4pt}
+\end{pspicture}
+\end{LTXexample}
+
+
+\bigskip
+The \Lcs{psLCNode} macro builds the linear combination of the two given
+vectors and stores the end of
+the new vector as a node. All vectors start at $(0,0)$, so a \Lcs{rput} maybe 
+appropriate. The syntax is
+
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}[showgrid=true](5,3)
+\psset{linecolor=black}
+\psline[linestyle=dashed]{->}(3,1.5)
+\psline[linestyle=dashed]{->}(0.375,1.5)
+\psset{linecolor=red}
+\psline{->}(2,1)\psline{->}(0.5,2)
+\psLCNode(2,1){1.5}(0.5,2){0.75}{PI}
+\psline[linewidth=2pt]{->}(PI)
+\psset{linecolor=black}
+\psline[linestyle=dashed](3,1.5)(PI)
+\psline[linestyle=dashed](0.375,1.5)(PI)
+\end{pspicture}
+\end{LTXexample}
+
+
+%--------------------------------------------------------------------------------------
+\section{\nxLcs{nlput} and \nxLcs{psLDNode}}
+%--------------------------------------------------------------------------------------
+\Lcs{ncput} allows you to set a label relative to the first node
+of the last node connection. With \Lcs{nlput} this can be done
+absolute to a given node. The syntax is different to the other
+node connection macros. It uses internally the macro
+\Lcs{psLDNode} which places a node absolute to two given points,
+starting from the first one.
+
+\begin{BDef}
+\Lcs{nlput}\OptArgs\Largr{A}\Largr{B}\Largb{distance}\Largb{text}\\
+\Lcs{psLDNode}\OptArgs\Largr{A}\Largr{B}\Largb{distance}\Largb{node name}
+\end{BDef}
+
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(5,2)
+\pnode(0,0){A}
+\pnode(5,2){B}
+\ncline{A}{B}
+\psLDNode(A)(B){1.5cm}{KN}\qdisk(KN){2pt}
+\nlput[nrot=:U](A)(B){1cm}{Test}
+\nlput[nrot=:D](A)(B){2cm}{Test}
+\nlput[nrot=:U](A)(B){3cm}{Test}
+\nlput(A)(B){4cm}{Test}
+\end{pspicture}
+\end{LTXexample}
+
+\section{Extensions}
+\subsection{Quick overview}
+All macros in this section are connected in one way or other with the 
+construction or deployment of
+one or more nodes of type \Lcs{pnode}, which is to say in effect, 
+named points. For the remainder of this section, node always means \Lcs{pnode}.
+Nodes are one of 
+the most powerful features of pstricks---the ``trickiest tricks'' in the words of 
+its originator. If used without appropriate caution, they can produce PostScript errors 
+that can be difficult to track down. For example, suppose you have defined a node \texttt{A} 
+by \verb|\pnode(1,1){A}|, and then, a little later, you want to move the node a bit to the 
+right, and you write \verb|\pnode([nodesep=.5cm]A){A}|. On processing the file you will  
+see an error message from ghostscript: \Lps{stackunderflow}\verb| in --exch--|. 
+The lesson is: you may not assign a node name if a node by that name is involved 
+explicitly in its definition. To reassign a node name  safely, you have to write instead something like 
+\begin{verbatim}
+\pnode([nodesep=.5cm]A){Atemp}
+\pnode(Atemp){A}
+\end{verbatim}
+This problem afflicts a number of other node-forming macros based on a \Lcs{pnode} construction, as most are.
+
+Nodes are more complicated than they appear. Each node is stored not only with a recipe 
+for finding its coordinates, but also with the coordinate system in effect when it was 
+defined. Part of the retrieval process involves modifying the coordinates if necessary 
+so that they represent the same point on the page even if the coordinate system has 
+changed. This is important, but has some unexpected consequences. Normally, the simplest 
+way to translate an object is with \Lcs{rput}.
+\begin{verbatim}
+\pnode(1,1){P}% define P as (1,1)
+\rput(2,3){\psdot{P}}% places dot at original P=(1,1)
+\end{verbatim}
+is different from
+\begin{verbatim}
+\rput(2,3){\pnode(1,1){P}\psdot{P}}
+% places dot at (1,1)+(2,3)
+\end{verbatim}
+Effectively, \Lcs{rput} and \Lcs{uput} are not useful for translating previously 
+defined nodes, but they are useful for defining new nodes relative to fixed positions.  
+
+The new macros in this section
+are of several kinds: (i) utility macros, some used 
+internally by the package and some of general use; (ii) macros that manipulate one or 
+more nodes to produce other nodes; (iii) constructions intended to be used with nodes and 
+node sequences. By a node sequence is meant one or more nodes having a common root name 
+followed by an index---eg, P0 P1 P2 ... P5 is a node sequence with root name P. It is 
+easy to define such node sequences using the \Lcs{multido} macro, or using one of a 
+number of macros in this section.
+
+\subsection{Node expressions}
+A number of macros in the package (eg, \Lcs{psxline}) permit the use of node expressions, 
+by which is meant an expression like
+\begin{verbatim}
+.25(1,3)+.333(2;90)-1.2([nodesep=.5cm]Q)
+\end{verbatim}
+which specifies a linear combination of points (the items enclosed in parentheses) 
+specified in any manner acceptable to \Lcs{SpecialCoor}. 
+%The items themselves cannot 
+%themselves be node expressions, as they are not acceptable to \Lcs{SpecialCoor}. 
+
+Node expressions are handled by \Lcs{nodexn}, which calls the macros \Lcs{hasparen} and 
+\Lcs{parsenodexn} to do the real work. If you write code that needs to be able to handle node expressions, you use
+
+\begin{BDef}
+\Lcs{nodexn}\Largb{expr}\Largb{nodename}
+\end{BDef}
+
+which returns a node \verb|<nodename>| once \verb|<expr>| has been fully parsed. It is safe to 
+reuse a node name, as in 
+\begin{verbatim}
+\nodexn{(P)+.5(1,2)}{P}
+\end{verbatim}
+
+The following macros amount to special cases of node expressions.
+\begin{BDef}
+\Lcs{AtoB}\Largr{A}\Largr{B}\Largb{C}
+\end{BDef}
+ defines a node by name C essentially as B-A, as vectors. It is safe to use 
+ \Lcs{AtoB}\verb|(Q)(P){P}| and \Lcs{AtoB}\verb|(Q)(P){Q}|.
+
+\begin{BDef}
+\Lcs{AplusB}\Largr{A}\Largr{B}\Largb{C}
+\end{BDef}
+ defines node by name C essentially as A+B, as vectors. It is safe to use 
+ \Lcs{AplusB}\verb|(Q)(P){P}| and \Lcs{AplusB}\verb|(Q)(P){Q}|.
+
+\begin{BDef}
+\Lcs{midAB}\Largr{A}\Largr{B}\Largb{C}
+\end{BDef}
+
+ defines node by name C essentially as $(A+B)/2$, as vectors. It is safe to use \Lcs{midAB}\verb|(Q)(P){P}| 
+ and \Lcs{midAB}\verb|(Q)(P){Q}|.
+
+\begin{LTXexample}[width=.35\textwidth]
+\begin{pspicture}[showgrid=true](-.5,-.5)(2.5,2.5)
+\psset{arrows=->,arrowscale=1.5}
+\pnode(2,1){P}\pnode(.5,1){Q}
+\AtoB(Q)(P){QP}
+\AplusB(Q)(P){R}
+\psline(0,0)(P)\uput[-45](P){P}
+\psline(0,0)(Q)\uput[135](Q){Q}
+\psline(0,0)(QP)\uput[-70](QP){QP}
+\psline(0,0)(R)\uput[160](R){R}
+\psline[linestyle=dashed](Q)(P)   
+\psline[linestyle=dashed](Q)(R)   
+\psline[linestyle=dashed](P)(R)   
+\end{pspicture} 
+\end{LTXexample}
+
+
+\subsection{The main macros}
+\begin{BDef}
+\Lcs{normalvec}\Largr{coords}\Largb{nodename}
+\end{BDef}
+For example,
+\begin{verbatim}
+\normalvec(P){P}\normalvec(2;30){Q}
+\end{verbatim}
+first redefines the node {\tt P} as a node whose vector interpretation is of the same 
+length as the original {\tt P}, but rotated 90 degrees. The second instance has the 
+same effect as \Lcs{pnode}\verb|(2;120){Q}|.
+\begin{BDef}
+\Lcs{curvepnode}\Largb{tval}\Largb{expression in t}\Largb{nodename}
+\end{BDef}
+
+For example, 
+\begin{verbatim}
+\curvepnode{1}{cos(t) | sin(t)}{P}
+\end{verbatim}
+ sets a node named {\tt P} at \verb|(cos(1), sin(1))| and a node named {\tt Ptang} 
+ which represents a unit vector in the tangent direction to the curve at {\tt P}. 
+ The expression in {\tt t} in this case is algebraic, which is detected automatically by the macro.
+
+\begin{LTXexample}[width=.35\textwidth]
+\begin{pspicture}[showgrid=true](-.5,-.5)(2.5,2)
+\def\exn{cos(t) | sin(t)}
+\psparametricplot[algebraic]{0}{2}{\exn}
+\curvepnode{1}{\exn}{P}
+\psdot(P)\uput[45](P){P}
+\end{pspicture}
+\end{LTXexample}
+\vspace{2pc}
+   
+\begin{BDef}
+\Lcs{psparnode}\Largb{t}\Largb{expression in t}\Largb{<nodename>}
+\end{BDef}
+ is called by the command \Lcs{curvename} if the  expression is PostScript, not algebraic.
+
+\begin{BDef}
+\Lcs{algparnode}\Largb{t}\Largb{expression in t}\Largb{nodename}
+\end{BDef}
+ is called by the command \Lcs{curvename} if the expression is algebraic, not PostScript.
+
+\begin{BDef}
+\Lcs{curvepnodes}\Largb{tmin}\Largb{tmax}\Largb{expr. in t}\Largb{nodeRoot}
+\end{BDef}
+ Uses current setting of plotpoints (default 50) to define a node sequence of points along the curve. Eg, 
+\begin{verbatim}
+\curvepnodes[plotpoints=100]{0}{1}{t+t^2 | Ex(-t)}{P}
+\end{verbatim}
+ sets nodes {\tt P0 .. P99} at equally spaced {\tt t} values along the curve, 
+ and assigns the macro \Lcs{Pnodecount} to 99, the highest index. The expression in {\tt t} 
+ may be either algebraic or PostScript, and is handled automatically. The values 
+ \verb|<tmin>, <tmax>| may be expressed using PostScript---eg, \verb|{Pi neg}{PiDiv2}|.
+ 
+\begin{LTXexample}[width=.35\textwidth]
+\begin{pspicture}[showgrid=true](-.5,-.5)(2.5,3)
+\def\exn{t+t^2 | 2*Ex(-t)}
+\psset{plotpoints=100}
+\psparametricplot[algebraic]{0}{1}{\exn}
+\curvepnodes{0}{1}{\exn}{P}
+\psdot(P50)\uput[75](P50){P50}
+\psdot(P99)\uput[75](P99){P99}
+\end{pspicture} 
+\end{LTXexample}
+
+ 
+\begin{BDef}
+\Lcs{fnpnode}\Largb{xval}\Largb{expression in x}\Largb{nodename}
+\end{BDef}
+
+ sets a single node on the graph. Eg, 
+
+\begin{verbatim}
+\fnpnode{.5}{x x 1 add mul 2 div}{P}
+\end{verbatim}
+ declares the node P at the point x=0.5 on the graph.  It has the same effect as 
+
+\begin{verbatim}
+\pnode(!/x 0.5 def x x x 1 add mul 2 div}){P}
+\end{verbatim}
+
+ If your expression in {\tt t} is algebraic, you must specify the keyword {\tt algebraic}, as in 
+ \Lcs{fnpnode}\verb|[algebraic]{0.5}{x*(x+1)/2}{P}|. 
+ 
+\begin{LTXexample}[width=.35\textwidth]
+\begin{pspicture}[showgrid=true](-.5,-.5)(2.5,3)
+\def\exn{x x 1 add mul 2 div}
+\psplot{0}{2}{\exn}
+\fnpnode{0.5}{\exn}{Q}
+\psdot(Q)\uput[-45](Q){Q}
+\end{pspicture} 
+\end{LTXexample}
+\vspace{2pc}
+
+  
+ 
+\begin{BDef}
+\Lcs{fnpnodes}\Largb{xmin}\Largb{xmax}\Largb{expression in x}\Largb{nodeRoot}
+\end{BDef}
+Is similar to \Lcs{curvenodes}, but for the graph of a function. The keyword \Lkeyword{algebraic} 
+must be specified if your expression is indeed algebraic.
+
+\begin{LTXexample}[width=.35\textwidth]
+\begin{pspicture}[showgrid=true](-.5,-.5)(2.5,3)
+\def\exn{x x 1 add mul 2 div}
+\psplot{0}{2}{\exn}
+\fnpnodes[plotpoints=10]{0}{2}{\exn}{A}
+\psdot(A4)\uput[-45](A4){A4}
+\end{pspicture} 
+\end{LTXexample}
+\vspace{2pc}
+
+
+\begin{BDef}
+\Lcs{shownode}\Largr{P}
+\end{BDef}
+is a debugging tool, which displays in the console window the coordinates of node P. 
+This will not appear until the final stage of processing the PostScript file. You will 
+get a PostScript error if the node you specify is undefined. 
+
+\begin{BDef}
+\Lcs{getnodelist}\Largb{node root name}\Largb{next command}
+\end{BDef}
+ is useful in writing pstricks macros, where there is a list of parenthesized coordinates 
+ to be read and turned into a node sequence, following which \verb|<next command>| is followed.
+
+\begin{BDef}
+\Lcs{pnodes}\Largb{P}\Largr{1,2}\Largr{2;3}\ldots
+\end{BDef}
+is effectively \Lcs{getnodelist}\Largb{P}\Largb{}\verb|(1,2)(2;3)...|, just a quick way to 
+turn a list of coordinates into a node sequence P0 P1 ...
+
+\begin{BDef}
+\Lcs{psnline}\OptArgs\Largb{arrows}\Largr{coors}\Largb{name}
+\end{BDef}
+ for example, expects that there are nodes named P3..P8, and  gives the same result as
+\begin{verbatim}
+\psline[linewidth=1pt]{->}(P3)(P4)(P5)(P6)(P7)(P8)
+\end{verbatim}
+
+\begin{LTXexample}[width=.35\textwidth]
+\begin{pspicture}[showgrid=true,algebraic](-.5,-.5)(2.5,2)
+\pnodes{P}(.1,.1)(1;10)(*2 {x^2/4})(0,1.4)
+%defines P0..P3--now join them
+\psnline[arrowscale=2]{-D>}(0,3){P}
+\end{pspicture} 
+\end{LTXexample}
+\vspace{2pc}
+
+
+\begin{BDef}
+\Lcs{psLCNodeVar}\Largr{node A}\Largr{node B}\Largr{factorA,factorB}\Largb{node name}
+\end{BDef}
+
+is similar to \Lcs{psLCNode},
+ and provides a means of forming a linear combination of two nodes, thought of as vectors. Where 
+\begin{verbatim}
+\psLCNode(A){a}(B){b}{C}
+\end{verbatim}
+ effectively makes \verb|C=aA+bB|, 
+\begin{verbatim}
+\psLCNodeVar(A)(B)(a,b){C}
+\end{verbatim}
+does the same, but the third argument \verb|(a,b)| may be specified in any form acceptable 
+to \Lcs{SpecialCoor}. (With \Lcs{psLCNode}, each coefficient may be specified in PostScript code.) 
+One other difference is that \Lcs{psLCNodeVar} allows the reuse of a node name in place. For example, 
+it is possible to write
+\begin{verbatim}
+\psLCNodeVar(A)(B)(2,3){A}% symbol A reassigned
+\end{verbatim}
+where the equivalent in \Lcs{psLCNode} will lead to a PostScript error. Since \Lcs{AtoB} and \Lcs{AplusB} 
+are defined using \Lcs{psLCNodeVar}, they also allow node name reuse: \Lcs{AtoB}\verb|(Q)(P){P}| is legal.
+
+\begin{BDef}
+\Lcs{psRelNodeVar}\Largr{node A}\Largr{node B}\Largr{radius;angle}\Largb{node name}
+\end{BDef}
+is similar to \Lcs{psRelNode}, and provides a means of scaling and rotating  a line segment AB about A. The effect of 
+\begin{verbatim}
+\psRelNodeVar(A)(B)(2;30){C}
+\end{verbatim}
+ is the same as 
+ \begin{verbatim}
+\psRelNode[angle=30](A)(B){2}{C}
+\end{verbatim}
+ but the third argument (2;30) may be specified in any form acceptable to \Lcs{SpecialCoor}, 
+ while specifying the angle argument in \Lcs{psRelNode} using PostScript is not possible. 
+ Note that  \Lcs{psRelNodeVar}\verb|(0,0)(A)(B){C}|  may be interpreted as defining {\tt C} to 
+ be the complex product of {\tt A} and {\tt B}. 
+
+
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}[showgrid=true](-.5,-.5)(3.5,3)
+\pnode(0,.5){P}\pnode(1.5,.75){Q}
+\psRelNodeVar(P)(Q)(2;20){R}
+\psline(Q)(P)\uput[-45](P){P}
+\uput[-70](Q){Q}
+\psline(P)(R)\uput[-70](R){R}
+\end{pspicture} 
+\end{LTXexample}
+
+
+\begin{BDef}
+\Lcs{psRelLineVar}\Largr{node A}\Largr{node B}\Largr{radius;angle}\Largb{node name}
+\end{BDef}
+ stands to \Lcs{psRelLine} as \Lcs{psRelNodeVar} stands relative to \Lcs{psRelNode}. 
+ 
+\Lcs{psRelLine}\verb|Var(A)(B)(a;b){C}| defines the node {\tt C}, and, in addition, draws the line segment {\tt AC}. 
+
+\begin{BDef}
+\Lcs{rhombus}\Largb{edge length}\Largr{A}\Largb{B}\Largb{C}\Largb{D}
+\end{BDef}
+computes the two remaining vertices C, D given two opposing vertices A, B 
+of a rhombus with specified edge length. It does not draw the rhombus, which 
+could be handled easily by \Lcs{psline}. Internally, \Lcs{rhombus} uses 
+\Lcs{psRelNodeVar}.
+
+\begin{BDef}
+\Lcs{psrline}\Largr{P}\Largr{Q}\ldots
+\end{BDef}
+ is like \Lcs{psline}, but drawing a line starting at (P), with successive 
+ increments (Q)... It has the same options as\Lcs{psline}.
+
+\begin{LTXexample}[width=.35\textwidth]
+\begin{pspicture}[showgrid=true](-.5,-.5)(3.5,3)
+\pnode(0,.5){P}\pnode(1,1){Q}
+\psrline{->}(P)(Q)(2;20)
+\uput[-45](P){P}
+\end{pspicture} 
+\end{LTXexample}
+ 
+\begin{BDef}
+\Lcs{psxline}\Largr{basept}\Largb{nodexpr1}\Largb{nodexpr2}
+\end{BDef}
+The {\tt x} here stands for expression. The idea is that one builds a 
+line from \verb|<basept>+<nodexpr1>| to \verb|<basept>+<nodexpr2>|.
+
+\begin{LTXexample}[width=.35\textwidth]
+\begin{pspicture}[showgrid=true](-.5,-.5)(3.5,4)
+\def\pfn{t | t^2/4}
+\psparametricplot[algebraic]{0}{3.5}{\pfn}
+\curvepnode{2}{\pfn}{P}% sets P, Ptang
+\normalvec(Ptang){Q}\uput[-45](P){P}
+\psxline[linecolor=red]{<->}(P){-(Ptang)}{1.5(Ptang)}
+\psxline[linecolor=blue]{->}(P){}{.5(Q)}%can use } for {(0,0)}
+\end{pspicture} 
+\end{LTXexample}
+\vspace{2pc}
+
+\begin{BDef}
+\Lcs{polyIntersections}\Largb{Name1}\Largb{Name2}\Largr{A}\Largr{B}\Largb{P}\ldots\\
+\Lcs{polyIntersections}\Largb{Name1}\Largb{Name2}\Largr{A}\Largr{B}\Largb{P}\Largb{n}\\
+\end{BDef}
+
+is the most complicated macro in the collection. It has two forms.
+
+\begin{verbatim}
+\polyIntersections{<Name1>}{<Name2>}(A)(B)(1,2)(3;30)(6,5)...
+\end{verbatim}
+
+defines the polyline \verb|L=(1,2)(3;30)(6,5)...|, and computes the two points of 
+intersection closest to {\tt A} in each direction with the directed line starting at 
+A heading toward B. The first intersection point in the positive direction is named 
+\verb|<Name1>|, and the first intersection point in the opposite direction (from A) 
+is named \verb|<Name2>|. If one or other of these intersections is empty, the nodes are 
+set to remote points on the line {\tt AB}.  The effect of the line joining the constructed 
+nodes depends on the location of {\tt A} and {\tt B} relative to {\tt L}, with two cases worth noting.
+\begin{itemize}
+\item if {\tt L} is closed and if {\tt A, B} are interior to one of its components, the 
+resulting line extends across that component of {\tt L}, and contains {\tt AB}.
+\item If {\tt L} is simple and closed, one of {\tt A, B} is inside and the other outside, 
+the resulting line segment will contain {\tt A} but not {\tt B}. 
+\end{itemize}
+
+\begin{verbatim}
+\polyIntersections{<Name1>}{<Name2>}(A)(B){P}{n}
+\end{verbatim}
+
+has exactly the same effect as 
+
+\begin{verbatim}
+\polyIntersections{<Name1>}{<Name2>}(A)(B)(P0)(P1)...(Pn)
+\end{verbatim}
+
+assuming \verb|P0...Pn| to be previously defined nodes.
+
+\begin{LTXexample}[width=.375\textwidth]
+\begin{pspicture}[showgrid=true](-.5,-.5)(3.5,3)
+\pnodes{P}(0,.5)(3,.5)(2.5,2)(.5,2.5)(0,.5)
+\pnode(1,1.1){A}\pnode(2,1.5){B}
+\polyIntersections{N1}{N2}(A)(B){P}{4}
+\psnline(0,4){P}
+\psdots(A)(B)\psline(N1)(N2)
+\uput[-60](A){A}\uput[-60](B){B}
+\uput[0](N1){N1}\uput[-180](N2){N2}
+\end{pspicture} 
+\end{LTXexample}
+
+\begin{LTXexample}[width=.375\textwidth]
+\begin{pspicture}[showgrid=true](-.5,-.5)(3.5,3)
+\pnodes{P}(0,.5)(3,.5)(2.5,2)(.5,2.5)(0,.5)
+\pnode(1,1.1){A}\pnode(2,3){B}
+\polyIntersections{N1}{N2}(A)(B){P}{4}
+\psnline(0,4){P}
+\psdots(A)(B)\psline(N1)(N2)
+\uput[-60](A){A}\uput[-60](B){B}
+\uput[90](N1){N1}\uput[-90](N2){N2}
+\end{pspicture} 
+\end{LTXexample}
+
+\begin{LTXexample}[width=.375\textwidth]
+\begin{pspicture}[showgrid=true](-.5,-.5)(3.5,3)
+\def\fn{1.5+sin(t)+.4*sin(2*t)%
+ | 1+cos(t)+.2*cos(2*t)+.2*sin(4*t)}%
+\pnode(1,1.1){A}\pnode(2,1.2){B}
+\psset{plotpoints=100}
+\psparametricplot[algebraic]{0}{6.283}{\fn}
+\curvepnodes{0}{6.283}{\fn}{Z}
+\polyIntersections{N1}{N2}(A)(B){Z}{99}
+\psdots(A)(B)\psline(N1)(N2)
+\uput[-60](A){A}\uput[-60](B){B}
+\uput[0](N1){N1}\uput[220](N2){N2}
+\end{pspicture} 
+\end{LTXexample}
+\vspace{1pc}
+
+\begin{LTXexample}[width=.375\textwidth]
+\begin{pspicture}[showgrid=true](-.5,-.5)(3.5,3)
+\def\fn{1.5+sin(t)+.4*sin(2*t)%
+ | 1+cos(t)+.2*cos(2*t)+.2*sin(4*t)}%
+\pnode(.8,.6){A}\pnode(2.5,-.5){B}
+\psset{plotpoints=100}
+\psparametricplot[algebraic]{0}{6.283}{\fn}
+\curvepnodes{0}{6.283}{\fn}{Z}
+\polyIntersections{N1}{N2}(A)(B){Z}{99}
+\psdots(A)(B)\psline(N1)(N2)
+\uput[90](A){A}\uput[-60](B){B}
+\uput[70](N1){N1}\uput[180](N2){N2}
+\end{pspicture} 
+\end{LTXexample}
+\vspace{1pc}
+
+
+\begin{LTXexample}[width=.375\textwidth]
+\begin{pspicture}[showgrid=true](-.5,-.5)(3.5,3)
+\pnodes{P}(0,.5)(3,.5)(2.5,2)(.5,2.5)(0,.5)
+\pnode(1,1.1){A}\pnode(2,1.5){B}
+\polyIntersections{N1}{N2}(A)(B){P}{3}
+\psnline(0,3){P}
+\psdots(A)(B)
+\psclip{\psframe[linestyle=none](-.5,-.5)(3.5,2.5)}
+\psline(N1)(N2)\endpsclip
+\uput[-60](A){A}\uput[-60](B){B}
+\uput[0](N1){N1}\uput[-180](N2){N2}
+\end{pspicture} 
+\end{LTXexample}
+\vspace{1pc}
+
+\begin{LTXexample}[width=.375\textwidth]
+\begin{pspicture}[showgrid=true](-.5,-.5)(3.5,3)
+\def\fn{x+sin(2*x)}
+\psplot[algebraic]{0}{3.14}{\fn}
+\fnpnodes[algebraic]{0}{3.14}{\fn}{P}
+\pnode(.6,.8){A}\pnode(1.5,1.1){B}
+\polyIntersections{N1}{N2}(A)(B){P}{49}
+\psdots(A)(B)
+\uput[-90](A){A}\uput[-90](B){B}
+\psline(N1)(N2)
+\psset{linestyle=dashed}
+\psline(N1)(N1 | 0,0)
+\psline(N2)(N2 | 0,0)
+\uput[70](N1){N1}\uput[170](N2){N2}
+\end{pspicture} 
+\end{LTXexample}
+\vspace{1pc}
+
+\begin{BDef}
+\Lcs{ArrowNotch}\Largb{<NodeName>}\Largb{<nodeindex>}\Largb{<direction>}\Largb{<Notch>}
+\end{BDef}
+takes as inputs the root name of the node sequence, the index at which the arrow 
+tip is to be drawn, and the direction (one of \verb+>,<+) of the arrow. It then 
+constructs the notch as a node with name \verb|<Notch>|. The arrowhead may then be 
+drawn with a command like \Lcs{psline}\verb|{->}(N)(P3)|, assuming the tip was to be {\tt P3} 
+and the notch was {\tt N}. Keep in mind that the macro takes its settings for linewidth, 
+arrowscale, etc from the current values, so it is generally preferable to include them 
+in a \Lcs{psset} before drawing the curve and calling \Lcs{ArrowNotch}. 
+(Alternatively, they may be included as optional settings in \Lcs{ArrowNotch}.)
+The first example below shows a case where the native arrow direction is not 
+good. The second shows how to make a version using \Lcs{ArrowNotch}. Notice that the minimum and maximum 
+parameter values in the second example had to be modified to keep the curve 
+from protruding near the end arrowheads.
+
+\Lcs{ArrowNotch} is a computationally expensive macro (quadratic in {\tt plotpoints}) designed to 
+improve the placement of arrows on curves in those cases (high curvature, large values of 
+linewidth, arrowscale, etc) where the native arrow direction is not optimal. The macro 
+depends on the construction of a node sequence, say {\tt P0..Pn}, of samples of the curve 
+(eg, with \Lcs{curvepnodes}) from which it computes the position of the notch of the arrow 
+so that, when drawn, the arrow notch will be located on the curve in all cases. It operates 
+with only two particular arrow shapes---those arrows specified with either 
+\verb|->| or \verb|-D>|, or their reverses. 
+
+
+\begin{LTXexample}[width=.375\textwidth]
+\def\fn{1.5+1.5*cos(t) | 1+sin(t)}
+\psset{linewidth=2pt,arrowscale=3}
+\begin{pspicture}(0,0)(3.5,3)
+\psparametricplot[algebraic,arrows=<->]{PiDiv2 neg}{Pi}{\fn}
+\end{pspicture} 
+\end{LTXexample}
+\vspace{1pc}
+
+\begin{LTXexample}[width=.375\textwidth]
+\def\fn{1.5+1.5*cos(t) | 1+sin(t)}
+\psset{linewidth=2pt,arrowscale=3}
+\begin{pspicture}(0,0)(3.5,3)
+\curvepnodes{PiDiv2 neg}{Pi}\fn{P}%create P0..P49
+\ArrowNotch{P}{0}{<}{Q}
+\ArrowNotch{P}{49}{>}{R}
+\ArrowNotch[arrowscale=1.5]{P}{27}{>}{S}
+\psparametricplot[algebraic]{-1.47}{2.95}{\fn}
+\psline{->}(Q)(P0)
+\psline{->}(R)(P49)
+\psline[arrowscale=1.5]{->}(S)(P27)
+\end{pspicture} 
+\end{LTXexample}
+
+\clearpage
+\section{List of all optional arguments for \texttt{pst-node}}
+
+\xkvview{family=pst-node,columns={key,type,default}}
+
+\nocite{*}
+\bgroup
+\RaggedRight
+\bibliographystyle{plain}
+\bibliography{pst-node-doc}
+\egroup
+
+\printindex
+
+
+\end{document}

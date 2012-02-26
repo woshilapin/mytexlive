@@ -1,0 +1,525 @@
+\documentclass[12pt]{article}
+\usepackage{pst-map3d,pstricks-add}
+\let\PSTfileversion\fileversion
+\let\PSTfiledate\filedate
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[garamond]{mathdesign}
+\renewcommand{\ttdefault}{lmtt}
+\usepackage{longtable,array}
+\usepackage{ragged2e}
+%\usepackage{url}
+\usepackage[a4paper,margin=2cm,nohead]{geometry}
+\usepackage[colorlinks=true]{hyperref}
+\usepackage{showexpl,xspace}
+\usepackage[french]{babel}
+\def\PST{\texttt{PSTricks}\xspace}
+\def\PS{\texttt{PostScript}\xspace}
+\makeatletter
+\newdimen\pssizeStar
+\def\psset@sizeStar#1{\pssetlength\pssizeStar{#1}}
+\psset@sizeStar{1.5pt}
+
+%% adapté de \psRandom du package pstricks-add
+%% pour rendre aléatoire la taille des étoiles
+\def\psRandomStar{\pst@object{psRandomStar}}%
+\def\psRandomStar@i{\@ifnextchar({\psRandomStar@ii}{\psRandomStar@iii(0,0)(1,1)}}
+\def\psRandomStar@ii(#1){\@ifnextchar({\psRandomStar@iii(#1)}{\psRandomStar@iii(0,0)(#1)}}
+\def\psRandomStar@iii(#1)(#2)#3{%
+  \def\pst@tempA{#3}%
+  \ifx\pst@tempA\pst@empty\psclip{\psframe(#2)}\else\psclip{#3}\fi
+  \pst@getcoor{#1}\pst@tempA
+  \pst@getcoor{#2}\pst@tempB
+  \begin@SpecialObj
+  \addto@pscode{
+    \pst@tempA\space /yMin exch def
+    /xMin exch def
+    \pst@tempB\space /yMax exch def
+    /xMax exch def
+    /dy yMax yMin sub def
+    /dx xMax xMin sub def
+    rrand srand                 % initializes the random generator
+    /getRandReal { rand 2147483647 div } def
+     \psk@randomPoints {
+    /DS \pst@number\pssizeStar\space getRandReal mul def
+    \@nameuse{psds@\psk@dotstyle}
+     \ifPst@color getRandReal 1 1 sethsbcolor \fi
+     getRandReal dx mul xMin add
+     getRandReal dy mul yMin add
+     Dot
+     \ifx\psk@fillstyle\psfs@solid fill \fi stroke
+    } repeat
+  }%
+  \end@SpecialObj
+  \endpsclip
+  \ignorespaces
+}
+\makeatother
+\definecolor{graygreen}{cmyk}{0.7,0,0.6,0.2}
+\newcommand{\PstMapThreeDPackage}{`\textsf{pst-map3d}'}
+ \title{The \PstMapThreeDPackage{} package\\A PSTricks package for Geographical Projections}
+ \author{Manuel \textsc{Luque}
+         \mbox{\texttt{<manuel.luque27@gmail.com>}}\\
+         and\\
+         Giuseppe \textsc{Matarazzo} \mbox{\texttt{<joematara@hotmail.com>}}}
+ \date{Version 2.0\\ 18 mars 2008}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+\PstMapThreeDPackage{} traite de la représentation en trois dimensions
+ du globe terrestre avec plusieurs fonctionnalités qui rendent son
+ utilisation agréable (tout au moins nous l'espérons).
+
+Il s'agit d'une reprise du package élaboré avec Giuseppe Matarazzo en
+2003. Celui-ci présentait quelques erreurs de représentation lorsqu'une
+grande partie d'un pays était cachée aux yeux de l'observateur. Une idée
+très astucieuse de Christophe Poulain permettant de résoudre ce problème
+est à l'origine de la refonte du package. J'ai aussi profité de quelques
+macros \texttt{postscript} mises au point par Jean-Paul Vignault pour
+l'écriture du package \texttt{`pst-solides3d'}.
+
+L'élaboration et la mise en ligne de ce package a bénéficié des
+encouragements, de toute la compétence et de la disponibilité de
+Jean-Michel Sarlat.
+
+La plus grande le code ayant donc du être réécrite, il m'a semblé
+judicieux d'introduire de nouvelles fonctionnalités parmi lesquelles :
+le \textit{globe tellure}, les plaques tectoniques, les épicentres des
+séismes, les zones de fracture et les linéations magnétiques (anomalies
+magnétiques des fonds océaniques).
+
+\end{abstract}
+ \tableofcontents
+% \newpage
+ \section{Les données\label{datas}}
+GLOBE Binaries DECODING : World Public Domain Dbase :
+ F.Pospeschil, A.Rivera (1999)
+
+\url{ftp://ftp.blm.gov/pub/gis/wdbprg.zip}
+
+Elles ont \'et\'e converties sous forme de tableau PostScript, en
+degr\'es,
+gr\^ ace à un petit programme en pascal (de Giuseppe Matarazzo) qui
+fait partie de la distribution. Ce sont les mêmes données que
+celles du package \textsf{pst-map2d}.
+\section{Les paramètres}
+\begin{longtable}{|>{\bfseries\ttfamily\color{blue}}l|c|m{10cm}|}
+  \hline
+  \multicolumn{1}{|c|}{\textbf{Paramètre}}&
+  \multicolumn{1}{c|}{\textbf{Défaut}}&
+  \multicolumn{1}{c|}{\textbf{Signification}} \\ \hline\hline
+\endfirsthead
+\hline
+  \multicolumn{1}{|c|}{\textbf{Paramètre}}&
+  \multicolumn{1}{c|}{\textbf{Défaut}}&
+  \multicolumn{1}{c|}{\textbf{Signification}} \\ \hline\hline
+\endhead
+\multicolumn{3}{|r|}{\textit{Suite à la page suivante}}\\ \hline
+\endfoot
+\multicolumn{3}{|r|}{\textit{Fin de la table}}\\ \hline
+\endlastfoot
+Radius&5&rayon du globe \\\hline
+Dobs&20&distance de l'observateur au centre du globe \\\hline
+Decran&25&distance de l'écran à l'observateur \\\hline
+THETA&0& angle définissant, avec $\phi$ en coordonnées sphériques la position de l'observateur \\\hline
+PHI&45& angle définissant, avec $\theta$ en coordonnées sphériques la position de l'observateur \\\hline
+RotZ&0& rotation du globe autour de l'axe vertical $Oz$ en degrés\\\hline
+RotX&0& rotation du globe autour de l'axe horizontal $Ox$ en degrés\\\hline
+RotY&0& rotation du globe autour de l'axe horizontal $Oy$ en degrés\\\hline
+gridmap&true& boléen : trace le maillage de la sphère : méridiens et parallèles\\\hline
+gridmapdiv&$10^{\mathrm{o}}$& écart angulaire entre 2 méridiens ou 2 parallèles\\\hline
+gridmapcolor&black& couleur des méridiens et parallèles\\\hline
+gridmapwidth&0.8pt & épaisseur des lignes des méridiens et parallèles\\\hline
+mapcolor&``terre''& couleur des continents : la couleur ``terre'' a été prédéfinie\\\hline
+oceancolor&``mer''& couleur des océans et mers : : la couleur ``mer'' a été prédéfinie\\\hline
+borders&true& booléen : dessine les frontières\\\hline
+bordercolor&black& couleur des frontières\\\hline
+borderwidth&0.8pt & épaisseur des frontières\\\hline
+france&false& booléen : dessine la France métropolitaine et la Corse. 
+    Destiné à la représentation particulière de la France ou bien à sa mise en valeur.\\\hline
+coasts&true& booléen : dessine les côtes\\\hline
+coastcolor&black& couleur des côtes\\\hline
+coastwidth&0.8pt & épaisseur des côtes\\\hline
+islandcolor&black& couleur du contour des îles\\\hline
+rivers&true& booléen : dessine les fleuves\\\hline
+lakes&true& booléen : dessine les lacs\\\hline
+capitals&true& booléen : marque les capitales visibles\\\hline
+citys&true& booléen : marque toutes les villes visibles\\\hline
+usa&false& booléen : dessine les états \\\hline
+australia&false& booléen : dessine les états \\\hline
+mexico&false& booléen : dessine les états \\\hline
+circles&false& booléen : dessine des cercles parallèles sur les océans et les mers \\\hline
+circlecolor&blue& couleur des côtes\\\hline
+circlewidth&0.5pt & épaisseur des côtes\\\hline
+circlesep&$2^{\mathrm{o}}$& écart angulaire entre 2 cercles\\\hline
+visibility&booléen& true : dessine les parties du globe visibles pour l'observateur\\\hline
+blueEarth&booléen& true : dessine un disque couleur de l'océan à la dimension du globe\\\hline
+daynight&booléen& false : dessine la nuit sur le globe\\\hline
+hour&12 & heure locale du lieu\\\hline
+Day&le jour actuel& jour d'observation\\\hline
+Month&le mois actuel& mois d'observation\\\hline
+ridge&false& trace les limites des plaques tectoniques\\\hline
+ridgecolor&red& couleur des dorsales\\ \hline
+trenchcolor&darkgreen& couleur des lignes de convergence\\ \hline
+transfrmcolor&orange& couleur des lignes de transcurrence\\ \hline
+ridgewidth&2 pt& épaisseur des lignes précédentes\\ \hline
+zonefrac&false& booléen : tracé des lignes de fracture\\ \hline
+zonefraccolor&red& couleur des lignes de fracture\\ \hline
+zonefracwidth&0.8 pt& épaisseur des lignes de fracture\\ \hline
+wmaglinwidth&0.8 pt& épaisseur des lignes de linéation magnétique\\ \hline
+wmaglin&false& booléen : tracé des linéations magnétiques\\ \hline
+wmaglincolor&red& couleur des linéations magnétiques\\ \hline
+Year&l'année actuelle& l'année d'observation\\\hline
+waves&3& nombre de cercles concentriques à partir de l'épicentre\\\hline
+Rmax&1500& Rayon, en km,  du plus grand cercle centré sur l'épicentre\\\hline
+\end{longtable}
+\section{La représentation du globe}
+
+La représentation du globe est centrée sur Paris avec les paramètres
+\begin{center}\centering \verb+\psset{PHI=48.85,THETA=2.32}+.\end{center}
+Un effet de moirage apparaît du aux
+cercles concentriques tracés sur la sphère. Différentes options de
+couleur sont testées avec cet exemple.
+
+%\begin{LTXexample}[width=8cm]
+\begin{pspicture}(-4,-4)(4,4)
+\psset{PHI=48.85,THETA=2.32,Decran=15,path=../data}
+\WorldMapThreeD[gridmapcolor=yellow,circlesep=1,mapcolor=green!50,bordercolor=red,
+                coastwidth=1.2pt,capitals,islandcolor=blue,coastcolor=blue,coasts]
+\psmeridien{2.32}
+\psparallel{48.85}
+\mapputIIID(2.32,48.85){Paris}
+\end{pspicture}
+%\end{LTXexample}
+
+\section{Effet de transparence et rotations}
+
+La transparence(resp. opacité) du globe se règle avec le paramètre
+\texttt{opacity}.  Si l'on souhaite combiner les rotations celles-ci
+s'effectuent, pour des raisons spécifiques à ce package, dans l'ordre
+suivant \texttt{RotZ}, \texttt{RotX}, \texttt{RotY}.
+
+Rappelons que les effets de transparence ne sont possibles qu'avec le
+fichier \texttt{pdf}, celui-ci sera obtenu avec la séquence de commandes: 
+\texttt{\LaTeX}-->\texttt{dvips}-->\texttt{ps2pdf}.
+
+%\begin{LTXexample}[width=8.2cm]
+\begin{pspicture}(-4,-4)(4,4)
+\psset{RotX=-23,RotZ=30,PHI=46.5833,THETA=0.3333,visibility=false,Decran=15,path=../data}
+\WorldMapThreeD[circles=false,blueEarth=false]
+\WorldMapThreeD[circles=false,visibility=true,opacity=0.7]
+\psmeridien[visibility=true]{0.333}
+\psparallel[visibility=true]{46.5833}
+\mapputIIID(0.3333,46.5833){Poitiers}
+\end{pspicture}
+%\end{LTXexample}
+
+
+\section{Mise en valeur du territoire français}
+\begin{center}
+
+\begin{pspicture*}(-0.5\linewidth,-0.45\textheight)(0.5\linewidth,0.5\textheight)
+\psset{PHI=45,THETA=5,unit=7.5,path=../data}
+\WorldMapThreeD[lakes=false,circlesep=0.25,lakes=false,gridmap=false,
+                mapcolor=graygreen!50,bordercolor=red,rivers=false,
+                coasts=false,islandcolor=blue]%
+\WorldMapThreeD[gridmapcolor=yellow,circles=false,lakes=true,gridmapdiv=5,france=true,
+		islandcolor=blue,blueEarth=false,
+                bordercolor=red,islands=false,borders=false,rivers=true,coasts=true,
+                coastcolor=blue]%
+\psmeridien{2.32}
+\psparallel{48.85}
+\newpsstyle{NodeLabelStyle}{fillstyle=solid,fillcolor=yellow!50,framesep=0,
+		linestyle=none,opacity=0.5}
+\input{villesFrance3d}
+\newpsstyle{NodeLabelStyle}{fillstyle=solid,fillcolor=red!50,
+		framesep=0,linestyle=none,opacity=0.5}
+\newpsstyle{psNodeMapStyle}{fillstyle=solid,fillcolor=yellow!50,linecolor=red}
+\psset{nodeWidth=0.025\psunit,linecolor=red}
+\pnodeMapIIID(15.2833,37.0833){Syracuse}
+\pscircle[fillstyle=solid,fillcolor=green](Syracuse){0.025\psunit}
+\psdot[dotsize=0.025\psunit](Syracuse)
+\uput[l](Syracuse){\psframebox[fillstyle=solid,fillcolor=yellow,framesep=0,
+		linestyle=none,opacity=0.5]{\textsf{Syracuse}}}
+\pnodeMapIIID(10.51667,43.85){Lucques}
+\pscircle[fillstyle=solid,fillcolor=green](Lucques){0.025\psunit}
+\psdot[dotsize=0.025\psunit](Lucques)
+\uput[u](Lucques){\psframebox[fillstyle=solid,fillcolor=yellow!50,framesep=0,
+		linestyle=none,opacity=0.5]{\textsf{Lucques}}}
+\input{capitales}
+\psepicenter[circlecolor=red,waves=16,Rmax=2000](0.3333,46.5833){Poitiers}
+\end{pspicture*}
+
+\end{center}
+
+\section{Les macros}
+\subsection{La commande \textbackslash pnodeMapIIID}
+Une commande créée à cet effet permet de placer en un point du globe, défini
+par sa longitude et sa latitude, une ville, un lieu, un symbole ou une
+annotation quelconque. Cette commande qui utilise le package
+\textsf{pst-node} est la suivante :
+\begin{verbatim}
+\pnodeMapIIID(longitude,latitude){nom}
+\end{verbatim}
+\textsf{longitude} et \textsf{latitude} sont en degrés, le \textsf{nom}
+attribué au n\oe{}ud ne doit pas contenir de lettre accentuée.
+\subsection{La commande \textbackslash mapputIIID}
+La commande \verb+\mapputIIID(0.100000,49.483333){Le Havre}+ est identique à la suite de commandes :
+\begin{itemize}
+\item \verb+\pnodeMapIIID(0.100000,49.483333){LeHavre}+
+\item \verb+\psdot[linecolor=red,dotsize=2mm](LeHavre)+
+\item \verb+\uput[u](LeHavre){\psframebox*[fillstyle=solid,+\\
+      \verb+            fillcolor=yellow,framesep=0]{\textsf{Le Havre}}}+
+\end{itemize}
+D'une façon générale elle s'écrit :
+\begin{verbatim}
+ \mapputIIID[angle](longitude,lattitude)[node name]{node label}[country]
+\end{verbatim}
+Ce qui est entre crochets est facultatif. Par défaut l'angle de positionnement vaut $90^{\mathrm{o}}$.
+
+Les paramètres avec les valeurs par défaut sont les suivants :
+\begin{verbatim}
+ \newpsstyle{psNodeMapStyle}{fillstyle=solid,fillcolor=red}
+ \newpsstyle{NodeLabelStyle}{fillstyle=solid,fillcolor=yellow,
+            framesep=0,linestyle=none}
+ nodeWidth=1 mm
+\end{verbatim}
+\subsection{La commande \textbackslash psmeridien}
+\begin{verbatim}
+\psmeridien[options]{longitude}
+\end{verbatim}
+Elle permet de tracer la partir visible du méridien défini par sa
+longitude en degrés.
+
+\subsection{La commande \textbackslash psparallel}
+\begin{verbatim}
+\psparallel[options]{latitude}
+\end{verbatim}
+Elle permet de tracer la partir visible du  cercle parallèle à
+l'équateur défini par sa latitude en degrés.
+
+\section{Le globe tellure}
+
+Le \textit{globe tellure} est décrit dans le document
+\textit{Globe\_tellure\_original.pdf}.
+
+La macro qui lui est associée est la suivante :
+\begin{verbatim}
+\def\psGlobeTellure{\pst@object{psGlobeTellure}}
+\def\psGlobeTellure@i(#1,#2)#3{% longitude, latitude et nom de la ville
+  \begin@SpecialObj%
+   \pnode(!/ux 0 def /uy 90 #2 sub sin def /uz 90 #2 sub cos def 0 0){ttt}%
+   \psset{PHI=0,THETA=0}%
+    {\psset{RotX=#2 90 sub,RotZ=90 #1 add}
+    \WorldMapThreeD[style=\psk@styleGlobe,daynight=false]%
+    \mapputIIID(#1,#2){#3}}%
+   \WorldMapThreeD[style=\psk@styleNight,daynight=true,circles=false,
+            blueEarth=false,
+            borders=false,islands=false,
+            rivers=false,lakes=false,
+            gridmap=false,latitudeParallel=#2]%
+   \psframe*(-3,-6.5)(3,-5.5)
+   \rput(! 0 \psk@TroisD@Radius\space neg -1 add){%
+    \white%
+    \psk@WorldMap@hour h le \psk@WorldMap@J/\psk@WorldMap@M/\psk@WorldMap@A}
+   \end@SpecialObj%
+   \ignorespaces}%
+\end{verbatim}
+Les deux styles associés à la partie éclairée et à la partie dans
+l'ombre sont :
+
+\begin{verbatim}
+\newpsstyle{Globe}{circles=true}
+\newpsstyle{night}{fillstyle=solid,fillcolor=black,opacity=0.8}
+\end{verbatim}
+et sont modifiables grâce aux deux options : \texttt{[styleGlobe=Globe]}
+et \texttt{[styleNight=night]} qui sont les styles par défaut.
+
+Elle s'utilise simplement, mais elle n'est valable que pour les villes de l'hémisphère nord :
+
+%\begin{LTXexample}[width=8cm]
+\begin{postcript}
+\definecolor{BlueDark}{cmyk}{1,1,0,0.5}
+\newpsstyle{Globe}{circles=true,gridmap=true,daynight=false}
+\newpsstyle{night}{fillstyle=solid,fillcolor=BlueDark,linecolor=BlueDark,opacity=0.8}
+\psset{Radius=5,Decran=100,Dobs=100,unit=0.5,path=../data}
+\begin{pspicture}(-7,-7)(7,7)
+\psframe*[linecolor=BlueDark](-7,-7)(7,7)%
+\psRandomStar[linecolor=yellow!50,randomPoints=100](-7,-7)(7,7){\psframe(-7,-7)(7,7)}
+\psGlobeTellure[hour=10,Day=22,Month=06,Year=2008](15.28,37.07){Syracuse}
+\end{pspicture}
+\end{postcript}
+%\end{LTXexample}
+
+Elle comprend en options, l'heure locale, le jour, le mois et l'année et
+en argument les coordonnées géographiques de la ville ainsi que son nom.
+
+La commande \verb+\psRandomStar(-7,-7)(7,7){\psframe(-7,-7)(7,7)}+ a été
+empruntée au package \texttt{pstricks-add} et permet de dessiner des
+étoiles dont la position et la taille sont aléatoires. Par rapport à la
+commande de \texttt{pstricks-add}, il y a en plus l'option
+\texttt{[sizeStar=1.5pt]} qui permet de fixer la taille maximale des
+étoiles. La package
+\texttt{pstricks-add} doit être chargé en préambule avant
+\PstMapThreeDPackage.
+
+\begin{verbatim}
+\newdimen\pssizeStar
+\def\psset@sizeStar#1{\pssetlength\pssizeStar{#1}}
+\psset@sizeStar{1.5pt}
+
+%% adapté de \psRandom du package pstricks-add
+%% pour rendre aléatoire la taille des étoiles
+\def\psRandomStar{\pst@object{psRandomStar}}%
+\def\psRandomStar@i{%
+    \@ifnextchar({\psRandomStar@ii}{\psRandomStar@iii(0,0)(1,1)}}
+\def\psRandomStar@ii(#1){%
+    \@ifnextchar({\psRandomStar@iii(#1)}{\psRandomStar@iii(0,0)(#1)}}
+\def\psRandomStar@iii(#1)(#2)#3{%
+  \def\pst@tempA{#3}%
+  \ifx\pst@tempA\pst@empty\psclip{\psframe(#2)}\else\psclip{#3}\fi
+  \pst@getcoor{#1}\pst@tempA
+  \pst@getcoor{#2}\pst@tempB
+  \begin@SpecialObj
+  \addto@pscode{
+    \pst@tempA\space /yMin exch def
+    /xMin exch def
+    \pst@tempB\space /yMax exch def
+    /xMax exch def
+    /dy yMax yMin sub def
+    /dx xMax xMin sub def
+    rrand srand                 % initializes the random generator
+    /getRandReal { rand 2147483647 div } def
+     \psk@randomPoints {
+    /DS \pst@number\pssizeStar\space getRandReal mul def
+    \@nameuse{psds@\psk@dotstyle}
+     \ifPst@color getRandReal 1 1 sethsbcolor \fi
+     getRandReal dx mul xMin add
+     getRandReal dy mul yMin add
+     Dot
+     \ifx\psk@fillstyle\psfs@solid fill \fi stroke
+    } repeat
+  }%
+  \end@SpecialObj
+  \endpsclip
+  \ignorespaces
+}
+\makeatother
+\end{verbatim}
+\section{Les épicentres}
+La commande suivante :
+\begin{verbatim}
+\psepicenter[circlecolor=red,waves=4,Rmax=2000](95.98,3.30){Sumatra}
+\end{verbatim}
+tracera l'épicentre du séisme qui eut lieu sur la côte occidentale du
+nord de Sumatra le 26 décembre 2004, les coordonnées géographiques sont
+indiquées entre les parenthèses :
+\texttt{(longitude, latitude)}, la nom de la ville ou de la région entre
+accolades. Les paramètres optionnels concernent la couleur des cercles
+concentriques, leur nombre et le rayon maximum en km de l'onde,
+l'épaisseur se règle avec
+\texttt{[circlewidth=2pt]}.
+
+Il y a de très nombreux renseignements sur les séismes sur le site :
+
+\centerline{\url{http://earthquake.usgs.gov/eqcenter/eqarchives/year/magnitude8_1900_date.php}}
+
+%\begin{LTXexample}[pos=t]
+\begin{pspicture}(-5,-5)(5,5)
+\psset{Radius=5,Dobs=200,Decran=200,path=../data}
+\psset{PHI=10,THETA=120,circlewidth=1.5pt}
+\WorldMapThreeD[circles=false,australia=true]%
+\psmeridien{95.98}
+\psparallel{3.30}
+\psepicenter[circlecolor=red,waves=4,Rmax=2000](95.98,3.30){Sumatra}
+\psmeridien[meridiencolor=green]{160}
+\psparallel[parallelcolor=green]{52.76}
+\psepicenter[circlecolor=green](160,52.76){Kamchatka}
+\end{pspicture}
+%\end{LTXexample}
+
+
+\section{Les plaques tectoniques}
+
+Elles se tracent avec l'option \texttt{ridge}. Les différents types se
+distinguent par des couleurs différentes (paramétrables : voir la partie
+correspondant aux paramètres).
+
+Les données relatives aux plaques ont été obtenues sur le site :
+
+\centerline{\url{http://www.ig.utexas.edu/research/projects/plates/}}
+
+%\begin{LTXexample}[pos=t]
+\begin{postscript}
+\psset{unit=0.8,RotX=0,Decran=100,Dobs=100,PHI=0,THETA=-100,path=../data}
+\begin{pspicture}(-5,-5)(5,5)
+\WorldMapThreeD[gridmapcolor=yellow,circles=false,ridge=true]%
+\psframe(4,-6.4)(10.5,-3.6)
+\uput[r](4,-4){Tectonic plates boundaries}
+\psline[linecolor=red,linewidth=2pt](4.2,-4.5)(5,-4.5)\uput[r](5,-4.5){\color{red}{Ridge}}
+\psline[linecolor=darkgreen,linewidth=2pt](4.2,-5.25)(5,-5.25)\uput[r](5,-5.25){\color{darkgreen}{Trench}}
+\psline[linecolor=orange,linewidth=2pt](4.2,-6)(5,-6)\uput[r](5,-6){\color{orange}{Transform}}
+\end{pspicture}\\
+\begin{pspicture}(-5,-5)(5,5)
+\psset{PHI=0,THETA=100}
+\WorldMapThreeD[gridmapcolor=yellow,circles=false,ridge=true]%
+\end{pspicture}
+\end{postscript}
+
+%\end{LTXexample}
+
+\section{Les zones de fracture et les linéations magnétiques}
+
+%\begin{LTXexample}[pos=t]
+\begin{postscript}
+\psset{Decran=100,Dobs=100,unit=0.8,path=../data}
+\begin{pspicture}(-5,-5)(5,5)
+\psset{PHI=0,THETA=-90}
+\WorldMapThreeD[gridmapcolor=yellow,circles=false,wfraczon=true]%
+\psline[linecolor=red,linewidth=2pt](4.2,-5)(5,-5)\uput[r](5,-5){\color{red}{wzonfrac}}
+\end{pspicture}\\
+\begin{pspicture}(-5,-5)(5,5)
+\psset{PHI=0,THETA=90}
+\WorldMapThreeD[gridmapcolor=yellow,circles=false,wfraczon=true]%
+\end{pspicture}
+\end{postscript}
+%\end{LTXexample}
+%\begin{LTXexample}[pos=t]
+
+\begin{postscript}
+\psset{Decran=100,Dobs=100,unit=0.8,path=../data}
+\begin{pspicture}(-5,-5)(5,5)
+\psset{PHI=0,THETA=-90}
+\WorldMapThreeD[gridmapcolor=yellow,circles=false,wmaglin=true]%
+\psline[linecolor=darkblue,linewidth=2pt](4.2,-5)(5,-5)\uput[r](5,-5){\color{darkblue}{wmaglin}}
+\end{pspicture}\\
+\begin{pspicture}(-5,-5)(5,5)
+\psset{PHI=0,THETA=90}
+\WorldMapThreeD[gridmapcolor=yellow,circles=false,wmaglin=true]%
+\end{pspicture}
+\end{postscript}
+%\end{LTXexample}
+
+
+\section{Quelques liens}
+Le développement du package : \url{http://syracuse-dev.org/mpst-globe}
+
+\url{http://melusine.eu.org/syracuse/pstricks/pst-solides3d/}
+
+Pour les données sur les plaques tectoniques, les volcans, les
+linéations magnétiques et le zones de fracture :
+
+\url{http://www.versamap.com/webdoc03.htm}
+
+
+\nocite{*}
+\bgroup
+\RaggedRight
+\bibliographystyle{plain}
+\bibliography{PSTricks}
+\egroup
+
+
+
+\end{document}

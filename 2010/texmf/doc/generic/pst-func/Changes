@@ -1,0 +1,109 @@
+..... pst-func.tex
+0.76  2012-01-13  - modifications to \psImpPlot
+0.75  2012-01-01  - moved \psPrintValue into pst-tools
+0.74  2011-11-02  - make \psLorenz work in a correct way
+0.73  2011-10-21  - add \psModBessel function
+0.72  2011-04-23  - allow option comma for all functions
+                  - use helper function dot2comma
+0.71  2010-11-03  - allow option dotstyle for \psGaussI
+0.70  2010-10-02  - moved vasicek as \psvasicek from pst-math
+                    to pst-func
+0.69  2010-06-21  - fix bug with markZeros
+0.68  2010-02-11  - add Weibull distribution
+0.67  2010-02-09  - fix bug with arrows in \psPolynomial
+0.66  2010-01-26  - new optional argument for the Gini
+                    coefficient of \psLorenz
+0.65  2010-01-25  - new distribution \psCauchy
+                  - new macro psLorenz for the Lorenz curve
+0.64  2010-01-19  - new optional argument for \psplotImp
+                    to insert predefined PS code
+0.63  2010-01-04  - fixed bug with Bezier definition
+0.62  2009-12-01  - fixed bug with \pst@Shift in \psGaussI
+0.61  2009-11-30  - fixed bug with \psGaussI
+0.60  2009-10-08  - modified \psPrintValue to allow algebraic function mode
+                  - fix bug with algebraic=true for all macros with \psplot
+                    which need postfix code
+0.59  2009-01-23  - add option \psk@xShift for \psPrintValue
+0.58  2008-12-08  - add the ChebyshevT and ChebyshevU (first and second kind)
+                    the macros are only wrappers for the PS routines
+		  - take the optional argument comma from pstricks-add into
+                    account for \psPrintValue
+0.57  2008-11-13  - new optional argument for the step width of \psPlotImp
+0.56  2008-10-31  - fix bug with \psPoisson, thanks to Gerry Coombes
+                  - index for the documentation
+0.55  2008-06-12  added code for Thomae's function, aka popcorn function
+0.54  2008-03-22  added Bernstein code for Bernstein polynomials with
+                  optional argument for the envolope curve
+0.53  2008-03-21  - added macro \psBezier# for Bezier curves of order
+		    #=1...9 with 2..10 pairs of coordinates
+0.52  2008-03-02  - changes macros from SpecialObj to OpenObj, which allows the use
+		    of the macros inside \pscustom
+0.51  2008-02-27  - enable filling support for \psIntegral  and \psCumIntegral
+		    (suggested by Rafal Bartczuk) 
+0.50  2007-08-30  - modified \psPoisson{m,N}{Lambda} (Gerry Coombes) 
+		  - modified \psPolynomial{m,n,N}{Lambda} (Gerry Coombes) 
+		  - fixed bug in \psPoisson with markZeros
+		  - fixed bug in \psBinomial with markZeros
+		  - fixed bug in psPlotImp with \psyunit
+		  - added new distribution functions
+		    \psFDist for F-distribution
+		    \psGammaDist
+		    \psChiIIDist
+		    \psTDist for Student's t-distribution
+		    \psBetaDist for Beta distribution
+		  - use pat-math.pro for GAMMALN function
+0.49  2007-06-23  - add psVolume, rotating a function around the x-axis 
+0.48  2007-03-17  - add another distribution function: psPoisson 
+0.47  2007-02-01  - add support of arrows for psPolynomial 
+0.46  2006-09-06  - using the bool key from xkeyval
+                  - adding the superellipse function (Lame curve)
+		  - uses pstricks-add for algebraic plot
+0.45  2006-04-22  make polarplot and algebraic option work
+		  added \psplotImp for plotting implicit
+		  defined functions (experimental)
+		  accept plotstyle curve for \psBinomialN
+		  new option barwidth for \psBinomial
+		  new macro \psBinomial and \psBinomialN
+0.44  2006-01-16  new macros \psCumIntegral, \psIntegral
+		  \psConv
+0.43  2005-12-19  new macro psSi for the integral sin Si(x)
+                  and si(x)=Si(x)-pi/2
+		  and Ci(x), the integral cosin
+0.42  2005-12-09  new macro psGaussI for the integral of Gauss
+                  use mue as option name instead of xShift (\psGauss}
+0.41  2005-09-23  new macro pstPrintValue
+0.40  2005-04-09  new option xShift instaed of x0 for psPolynomial and Gauss
+0.39  2005-04-09  new option x0 for Gauss
+0.38  2004-11-08  change the option Abbreviation to the right one
+                  Derivation
+0.37  2004-11-08  changes pstricks object type from closed to open
+0.36  2004-11-07  some more options for the polynomial macro
+0.35  2004-10-26  added the zero points for the function
+0.34  2004-10-22  modification to the Abbreviation key
+0.33  2004-10-19  added options firstAbbrColor|Style and secondAbbrColor/Style
+
+
+..... pst-func.sty
+      2004-10-18  first version
+      2006-04-22  add pst-func.pro to the filelist
+
+
+..... pst-func.pro
+0.13  2010-06-21  - run FindZeros in a local dictionary
+                  - return [zeros] on stack
+0.12  2010-01-04  rename Points to BezierPoints to prevent clash with
+                  pstricks.pro
+0.11  2009-05-05  cosmetic changes
+0.10  2009-01-08  added ChebyshevT and ChebyshevU (first and second kind)
+0.09  2008-03-22  added Bernstein code for Bernstein polynomials
+0.08  2008-03-21  added BezierCurve code for Bezier curves of up to
+		    order 9 
+0.07  2007-08-30  new subroutine LogGamma 
+0.06  2006-04-16  new subroutine MoverN (binomial coefficient)
+0.05  2005-12-19  new subroutine Si and si for the integral sin
+                  new subroutine for the integral cosin
+                  new subroutine factorial (recursive)
+0.04  2005-12-05  new subroutine Simpson for the integral of Gaussian curve
+0.03  2005-07-28  add the complex part
+0.02  2004-11-08  change Abbreviation to the right name Derivation
+0.01  2004-11-04  first version

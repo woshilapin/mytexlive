@@ -1,0 +1,82 @@
+\section {La double hélice de l'ADN}
+\bgroup
+\psset{lightsrc=30 36 17,SphericalCoor,viewpoint=50 45 5,Decran=50}
+\def\parametresADN{
+        /PHI 0 def
+         /Rayon 2 def
+         /x0 {Rayon PHI cos mul} def
+         /y0 {Rayon PHI sin mul} def
+         /z0 0 def
+         /dz 0.5 def
+         /Hauteur 6 def
+         /x1 {Rayon t 2 mul 180 mul 3.14159 div PHI add cos mul} def
+         /y1 {Rayon t 2 mul 180 mul 3.14159 div PHI add sin mul} def
+         /z1 {t} def
+         /dA 0.05 def
+         /tableau_des_sommets [
+             2 {
+          dA dA Hauteur{/t exch def
+                     x0 y0 z0
+                     x1 y1 z1
+                     x1 y1 z1 dz add
+                     x0 y0 z0 dz add
+                     /x0 x1 def
+                     /y0 y1 def
+                     /z0 z1 def
+                  } for
+          /PHI 180 def
+          /x0 {Rayon PHI cos mul} def
+          /y0 {Rayon PHI sin mul} def
+          /z0 0 def
+          } repeat
+                  ]
+           def
+         /Sommets {tableau_des_sommets aload pop} def
+         /NbrePoints tableau_des_sommets length 3 div cvi def
+        /Faces  {0 4 NbrePoints 4 sub {
+                 /Ni exch def
+               [ Ni Ni 1 add  Ni 2 add Ni 3 add]
+                                     } for
+             } def
+}
+
+\begin{pspicture}(-3,-1)(3,10)
+\psframe[fillstyle=solid,fillcolor=green!50](-3,-1)(3,8)
+\pstVerb{\parametresADN}%
+\psSolid[object=cylindre,r=Rayon,h=1,ngrid=1 36,fillcolor=yellow!50](0,0,-1)%
+\axesIIID(0,0,0)(Rayon 1 add,Rayon 1 add, Hauteur 1 add)
+\psSolid[object=new,
+         fillcolor=red!50, 
+         hollow,
+         action=draw**,
+         sommets=Sommets,
+         faces=Faces]%
+\end{pspicture}
+\begin{pspicture}(-0.2,-1)(0.2,10)
+\psProjection[object=texte,unit=0.1,
+   fontsize=5,
+   text={double helix of DNA},
+   normal=1 1 0 180](10,10,-20)
+\end{pspicture}
+\begin{pspicture}(-3,-1)(3,10)
+\psframe[fillstyle=solid,fillcolor=green!50](-3,-1)(3,8)
+\pstVerb{\parametresADN}%
+\psSolid[object=cylindre,r=Rayon,h=1,ngrid=1 36](0,0,-1)%
+\axesIIID(0,0,0)(Rayon 1 add,Rayon 1 add, Hauteur 1 add)
+\codejps{
+/double_helix_dna {
+/S [
+  Sommets
+  ] def
+/F [
+  Faces
+  ] def
+  S F generesolid
+  dup [0 1]
+  solidputhuecolors }
+def
+ double_helix_dna drawsolid*}
+\end{pspicture}
+
+
+\egroup

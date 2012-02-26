@@ -1,0 +1,1041 @@
+%% $Id: pst-mirror-doc.tex 377 2010-08-30 12:15:40Z herbert $
+\documentclass[11pt,frenchb,BCOR10mm,DIV12,bibliography=totoc,parskip=false,smallheadings
+    headexclude,footexclude,oneside]{pst-doc}
+\usepackage[utf8]{inputenc}
+\usepackage{pst-mirror}
+\let\myFV\fileversion
+\usepackage{pst-grad}
+\usepackage{tabularx}
+\usepackage{longtable}
+
+\def\UrlFont{\small\ttfamily}
+\makeatletter
+\def\verbatim@font{\small\normalfont\ttfamily}
+\makeatother
+\let\myPart\part
+\renewcommand{\part}[1]{\clearpage\myPart{#1}}
+\newcommand\verbI[1]{\small\texttt{#1}}
+
+\psset{subgriddiv=0,gridlabels=7pt,gridcolor=black!15}
+\hypersetup{pdfauthor={Herbert Voss},pdftitle={Sphere mirror}}
+%
+\newcounter{boua}
+\newcommand\itemBoua{\addtocounter{boua}{1}\strut\indent\textit{\theboua}\textsuperscript{o} --- }
+\makeatletter
+% macro d'Etienne RIGA sur fr.comp.text.tex
+\newcount\r@pport  \newdimen\r@ppord
+\newcount\kslant   \newdimen\kslantd
+
+\def\ARC#1{\setbox0\hbox{$\m@th\displaystyle#1$}\kslant=\ht0
+   \divide\kslant by1000\multiply\kslant by\fontdimen1\textfont1
+   \divide\kslant by10000\kslantd=\kslant\fontdimen6\textfont1
+      \divide\kslantd by7750\kern\kslantd
+   \r@ppord=\wd0\multiply\r@ppord by100\divide\r@ppord by\ht0
+   \multiply\r@ppord by300\advance\r@ppord by\ht0
+   \pspicture(0,0)
+   \psparabola[linewidth=.3pt](0,1.05\ht0)(.5\wd0,1.21\r@ppord)
+   \endpspicture\kern-\kslantd\box0}
+\makeatother
+
+\def\oeil{\psarc[linewidth=2pt](0,2.5){2.5}{215}{270}%
+  \psarc[linewidth=2pt](0,-2.5){2.5}{90}{140}%
+  \psarc(-2.5,0){1}{-30}{30}\psarc(0,0){1.75}{160}{200}
+  \psclip{%
+    \pscircle[linestyle=none](0,0){1.75}}
+    \pscircle[fillstyle=solid,fillcolor=lightgray](-2.5,0){0.9}
+  \endpsclip}%
+
+\def\decor{%
+% plan de front
+  \psset{Sphere=false}
+  {\psset{normale=0 0, Xorigine=40, Yorigine=0, Zorigine=0}
+  \pstSphereFrame[fillstyle=solid,fillcolor=OrangePale](-70,-50)(70,10)
+  \pstSphereGrid[linecolor=blue,linewidth=0.2mm,grille=10,Ymin=-50,Ymax=10,Xmax=70,Xmin=-70](40,0,0)}%
+  % plan horizontal
+  {\psset{normale=0 90, Xorigine=40, Yorigine=0, Zorigine=-10}
+  \pstSphereFrame[fillstyle=solid,fillcolor=cyan,opacity=0.5](-70,-30)(70,0)
+  \pstSphereGrid[linecolor=blue,linewidth=0.2mm,grille=10,Ymin=-30,Ymax=0,Xmax=70,Xmin=-70](40,0,-10)}%
+  % plan vertical gauche
+  {\psset{normale=90 0, Xorigine=40, Yorigine=70, Zorigine=-10}
+  \pstSphereFrame[fillstyle=solid,fillcolor=yellow](0,0)(-30,-60)
+  \pstSphereGrid[linecolor=blue,linewidth=0.05mm,grille=10,Ymin=-60,Ymax=0,Xmin=-30,Xmax=0](40,70,-10)}
+  % plan vertical droit
+  {\psset{normale=90 0,%
+                Xorigine=40,%
+                Yorigine=-70,%
+                Zorigine=-10}
+\pstSphereFrame[fillstyle=solid,fillcolor=yellow](0,0)(-30,-60)
+\pstSphereGrid[linecolor=blue,linewidth=0.05mm,grille=10,Ymin=-60,Ymax=0,Xmin=-30,Xmax=0](40,-70,-10)}}
+
+\def\bgImage{\psscalebox{0.7}{\begin{pspicture}(-7,-7)(7,7)
+  \newpsstyle{GradWhiteYellow}{fillstyle=gradient,gradbegin=yellow,gradend=yellow!20,
+     linecolor=yellow!50,GradientCircle=true,gradmidpoint=0,GradientPos={(1,1)}}%
+  \pscircle[style=GradWhiteYellow]{7.07}
+  \pstSphereGrid[linecolor=red,grille=10,Ymin=-50,Ymax=50,Xmax=80,Xmin=-80,normale=0 0](20,0,0)
+  \pstSphereGrid[linecolor=blue,grille=10,Ymin=-40,Ymax=-20,Xmax=80,Xmin=-80,normale=0 90](40,0,-10)%
+  \pstTextSphere[fillstyle=solid,fillcolor=red,normale=0 0,fontscale=40,PSfont=Time-Roman,yO=0](20,0,10){pst-mirror}
+  \pstTextSphere[fillstyle=solid,fillcolor=black,normale=0 0,fontscale=20,PSfont=Helvetica,yO=0](20,0,35){PSTricks}
+  \pstTextSphere[fillstyle=solid,fillcolor=blue,normale=0 90,fontscale=10,PSfont=Helvetica,yO=2.5](10,0,-10){A Spherical Mirror}%
+\end{pspicture}}}
+
+\lstset{basicstyle=\ttfamily\footnotesize}
+
+\begin{document}
+\author{Manuel Luque\\Herbert Vo\ss}
+\docauthor{}
+\date{\today}
+\title{Images on a spherical mirror}
+\subtitle{A PSTricks package for drawing 3D objects on a sphere,  v\myFV}
+\maketitle%
+
+\tableofcontents
+
+\clearpage
+\begin{abstract}
+
+\vfill\noindent
+Thanks for feedback and contributions to:\\
+Bruno Guegan; Jean-Paul Vignault
+\end{abstract}
+
+
+\section{Objectifs }
+On voit souvent dans les villes, lorsque la visibilité à la sortie
+d'un garage ou à un carrefour est insuffisante, ou bien
+dans certains magasins pour des motifs de surveillance, des
+miroirs bombés donnant de l'environnement un panorama trés large.
+On peut prendre aussi une boule argentée ou dorée que l'on suspend
+aux branches des sapins de Noél, pour voir le décor se réfléchir dans la Sphere
+avec une distorsion bien particuliére.
+
+L'objectif est de définir des éléments de décor en 3D, \textit{des
+briques}, pour reconstruire ce qu'un observateur placé é une
+certaine distance d'une boule miroir, é la méme hauteur que son
+centre verrait.
+
+
+Les \textit{briques} é notre disposition sont :
+\begin{compactitem}
+  \item Un parallélépipéde rectangle donné par ses trois
+  dimensions \verb+A,B,C+ : il peut donc se transformer en cube et
+  méme en dé.
+  \item Un quadrillage plan défini par son origine, la normale au
+  plan et ses limites.
+  \item Une ligne.
+  \item Un rectangle défini comme le quadrillage.
+  \item Un polygone.
+  \item Un cercle défini par la normale é son plan, son origine et
+  son rayon, un arc de cercle défini comme le cercle avec ses deux angles limites.
+  \item Un point de l'espace.
+  \item Un tétraédre donné par les coordonnées du centre de sa base et le rayon du
+  cercle inscrivant chaque face, que l'on peut faire
+  tourner.
+  \item Une pyramide é base carrée donnée par le demi-cété de sa
+  base et sa hauteur que l'on peut faire tourner et placer oé on
+  veut.
+  \item Une sphére donnée par les coordonnées du centre \verb+CX=...+,\verb+CY=...+,\verb+CZ=...+
+   et le rayon, que l'on peut faire
+  tourner avec les paramétres
+  \verb+RotX=...+,\verb+RotY=...+,\verb+RotZ=...+.
+  \item Un cylindre vertical défini par son rayon, sa hauteur, que l'on peut faire
+  tourner avec les paramétres
+  \verb+RotX=...+,\verb+RotY=...+,\verb+RotZ=...+ et dont le centre
+  de la base se placera avec les paramétres \verb+CX=...+,\verb+CY=...+,\verb+CZ=...+
+  \item Un céne et tronc de céne définis par le rayon de la base,
+  la hauteur et la fraction de hauteur qu'on souhaite retenir (pour le tronc ce céne).
+  On peut les placer ou l'on veut et les faire tourner comme les autres éléments.
+  \item Image d'un texte écrit sur un plan quelconque.
+\end{compactitem}
+
+\clearpage
+\section{Présentation du probléme théorique}
+
+\begin{center}
+\begin{pspicture}(-5,-6)(11,6)
+\pnode(0,0){O}
+\pnode(! /xA 8 def /yA 5 def  xA yA){A}
+\pnode(! /Theta 10 def /xI1 5 Theta cos mul def /yI1 5 Theta sin mul def
+        xI1 yI1){I1}
+\psline[linecolor=red](I1)(A)
+\pnode(!/Alpha1 yA yI1 sub xA xI1 sub atan def
+        /iAngle Alpha1 Theta sub def
+        /Alpha1' Theta iAngle sub def
+        /xP1' xI1 6 Alpha1' cos mul add def
+        /yP1' yI1 6 Alpha1' sin mul add def
+        xP1' yP1'){P1'}
+\psline[linecolor=red](I1)(P1') \pcline[linecolor=blue,nodesepB=-4](O)(I1)
+\pnode(!/Theta 20 def /xI2 5 Theta cos mul def /yI2 5 Theta sin mul def xI2 yI2){I2}
+\pnode(! 
+        /Alpha2 yA yI2 sub xA xI2 sub atan def
+        /iAngle Alpha2 Theta sub def
+        /Alpha2' Theta iAngle sub def
+        /xP2' xI2 6 Alpha2' cos mul add def
+        /yP2' yI2 6 Alpha2' sin mul add def
+        xP2' yP2'){P2'}
+\psline[linecolor=red](I2)(P2')
+\pcline[linecolor=blue,nodesepB=-4](O)(I2)
+\pnode(!
+    /tanAlpha1' Alpha1' dup sin exch cos div def
+    /tanAlpha2' Alpha2' dup sin exch cos div def
+    /xA' yI2 yI1 sub xI2 tanAlpha2' mul sub xI1 tanAlpha1' mul add
+         tanAlpha1' tanAlpha2' sub div def
+    /yA' xA' tanAlpha1' mul yI1 add xI1 tanAlpha1' mul sub def
+    xA' yA'){A'}
+\psdot(A')
+\pswedge[fillstyle=solid,fillcolor=black](A'){0.5}{-35}{-5}
+\uput{0.5}[-15](A'){$\varepsilon'$}
+\psline[linestyle=dashed](A')(I1)
+\psline[linestyle=dashed](A')(I2)
+\pscircle{5}
+\psdot(A)
+\psline[linestyle=dotted](O)(A)
+\uput[0](A){A}
+\uput[45](A'){A'}
+\uput[180](O){O}
+\uput[80](I2){$\mathrm{I_1}$}
+\uput[-135](I1){$\mathrm{I_2}$}
+\psline[linestyle=dotted](O)(A')
+\pswedge[fillstyle=solid,fillcolor=black](A){2}{224.9}{233.335}
+\uput{2.1}[230](A){$\varepsilon$}
+\psline[linecolor=red](I2)(A)
+\psline[linecolor=red](I1)(A)
+\pswedge[fillstyle=solid,fillcolor=black](O){2}{10}{20}
+\uput{2.1}[15](O){$\omega$}
+\psarc(O){2}{10}{20}
+\psarc[doubleline=true](I1){0.75}{10}{53.335}
+\psarc[doubleline=true](I1){0.95}{-33.335}{10}
+\uput{1}[-12](I1){$i+\mathrm{d}i$}
+\psarc(I2){0.75}{20}{44.9}
+\psarc(I2){0.95}{-4.9}{20}
+\uput{0.8}[31](I2){$i$}
+\uput{1}[7.5](I2){$i$}
+% \psaxes(0,0)(-5,-6)(10,6)
+\end{pspicture}
+\end{center}
+
+Il s'agit d'étudier la réflexion d'un mince pinceau conique émis
+par~A se réfléchissant sur le miroir sphérique et qui pénétrera dans l'\oe{}il de
+l'observateur. C'est un probléme trés complexe qui a été abordé
+dans sa généralité par Henri Bouasse dans son livre : \textit{Optique supérieure}, paru en 1917 aux éditions Delagrave.
+
+Le point lumineux A, quel qu'il soit, est dans le plan du grand
+cercle de la sphére défini par $\mathrm{OI_1A}$. Je donne le début
+de cette étude théorique, qui est une adaptation des pages~108 et suivantes de son livre,
+sans la développer jusqu'é son terme, car
+comme l'indique Henri Bouasse lui-méme \guillemotleft \textit{ Le
+probléme est généralement inextricable, sauf dans le cas oé la
+symétrie du systéme indique quels rayons il faut regrouper aprés
+réflexion} \guillemotright. Et bien que la fin de cette remarque
+s'applique au miroir sphérique, encore faudrait-il que les calculs
+soient facilement programmables et relativement rapides et j'avoue
+avoir été découragé par leur complexité. Heureusement, nous
+verrons que dans certaines conditions, de judicieuses
+approximations permettent d'obtenir une solution réaliste.
+
+Afin d'apprécier la difficulté du probléme, on considére d'abord les limites du pinceau 
+dans ce plan, c'est é dire sur l'arc  \ARC{\mathrm{\hspace{0.5em}I_1I_2}}.
+
+Les angles sont exagérément grands
+pour des raisons de clarté.
+
+Dans le triangle $\mathrm{OI_1A}$,
+$$i=\mathrm{\widehat{I_1OA}+\widehat{OAI_1}}$$
+Dans le triangle $\mathrm{OI_2A}$,
+$$\begin{array}{rcl}
+i+\mathrm{d}i&=&\mathrm{\widehat{I_2OA}+\widehat{OAI_2}}\\
+&=&\mathrm{\widehat{I_2OI_1}+\widehat{I_1OA}+\widehat{OAI_1}+\widehat{I_1AI_2}}\\
+&=&\mathrm{\omega+\widehat{I_1OA}+\widehat{OAI_1}+\varepsilon}
+\end{array}
+$$
+On en déduit :
+\begin{equation}
+\mathrm{d}i=\omega+\varepsilon
+\label{di_one}
+\end{equation}
+Dans le triangle $\mathrm{OI_1A'}$
+$$i=\mathrm{\pi-(\widehat{I_1OA'}+\widehat{OA'I_1})}$$
+Dans le triangle $\mathrm{OI_2A'}$
+$$\begin{array}{rcl}
+i+\mathrm{d}i&=&\pi-(\mathrm{\widehat{I_2OA'}+\widehat{OA'I_2})}\\
+&=&\pi-\left(\mathrm{(\widehat{I_2OI_1}+\widehat{I_1OA'})+(\widehat{OAI'_1}-\widehat{I_1A'I_2})}\right)\\
+&=&\pi-\left(\mathrm{(\omega+\widehat{I_1OA'})+(\widehat{OA'I_1}-\varepsilon')}\right)
+\end{array}
+$$
+On en déduit :
+\begin{equation}
+\mathrm{d}i=-\omega+\varepsilon'
+\label{di_two}
+\end{equation}
+En rapprochant (\ref{di_one}) et (\ref{di_two}) :
+\begin{equation}
+\omega+\varepsilon=-\omega+\varepsilon'\Longleftrightarrow2\omega=\varepsilon'-\varepsilon
+\label{omega}
+\end{equation}
+En se rappelant qu'en réalité $\varepsilon$, $\varepsilon'$ et
+$\omega$ sont de petits angles, on établit les relations
+suivantes, en posant :
+$$t=\mathrm{AI_1}\textrm{ et } t'=\mathrm{A'I_1}$$
+$$\mathrm{d}s=\ARC{\mathrm{\hspace{0.5em}I_1I_2}}=R\omega=\frac{t\varepsilon}{\cos i}=\frac{t'\varepsilon'}{\cos i}$$
+$$\varepsilon=\frac{\mathrm{R}\omega\cos i}{t}\qquad\varepsilon'=\frac{\mathrm{R}\omega\cos
+i}{t'}$$
+Compte-tenu de la relation (\ref{omega}), on en déduit la formule
+fondamentale :
+$$\frac{1}{t'}-\frac{1}{t}=\frac{2}{\mathrm{R}\cos i}$$
+S'il n'y avait que le faisceau de rayons balayant depuis A l'arc
+\ARC{\mathrm{I_1I_2}}, l'image virtuelle que verrait
+l'\oe{}il serait $\mathrm{A'}$, qui est dans ce plan la trace de la
+\textit{focale tangentielle}.
+
+Il faut maintenant envisager toutes les autres génératrices du
+céne. On en prend deux de particuliéres, celles qui sont sur les
+bouts de l'arc de cercle de la sphére perpendiculaire au grand
+cercle précédent. Nous ne pouvons plus nous placer maintenant dans
+un plan pour faire le schéma. Ces deux génératrices permettent de
+déterminer la \textit{focale radiale} $\mathrm{A''}$. Les deux focales $\mathrm{A'}$ et
+$\mathrm{A''}$ sont alignées avec le rayon réfléchi correspondant
+au rayon moyen du pinceau incident.
+
+
+En conclusion, é la page 134, Henri Bouasse écrit :
+  \guillemotleft \textit{ l'\oe{}il n'utilise qu'un pinceau
+  extrémement étroit ; il s'accommode sur l'une des focales ou sur le cercle de
+  diffusion.} \guillemotright. Nous avons un peu avancé, mais quel(s) point(s)
+  calculer?
+
+Les milieux des focales tangentielles, radiales et du cercle de
+diffusion se trouvent alignés avec l'\oe{}il et le point
+d'incidence du rayon moyen du faisceau (celui qui aprés réflexion
+passe par l'\oe{}il). L'image obtenue d'un objet quelconque n'est
+ pas plane. On pourrait contourner la difficulté en imaginant un plan
+ fictif perpendiculaire à l'axe \oe{}il-centre de la boule et
+ passant par une valeur moyenne des cercles de diffusion, sur
+ lequel on calculerait les intersections des rayons. Il faut bien
+ reconnaétre que tout cela est passablement compliqué.
+
+Henri Bouasse propose, dans certaines conditions, une méthode approximative qui donne de bons
+résultats et qui a l'avantage d'étre simple. C'est
+l'intégralité de cette solution qu'il donne dans les
+pages 133, 134 et 135 de son livre, qui est développée ci-aprés.
+
+\section{Vision dans une boule de jardin}
+\begin{center}
+\begin{pspicture}(-5,-2)(8,14)
+\pscircle{2}
+\psline[linewidth=0.8mm](8,0.2)(8,14) \psline[linewidth=0.8mm](8,-0.2)(8,-2)
+\psline(-5,0)(8.2,0)\psline(4;30)\psarc(0,0){1}{0}{30}\uput[15](1;15){$i$}
+\pnode(!2 30 cos mul 2 30 sin mul){I}
+\psline[linestyle=dashed](!0  2 30 sin mul)(I) \psline(!0 2 30 sin mul)(0,0)
+\uput[180](!0 1 30 sin mul){$\rho'$} \psline(I)(!8 2 30 sin mul)
+\rput(I){\psarc(0,0){1}{0}{30} \uput[15](1;15){$i$}
+\psline(! /IH 8 2 30 cos mul sub 2 mul def IH 60 cos mul IH 60 sin mul)}
+\uput[270](0,0){C} \uput[45](8,0){T} \uput[180](8,-2){E} \uput[180](-2,0){B}
+\uput[270](5,0){D} \uput[180](8,6){$\rho$}
+\end{pspicture}
+\end{center}
+
+\itemBoua Pour effectuer les expériences suivantes, on se sert
+d'une boule de jardin achetée dans un bazar, ou d'un petit ballon
+de verre de 5~cm de diamétre environ dont on argente la surface
+extérieure. On peut argenter extérieurement une bille d'ivoire.
+
+Sur une trés grande feuille de carton blanc E, on trace un
+quadrillage en traits noirs épais. On regarde l'image de ce
+quadrillage par un petit trou percé au centre du carton.
+
+La distance $\mathrm{D=TB}$ sera prise d'une trentaine de
+centimétres.
+
+Le quadrillage apparaét déformé \textit{en barillet}, mais
+\textit{parfaitement net}.
+
+\itemBoua
+Pour avoir une idée de la loi de déformation supposons l'\oe{}il
+assez loin pour que les rayons réfléchis qui y parviennent, soient
+quasi-paralléles. Appelons $\rho'$ la distance d'un rayon é la
+droite TB.
+
+Soit R le rayon de la boule. l'angle d'incidence est :
+$$i=\arcsin(\rho':\mathrm{R})$$
+Le point oé le rayon conjugué coupe l'écran E, est é une distance
+$\rho$ de TB donnée par la formule~:
+$$\rho=\mathrm{D}\tan2i$$
+D'oé la loi approchée :
+$$\arctan\frac{\rho}{\mathrm{D}}=2\arcsin\frac{\rho'}{\mathrm{R}}$$
+$\rho$ devient infini pour :
+$$\arcsin(\rho':\mathrm{R})=45^\mathrm{o}\qquad \rho'=0.7\mathrm{R}$$
+En conséquence, si grand que soit le carton, son image occupera
+moins des sept dixiémes du diamétre.
+
+\section{Exemples}
+\begin{pspicture}(-8,-8)(8,8)
+\pstSphereFrame[normale=0 90,Xorigine=50,Yorigine=0,Zorigine=-20,fillstyle=solid,
+  fillcolor=OrangePale](-70,-50)(70,50)
+\pstSphereGrid[normale=0 90,linecolor=blue,linewidth=0.2mm,grille=10,
+  Ymin=-50,Ymax=50,Xmax=70,Xmin=-70](50,0,-20)
+{\psset{fillstyle=solid,fillstyle=solid,fillcolor=GrisClair,A=5,B=A,C=A}
+\multido{\iX=95+-20}{4}{\multido{\iZ=55+-10}{6}{\psset{CX=\iX,CZ=\iZ,CY=45}\pstCube}
+                        \multido{\iZ=-15+10}{2}{\psset{CX=\iX,CZ=\iZ,CY=45}\pstCube}
+                        \multido{\iZ=55+-10}{6}{\psset{CX=\iX,CZ=\iZ,CY=-45}\pstCube}
+                        \multido{\iZ=-15+10}{2}{\psset{CX=\iX,CZ=\iZ,CY=-45}\pstCube}
+                        \multido{\iY=35+-10}{4}{\psset{CX=\iX,CZ=55,CY=\iY}\pstCube}
+                        \multido{\iY=-35+10}{4}{\psset{CX=\iX,CZ=55,CY=\iY}\pstCube}}}
+\multido{\iZ=-15+10,\iRotZ=20+45}{2}{%
+  \psset{fillstyle=solid,fillstyle=gradient,fillcolor=GrisClair,A=5,B=A,C=A,
+         CX=5,CY=-65,CZ=\iZ,RotZ=\iRotZ}\pstCube}
+\multido{\iZ=-15+10}{2}{%
+  \psset{fillstyle=solid,fillstyle=solid,fillcolor=GrisClair,A=5,B=A,C=A,CX=15,CY=45,CZ=\iZ}\pstCube
+  \psset{CY=-45}\pstCube}
+\multido{\iZ=15+-10,\iRotZ=30+30}{2}{%
+  \psset{fillstyle=solid,fillstyle=solid,fillcolor=GrisClair,A=5,B=A,C=A,
+    CX=15,CY=45,CZ=\iZ,RotZ=\iRotZ}\pstCube}
+\multido{\iZ=25+-10,\iRotZ=30+20}{3}{%
+  \psset{fillstyle=solid,fillstyle=solid,fillcolor=GrisClair,A=5,B=A,C=A,
+    CX=15,CY=-45,CZ=\iZ,RotZ=\iRotZ}\pstCube}
+\multido{\iX=95+-20}{5}{\multido{\iY=-25+10}{6}{%
+  \psset{fillstyle=gradient,gradbegin=white,gradend=red,gradmidpoint=0.2,linewidth=0.05mm,
+    CY=\iY,CZ=-20,CX=\iX}
+  \ifnum\iX=15
+    \ifnum\iY=-15 {\psset{RotY=90,RotZ=-45,CZ=-17.5}\pstSphereCylinder{2.5}{-10}}
+    \else \pstSphereCylinder{2.5}{10}\fi
+  \else\pstSphereCylinder{2.5}{10}\fi}}
+\multido{\iY=25+-10,\iRotY=0+60}{6}{%
+  \psset{fillstyle=solid,linewidth=0.05mm,CX=55,CY=\iY,CZ=-10,A=2.5,Hpyramide=5}\pstPyramide}
+\multido{\iY=25+-10,\iRotY=0+60}{6}{%
+  \psset{fillstyle=gradient,gradbegin=white,gradend=red,gradmidpoint=0.2,
+    linewidth=0.05mm,CX=35,CY=\iY,CZ=-10}\pstSphereCone{2.5}{2.5}}
+\multido{\iY=25+-10,\iRotY=0+60}{6}{%
+\psset{fillstyle=gradient,gradbegin=white,gradend=blue,gradmidpoint=0.2,linecolor=cyan,linewidth=0.1mm}
+\ifnum\iY=-15 {\psset{CX=7.5,CY=-5,CZ=-17.5,RotY=\iRotY} \pstMirrorSphere{2.5}}
+\else {\psset{CX=15,CY=\iY,CZ=-7.5,RotY=\iRotY}\pstMirrorSphere{2.5}}\fi}
+\psset{CX=2.5,CZ=-10,CY=15,fracHcone=0.5,linecolor=red,fillstyle=gradient,gradbegin=yellow,
+  gradend=red,gradmidpoint=0,linewidth=0.05mm}
+\pstSphereCone{2.5}{5}
+{\psset{RotX=0,RotZ=20,RotY=30,CX=2.5,CZ=-10,CY=2.5,fillstyle=solid,linecolor=black,A=2,Hpyramide=3}
+\pstPyramide}
+{\psset{linecolor=red,CZ=5,A=2.5,B=A,C=A,RotZ=-50,RotX=20,RotY=30,CY=0,CX=20,%
+  fillstyle=solid,fillcolor=OrangePale}
+\pstDie}
+\end{pspicture}
+
+\begin{lstlisting}
+\begin{pspicture}(-8,-8)(8,8)
+\pstSphereFrame[normale=0 90,Xorigine=50,Yorigine=0,Zorigine=-20,fillstyle=solid,
+  fillcolor=OrangePale](-70,-50)(70,50)
+\pstSphereGrid[normale=0 90,linecolor=blue,linewidth=0.2mm,grille=10,
+  Ymin=-50,Ymax=50,Xmax=70,Xmin=-70](50,0,-20)
+{\psset{fillstyle=solid,fillstyle=solid,fillcolor=GrisClair,A=5,B=A,C=A}
+\multido{\iX=95+-20}{4}{\multido{\iZ=55+-10}{6}{\psset{CX=\iX,CZ=\iZ,CY=45}\pstCube}
+                        \multido{\iZ=-15+10}{2}{\psset{CX=\iX,CZ=\iZ,CY=45}\pstCube}
+                        \multido{\iZ=55+-10}{6}{\psset{CX=\iX,CZ=\iZ,CY=-45}\pstCube}
+                        \multido{\iZ=-15+10}{2}{\psset{CX=\iX,CZ=\iZ,CY=-45}\pstCube}
+                        \multido{\iY=35+-10}{4}{\psset{CX=\iX,CZ=55,CY=\iY}\pstCube}
+                        \multido{\iY=-35+10}{4}{\psset{CX=\iX,CZ=55,CY=\iY}\pstCube}}}
+\multido{\iZ=-15+10,\iRotZ=20+45}{2}{%
+  \psset{fillstyle=solid,fillstyle=gradient,fillcolor=GrisClair,A=5,B=A,C=A,
+         CX=5,CY=-65,CZ=\iZ,RotZ=\iRotZ}\pstCube}
+\multido{\iZ=-15+10}{2}{%
+  \psset{fillstyle=solid,fillstyle=solid,fillcolor=GrisClair,A=5,B=A,C=A,CX=15,CY=45,CZ=\iZ}\pstCube
+  \psset{CY=-45}\pstCube}
+\multido{\iZ=15+-10,\iRotZ=30+30}{2}{%
+  \psset{fillstyle=solid,fillstyle=solid,fillcolor=GrisClair,A=5,B=A,C=A,
+    CX=15,CY=45,CZ=\iZ,RotZ=\iRotZ}\pstCube}
+\multido{\iZ=25+-10,\iRotZ=30+20}{3}{%
+  \psset{fillstyle=solid,fillstyle=solid,fillcolor=GrisClair,A=5,B=A,C=A,
+    CX=15,CY=-45,CZ=\iZ,RotZ=\iRotZ}\pstCube}
+\multido{\iX=95+-20}{5}{\multido{\iY=-25+10}{6}{%
+  \psset{fillstyle=gradient,gradbegin=white,gradend=red,gradmidpoint=0.2,linewidth=0.05mm,
+    CY=\iY,CZ=-20,CX=\iX}
+  \ifnum\iX=15
+    \ifnum\iY=-15 {\psset{RotY=90,RotZ=-45,CZ=-17.5}\pstSphereCylinder{2.5}{-10}}
+    \else \pstSphereCylinder{2.5}{10}\fi
+  \else\pstSphereCylinder{2.5}{10}\fi}}
+\multido{\iY=25+-10,\iRotY=0+60}{6}{%
+  \psset{fillstyle=solid,linewidth=0.05mm,CX=55,CY=\iY,CZ=-10,A=2.5,Hpyramide=5}\pstPyramide}
+\multido{\iY=25+-10,\iRotY=0+60}{6}{%
+  \psset{fillstyle=gradient,gradbegin=white,gradend=red,gradmidpoint=0.2,
+    linewidth=0.05mm,CX=35,CY=\iY,CZ=-10}\pstSphereCone{2.5}{2.5}}
+\multido{\iY=25+-10,\iRotY=0+60}{6}{%
+\psset{fillstyle=gradient,gradbegin=white,gradend=blue,gradmidpoint=0.2,linecolor=cyan,linewidth=0.1mm}
+\ifnum\iY=-15 {\psset{CX=7.5,CY=-5,CZ=-17.5,RotY=\iRotY} \pstMirrorSphere{2.5}}
+\else {\psset{CX=15,CY=\iY,CZ=-7.5,RotY=\iRotY}\pstMirrorSphere{2.5}}\fi}
+\psset{CX=2.5,CZ=-10,CY=15,fracHcone=0.5,linecolor=red,fillstyle=gradient,gradbegin=yellow,
+  gradend=red,gradmidpoint=0,linewidth=0.05mm}
+\pstSphereCone{2.5}{5}
+{\psset{RotX=0,RotZ=20,RotY=30,CX=2.5,CZ=-10,CY=2.5,fillstyle=solid,linecolor=black,A=2,Hpyramide=3}
+\pstPyramide}
+{\psset{linecolor=red,CZ=5,A=2.5,B=A,C=A,RotZ=-50,RotX=20,RotY=30,CY=0,CX=20,%
+  fillstyle=solid,fillcolor=OrangePale}
+\pstDie}
+\end{pspicture}
+\end{lstlisting}
+
+
+
+
+\begin{pspicture}(-8,-8)(8,8)
+%\psset{scale=2}
+\pstSphereFrame[Xorigine=20,Yorigine=0,Zorigine=0,fillstyle=solid,fillcolor=OrangePale](-70,-50)(70,10)
+\pstSphereGrid[linecolor=blue,linewidth=0.2mm,grille=5,Ymin=-50,Ymax=50,Xmax=70,Xmin=-70](20,0,0)%
+%
+\pstSphereFrame[normale=90 0,Xorigine=10,Yorigine=70,Zorigine=0,fillstyle=solid,fillcolor=yellow](-10,-50)(10,10)
+\multido{\nX=17.5+-10.0}{2}{%
+  \multido{\nY=-67.5+10.0}{14}{%
+    \pstSphereFrame[normale=0 90,Xorigine=\nX,Yorigine=\nY,Zorigine=-10,fillstyle=solid,
+      fillcolor=yellow](-2.5,-2.5)(2.5,2.5)}}
+\multido{\nX=12.5+-10.0}{2}{%
+  \multido{\nY=-62.5+10.0}{14}{%
+    \pstSphereFrame[normale=0 90,Xorigine=\nX,Yorigine=\nY,Zorigine=-10,fillstyle=solid,
+      fillcolor=yellow](-2.5,-2.5)(2.5,2.5)}}
+\pstSphereGrid[normale=90 0,linecolor=blue,linewidth=0.2mm,grille=5,
+  Xmin=-10,Xmax=10,Ymax=10,Ymin=-50](10,70,0)%
+\pstSphereGrid[normale=0 90,linecolor=blue,linewidth=0.2mm,grille=5,
+  Xmin=-70,Xmax=70,Ymax=10,Ymin=-10](10,0,-10)%
+{\psset{linecolor=black,CZ=52,A=5,B=70,C=2,CY=0,CX=15,fillstyle=solid}\pstCube}
+{\psset{linecolor=red,CX=15,A=5,B=A,C=A,CY=-10,CZ=-5,RotZ=0,fillstyle=solid,fillcolor=blue}\pstDie}%
+\multido{\nZ=47.5+-5.0}{10}{%
+  \psset{linecolor=red,CY=22.5,A=2.5,B=A,C=A,CZ=\nZ,CX=17.5,fillstyle=solid}\pstCube}
+\multido{\nZ=-7.5+5.0}{2}{%
+  \psset{linecolor=red,CY=22.5,A=2.5,B=A,C=A,CZ=\nZ,CX=17.5,fillstyle=solid}\pstCube}
+{\psset{fillstyle=gradient,gradbegin=white,gradend=blue,gradmidpoint=0.2,linecolor=cyan,linewidth=0.1mm,%
+  CX=15,RotX=45,RotY=60}
+\pstMirrorSphere{5}}
+{\psset{fillstyle=gradient,gradbegin=white,gradend=red,gradmidpoint=0.2,linewidth=0.1mm,CX=10,CY=20,CZ=-10}
+\pstSphereCylinder{5}{7.5}}
+{\psset{fillstyle=gradient,gradbegin=white,gradend=red,gradmidpoint=0.2,linewidth=0.1mm,%
+    CX=15,CY=10,CZ=-7.5,RotY=90,RotX=-45}\pstSphereCylinder{2.5}{-10}}
+{\psset{linecolor=red,CX=10,A=2.5,B=A,C=A,CY=-40,CZ=-7.5,RotZ=60,fillstyle=solid,fillcolor=yellow}\pstDie}%
+{\psset{CZ=-10,CY=-2.5,CX=2.5,RotZ=-20,linecolor=black,fillstyle=gradient,Rtetraedre=2.5}\pstTetraedre}
+\multido{\nY=-67.5+10.0}{9}{%
+  {\psset{linecolor=blue,CZ=17.5,A=1,B=2.5,C=2.5,CY=\nY,CX=19,fillstyle=solid,linewidth=0.1mm}\pstCube}}
+\multido{\nY=-62.5+10.0}{8}{\psset{RotX=0,RotZ=0,RotY=-90,CX=20,CZ=12.5,CY=\nY,
+  fillstyle=solid,linecolor=black,A=2.5,Hpyramide=3}\pstPyramide}
+\end{pspicture}
+
+\begin{lstlisting}
+\begin{pspicture}(-8,-8)(8,8)
+%\psset{scale=2}
+\pstSphereFrame[Xorigine=20,Yorigine=0,Zorigine=0,fillstyle=solid,fillcolor=OrangePale](-70,-50)(70,10)
+\pstSphereGrid[linecolor=blue,linewidth=0.2mm,grille=5,Ymin=-50,Ymax=50,Xmax=70,Xmin=-70](20,0,0)%
+%
+\pstSphereFrame[normale=90 0,Xorigine=10,Yorigine=70,Zorigine=0,fillstyle=solid,fillcolor=yellow](-10,-50)(10,10)
+\multido{\nX=17.5+-10.0}{2}{%
+  \multido{\nY=-67.5+10.0}{14}{%
+    \pstSphereFrame[normale=0 90,Xorigine=\nX,Yorigine=\nY,Zorigine=-10,fillstyle=solid,
+      fillcolor=yellow](-2.5,-2.5)(2.5,2.5)}}
+\multido{\nX=12.5+-10.0}{2}{%
+  \multido{\nY=-62.5+10.0}{14}{%
+    \pstSphereFrame[normale=0 90,Xorigine=\nX,Yorigine=\nY,Zorigine=-10,fillstyle=solid,
+      fillcolor=yellow](-2.5,-2.5)(2.5,2.5)}}
+\pstSphereGrid[normale=90 0,linecolor=blue,linewidth=0.2mm,grille=5,
+  Xmin=-10,Xmax=10,Ymax=10,Ymin=-50](10,70,0)%
+\pstSphereGrid[normale=0 90,linecolor=blue,linewidth=0.2mm,grille=5,
+  Xmin=-70,Xmax=70,Ymax=10,Ymin=-10](10,0,-10)%
+{\psset{linecolor=black,CZ=52,A=5,B=70,C=2,CY=0,CX=15,fillstyle=solid}\pstCube}
+{\psset{linecolor=red,CX=15,A=5,B=A,C=A,CY=-10,CZ=-5,RotZ=0,fillstyle=solid,fillcolor=blue}\pstDie}%
+\multido{\nZ=47.5+-5.0}{10}{%
+  \psset{linecolor=red,CY=22.5,A=2.5,B=A,C=A,CZ=\nZ,CX=17.5,fillstyle=solid}\pstCube}
+\multido{\nZ=-7.5+5.0}{2}{%
+  \psset{linecolor=red,CY=22.5,A=2.5,B=A,C=A,CZ=\nZ,CX=17.5,fillstyle=solid}\pstCube}
+{\psset{fillstyle=gradient,gradbegin=white,gradend=blue,gradmidpoint=0.2,linecolor=cyan,linewidth=0.1mm,%
+  CX=15,RotX=45,RotY=60}
+\pstMirrorSphere{5}}
+{\psset{fillstyle=gradient,gradbegin=white,gradend=red,gradmidpoint=0.2,linewidth=0.1mm,CX=10,CY=20,CZ=-10}
+\pstSphereCylinder{5}{7.5}}
+{\psset{fillstyle=gradient,gradbegin=white,gradend=red,gradmidpoint=0.2,linewidth=0.1mm,%
+    CX=15,CY=10,CZ=-7.5,RotY=90,RotX=-45}\pstSphereCylinder{2.5}{-10}}
+{\psset{linecolor=red,CX=10,A=2.5,B=A,C=A,CY=-40,CZ=-7.5,RotZ=60,fillstyle=solid,fillcolor=yellow}\pstDie}%
+{\psset{CZ=-10,CY=-2.5,CX=2.5,RotZ=-20,linecolor=black,fillstyle=gradient,Rtetraedre=2.5}\pstTetraedre}
+\multido{\nY=-67.5+10.0}{9}{%
+  {\psset{linecolor=blue,CZ=17.5,A=1,B=2.5,C=2.5,CY=\nY,CX=19,fillstyle=solid,linewidth=0.1mm}\pstCube}}
+\multido{\nY=-62.5+10.0}{8}{\psset{RotX=0,RotZ=0,RotY=-90,CX=20,CZ=12.5,CY=\nY,
+  fillstyle=solid,linecolor=black,A=2.5,Hpyramide=3}\pstPyramide}
+\end{pspicture}
+\end{lstlisting}
+
+
+\clearpage
+\section{Utilisation des briques}
+\subsection{Le repére}
+l'origine est placée contre la boule, sur l'horizontale joignant le
+centre~C de la boule é l'\oe{}il de l'observateur. O$z$ est
+vertical, O$xy$ forme le plan horizontal. Tous les objets seront
+donc placés au-delé de O avec $x>0$.
+\begin{center}
+\begin{pspicture}(-2,-2)(10,5)
+\pscircle{2}
+\rput(2,0){%
+\psline{->}(5,0)
+\psline{->}(0,5)
+\psline{->}(4;30)
+\uput[-90](5,0){$x$}
+\uput[180](0,5){$z$}
+\uput[30](4;30){$y$}}
+\rput(10,0){\oeil}
+\uput[180](2,0){O}
+\psdot(0,0)
+\end{pspicture}
+\end{center}
+
+\subsection{Placer un quadrillage}
+Le plan du quadrillage est défini par une origine
+(\textsf{Xorigine,Yorigine,Zorigine}), le vecteur unitaire normal au plan donné par
+sa longitude et sa latitude $(\theta,\phi)$ lesquelles sont paramétrées, avec des valeurs en degrés avec :
+\textsf{%
+\begin{compactitem}
+  \item normale =$\theta$ $\phi$
+\end{compactitem}}
+Un vecteur unitaire quelconque a pour coordonnées, en fonction de $\theta$ et $\phi$ :
+$$
+\vec{u}=\left(
+\begin{array}{c}
+\cos\theta\cos\phi\\
+\sin\theta\cos\phi\\
+\sin\phi
+\end{array}
+\right)
+$$
+$\vec{i},\vec{j},\vec{k}$ sont les vecteurs unitaires dirigés
+respectivement suivant O$x$, O$y$ et O$z$.
+
+Le vecteur unitaire normal é un plan de front, c'est-é-dire paralléle é O$yz$,
+est le vecteur $\vec{i}$
+ou $-\vec{i}$, $\vec{u}(\theta=0\textrm{ ou } \pi,\phi=0)$.
+
+Un plan horizontal est paralléle é O$xy$, un vecteur normal est
+soit $\vec{k}$, soit $-\vec{k}$, il est défini par
+$\vec{u}(\theta=\textrm{valeur indifférente} (0),\phi=\pi/2\textrm{ ou }-\pi/2)$.
+
+Un plan vertical paralléle é O$xz$ a pour normale $\vec{j}$ ou
+$-\vec{j}$, donc $\theta=\pi/2\textrm{ ou }-\pi/2$ et $\phi=0$.
+
+\textbf{Une remarque importante} : le vecteur unitaire choisi normal au plan $\vec{u}$, détermine
+l'orientation des vecteurs $\vec{I}$ et $\vec{J}$ du plan, avec
+les régles habituelles d'orientation : le triédre $(\vec{I},\vec{J},\vec{u})$ est direct,
+ \textbf{ mais le vecteur $\vec{I}$ a étépris dans le plan de référence O$xy$}.
+
+%$
+Pour que le quadrillage soit parfaitement déterminé, on fixe les
+valeurs de deux sommets opposé avec :
+\textsf{Ymin=-50,Ymax=10,Xmax=70,Xmin=-70}. Ainsi que le pas de la
+grille avec \textsf{grille=10}, par exemple.
+\begin{center}
+\begin{pspicture}(-5,-4)(5,5)
+  \decor
+  % les graduations
+  \multido{\iY=-70+10}{15}{%
+    \pstSpherePoint(40,\iY,0){A}
+    \uput[90](A){\footnotesize\red\iY}}
+  \multido{\iX=10+10}{4}{%
+    \pstSpherePoint(\iX,0,-10){A}
+    \uput[-45](A){\footnotesize\blue\iX}}
+  \multido{\iZ=-10+10}{7}{%
+    \pstSpherePoint(40,0,\iZ){A}
+    \uput[135](A){\footnotesize\green\iZ}}
+\end{pspicture}
+\end{center}
+
+
+\begin{lstlisting}
+\begin{pspicture}(-5,-4)(5,5)
+  \decor% les graduations, see preamble
+  \multido{\iY=-70+10}{15}{\pstSpherePoint(40,\iY,0){A}\uput[90](A){\footnotesize\red\iY}}
+  \multido{\iX=10+10}{4}{\pstSpherePoint(\iX,0,-10){A} \uput[-45](A){\footnotesize\blue\iX}}
+  \multido{\iZ=-10+10}{7}{\pstSpherePoint(40,0,\iZ){A} \uput[135](A){\footnotesize\green\iZ}}
+\end{pspicture}
+\end{lstlisting}
+
+
+En bleu graduations de l'axe O$x$, en rouge celles de O$x$ et en
+vert celles de O$z$.
+
+Le quadrillage du plan de front est défini par :
+
+\begin{lstlisting}
+\pstSphereGrid[normale=0 0,% default
+  linecolor=blue,linewidth=0.2mm,grille=10,Ymin=-50,Ymax=10,Xmax=70,Xmin=-70](40,0,0)%
+\end{lstlisting}
+Le quadrillage du plan horizontal par :
+
+\begin{lstlisting}
+\pstSphereGrid[normale=0 90,linecolor=blue,linewidth=0.2mm,grille=10,
+    Ymin=-30,Ymax=0,Xmax=70,Xmin=-70](40,0,-10)%
+\end{lstlisting}
+
+Les quadrillages des plans latéraux par :
+
+\begin{lstlisting}
+\pstSphereGrid[normale=90 0,linecolor=blue,linewidth=0.05mm,grille=10,
+    Ymin=-60,Ymax=0,Xmin=-30,Xmax=0](40,70,-10)
+\pstSphereGrid[normale=90 0,linecolor=blue,linewidth=0.05mm,grille=10,%
+    Ymin=-60,Ymax=0,Xmin=-30,Xmax=0](40,-70,-10)
+\end{lstlisting}
+
+On peut se rendre compte de ce qui se produit en changeant l'orientation
+du vecteur normal. J'inverse l'orientation de la normale pour les quatre plans.
+
+On obtient la méme chose que précédemment en faisant :
+
+\begin{lstlisting}
+\begin{pspicture}(-5,-4)(5,4)
+% plan de front
+\psset{Sphere=false}
+{\psset{normale=180 0,Xorigine=40,Yorigine=0,Zorigine=0}
+\pstSphereFrame[fillstyle=solid,fillcolor=OrangePale](-70,-50)(70,10)
+\pstSphereGrid[linecolor=blue,linewidth=0.2mm,grille=10,
+                  Ymin=-50,Ymax=10,Xmax=70,Xmin=-70](40,0,0)}
+% plan horizontal
+{\psset{normale=0 -90,Xorigine=40,Yorigine=0,Zorigine=-10}
+\pstSphereFrame[fillstyle=solid,fillcolor=cyan](70,30)(-70,0)
+\pstSphereGrid[linecolor=blue,linewidth=0.2mm,grille=10,
+  Ymin=0,Ymax=30,Xmax=70,Xmin=-70](40,0,-10)}%
+% plan vertical de gauche
+{\psset{normale=-90 0,Xorigine=40,Yorigine=70,Zorigine=-10}
+\pstSphereFrame[fillstyle=solid,fillcolor=yellow](0,0)(30,-60)
+\pstSphereGrid[linecolor=blue,linewidth=0.05mm,grille=10,
+  Ymin=-60,Ymax=0,Xmin=0,Xmax=30](40,70,-10)}
+% plan vertical a droite
+{\psset{normale=-90 0,Xorigine=40,Yorigine=-70,Zorigine=-10}
+\pstSphereFrame[fillstyle=solid,fillcolor=yellow](0,0)(30,-60)
+\pstSphereGrid[linecolor=blue,linewidth=0.05mm,grille=10,Ymin=-60,
+  Ymax=0,Xmin=0,Xmax=30](40,-70,-10)}
+\end{pspicture}
+\end{lstlisting}
+
+
+\subsection{Dessiner un rectangle}
+Dans l'exemple précédent, j'ai dessiné les rectangles
+correspondants aux quadrillages. La commande est identique é celle
+du quadrillage avec les mémes paramétres pour l'origine et le
+vecteur normal au plan. On donne les coordonnées de deux sommets
+opposés comme dans la commande \verb+\psframe+ de PSTricks, dans le
+plan.
+
+\subsection{Tracer une ligne, marquer un point}
+Un segment de droite est déterminé par les coordonnées de ses
+extrémités. Un point par ses coordonnées. On peut tracer une ligne brisée en plaéant les points é la suite, comme dans la commande de PStricks \verb+\psline+.
+\begin{lstlisting}
+\pstSpherePoint(40,0,40){A}
+\pstSpherePoint(10,-40,-10){B}
+\pstSpherePoint(10,40,-10){C}
+\psdots[dotsize=1mm,linecolor=green](A)(B)(C)
+\pstSphereLine[linecolor=red](10,40,-10)(40,0,40)(10,-40,-10)
+\end{lstlisting}
+Vous remarquerez que les coordonnées de $y$ sont inversées. Je
+rappelle que le plan couleur \textsf{cyan} est é la cote $z=-10$.
+\begin{center}
+\begin{pspicture}(-5,-4)(5,5)
+\decor
+\pstSphereLine[linecolor=red,linewidth=1mm](10,40,-10)(40,0,40)(10,-40,-10)
+\pstSpherePoint(40,0,40){A}
+\pstSpherePoint(10,-40,-10){B}
+\pstSpherePoint(10,40,-10){C}
+\psdots[dotsize=2mm,linecolor=green](A)(B)(C)
+\end{pspicture}
+\end{center}
+
+\subsection{Dessiner un polygone}
+Commande identique é celle de PStricks.
+\begin{lstlisting}
+\psSpherePolygon[options](x0,y0,z0)(x1,y1,z1)...(xn,yn,zn)
+\end{lstlisting}
+
+\clearpage
+\subsection{Parallélépipéde}
+Le parallélépipéde est défini par ses trois dimensions
+\textsf{A,B,C}. On peut le déplacer en fixant les coordonnées de
+son centre avec : \textsf{CX,CY,CZ} et le faire tourner avec autour
+des axes avec : \textsf{RotX,RotY,RotZ} dont les valeurs sont par défauts, positionnées é 0.
+\begin{lstlisting}
+\psset{A=2.5,B=5,C=A,fillstyle=solid,fillcolor=GrisClair,linecolor=red}
+\psset{CX=10,CZ=-5,CY=0}
+\pstCube
+\end{lstlisting}
+\begin{center}
+\begin{pspicture}(-5,-4)(5,5)
+\decor
+\psset{A=2.5,B=5,C=A,fillstyle=solid,fillcolor=GrisClair,linecolor=red}
+\psset{CX=15,CZ=-5,CY=0}
+\pstCube
+\end{pspicture}
+\end{center}
+
+On le fait tourner autour de O$z$ avec \Lkeyword{RotZ}=30 etc.
+
+\begin{center}
+\begin{pspicture}(-5,-4)(5,5)
+\decor
+\psset{A=2.5,B=5,C=A,fillstyle=solid,fillcolor=GrisClair,linecolor=red}
+\psset{CX=15,CZ=-5,CY=0,RotZ=30}
+\pstCube
+\end{pspicture}
+\end{center}
+
+\begin{lstlisting}
+\psset{CX=15,CZ=-5,CY=0,RotZ=30}
+\end{lstlisting}
+
+\clearpage
+\subsection{Le dé}
+Le dé posséde une commande propre \Lcs{pstDie}, qui en interne utilise celle
+du \Lcs{pstCube} en affichant les points. Voici quelques dés.
+\begin{center}
+\begin{pspicture}(-5,-4)(5,5)
+\decor
+\psset{A=2.5,B=A,C=A,fillstyle=solid,fillcolor=GrisClair,linecolor=red}
+\psset{CX=15,CZ=-5,CY=10,RotZ=60,RotX=90}
+\pstDie
+\psset{A=5,B=A,C=A,fillstyle=solid,fillcolor=OrangeTresPale,linecolor=red}
+\psset{CX=25,CZ=5,CY=-5,RotZ=45,RotY=20,RotX=-60}
+\pstDie
+\end{pspicture}
+\end{center}
+
+\begin{lstlisting}
+\psset{A=2.5,B=A,C=A,fillstyle=solid,fillcolor=GrisClair,linecolor=red}
+\psset{CX=15,CZ=-5,CY=10,RotZ=60,RotX=90}
+\pstDie
+\psset{A=5,B=A,C=A,fillstyle=solid,fillcolor=OrangeTresPale,linecolor=red}
+\psset{CX=25,CZ=5,CY=-5,RotZ=45,RotY=20,RotX=-60}
+\pstDie
+\end{lstlisting}
+
+\subsection{Tracer un cercle ou un arc de cercle}
+Le cercle et l'arc de cercle seront définis par le plan auquel ils
+appartiennent. Comme précédemment le plan sera défini par une
+origine et le vecteur unitaire normal é ce plan. Ces données étant
+posées, il n'y plus que le rayon du cercle é fixer et les deux
+angles limites s'il s'agit de l'arc de cercle.
+
+\begin{BDef}
+\Lcs{pstSphereCircle}\OptArgs\Largb{radius}\\
+\Lcs{pstSphereArc}\OptArgs\Largb{radius}\Largb{angle\_min}\Largb{angle\_max}
+\end{BDef}
+
+\verb+\pstSphereArc+ : respectez l'ordre des angles limites sinon l'interpréteur
+\textsf{PostScript} signalera une erreur.
+
+\begin{center}
+\begin{pspicture}(-5,-4)(5,5)
+  \decor
+  \psset{Xorigine=40}%
+  \multido{\iYorigine=-65+10}{14}{\psset{Yorigine=\iYorigine,Zorigine=15}
+    \pstSphereCircle[linecolor=red]{5}}
+  \multido{\iYorigine=-65+10}{14}{\psset{Yorigine=\iYorigine,Zorigine=50}%
+    \pstSphereArc[linecolor=blue,linewidth=0.5mm,fillstyle=solid,fillcolor=OrangePale]{5}{180}{360}}
+\end{pspicture}
+\end{center}
+
+Des cercles et des arcs de cercle sur le plan de front :
+\begin{lstlisting}
+\psset{Xorigine=40}
+\multido{\iYorigine=-65+10}{14}{%
+  \psset{Yorigine=\iYorigine,Zorigine=15}\pstSphereCircle[linecolor=red]{5}}
+\multido{\iYorigine=-65+10}{14}{\psset{Yorigine=\iYorigine,Zorigine=50}
+  \pstSphereArc[linecolor=blue,linewidth=0.5mm,fillstyle=solid,fillcolor=OrangePale]{5}{180}{360}}
+\end{lstlisting}
+
+\clearpage
+\subsection{La sphére}
+Elle est définie par son rayon, son centre se place avec les
+paramétres \Lkeyword{CX}, \Lkeyword{CY}, \Lkeyword{CZ}, on la fait tourner autour de son
+centre avec \Lkeyword{RotX}, \Lkeyword{RotY}, \Lkeyword{RotZ}.
+
+\begin{center}
+\begin{pspicture}(-5,-4)(5,5)
+\decor% defined in the preamble
+\multido{\iCY=-65+10,\iRotX=0+20}{7}{%
+\psset{CY=\iCY,CZ=-5,CX=15,RotX=\iRotX}
+\psset{fillstyle=gradient,gradbegin=white,gradend=red,%
+       gradmidpoint=0.2,linecolor=magenta,linewidth=0.05mm}
+\ifnum\multidocount=7
+\psset{CZ=0}
+\fi
+\ifnum\multidocount=3
+\psset{CZ=20}
+\fi
+\pstMirrorSphere{5}}
+\multido{\iCY=65+-10,\iRotX=0+15}{7}{%
+\psset{CY=\iCY,CZ=-5,CX=15,RotX=\iRotX}
+\psset{fillstyle=gradient,gradbegin=white,gradend=red,%
+       gradmidpoint=0.2,linecolor=magenta,linewidth=0.05mm}
+\ifnum\multidocount=6
+\psset{CZ=10}
+\fi
+\ifnum\multidocount=3
+\psset{CZ=20,CY=5}
+\fi
+\pstMirrorSphere{5}}
+\end{pspicture}
+\end{center}
+\begin{lstlisting}
+\multido{\iCY=-65+10,\iRotX=0+20}{7}{%
+  \psset{CY=\iCY,CZ=-5,CX=15,RotX=\iRotX,fillstyle=gradient,gradbegin=white,gradend=red,%
+       gradmidpoint=0.2,linecolor=magenta,linewidth=0.05mm}\pstMirrorSphere{5}}
+\end{lstlisting}
+
+\clearpage
+\subsection{Dessiner un cylindre}
+Le cylindre sera donné par le rayon de sa base et sa hauteur. Le
+centre de la base sera positionné avec \Lkeyword{CX}, \Lkeyword{CY}, \Lkeyword{CZ}, on le fait tourner autour
+autour des axes avec \Lkeyword{RotX}, \Lkeyword{RotY}, \Lkeyword{RotZ}.
+
+\begin{BDef}
+\Lcs{pstSphereCylinder}\OptArgs\Largb{radius}\Largb{hauteur}
+\end{BDef}
+
+\begin{center}
+\begin{pspicture}(-5,-4)(5,5)
+  \decor
+%  \pstTextSphere[fillstyle=solid,fillcolor=red,fontscale=10,PSfont=Helvetica,normale=0 90](15,0,-10){l'aventure mathématique}
+  \psset{fillstyle=gradient,gradbegin=white,gradend=red,gradmidpoint=0.2,linewidth=0.1mm}
+  { \psset{CX=20,CY=20,CZ=-10} \pstSphereCylinder{5}{7.5} }
+  { \psset{CX=15,CY=10,CZ=-7.5,RotY=90,RotX=-45} \pstSphereCylinder{2.5}{-10}}
+%  \pstTextSphere[fillstyle=solid,fillcolor=red,fontscale=25,PSfont=Bookman-demibold,
+%    normale=0 0](40,0,10){Tangente}
+\end{pspicture}
+\end{center}
+
+\begin{lstlisting}
+\psset{fillstyle=gradient,gradbegin=white,gradend=red,%
+       gradmidpoint=0.2,linewidth=0.1mm}
+{\psset{CX=20,CY=20,CZ=-10}
+\pstSphereCylinder{5}{7.5}}
+{\psset{CX=15,CY=10,CZ=-7.5,RotY=90,RotX=-45}
+\pstSphereCylinder{2.5}{-10}}
+\end{lstlisting}
+
+\clearpage
+\subsection{Dessiner un céne}
+Le céne se définit comme le cylindre, rayon de la base, hauteur et
+en option la fraction de hauteur de céne si l'on souhaite avoir un
+tronc de céne.
+
+\begin{BDef}
+\Lcs{pstSphereCone}\OptArgs\Largb{radius}\Largb{hauteur}
+\end{BDef}
+
+
+\Lkeyword{fracHcone} est obligatoirement un nombre compris entre 0 et 1.
+
+\begin{center}
+\begin{pspicture}(-5,-4)(5,5)
+\decor
+\psset{linecolor=red,fillstyle=gradient,gradbegin=yellow,gradend=red,gradmidpoint=0,linewidth=0.05mm}
+{\psset{CX=15,CZ=-10,CY=5,fracHcone=0.5}\pstSphereCone{5}{10}}
+{\psset{CX=40,CZ=5,CY=-25,RotY=-90}     \pstSphereCone{5}{10}}
+{\psset{CX=25,CZ=5,CY=-70,RotX=-90}     \pstSphereCone{5}{30}}
+\end{pspicture}
+\end{center}
+
+\begin{lstlisting}
+{\psset{CX=15,CZ=-10,CY=5,fracHcone=0.5}\pstSphereCone{5}{10}}
+{\psset{CX=40,CZ=5,CY=-25,RotY=-90}     \pstSphereCone{5}{10}}
+{\psset{CX=25,CZ=5,CY=-70,RotX=-90}     \pstSphereCone{5}{30}}
+\end{lstlisting}
+
+\clearpage
+\subsection{Tracer une pyramide}
+La pyramide é base carrée est donnée par le demi-cété (\Lkeyword{A})de sa
+  base et sa hauteur (\Lkeyword{Hpyramide}), que l'on peut faire tourner et placer oé on
+  veut, comme les objets précédents.
+
+\begin{center}
+\begin{pspicture}(-5,-4)(5,5)
+\decor
+\psset{fillstyle=solid,linecolor=black,A=5}
+\multido{\nY=-65+20.0}{7}{%
+\psset{RotX=0,RotZ=0,RotY=-90,CX=40,CZ=5,CY=\nY,Hpyramide=5}
+\pstPyramide}
+\multido{\nY=65+-20.0,\iRotZ=0+20}{6}{%
+\psset{RotX=0,RotZ=\iRotZ,RotY=0,CX=20,CZ=-10,CY=\nY,Hpyramide=8}
+\pstPyramide}
+\end{pspicture}
+\end{center}
+
+\begin{lstlisting}
+\psset{fillstyle=solid,linecolor=black,A=5}
+\multido{\nY=-65+20.0}{4}{%
+  \psset{RotX=0,RotZ=0,RotY=-90,CX=40,CZ=5,CY=\nY,Hpyramide=5}\pstPyramide}
+\multido{\nY=65+-20.0,\iRotZ=0+20}{6}{%
+  \psset{RotX=0,RotZ=\iRotZ,RotY=0,CX=20,CZ=-10,CY=\nY,Hpyramide=8}\pstPyramide}
+\end{lstlisting}
+
+\section{Image d'un texte}
+
+C'est la commande \Lcs{pstTextSphere}\OptArgs\Largs{x,y,z}\Largb{texte} qui permet d'afficher le texte 
+souhaité avec les paramétres suivants :
+\begin{compactitem}
+  \item Le plan qui contient le texte est défini par :
+  \begin{compactitem}
+    \item sa normale \Lkeyword{normale}=$\theta$ $\phi$ ;
+    \item et son origine \texttt{(x,y,z)}.
+  \end{compactitem}
+  \item La taille des caractéres est fixée par \Lkeyword{fontscale}=1 : 1 cm par défaut.
+  \item Le type de fonte par \Lkeyset{PSfont=Times-Roman} par défaut.
+  \item Le booléen \Lkeyword{isolatin} qui est positionné é \texttt{true} par défaut, permet l'écriture 
+    des caractéres accentués. Si l'on souhaite utiliser la police \texttt{Symbol}, permettant d'écrire 
+    les caractéres grecs, il faut positionner ce booléen é \texttt{false}.
+\end{compactitem}
+\begin{center}
+\begin{pspicture}(-8,-10)(8,10)
+%\psset{Rayon=8}
+\newpsstyle{GradWhiteYellow}{fillstyle=gradient,%
+    gradbegin=yellow,gradend=yellow!20,linecolor=yellow!50,GradientCircle=true,gradmidpoint=0,GradientPos={(1,1)}}%
+\pscircle[style=GradWhiteYellow]{7.07}
+\pstSphereGrid[linecolor=red,grille=10,Ymin=-50,Ymax=50,Xmax=80,Xmin=-80,normale=0 0](20,0,0)
+\pstSphereGrid[linecolor=blue,grille=10,Ymin=-40,Ymax=-20,Xmax=80,Xmin=-80,normale=0 90](40,0,-10)%
+\pstTextSphere[fillstyle=solid,fillcolor=red,normale=0 0,fontscale=30,PSfont=Bookman-demibold,yO=0](20,0,10){Tangente}
+\pstTextSphere[fillstyle=solid,fillcolor=blue,normale=0 90,fontscale=10,
+  PSfont=Helvetica,yO=2.5](10,0,-10){l'aventure math\'ematique}%
+\end{pspicture}
+\end{center}
+
+\begin{lstlisting}
+\begin{pspicture}(-8,-10)(8,10)
+%\psset{Rayon=8}
+\newpsstyle{GradWhiteYellow}{fillstyle=gradient,gradbegin=yellow,gradend=yellow!20,
+  linecolor=yellow!50,GradientCircle=true,gradmidpoint=0,GradientPos={(1,1)}}%
+\pscircle[style=GradWhiteYellow]{7.07}
+\pstSphereGrid[linecolor=red,grille=10,Ymin=-50,Ymax=50,Xmax=80,Xmin=-80,normale=0 0](20,0,0)
+\pstSphereGrid[linecolor=blue,grille=10,Ymin=-40,Ymax=-20,Xmax=80,Xmin=-80,normale=0 90](40,0,-10)%
+\pstTextSphere[fillstyle=solid,fillcolor=red,normale=0 0,fontscale=30,
+  PSfont=Bookman-demibold,yO=0](20,0,10){Tangente}
+\pstTextSphere[fillstyle=solid,fillcolor=blue,normale=0 90,fontscale=10,
+  PSfont=Helvetica,yO=2.5](10,0,-10){l'aventure math\'ematique}%
+\end{pspicture}
+\end{lstlisting}
+
+\section{Conclusion}
+Nous pouvons maintenant nous atteler é la téche de construire des
+décors en 3D vus dans une boule qui soient intéressants et
+artistiques, un prolongement vers une animation est toujours possible.
+J'ai pensé inclure dans ce package, é l'aide d'une option,
+la 3D conventionnelle : il suffit de changer les formules
+relatives é la boule et d'y rajouter les paramétres relatifs au
+point de vue, mais finalement cela aurait trop alourdi cette
+étude -- vous pouvez regardez la commande \Lcs{pnodeTroisD} et les
+nombreuses applications développées dans ma page personnelle.
+
+\textbf{Une remarque importante :} si le calcul des faces cachées
+est pris en compte pour chaque objet pris individuellement, il en
+est pas de méme pour l'ensemble du panorama. Il convient donc de
+placer en premier les objets les plus éloignés de boule, puis ceux
+qui sont de plus en plus proche de la boule.
+
+
+\section{List of all optional arguments for \texttt{pst-mirror}}
+
+\xkvview{family=pst-mirror,columns={key,type,default}}
+
+
+\bgroup
+\nocite{*}
+\raggedright
+\bibliographystyle{plain}
+\bibliography{\jobname}
+\egroup
+
+\printindex
+
+
+\end{document}

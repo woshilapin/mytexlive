@@ -1,0 +1,114 @@
+\section {Composer une vue d'un ensemble d'objets avec \texttt{codejps}}
+
+Le calcul des parties cachées est effectué par les routines du code
+\texttt{PostScript} du fichier \texttt{solides.pro}, mais les lignes
+de code sont ``encapsulées'' dans un environnement \texttt{pspicture}
+grâce à la commande \verb+\codejps{code ps}+. Cette partie est
+développée dans le document
+\texttt{documentation-fusion-jps.tex(pdf)}. En voici un exemple : 
+
+\begin{minipage}{6cm}
+\setlength{\columnseprule}{1pt}
+\begin{pspicture}(-3,-4)(3,4)
+\psset{lightsrc=100 -50 -10,lightintensity=3,viewpoint=200 20 10,Decran=20,SphericalCoor}
+\psframe(-3,-3)(3,3)
+{\psset{linewidth=0.5\pslinewidth}
+\codejps{
+/Cl {9.02  [18 16] newsphere
+ {-90 0 0 rotateOpoint3d} solidtransform
+ dup (Green) outputcolors} def
+/Cl1 { Cl {10.25 10.25 10.25 translatepoint3d} solidtransform } def
+/Cl2 { Cl {10.25 -10.25 10.25 translatepoint3d} solidtransform } def
+/Cl3 { Cl {-10.25 -10.25 10.25 translatepoint3d} solidtransform } def
+/Cl4 { Cl {-10.25 10.25 10.25 translatepoint3d} solidtransform } def
+/Cl5 { Cl {10.25 10.25 -10.25 translatepoint3d} solidtransform } def
+/Cl6 { Cl {10.25 -10.25 -10.25 translatepoint3d} solidtransform } def
+/Cl7 { Cl {-10.25 -10.25 -10.25 translatepoint3d} solidtransform } def
+/Cl8 { Cl {-10.25 10.25 -10.25 translatepoint3d} solidtransform } def
+/Cs {8.38  [18 16] newsphere
+ dup (White) outputcolors} def
+%
+/Cl12{ Cl1 Cl2 solidfuz} def
+/Cl123{ Cl12 Cl3 solidfuz} def
+/Cl1234{ Cl123 Cl4 solidfuz} def
+/Cl12345{ Cl1234 Cl5 solidfuz} def
+/Cl123456{ Cl12345 Cl6 solidfuz} def
+/Cl1234567{ Cl123456 Cl7 solidfuz} def
+/Cl12345678{ Cl1234567 Cl8 solidfuz} def
+/C_Cs { Cl12345678 Cs solidfuz} def
+C_Cs  drawsolid**}}%
+%\psSolid[object=cube,a=20.5,action=draw,linestyle=dashed]%
+\psPoint(0,0,0){P}
+\psPoint(10.25,10.25,10.25){Cl1}
+\psPoint(10.25,-10.25,10.25){Cl2}
+\psPoint(-10.25,-10.25,10.25){Cl3}
+\psPoint(-10.25,10.25,10.25){Cl4}
+\psPoint(10.25,10.25,-10.25){Cl5}
+\psPoint(10.25,-10.25,-10.25){Cl6}
+\psPoint(-10.25,-10.25,-10.25){Cl7}
+\psPoint(-10.25,10.25,-10.25){Cl8}
+\pspolygon[linestyle=dashed](Cl1)(Cl2)(Cl3)(Cl4)
+\pspolygon[linestyle=dashed](Cl5)(Cl6)(Cl7)(Cl8)
+\psline[linestyle=dashed](Cl2)(Cl6)
+\psline[linestyle=dashed](Cl3)(Cl7)
+\psline[linestyle=dashed](Cl1)(Cl5)
+\psline[linestyle=dashed](Cl4)(Cl8)
+\pcline[offset=0.5]{<->}(Cl2)(Cl1)
+\aput{:U}{a}
+\pcline[offset=0.5]{<->}(Cl6)(Cl2)
+\aput{:U}{a}
+\end{pspicture}
+\end{minipage}
+\hfill
+\begin{minipage}{14cm}
+\footnotesize
+\begin{verbatim}
+\codejps{
+/Cl {9.02  [12 8] newsphere
+ {-90 0 0 rotateOpoint3d} solidtransform
+ dup (Green) outputcolors} def
+/Cl1 { Cl {10.25 10.25 10.25 translatepoint3d} solidtransform } def
+/Cl2 { Cl {10.25 -10.25 10.25 translatepoint3d} solidtransform } def
+/Cl3 { Cl {-10.25 -10.25 10.25 translatepoint3d} solidtransform } def
+/Cl4 { Cl {-10.25 10.25 10.25 translatepoint3d} solidtransform } def
+/Cl5 { Cl {10.25 10.25 -10.25 translatepoint3d} solidtransform } def
+/Cl6 { Cl {10.25 -10.25 -10.25 translatepoint3d} solidtransform } def
+/Cl7 { Cl {-10.25 -10.25 -10.25 translatepoint3d} solidtransform } def
+/Cl8 { Cl {-10.25 10.25 -10.25 translatepoint3d} solidtransform } def
+/Cs {8.38  [12 8] newsphere
+ dup (White) outputcolors} def
+/Cl12{ Cl1 Cl2 solidfuz} def
+/Cl123{ Cl12 Cl3 solidfuz} def
+/Cl1234{ Cl123 Cl4 solidfuz} def
+/Cl12345{ Cl1234 Cl5 solidfuz} def
+/Cl123456{ Cl12345 Cl6 solidfuz} def
+/Cl1234567{ Cl123456 Cl7 solidfuz} def
+/Cl12345678{ Cl1234567 Cl8 solidfuz} def
+/C_Cs { Cl12345678 Cs solidfuz} def
+C_Cs  drawsolid**}
+\end{verbatim}
+\end{minipage}
+
+On définit l'ion chlorure $\mathrm{Cl^-}$ :
+\begin{verbatim}
+/Cl {9.02  [12 8] newsphere
+ {-90 0 0 rotateOpoint3d} solidtransform
+ dup (Green) outputcolors} def
+\end{verbatim}
+que l'on recopie aux sommets du cube :
+\begin{verbatim}
+/Cl1 { Cl {10.25 10.25 10.25 translatepoint3d} solidtransform } def
+/Cl2 { Cl {10.25 -10.25 10.25 translatepoint3d} solidtransform } def
+/Cl3 { Cl {-10.25 -10.25 10.25 translatepoint3d} solidtransform } def
+/Cl4 { Cl {-10.25 10.25 10.25 translatepoint3d} solidtransform } def
+/Cl5 { Cl {10.25 10.25 -10.25 translatepoint3d} solidtransform } def
+/Cl6 { Cl {10.25 -10.25 -10.25 translatepoint3d} solidtransform } def
+/Cl7 { Cl {-10.25 -10.25 -10.25 translatepoint3d} solidtransform } def
+/Cl8 { Cl {-10.25 10.25 -10.25 translatepoint3d} solidtransform } def
+\end{verbatim}
+Puis l'ion césium $\mathrm{Cs^+}$, placé au centre :
+\begin{verbatim}
+/Cs {8.38  [12 8] newsphere
+ dup (White) outputcolors} def
+\end{verbatim}
+Ensuite on fusionne deux par deux les différentes sphères.

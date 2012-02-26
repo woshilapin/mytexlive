@@ -1,0 +1,22 @@
+\section {Un avion}
+
+\bgroup
+\psset{unit=0.5}
+\psset{lightsrc=30 -40 10}
+\begin{pspicture}(-7,-4)(7,9)
+\psset{SphericalCoor,viewpoint=50 -50 20,Decran=40}
+\psframe(-7,-4)(7,9)
+\psSolid[object=new,RotX=100,RotZ=-30,
+    sommets= (sommetsavion.dat) run,
+    faces={(facesavion.dat) run}]%
+\end{pspicture}
+\hfill
+\begin{pspicture}(-7,-4)(7,9)
+\psset{SphericalCoor,viewpoint=50 -80 60,Decran=40}
+\psframe(-7,-4)(7,9)
+\psSolid[object=new,RotX=90,
+    sommets= (sommetsavion.dat) run,
+    faces={(facesavion.dat) run}]%
+\end{pspicture}
+
+\egroup

@@ -1,0 +1,17 @@
+With pst-bar, one may use pstricks to produce bar charts directly from a data
+file. This package is still in the beta stage --- the usual caveats pertaining
+to beta software apply. Additional features and improved (in both content and
+layout) documentation will be provided as the code stabilizes.
+
+INSTALLATION:
+
+pst-bar consists of three files: pst-bar.sty, pst-bar.tex, and pst-bar.pro.
+Place the first two anywhere your installation can find them (typically
+$LOCALTEXMF/tex/latex/pst-bar for pst-bar.sty and
+$LOCALTEXMF/tex/generic/pst-bar for pst-bar.tex). Place pst-bar.pro where dvips
+can find it, typically in the pstricks subdirectory of your dvips directory
+(i.e., $LOCALTEXMF/dvips/pstricks).
+
+DOCUMENTATION:
+
+See pst-bar-doc.ps or pst-bar-doc.pdf for details on using pst-bar.

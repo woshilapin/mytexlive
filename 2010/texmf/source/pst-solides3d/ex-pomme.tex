@@ -1,0 +1,26 @@
+\section {Une pomme}
+\bgroup
+\psset{unit=0.5}
+\psset{lightsrc=50 10 30}
+
+\psset{SphericalCoor,viewpoint=50 -10 30,Decran=50}
+\begin{pspicture*}(-8,-8)(8,8)
+\psframe*[linecolor=cyan!50](-8,-8)(8,8)
+\psSolid[object=grille,base=-8 8 -8 8,action=draw**,ngrid=4,linecolor=red](0,0,-3.9)
+\psSolid[object=new,grid,hue=0.1 0.5,
+    sommets= (sommets_pomme.dat) run,
+    faces={(faces_pomme.dat) run}]%
+\end{pspicture*}
+\psset{SphericalCoor,viewpoint=50 10 50,Decran=50}
+\begin{pspicture*}(-8,-8)(8,8)
+\psframe*[linecolor=cyan!50](-8,-8)(8,8)
+\psSolid[object=grille,base=-8 8 -8 8,action=draw**,ngrid=4,linecolor=red](0,0,-3.9)
+\psSolid[object=new,grid,hue=0 0.2,
+    sommets= (sommets_pomme.dat) run,
+    faces={(faces_pomme.dat) run}]%
+\psSolid[object=new,grid,fillcolor=red!75!green!50,
+    sommets= (sommets_pomme.dat) run,
+    faces={(faces_queue.dat) run}]%
+\end{pspicture*}
+
+\egroup

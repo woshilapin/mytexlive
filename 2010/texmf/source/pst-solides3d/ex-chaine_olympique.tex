@@ -1,0 +1,37 @@
+\section {Chaîne olympique}
+
+\definecolor{Brown}{cmyk}{0,0.81,1,0.60}
+
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-6,-5)(6,6)
+\psset{lightsrc=50 -50 50,viewpoint=40 0 20,SphericalCoor,Decran=100,ngrid=18 30,r0=0.25,r1=0.9}
+\psSolid[object=tore,solidmemory=true,
+   RotY=90,
+   fillcolor=blue,
+   action=none,
+   name=anneau1](0,-2.5,0)
+\psSolid[object=tore,solidmemory=true,
+   RotY=90,
+   fillcolor=Brown,
+    action=none,
+   name=anneau2](0,0,0)
+\psSolid[object=tore,solidmemory=true,
+   RotY=90,
+   fillcolor=red,
+    action=none,
+   name=anneau3](0,2.5,0)
+\psSolid[object=tore,solidmemory=true,
+   fillcolor=yellow,
+    action=none,
+   name=anneau4](0,-1.25,0)
+\psSolid[object=tore,solidmemory=true,
+   fillcolor=green,
+    action=none,
+   name=anneau5](0,1.25,0)
+\psSolid[object=fusion,
+   base=anneau1 anneau2 anneau3 anneau4 anneau5,
+   name=anneaux,
+   action=draw**]%
+\composeSolid
+\end{pspicture}
+\end{LTXexample}

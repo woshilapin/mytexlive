@@ -1,0 +1,197 @@
+\section {Solide ruban}
+
+Le ruban est un paravent posé sur le sol horizontal. La base du paravent est définie sur le plan $Oxy$ par
+les coordonnées des sommets placés dans le sens trigonométrique par le paramètre \texttt{base} :
+\begin{verbatim}
+\psSolid[object=ruban,h=3,base=x1 y1 x2 y2 x3 y3 ...xn yn,ngrid=n](0,0,0)%
+\end{verbatim}
+\subsection{Un simple paravent}
+\begin{center}
+\psset{lightsrc=10 0 10,SphericalCoor,viewpoint=50 -20 30,Decran=50,unit=0.75}
+\begin{pspicture}(-5,-4)(6,7)
+\psframe(-5,-4)(6,7)
+\psSolid[object=grille,base=-4 6 -4 4,action=draw,linecolor=gray](0,0,0)
+\psSolid[object=ruban,h=3,fillcolor=red!50,
+      base=0 0 2 2 4 0 6 2,
+      num=0 1 2 3,
+      show=0 1 2 3,
+      ngrid=3
+      ](0,0,0)
+\axesIIID(0,2,0)(6,6,6)
+\end{pspicture}
+\end{center}
+\begin{verbatim}
+\begin{pspicture}(-5,-4)(6,7)
+\psframe(-5,-4)(6,7)
+\psSolid[object=grille,base=-4 6 -4 4,action=draw](0,0,0)
+\psSolid[object=ruban,h=3,fillcolor=red!50,
+      base=0 0 2 2 4 0 6 2,
+      num=0 1 2 3,
+      show=0 1 2 3,
+      ngrid=3
+      ](0,0,0)
+\axesIIID(0,2,0)(6,6,6)
+\end{pspicture}
+\end{verbatim}
+
+\subsection{Un paravent sinusoïdal}
+
+\begin{center}
+\psset{unit=0.6}
+\psset{lightsrc=10 30 10,SphericalCoor,viewpoint=50 50 20,Decran=50}
+\begin{pspicture}(-10,-5)(12,7)
+\psframe(-10,-5)(12,7)
+\defFunction{F}(t){2 t 4 mul cos mul}{t 20 div}{}
+\psSolid[object=grille,base=-6 6 -10 10,action=draw,linecolor=gray](0,0,0)
+\psSolid[object=ruban,h=2,fillcolor=red!50,
+      resolution=72,
+      base=-200 200 {F} CourbeR2+,  %% -200 5 200 {/Angle ED 2 Angle 4 mul cos mul Angle 20 div } for,
+      ngrid=4](0,0,0)
+\axesIIID(5,10,0)(7,11,6)
+\end{pspicture}
+\end{center}
+
+\begin{verbatim}
+\psset{unit=0.6}
+\psset{lightsrc=10 30 10,SphericalCoor,viewpoint=50 50 20,Decran=50}
+\begin{pspicture}(-10,-5)(12,7)
+\psframe(-10,-5)(12,7)
+\defFunction{F}(t){2 t 4 mul cos mul}{t 20 div}{}
+\psSolid[object=grille,base=-6 6 -10 10,action=draw,linecolor=gray](0,0,0)
+\psSolid[object=ruban,h=2,fillcolor=red!50,
+      resolution=72,
+      base=-200 200 {F} CourbeR2+, 
+      ngrid=4](0,0,0)
+\axesIIID(5,10,0)(7,11,6)
+\end{pspicture}
+\end{verbatim}
+
+\subsection{Une surface ondulée}
+
+C'est le même objet que précédemment en lui faisant subir une rotation de $90^{\mathrm{o}}$ autour de $Oy$.
+\begin{center}
+\psset{unit=0.6}
+\psset{lightsrc=10 30 10,SphericalCoor,viewpoint=50 50 20,Decran=30}
+\begin{pspicture}(-14,-7)(8,7)
+\psframe(-14,-7)(8,7)
+\defFunction{F}(t){t 4 mul cos}{t 20 div}{}
+\psSolid[object=grille,base=0 16 -10 10,action=draw,linecolor=gray](0,0,0)
+\psSolid[object=ruban,h=16,fillcolor=red!50,RotY=90,incolor=green!20,
+      resolution=72,
+      base=-200 200 {F} CourbeR2+, 
+      ngrid=16](0,0,1)
+\axesIIID(16,10,0)(20,12,6)
+\end{pspicture}
+\end{center}
+\begin{verbatim}
+\psset{unit=0.6}
+\psset{lightsrc=10 30 10,SphericalCoor,viewpoint=50 50 20,Decran=30}
+\begin{pspicture}(-14,-7)(8,7)
+\defFunction{F}(t){t 4 mul cos}{t 20 div}{}
+\psSolid[object=grille,base=0 16 -10 10,action=draw,linecolor=gray](0,0,0)
+\psSolid[object=ruban,h=16,fillcolor=red!50,RotY=90,incolor=green!20,
+      resolution=72,
+      base=-200 200 {F} CourbeR2+, 
+      ngrid=16](0,0,1)
+\psframe(-14,-7)(8,7)
+\axesIIID(16,10,0)(20,12,6)
+\end{pspicture}
+\end{verbatim}
+On peut ensuite l'imaginer comme toit en tôle ondulée d'un abri quelconque.
+
+\subsection{Un paravent étoilé : version 1}
+Le contour du paravent est défini dans une boucle :
+\begin{verbatim}
+       base=0 72 360 {/Angle ED 5 Angle cos mul 5 Angle sin mul
+            3 Angle 36 add cos mul 3 Angle 36 add sin mul} for
+\end{verbatim}
+la surface bleutée du fond est définie à l'aide d'un polygone dont les
+sommets sont calculés par la commande \verb+\psPoint(x,y,z){P}+ 
+\begin{verbatim}
+\multido{\iA=0+72,\iB=36+72,\i=0+1}{6}{%
+    \psPoint(\iA\space cos 5 mul,\iA\space sin 5 mul,0){P\i}
+    \psPoint(\iB\space cos 3 mul,\iB\space sin 3 mul,0){p\i}
+    }%
+\pspolygon[fillstyle=solid,fillcolor=blue!50](P0)(p0)(P1)(p1)(P2)(p2)
+                                             (P3)(p3)(P4)(p4)(P5)(p5)
+\end{verbatim}
+\begin{center}
+\psset{unit=0.75}
+\psset{lightsrc=10 0 10,SphericalCoor,viewpoint=50 20 30,Decran=50}
+\begin{pspicture}(-9,-5)(9,7)
+\psframe(-9,-5)(9,7)
+\multido{\iA=0+72,\iB=36+72,\i=0+1}{6}{%
+    \psPoint(\iA\space cos 5 mul,\iA\space sin 5 mul,0){P\i}
+    \psPoint(\iB\space cos 3 mul,\iB\space sin 3 mul,0){p\i}
+    }%
+\pspolygon[fillstyle=solid,fillcolor=blue!50](P0)(p0)(P1)(p1)(P2)(p2)(P3)(p3)(P4)(p4)(P5)(p5)
+\defFunction{F}(t){t cos 5 mul}{t sin 5 mul}{}
+\defFunction{G}(t){t 36 add cos 3 mul}{t 36 add sin 3 mul}{}
+\psSolid[object=grille,base=-6 6 -6 6,action=draw,linecolor=gray](0,0,0)
+\psSolid[object=ruban,h=1,fillcolor=red!50,
+      base=0 72 360 {/Angle exch def Angle F Angle G} for,
+      num=0 1 2 3,
+      show=0 1 2 3,
+      ngrid=2](0,0,0)
+\axesIIID(5,5,0)(6,6,6)
+\end{pspicture}
+\end{center}
+\begin{verbatim}
+\begin{pspicture}(-9,-5)(9,7)
+\psframe(-9,-5)(9,7)
+\multido{\iA=0+72,\iB=36+72,\i=0+1}{6}{%
+    \psPoint(\iA\space cos 5 mul,\iA\space sin 5 mul,0){P\i}
+    \psPoint(\iB\space cos 3 mul,\iB\space sin 3 mul,0){p\i}
+    }%
+\pspolygon[fillstyle=solid,fillcolor=blue!50](P0)(p0)(P1)(p1)(P2)(p2)(P3)(p3)(P4)(p4)(P5)(p5)
+\defFunction{F}(t){t cos 5 mul}{t sin 5 mul}{}
+\defFunction{G}(t){t 36 add cos 3 mul}{t 36 add sin 3 mul}{}
+\psSolid[object=grille,base=-6 6 -6 6,action=draw,linecolor=gray](0,0,0)
+\psSolid[object=ruban,h=1,fillcolor=red!50,
+      base=0 72 360 {/Angle exch def Angle F Angle G} for,
+      num=0 1 2 3,
+      show=0 1 2 3,
+      ngrid=2](0,0,0)
+\axesIIID(5,5,0)(6,6,6)
+\end{pspicture}
+\end{verbatim}
+
+\subsection{Un paravent étoilé : version 2}
+
+Le fond du récipient est défini par l'objet \texttt{face} avec l'option \texttt{biface}~:
+\begin{center}
+\psset{unit=0.75}
+\psset{lightsrc=10 0 10,SphericalCoor,viewpoint=50 -20 20,Decran=50}
+\begin{pspicture}(-9,-5)(9,7)
+\psframe(-9,-5)(9,7)
+\defFunction{F}(t){t cos 5 mul}{t sin 5 mul}{}
+\defFunction{G}(t){t 36 add cos 3 mul}{t 36 add sin 3 mul}{}
+\psSolid[object=face,fillcolor=blue!50,
+      biface,
+      base=0 72 360 {/Angle exch def Angle F Angle G} for,
+      ](0,0,0)
+\psSolid[object=grille,base=-6 6 -6 6,action=draw,linecolor=gray](0,0,0)
+\psSolid[object=ruban,h=1,fillcolor=red!50,
+      base=0 72 360 {/Angle exch def Angle F Angle G} for,
+      ngrid=2](0,0,0)
+\axesIIID(5,5,0)(6,6,6)
+\end{pspicture}
+\end{center}
+\begin{verbatim}
+\psset{lightsrc=10 0 10,SphericalCoor,viewpoint=50 -20 20,Decran=50}
+\begin{pspicture}(-9,-5)(9,7)
+\psframe(-9,-5)(9,7)
+\defFunction{F}(t){t cos 5 mul}{t sin 5 mul}{}
+\defFunction{G}(t){t 36 add cos 3 mul}{t 36 add sin 3 mul}{}
+\psSolid[object=face,fillcolor=blue!50,
+      biface,
+      base=0 72 360 {/Angle exch def Angle F Angle G} for,
+      ](0,0,0)
+\psSolid[object=grille,base=-6 6 -6 6,action=draw,linecolor=gray](0,0,0)
+\psSolid[object=ruban,h=1,fillcolor=red!50,
+      base=0 72 360 {/Angle exch def Angle F Angle G} for,
+      ngrid=2](0,0,0)
+\axesIIID(5,5,0)(6,6,6)
+\end{pspicture}
+\end{verbatim}
+

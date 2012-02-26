@@ -1,0 +1,47 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                                  %%
+%%      Examples with AeB_Pro and solides3d         %%
+%%                                                  %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                                  %%
+%%        D. P. Story  dpstory@acrotex.net          %%
+%%        J. Gilg      gilg@acrotex.net             %%
+%%     The AcroTeX Software Development Team        %%
+%%                                                  %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                                  %%
+%% The actual version of AeB_Pro is available under %%
+%% http://www.math.uakron.edu/~dpstory/aeb_pro.html %%
+%%                                                  %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section {Anneaux De Borrom\'{e}e}
+
+\bgroup
+\psset{unit=0.5}
+\psset{lightsrc=10 5 10,SphericalCoor,viewpoint=10 10 10,Decran=30}
+
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-4,-6)(4,6)
+\codejps{
+ /ORing1 {
+    0.25 0.9 [18 30] newtore
+    {0.75 1.5 1 scaleOpoint3d} solidtransform
+    {0 0 0 rotateOpoint3d} solidtransform
+    dup (Blue) outputcolors} def
+/ORing2 {
+    0.25 0.9 [18 30] newtore
+    {0.75 1.5 1 scaleOpoint3d} solidtransform
+    {90 0 90 rotateOpoint3d} solidtransform
+    dup (Yellow) outputcolors} def
+/ORing3 {
+    0.25 0.9 [18 30] newtore
+    {0.75 1.5 1 scaleOpoint3d} solidtransform
+    {0 90 90 rotateOpoint3d} solidtransform
+    dup (Red) outputcolors} def
+/un {ORing1 ORing2 solidfuz} def
+/deux {ORing3 un solidfuz} def
+deux drawsolid**}
+\end{pspicture}
+\end{LTXexample}
+\egroup

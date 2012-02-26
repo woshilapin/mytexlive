@@ -1,0 +1,78 @@
+\section {Utiliser une face de solide pour définir un plan de projection }
+
+Plutôt que de définir un plan de projection par sa normale, on peut
+indiquer la face d'un solide déjà construit. Pour cela, il faut
+activer la mémorisation des solides (par \verb+\psset{solidmemory}+),
+donner un nom au solide visé, puis indiquer à la macro
+\verb+\psProjection+ le nom de ce solide et l'indice de la face
+souhaitée. 
+
+On utilise pour cela les paramètres \verb+solidname+ et \verb+no+ de
+la macro \verb+\psProjection+.
+
+\Cadre{$\backslash$psProjection[\ldots,solidname=A1,no=0]} utilisera le
+plan de projection défini par la face d'indice $0$ du solide $A1$, et
+l'image de l'origine sera le centre de la face d'indice $0$.
+
+\Cadre{$\backslash$psProjection[\ldots,solidname=A1,no=0](1,2,3)}
+utilisera cette fois le plan de projection parallèle à la face
+d'indice $0$ du solide $A1$, et l'image de l'origine sera le point de
+coordonnées $(1,2,3)$.
+
+\begin{multicols}{2}
+
+\bgroup
+\psset{unit=0.75}
+\psset{lightsrc=10 0 10,SphericalCoor=true,viewpoint=50 -20 20,Decran=50}
+\begin{pspicture}(-4,-5)(4,5)
+\psframe(-4,-5)(5,5)
+\psset{solidmemory}
+\defFunction[algebraic]{f}(x){cos(x)}{sin(x)}{}
+\psSolid[object=grille,
+      RotY=90,
+      ngrid=2.,
+      base=-4 4 -4 4,
+      fontsize=20,
+      numfaces=all,
+      name=A1,
+      ](0,0,0)
+\psProjection[object=courbeR2,
+   range=-1.57 pi,
+   linecolor=yellow,linewidth=0.1,
+   solidname=A1,no=0,
+   function=f]
+\psProjection[object=courbeR2,
+   range=-1.57 pi,
+   linecolor=red,linewidth=0.1,
+   solidname=A1,no=0,
+   function=f](0,0,0)
+\composeSolid
+\end{pspicture}
+\egroup
+
+\columnbreak
+
+\begin{verbatim}
+\psset{solidmemory}
+\defFunction[algebraic]{f}(x){cos(x)}{sin(x)}{}
+\psSolid[object=grille,
+      RotY=90,ngrid=2.,
+      base=-4 4 -4 4,
+      fontsize=20,
+      numfaces=all,
+      name=A1](0,0,0)
+\psProjection[object=courbeR2,
+   range=-1.57 pi,
+   linecolor=yellow,linewidth=0.1,
+   solidname=A1,no=0,
+   function=f]
+\psProjection[object=courbeR2,
+   range=-1.57 pi,
+   linecolor=red,linewidth=0.1,
+   solidname=A1,no=0,
+   function=f](0,0,0)
+\composeSolid
+\end{verbatim}
+
+\end {multicols}
+

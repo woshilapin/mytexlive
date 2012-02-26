@@ -1,0 +1,113 @@
+\section {Fusionner des solides}
+
+Il est possible d'assembler plusieurs solides en une seule structure~:
+c'est l'opération de \textsl {fusion\/} des solides. Cette technique
+permet d'appliquer l'algorithme du peintre à toute une scéne.
+
+Pour ce faire, il faut activer la possibilité de mettre en mémoire par
+\verb+\psset{solidmemory}+, puis construire ses différents solides
+avec \verb+\psSolid+, sans omettre de leur donner un nom chacun.
+
+On utilise ensuite l'objet \verb+fusion+ de \verb+\psSolid+, en
+indiquent dans le paramètre \verb+base+ la liste des noms des solides
+à fusionner.
+
+Pour visualiser la scène, ne pas oublier de conclure par
+\verb+\composeSolid+. 
+
+\begin{multicols}{2}
+\bgroup
+\psset{lightsrc=50 -50 50,SphericalCoor=true,viewpoint=40 16 32,Decran=40}
+\psset{unit=.6}
+\begin{pspicture}(-6,-5)(6,7)
+\psframe*[linecolor=gray!40](-6,-5)(6,7)
+\psset{solidmemory}
+\psSolid[object=cylindre,h=6,fillcolor=blue,
+      r=1.5,
+      ngrid=4 16,
+      action=none,
+      name=A1,
+      ](0,0,-4)
+\psSolid[object=anneau,h=6,fillcolor=red!50,
+      R=4,r=3,h=1,
+      action=none,
+      name=B1,
+      ](0,0,-1)
+\psSolid[object=fusion,
+      action=draw**,
+      base=A1 B1,
+      ](0,0,0)
+\composeSolid
+\end{pspicture}
+\egroup
+
+\columnbreak
+
+\begin{verbatim}
+\psset{solidmemory}
+\psSolid[object=cylindre,h=6,fillcolor=blue,
+      r=1.5,
+      ngrid=4 16,
+      action=none,
+      name=A1,
+      ](0,0,-4)
+\psSolid[object=anneau,h=6,fillcolor=red!50,
+      R=4,r=3,h=1,
+      action=none,
+      name=B1,
+      ](0,0,-1)
+\psSolid[object=fusion,
+      action=draw**,
+      base=A1 B1,
+      ](0,0,0)
+\composeSolid
+\end{verbatim}
+\end{multicols}
+
+
+\begin{multicols}{2}
+\bgroup
+\psset{unit=0.5}
+\begin{pspicture}(-6,-5)(6,5)
+\psset{solidmemory}
+\psset{lightsrc=50 -50 50,viewpoint=100 -30 40,
+   Decran=100,linewidth=0.5\pslinewidth,
+   ngrid=18 18,fillcolor=white,
+   h=12,r=2,RotX=90}
+\psframe*[linecolor=black](-6,-5)(6,5)
+\psSolid[object=cylindrecreux,
+   action=none,
+   name=cylindre1](0, 6, 0)
+\psSolid[object=cylindrecreux,
+   RotZ=90,
+   action=none,
+   name=cylindre2](-6, 0, 0)
+\psSolid[object=fusion,
+   base=cylindre1 cylindre2,RotX=0]
+\composeSolid
+\end{pspicture}
+\egroup
+
+\columnbreak
+
+\begin{verbatim}
+\psset{solidmemory}
+\psset{lightsrc=50 -50 50,viewpoint=100 -30 40,
+   Decran=100,linewidth=0.5\pslinewidth,
+   ngrid=18 18,fillcolor=white,
+   h=12,r=2,RotX=90}
+\psframe*[linecolor=black](-6,-5)(6,5)
+\psSolid[object=cylindrecreux,
+   action=none,
+   name=cylindre1](0, 6, 0)
+\psSolid[object=cylindrecreux,
+   RotZ=90,
+   action=none,
+   name=cylindre2](-6, 0, 0)
+\psSolid[object=fusion,
+   base=cylindre1 cylindre2,RotX=0]
+\composeSolid
+\end{verbatim}
+
+\end{multicols}
+

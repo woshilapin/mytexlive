@@ -1,0 +1,14 @@
+---------------------------------------------------
+| pst-ob3d: PSTricks package for 3D objects       |
+---------------------------------------------------
+
+Run the Makefile or alternative:
+
+* Run "tex" on pst-ob3d.ins and copy pst-ob3d.tex and pst-ob3d.sty
+  in one of your TeX input directories
+
+* Run "latex" on pst-ob3d.dtx to generate the documentation
+
+* This is a PSTricks (PostScript Tricks) package, which won't
+  run with pdftex. In this case go to http://PSTricks.de/
+  for some help.

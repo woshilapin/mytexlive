@@ -1,0 +1,345 @@
+\documentclass{article}
+\usepackage[latin1]{inputenc}%
+\usepackage{pstricks,url,graphicx,lscape}
+\usepackage[francais]{babel}
+\usepackage{pst-map2dII}
+\usepackage{ragged2e,xspace}
+\def\PST{\texttt{PSTricks}\xspace}
+\def\PS{\texttt{PostScript}\xspace}
+\definecolor{ocean}{rgb}{0.5,0.8,0.8}
+ \title{The \PstMapIIPackage{} package\\A PSTricks package for Geographical Projections}
+ \author{Manuel \textsc{Luque}
+         \mbox{\texttt{<Mluque5130@aol.com>}}\\
+         \and Giuseppe \textsc{Matarazzo} \mbox{\texttt{<joematara@hotmail.com>}}%
+	 \and Herbert \textsc{Voss} \mbox{\texttt{<voss@perce.de>}}}
+ \date{Version 0.71\\ May 9th, 2004}
+\newcommand{\PstMapIIPackage}{`\textsf{pst-map2dII}'}
+\newcommand\Parameter[1]{\colorbox{black}{\textcolor{white}{#1}}}
+%------------------------ hv --------------------------
+\psset{linewidth=0.2\pslinewidth,level=50,path=../dataII}
+%------------------------ hv --------------------------
+\begin{document}
+\maketitle
+\begin{abstract}
+Dans la continuité de \textsf{pst-map2d}, cette solution se propose
+d'utiliser la base de données géographiques : \textsf{CIA World DataBank II}, que l'on trouvera sur
+\url{http://www.evl.uic.edu/pape/data/WDB/}. On récupérera sur ce
+site toutes les données qui pèsent, compressées au format
+\textsf{tgz},  30~Mo et 121~Mo une fois décompactées. Cela donne
+une finesse de tracé exceptionnelle, qui évidemment ne peut-être appréciée, non pas sur l'écran,
+mais à l'impression, si possible avec une imprimante laser !
+
+\'Evidemment le temps de calcul est proportionnel à la taille des
+données à traiter. Cependant des options permettent de choisir la
+représentation d'un continent ou plusieurs. Un ordinateur puissant
+avec beaucoup de mémoire vive est donc souhaitable.
+\begin{center}
+\psset{xunit=5,yunit=5}
+\psframebox[framesep=0pt,linewidth=0.2mm,doubleline=true]{%
+  \begin{pspicture}*(-0.5,1.70)(1.5,3)%
+  \WorldMapII[africa=true,increment=2]
+\end{pspicture}}
+\end{center}
+\end{abstract}
+
+\tableofcontents
+
+\section{La mise en forme des données}
+La mise en forme des données a été effectuée (\textsf{wdbII.zip}) sur :
+\url{http://melusine.eu.org/syracuse/mluque/mappemonde/}. Si vous
+souhaitez le faire vous-même, voici quelques indications.
+
+Pour faciliter le travail de PostScript et diminuer le temps de
+calcul les données europe-cil.txt etc. doivent être très
+légèrement adaptées avec un éditeur de texte acceptant les
+fichiers lourds.
+
+Tous les lignes \textsf{segment ...} doivent être remplacées par :
+
+\textsf{][\% segment...}.
+
+Pour la clarté, si l'éditeur le permet
+on insérera un saut de ligne entre les deux crochets \textsf{] [}.
+On modifiera le début et la fin du fichier ainsi obtenu plaçant au
+début, à la place du premier crochet~] :
+
+\textsf{/europe-cil [}
+
+et à la fin, on rajoutera :
+
+\textsf{] ] def}.
+
+Cet exemple valable pour le fichier \textsf{europe-cil.txt} doit
+être répété et adapté en modifiant les noms à tous les autres
+fichiers.
+
+Giuseppe Matarazzo a mis au point un programme permettant de faire
+ce travail automatiquement, il fait partie de la distribution.
+
+Cependant le travail ne s'arrête pas là ! La structure des données
+des fichiers \textsf{asia-cil}, \textsf{asia-riv} et
+\textsf{samer-cil} pose problème.
+
+Commençons par le fichier qui donne le plus de soucis :
+\textsf{asia-cil}.
+
+Avec un votre éditeur de textes rechercher puis supprimez les
+segments :
+\begin{itemize}
+\item segment 7925 à segment 7957
+\item segment 7966
+\item segment 7968 à segment 7986
+\item segment 8377
+\item segment 8638 à segment 8641
+\item segment 8645 à segment 8650
+\item segment 8645 à segment 8650
+\item segments 15 à segment 123
+\end{itemize}
+Exemple : on supprimera [ segment 7925 \ldots ] d'un crochet à
+l'autre, crochets compris.
+
+Ces parties manquantes sont remplacées par le fichier
+\textsf{asia-isl.dat} qui est la concaténation des précédents.
+
+Pour le fichier \textsf{samer-cil}, supprimez de même les segments
+:
+\begin{itemize}
+\item segment 2166
+\item segment 1948
+\end{itemize}
+Ils seront remplacés par le fichier \textsf{samer-arc} : voilà
+vous êtes arrivés au bout de vos peines !
+
+ Si vous
+n'avez pas lu le fichier \verb+A LIRE+, la compilation a du mal se
+passer. Il faut en effet indiquer le chemin des données dans la
+variable \verb+path+. Cette variable contient le chemin des
+données sur mon disque dur :
+
+\verb+path=data+
+
+Il faut donc avant le \verb+\begin{document}+, indiquer celui qui
+correspond à votre configuration avec une commande du type :
+
+\verb+\psset{path=data}+
+
+ ou bien le modifier
+directement dans le fichier \verb+pst-mapII.tex+.
+\section{Les options}
+\subsection{Les différents types de projections} Ils sont ceux
+vus
+avec \textsf{pst-map2d} ; ici il n'y a qu'un seul niveau de détail
+: donc pas de choix possible.
+\begin{center}
+\renewcommand\arraystretch{2}
+\begin{tabular}{|l|c|}\hline
+\Parameter{type=1}& Mercator\\ \hline
+\Parameter{type=2} & Lambert\\ \hline
+\Parameter{type=3} & simple\\ \hline
+\Parameter{type=4} & Sanson-Flamsteed\\ \hline
+\Parameter{type=5} & cylindrical\\ \hline
+\Parameter{type=6} & Babinet\\ \hline
+\end{tabular}
+\end{center}
+\subsection{Les options}
+Les options se résument ici aux choix des continents et aux fleuves  ainsi qu'au dessin ou non des parallèles et méridiens.
+
+Par défaut tous les continents et fleuves sont tracés.
+\begin{itemize}
+\item \Parameter{europe=false} : l'Europe n'est pas dessinée.
+\item \Parameter{africa=false} : l'Afrique n'est pas dessinée.
+\item \Parameter{asia=false} : l'Asie n'est pas dessinée.
+\item \Parameter{namer=false} : l'Amérique du Nord n'est pas dessinée.
+\item \Parameter{samer=false} : l'Amérique du Sud n'est pas dessinée.
+\item \Parameter{rivers=false} : les rivières ne sont pas dessinées.
+\item \Parameter{borders=false} : les frontières ne sont pas
+tracées.
+\item \Parameter{city=false} : les villes ne sont pas
+placées. Si \Parameter{city=true} : les capitales et les villes sont placées
+(sans le nom).
+\item \Parameter{capital=true} : les capitales sont seules indiquées.
+\item \Parameter{maillage=false} : les parallèles et méridiens ne sont pas tracés.
+\item \Parameter{increment=10} : est la valeur par défaut, en degrés, de l'écart angulaire entre deux
+méridiens ou parallèles. On pourra donc fixer une valeur plus petite dans le cas
+d'un zoom.
+\item \Parameter{ilimiteL=180} : est la valeur absolue par défaut, en degrés, de
+la longitude $(\pm 180)$.
+\end{itemize}
+\section{Le mode d'emploi}
+\textbf{J'ai désactivé le tracé des fleuves et des frontières avec les options
+:}
+\begin{verbatim}
+rivers=false,borders=false
+\end{verbatim}
+\textbf{Afin d'accélérer l'affichage. Libre à vous des les activer en les plaçant à
+\texttt{true}}
+\subsection{Mercator}
+Le script suivant dessine la projection de Mercator (qui est le type par défaut), en mode paysage :
+\begin{verbatim}
+\hbox{\hspace{-3cm}%
+\begin{pspicture}*(-9,-9)(9,10)
+\rput{90}(0,0){\WorldMapII[all=true,level=75]}
+\end{pspicture}}
+\end{verbatim}
+\makebox[\textwidth]{%
+\begin{pspicture*}(-9,-9)(9,10)
+\rput{90}(0,0){\WorldMapII[all=true,rivers=false,borders=false,linewidth=0.1\pslinewidth,level=75]}
+\end{pspicture*}
+}
+\subsection{Projection de Lambert}
+\begin{verbatim}
+\begin{pspicture*}(-9,-5)(9,5)
+\WorldMapII[type=2,all=true]
+\end{pspicture*}
+\end{verbatim}
+\makebox[\textwidth]{%
+{\psset{xunit=0.75,yunit=0.75}
+\begin{pspicture}(-9,-5)(9,5)
+\WorldMapII[type=2,all=true,rivers=false,borders=false,linewidth=0.1\pslinewidth]
+\end{pspicture}}
+}
+
+\begin{landscape}
+\subsection{Projection simple}
+\begin{verbatim}
+\begin{pspicture*}(-9,-3)(9,3)
+  \psframe*[linecolor=ocean](-9,-3)(9,3)
+  \WorldMapII[type=3,maillage=false,all=true]
+\end{pspicture*}
+\end{verbatim}
+\begin{pspicture*}(-9,-3)(9,3)
+  \psframe*[linecolor=ocean](-9,-3)(9,3)
+  \WorldMapII[type=3,all=true,maillage=false,rivers=false,borders=false,linewidth=0.1\pslinewidth]
+\end{pspicture*}
+\end{landscape}
+
+\subsection{Projection Sanson-Flamsteed}
+\begin{verbatim}
+\begin{pspicture*}(-10,-5)(10,5)
+  \WorldMapII[type=4,all=true]
+\end{pspicture*}
+\end{verbatim}
+\begin{center}
+\resizebox{\linewidth}{!}{%
+\begin{pspicture*}(-10,-5)(10,5)
+  \WorldMapII[type=4,all=true,rivers=false,borders=false,linewidth=0.1\pslinewidth]
+\end{pspicture*}}
+\end{center}
+
+\clearpage
+
+\subsection{Projection cylindrique}
+\begin{verbatim}
+\psset{xunit=0.5,yunit=0.5}
+\begin{pspicture}*(-9,-12)(9.5,14)
+\psframe(-9,-12)(9.5,14)
+\WorldMapII[type=5,all=true]
+\end{pspicture}
+\end{verbatim}
+{\psset{xunit=0.5,yunit=0.5}
+\begin{pspicture}*(-9,-12)(9.5,14)
+\psframe(-9,-12)(9.5,14)
+\WorldMapII[type=5,all=true,linewidth=0.1\pslinewidth,rivers=false,borders=false]
+\end{pspicture}}
+
+\clearpage
+
+
+\subsection{Projection de Babinet}
+\begin{verbatim}
+{\psset{xunit=0.75,yunit=0.75}
+\begin{pspicture*}(-10,-5)(10,5)
+  \WorldMapII[type=6,all=true,rivers=false,borders=false,linewidth=0.1\pslinewidth]
+\end{pspicture*}}
+\end{verbatim}
+{\psset{xunit=0.75,yunit=0.75}
+\begin{pspicture*}(-10,-5)(10,5)
+  \WorldMapII[type=6,all=true,rivers=false,borders=false,linewidth=0.1\pslinewidth]
+\end{pspicture*}}
+
+\clearpage
+
+\subsection{Projection de Collignon}
+\begin{center}
+\resizebox{\linewidth}{!}{%
+\psset{xunit=0.75,yunit=0.75}
+\begin{pspicture*}(-10,-5)(10,5)
+\WorldMapII[type=7,all=true]
+\end{pspicture*}}
+\end{center}
+
+\clearpage
+
+
+\subsection{Projection de Bonne}
+On peut choisir la latitude et la longitude de référence avec les
+paramètres : \Parameter{latitude0=45} et \Parameter{longitude0=0},
+qui sont les valeurs par défaut.
+\begin{center}
+\begin{pspicture*}(-7,-10)(7,3)
+\WorldMapII[type=8,all=true]
+\end{pspicture*}
+\end{center}
+
+\clearpage
+
+
+\section{Comment faire un zoom sur un pays ou une région donnée}
+Il n'a pas été prévu de commande particulière, mais la procédure
+suivante :
+\begin{enumerate}
+  \item Placer un \verb+\psgrid+ après le tracé de la carte, puis
+  repérer les coordonnées des deux sommets opposés du rectangle
+  dans lequel sera inclus la région souhaitée.
+\begin{center}
+\psset{linewidth=0.2\pslinewidth}
+\psset{xunit=0.75,yunit=0.75}
+\begin{pspicture*}[showgrid=true](-9,-9)(10,9)
+  \WorldMapII[maillage=false,rivers=false,borders=false,all=true]
+\psframe[linewidth=0.5mm,linecolor=red](-6.5,1)(-3,3)
+\end{pspicture*}
+\end{center}
+  \item Par exemple, si nous choisissons de représenter les
+  \'Etats-Unis les coordonnées des coins bas-gauche et haut-droit
+  seront : \verb+(-6.5,1)(-3,3)+
+
+  L'agrandissement sera obtenu en changeant d'unité, un zoom $\times4$ s'obtiendra avec :
+  \verb+\psset{xunit=4,yunit=4}+. Finalement la
+  commande s'écrira :
+\begin{verbatim}
+\begin{center}
+\psset{xunit=4,yunit=4}% zoom 4*
+\psset{linewidth=1.25\pslinewidth}
+  \begin{pspicture*}(-6.5,1)(-3,3)
+  \WorldMapII[samer=true,namer=true,europe=false]
+\end{pspicture*}
+\end{center}
+\end{verbatim}
+\begin{center}
+\psset{xunit=4,yunit=4}% zoom 4*
+\psset{linewidth=1.25\pslinewidth}
+  \begin{pspicture}*(-6.5,1)(-3,3)
+  \WorldMapII[samer=true,namer=true,europe=false]
+\end{pspicture}
+\end{center}
+\item Pour le Japon, on choisira le cadre \verb+(6.2,1.4)(7.6,2.8)+ avec un
+zoom$\times10$. On ne sectionnera que \texttt{asia=true}, tous les autres
+sont à \texttt{false}.
+\begin{center}
+\psset{xunit=10,yunit=10}% zoom 10*
+\psset{linewidth=1.25\pslinewidth}
+  \begin{pspicture}*(6.2,1.4)(7.6,2.8)
+  \WorldMapII[asia=true,increment=1]
+\end{pspicture}
+\end{center}
+\end{enumerate}
+
+\nocite{*}
+\bgroup
+\RaggedRight
+\bibliographystyle{plain}
+\bibliography{PSTricks}
+\egroup
+
+
+\end{document}

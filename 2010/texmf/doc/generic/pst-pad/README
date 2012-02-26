@@ -1,0 +1,72 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Description:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+pst-pad is a PSTricks package for drawing simple attachment systems.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Contents:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Makefile                - Makefile for PDF documentation
+pst-pad.sty             - The LaTeX file
+pst-pad.tex             - The TeX file
+pst-pad-doc.pdf         - The english documentation
+pst-pad-doc.tex         - The english documentation (source)
+pst-pad-docDE.pdf       - The german documentation
+pst-pad-docDE.tex       - The german documentation (source)
+pst-pad-doc-header.tex  - Common header for EN/DE documentation
+showexpl.cfg            - Configuration file for showexpl.sty
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Installation:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Save the files pst-pad.sty|tex in a directory, which is part of your
+local TeX tree.  Then do not forget to run texhash to update this
+tree.  pst-pad needs pst-node and pstricks, which should be part of
+your local TeX installation, otherwise get it from a CTAN server,
+f.ex.  ftp://ftp.dante.de
+
+Save the files
+
+pst-pad.sty 
+pst-pad.tex
+
+in any place, where latex or any other TeX program will find it.  Do
+not forget to update your database, when installing this package the
+first time.
+
+pst-pad uses the extended version of the keyval package. So be sure
+that you
+- have installed xkeyval with the special pst-xkey
+  (CTAN: tex-archive/macros/latex/contrib/xkeyval/)
+- do not load another package after pst-pad, which loads the old
+  keyval.sty or pst-key.tex
+
+
+If you like to get the documentation file in another format run 
+
+latex pst-pad-doc.tex
+latex pst-pad-doc.tex
+dvips pst-pad-doc.dvi
+
+to get a PostScript file. But pay attention, that the pst-pad files
+are saved in the above mentioned way, before you run latex on the
+documentation file.
+
+The intermediate DVI file works only with viewers which can interprete
+the embedded PostScript code.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Licence:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+This material is subject to the LaTeX Project Public License. See
+http://www.ctan.org/tex-archive/help/Catalogue/licenses.lppl.html for
+the details of that license.
+
+
+Author: Patrick Drechsler
+Created: Tue Feb 19 18:14:18 2008
+

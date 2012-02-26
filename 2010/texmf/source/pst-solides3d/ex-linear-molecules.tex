@@ -1,0 +1,261 @@
+\section {Modèles moléculaires compact et éclaté}
+\bgroup
+
+\subsection{$\mathrm{Cl_2}$ : modèle compact}
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-4,-3)(4,5)
+\psset{lightsrc=10 50 10,lightintensity=2,
+       viewpoint=100 30 20,Decran=30,SphericalCoor}
+\psset{linecolor={[cmyk]{0 0.72 1 0.45}},
+       linewidth=0.5\pslinewidth}
+\codejps{
+% r phi theta [ngrid] newcalottesphere
+  /Chlore1 {
+  5 -30 90 [16 18] newcalottesphere
+  {90 0 0 rotateOpoint3d} solidtransform
+  {0 -2.5 0 translatepoint3d} solidtransform
+  dup videsolid
+  dup (Green) outputcolors
+  } def
+  /Chlore2 {
+  5 -30 90 [16 18] newcalottesphere
+  {-90 0 0 rotateOpoint3d} solidtransform
+  {0 2.5 0 translatepoint3d} solidtransform
+  dup (Green) outputcolors
+  } def
+  /dichlore{
+  Chlore1 Chlore2 solidfuz
+  } def
+  dichlore drawsolid**}
+\axesIIID(2.5,7.5,2.5)(15,15,12)
+\end{pspicture}
+\end{LTXexample}
+\newpage
+\subsection{$\mathrm{Cl_2}$ : modèle éclaté}
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-5,-5)(5,5)
+\psset{lightsrc=10 50 10,lightintensity=2,viewpoint=100 30 30,Decran=30,SphericalCoor}
+\psset{linecolor={[cmyk]{0 0.72 1 0.45}},linewidth=0.5\pslinewidth}
+\codejps{
+ /Chlore1 {5  -30 90 [16 18] newcalottesphere
+  {90 0 0 rotateOpoint3d} solidtransform
+    {0 -10 0 translatepoint3d} solidtransform
+    dup (Green) outputcolors } def
+/Chlore2 {5  -30 90 [16 18] newcalottesphere
+ {-90 0 0 rotateOpoint3d} solidtransform
+  {0 10 0 translatepoint3d} solidtransform
+  dup (Green) outputcolors } def
+/Liaison {
+     0 0.5 15  [12 10] newcylindre
+     {-90 0 0 rotateOpoint3d} solidtransform
+  {0 -7.5 0 translatepoint3d} solidtransform
+      dup (White) outputcolors
+   } def
+/Cl2{Chlore1 Chlore2 solidfuz} def
+/dichlore{Cl2 Liaison solidfuz} def
+  dichlore drawsolid**}
+\axesIIID(1,15,1)(15,20,12)
+\end{pspicture}
+\end{LTXexample}
+\newpage
+\subsection{$\mathrm{CO_2}$ : modèle compact}
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-4,-3)(4,3)
+\pstVerb{/DarkGray {0.2 setgray} def}%
+\psset{lightsrc=92 16 35,lightintensity=2,
+       viewpoint=100 10 20,Decran=30,SphericalCoor}
+\psset{linecolor={[cmyk]{0 0.72 1 0.45}},
+       linewidth=0.5\pslinewidth}
+\codejps{
+% r phi theta [ngrid] newcalottesphere
+  /Oxygen {
+  5 -30 90 [16 18] newcalottesphere
+  dup videsolid
+  dup (rouge) outputcolors
+  } def
+  /Carbon {
+  5 -30 30 [16 18] newcalottesphere
+  {90 0 0 rotateOpoint3d} solidtransform
+  dup (DarkGray) outputcolors
+  } def
+  /Oxygen1 {
+    Oxygen {90 0 0 rotateOpoint3d} solidtransform
+       {0 -4.33 0 translatepoint3d} solidtransform } def
+  /Oxygen2 {
+    Oxygen {-90 0 0 rotateOpoint3d} solidtransform
+        {0 4.33 0 translatepoint3d} solidtransform } def
+  /CO{Oxygen1 Carbon solidfuz} def
+  /CO2 {CO Oxygen2 solidfuz} def
+  CO2 drawsolid**}
+\axesIIID(2.5,7.5,2.5)(15,15,12)
+\end{pspicture}
+\end{LTXexample}
+\newpage
+\subsection{$\mathrm{CO_2}$ : modèle éclaté}
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-7,-3)(7,6)
+\pstVerb{/DarkGray {0.2 setgray} def}%
+\psset{lightsrc=92 16 35,lightintensity=2,
+       viewpoint=100 30 20,Decran=30,SphericalCoor}
+\psset{linecolor={[cmyk]{0 0.72 1 0.45}},
+       linewidth=0.5\pslinewidth}
+\codejps{
+% r phi theta [ngrid] newcalottesphere
+  /Oxygen {
+  5 -30 90 [16 18] newcalottesphere
+  dup videsolid
+  dup (rouge) outputcolors
+  } def
+  /Carbon {
+  5 -30 30 [16 18] newcalottesphere
+  {90 0 0 rotateOpoint3d} solidtransform
+  dup (DarkGray) outputcolors
+  } def
+/Liaison {
+     0 0.5 15  [10 10] newcylindre
+     {-90 0 0 rotateOpoint3d} solidtransform
+      dup (White) outputcolors
+   } def
+/L1 { Liaison {0 -17.5 1.5 translatepoint3d} solidtransform } def
+/L2 { Liaison {0 -17.5 -1.5 translatepoint3d} solidtransform } def
+/L3 { Liaison {0 2.5 1.5 translatepoint3d} solidtransform } def
+/L4 { Liaison {0 2.5 -1.5 translatepoint3d} solidtransform } def
+/Oxygen1 {Oxygen {90 0 0 rotateOpoint3d} solidtransform
+                 {0 -19.33 0 translatepoint3d} solidtransform } def
+/Oxygen2 {Oxygen {-90 0 0 rotateOpoint3d} solidtransform
+                 {0 19.33 0 translatepoint3d} solidtransform } def
+/Oxygen1L1 {Oxygen1 L1 solidfuz} def
+/Oxygen1L12 {Oxygen1L1 L2 solidfuz} def
+/CO1L12{Oxygen1L12 Carbon solidfuz} def
+/Oxygen2L3 {Oxygen2 L3 solidfuz} def
+/Oxygen2L34 {Oxygen2L3 L4 solidfuz} def
+/CO2 {CO1L12 Oxygen2L34  solidfuz} def
+  CO2 drawsolid**}
+%/L1234 {L12 L34 solidfuz} def
+%L1234 drawsolid**}
+\axesIIID(2.5,2.5,2.5)(15,25,15)
+\end{pspicture}
+\end{LTXexample}
+\newpage
+\subsection{Modèle éclaté du $\mathrm{N_2}$}
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-7,-2)(7,5)
+\psset{lightsrc=92 16 35,lightintensity=2,
+       viewpoint=100 30 20,Decran=30,SphericalCoor}
+\psset{linecolor={[cmyk]{0 0.72 1 0.45}},
+       linewidth=0.5\pslinewidth}
+\codejps{
+% r phi theta [ngrid] newcalottesphere
+  /Nitrogen {
+  5 -30 90 [16 18] newcalottesphere
+  {0 180 0 rotateOpoint3d} solidtransform
+  dup videsolid
+  dup (bleu) outputcolors
+  } def
+/Liaison {
+     0 0.5 15  [18 10] newcylindre
+      dup (White) outputcolors
+   } def
+/L1 {Liaison {0 -1.5 2 translatepoint3d} solidtransform } def
+/L2 {Liaison {0  1.5 2 translatepoint3d} solidtransform } def
+/L3 {Liaison {0  0 2 translatepoint3d} solidtransform } def
+/NitrogenL1 {Nitrogen L1 solidfuz} def
+/NitrogenL12 {NitrogenL1 L2 solidfuz} def
+/NitrogenL123 {NitrogenL12 L3 solidfuz} def
+/N2{NitrogenL123 Nitrogen {0 180 0 rotateOpoint3d} solidtransform {0 0 17 translatepoint3d} solidtransform solidfuz} def
+N2 {60 0 0 rotateOpoint3d} solidtransform {0 0 45 rotateOpoint3d} solidtransform drawsolid**}
+\axesIIID(2.5,2.5,2.5)(15,15,15)
+\end{pspicture}
+\end{LTXexample}
+\newpage
+\subsection{Modèle compact de l'acétylène}
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-7,-2)(7,5)
+\psset{lightsrc=92 16 35,lightintensity=2,linewidth=0.5\pslinewidth,
+       viewpoint=100 30 20,Decran=30,SphericalCoor}
+\pstVerb{/DarkGray {0.5 setgray} def}%
+\codejps{
+% r phi theta [ngrid] newcalottesphere
+  /Carbon {
+  4 -48.6 48.6 [16 18] newcalottesphere
+  {0 90 0 rotateOpoint3d} solidtransform
+  dup (DarkGray) outputcolors
+  } def
+  /Hydrogen {
+  3.317 -37.1 90 [16 18] newcalottesphere
+  dup videsolid
+  dup (White) outputcolors
+  } def
+/C2H2 {Hydrogen {0 -90 0 rotateOpoint3d} solidtransform
+                {-8 0 0 translatepoint3d} solidtransform
+      Carbon    {-3 0 0 translatepoint3d} solidtransform
+        solidfuz
+      Carbon    {3 0 0 translatepoint3d} solidtransform
+        solidfuz
+      Hydrogen {0 90 0 rotateOpoint3d} solidtransform
+               {8 0 0 translatepoint3d} solidtransform
+        solidfuz} def
+C2H2 {0 0 90 rotateOpoint3d} solidtransform drawsolid**}
+\axesIIID(2.5,2.5,2.5)(15,15,15)
+\end{pspicture}
+\end{LTXexample}
+
+\newpage
+\subsection{Modèle éclaté de l'acétylène}
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-7,-2.5)(7,3)
+\psset{lightsrc=92 16 35,lightintensity=2,linewidth=0.5\pslinewidth,
+       viewpoint=100 30 20,Decran=30,SphericalCoor}
+\pstVerb{/DarkGray {0.5 setgray} def}%
+\codejps{
+  /Carbon {
+  4 -48.6 48.6 [16 18] newcalottesphere
+  {0 90 0 rotateOpoint3d} solidtransform
+  dup (DarkGray) outputcolors
+  } def
+  /Hydrogen {
+  3.317 -37.1 90 [16 18] newcalottesphere
+  dup videsolid dup (White) outputcolors
+  } def
+/LiaisonCH {
+     0 0.5 9  [10 10] newcylindre
+      dup (White) outputcolors
+   } def
+/LiaisonCC {
+     0 0.5 10  [10 10] newcylindre
+      dup (White) outputcolors
+   } def
+/C2H2 {Carbon {-8 0 0 translatepoint3d} solidtransform
+     Carbon {8 0 0 translatepoint3d} solidtransform
+        solidfuz
+     LiaisonCC {0 -90 0 rotateOpoint3d} solidtransform
+               {5 0 0 translatepoint3d} solidtransform
+       solidfuz
+     LiaisonCC {0 -90 0 rotateOpoint3d} solidtransform
+               {5 0 1.5 translatepoint3d} solidtransform
+       solidfuz
+     LiaisonCC {0 -90 0 rotateOpoint3d} solidtransform
+               {5 0 -1.5 translatepoint3d} solidtransform
+       solidfuz
+     LiaisonCH {0 -90 0 rotateOpoint3d} solidtransform
+               {-11 0 0 translatepoint3d} solidtransform
+      solidfuz
+      Hydrogen {0 90 0 rotateOpoint3d} solidtransform
+               {22 0 0 translatepoint3d} solidtransform
+        solidfuz
+      LiaisonCH {0 90 0 rotateOpoint3d} solidtransform
+               {11 0 0 translatepoint3d} solidtransform
+      solidfuz
+      Hydrogen {0 -90 0 rotateOpoint3d} solidtransform
+               {-22 0 0 translatepoint3d} solidtransform
+        solidfuz } def
+C2H2 {0 0 90 rotateOpoint3d} solidtransform drawsolid**}
+\psPoint(0,8,5){C2}\psPoint(0,22,5){H2}
+\psPoint(0,-8,5){C1}\pcline{<->}(C1)(C2)
+\lput*{:U}{\small 12,1 pm}
+\pcline{<->}(C2)(H2)\lput*{:U}{\small 10,9 pm}
+\axesIIID(2.5,24,2.5)(15,26,10)
+\end{pspicture}
+\end{LTXexample}
+
+\egroup

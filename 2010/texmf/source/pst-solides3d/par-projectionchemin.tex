@@ -1,0 +1,198 @@
+\def\contourZ{2.2973   0.705301 smoveto
+           2.25049   0.561268 slineto
+           2.20779   0.456241 slineto
+           2.16287   0.376752 slineto
+           2.10933   0.309334 slineto
+           2.0227   0.242737 slineto
+           1.9088   0.193796 slineto
+           1.77011   0.163577 slineto
+           1.60932   0.153312 slineto
+           0.581305   0.153312 slineto
+           2.30929   2.58931 slineto
+           2.30929   2.64933 slineto
+           0.205292   2.64933 slineto
+           0.12531   1.9653 slineto
+           0.229352   1.9653 slineto
+           0.256204   2.09242 slineto
+           0.285274   2.18726 slineto
+           0.32042   2.26117 slineto
+           0.365338   2.3253 slineto
+           0.450739   2.40109 slineto
+           0.568741   2.4548 slineto
+           0.719097   2.48674 slineto
+           0.901314   2.49734 slineto
+           1.7853   2.49734 slineto
+           0.037281   0.0613412 slineto
+           0.037281   0.00131387 slineto
+           2.29328   0.00131387 slineto
+           2.38935   0.705301 slineto closepath}
+\def\contourY{-1.18668008 2.64933 smoveto
+              -2.0627 2.64933  slineto
+              -2.0627 2.57329  slineto
+              -1.93189 2.56451  slineto
+              -1.84673 2.54176  slineto
+              -1.80058 2.50185  slineto
+              -1.78671 2.44133  slineto
+              -1.80124 2.37482  slineto
+              -1.84271 2.29328  slineto
+              -2.41465 1.38933  slineto
+              -3.00671506 2.27734  slineto
+              -3.05721712 2.37276  slineto
+              -3.07470798 2.45332  slineto
+              -3.06403303 2.50062  slineto
+              -3.03077602 2.53527  slineto
+              -2.97346 2.55794  slineto
+              -2.89067984 2.56935  slineto
+              -2.85119 2.56984  slineto
+              -2.79067 2.57329  slineto
+              -2.79067 2.64933  slineto
+              -3.91065693 2.64933  slineto
+              -3.91065693 2.57329  slineto
+              -3.84414196 2.56714  slineto
+              -3.78469 2.55112  slineto
+              -3.7267971 2.51975  slineto
+              -3.66471696 2.46777  slineto
+              -3.59286499 2.38976  slineto
+              -3.50573897 2.28022  slineto
+              -3.3975091 2.13389  slineto
+              -3.2626729 1.94535  slineto
+              -2.73869 1.17731  slineto
+              -2.73869 0.481286  slineto
+              -2.74115 0.364599  slineto
+              -2.75068 0.273531  slineto
+              -2.77055 0.204717  slineto
+              -2.80422 0.15479  slineto
+              -2.85496 0.120383  slineto
+              -2.92608 0.0982117  slineto
+              -3.02083898 0.0849909  slineto
+              -3.14270115 0.077354  slineto
+              -3.14270115 0.00131387  slineto
+              -1.91866994 0.00131387  slineto
+              -1.91866994 0.077354  slineto
+              -2.03864 0.0826095  slineto
+              -2.13331985 0.094188  slineto
+              -2.20550013 0.114553  slineto
+              -2.25822 0.14625  slineto
+              -2.29419 0.191907  slineto
+              -2.31636 0.253905  slineto
+              -2.32761 0.334872  slineto
+              -2.33064985 0.437354  slineto
+              -2.33064985 1.21328  slineto
+              -1.73867011 2.1173  slineto
+              -1.57821012 2.33474  slineto
+              -1.44773006 2.4713  slineto
+              -1.32471991 2.54472 slineto
+              -1.18668008 2.57329 slineto closepath}
+
+\section {Projection d'un chemin}
+
+La macro \verb+\psProjection+ paut également projeter un chemin décrit
+en postscript. Dans ce cas, l'objet transmis à \verb+\psProjection+ est
+\Cadre {chemin}, chemin qui est décrit dans la paramètre \verb+path+.
+
+Par exemple, la procédure suivante dessinera , dans le plan choisi,
+une grille $8\times8$ au pas de $1$, dont les valeurs limites sont
+$[-4,4]$.  
+
+%% \begin{boxedverbatim}
+\begin{verbatim} 
+      object=chemin,
+      path=
+          -4 1 4
+          {-4 exch smoveto
+           8 0 srlineto} for
+          -4 1 4
+          {-4 smoveto
+           0 8 srlineto} for
+\end{verbatim}  
+%% \end{boxedverbatim}
+
+Le tracé du chemin ainsi défini fait appel à l'objet \Cadre{chemin} et à l'option \Cadre{path}.
+
+\begin{minipage}{0.4\linewidth}
+\psset{unit=0.5}
+\begin{pspicture}(-6,-5)(6,8)%
+\psframe*[linecolor=blue!50](-6,-5)(6,7)
+\psset{lightsrc=50 20 20,viewpoint=50 30 15,Decran=60}
+\psProjection[object=chemin,fillstyle=solid,fillcolor=white,
+            linewidth=.05,linecolor=red,
+            normal=1 1 2 180,
+            path=
+                -4 -4 smoveto
+                -4 4 slineto
+                4 4 slineto
+                4 -4 slineto
+                closepath
+            ](1,1,2)
+\psProjection[object=chemin,
+      linewidth=.02,
+      normal=1 1 2 180,
+      path=
+          -4 1 4
+          {-4 exch smoveto
+           8 0 srlineto} for
+           -4 1 4
+          {-4 smoveto
+           0 8 srlineto} for
+            ](1,1,2)
+\psProjection[object=chemin,fillstyle=solid,fillcolor=yellow,
+            linecolor=red,
+            normal=1 1 2 180,
+            path=\contourZ
+            ](1,1,2)
+\psProjection[object=chemin,fillstyle=vlines,hatchcolor=blue,
+            normal=1 1 2 180,
+            path=\contourY
+            ](1,1,2) 
+\psProjection[object=chemin,fillstyle=hlines,hatchcolor=yellow,
+            linecolor=red,
+            normal=1 1 2 180,
+            path=
+            2 0 smoveto
+            0 2 360 {
+                /x exch def
+                x cos 2 mul
+             x sin 2 mul
+                slineto
+         } for
+            ](1,1,2)
+\psPoint(0,0,0){O}
+\psPoint(1,1,2){O1}\psPoint(1.4,1.4,2.8){K}
+\psline[linewidth=.1,linecolor=red](O1)(K)
+\psline[linestyle=dashed](O)(O1)
+\psProjection[object=chemin,
+      linewidth=.1,
+      linecolor=green,
+      normal=1 1 2 180,
+      path=
+            0 0 smoveto
+            1 0 slineto](1,1,2)
+\psProjection[object=chemin,
+      linewidth=.1,
+      linecolor=blue,
+      normal=1 1 2 180,
+      path=
+            0 0 smoveto
+            0 1 slineto](1,1,2)
+\axesIIID(4,4,2)(5,5,6)
+\end{pspicture}
+\end{minipage}
+\hfill
+\begin{minipage}{0.6\linewidth}
+%% \begin{boxedverbatim} 
+\begin{verbatim} 
+\psProjection[object=chemin,
+            linewidth=.1,linecolor=blue,
+            fillstyle=solid,fillcolor=yellow,
+            normal=1 1 2 180,
+            path=\contourZ
+            ](1,1,2)
+\psProjection[object=chemin,
+            fillstyle=vlines,hatchcolor=blue,
+            normal=1 1 2 180,
+            path=\contourY
+            ](1,1,2)
+\end{verbatim}  
+%% \end{boxedverbatim}
+\end{minipage}
+

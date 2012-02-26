@@ -1,0 +1,208 @@
+\documentclass{article}
+\usepackage{pst-solides3d,pst-node,multido}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[a4paper]{geometry}
+\usepackage[frenchle]{babel}
+
+
+
+\date{03 octobre 2\,007}
+\author{JPV \& ML}
+\title{Utilisation de la \\
+grille et du parallélépipède}
+
+\begin{document}
+\maketitle
+\psset{lightsrc=100 20 50}
+%\section{La \textsf{grille} et son paramètre : \textsf{base}}
+Par défaut la grille au pas de 1 est dessinée sur le plan horizontal $Oxy$, elle supporte les mêmes options que les solides.
+\begin{verbatim}
+\psSolid[object=grille,base=-4 4 -5 5](0,0,0)
+\end{verbatim}
+{\psset{unit=0.5,SphericalCoor,viewpoint=100 20 20,Decran=100}
+\begin{pspicture}(-5,-3.5)(5,3.5)
+\psSolid[object=grille,base=-4 4 -5 5,action=draw](0,0,0)
+ \axesIIID(0,0,0)(4,5,3)
+\rput(0,-3){\textsf{action=draw}}
+\end{pspicture}
+\hfill
+\begin{pspicture}(-5,-3.5)(5,3.5)
+\psSolid[object=grille,base=-4 4 -5 5,action=draw*,fillcolor=yellow](0,0,0)
+ \axesIIID(0,0,0)(4,5,3)
+\rput(0,-3){\textsf{action=draw*,fillcolor=yellow}}
+\end{pspicture}}
+
+Dans le livre \textsc{géométrie} \textit{des cours complémentaires et enseignement secondaire court} de 1\,950 (éditeur Ligel), on trouve
+(page 459) la figure suivante, illustration du théorème :
+\begin{center}
+ \psframebox[fillstyle=solid,linestyle=none,fillcolor=yellow!50]{%
+ \begin{minipage}{0.8\linewidth}
+ \textbf{Le nombre qui mesure le volume d'un parallélépipède rectangle est égal
+ au produit des nombres qui mesurent ses trois dimensions.}
+\end{minipage}}
+\end{center}
+\begin{center}
+\psset{SphericalCoor,viewpoint=100 20 20,Decran=100}
+\begin{pspicture}(-6,-1.5)(6,5.5)
+\psSolid[object=parallelepiped,a=5,b=6,c=1,fillcolor=yellow](0,0,c 2 div)
+\psSolid[object=grille,base=-2.5 2.5 -3 3,action=draw](0,0,1)
+\psSolid[object=grille,base=-2.5 2.5 -3 3,action=draw](0,0,4)
+\psSolid[object=grille,base=-2 2 -3 3,RotY=90,action=draw](2.5,0,2)
+\psSolid[object=grille,base=-2.5 2.5 -2 2,RotX=-90,action=draw](0,3,2)
+\psSolid[object=cube,fillcolor=red,a=1](2,2.5,0.5)
+\psSolid[object=parallelepiped,a=5,b=6,c=4,action=draw,linewidth=2\pslinewidth](0,0,c 2 div)
+\psPoint(2.5,-3,0){A}
+\psPoint(2.5,3,0){B}
+\psPoint(-2.5,-3,0){D}
+\psPoint(-2.5,3,0){C}
+\psPoint(2.5,-3,4){E}
+\psPoint(2.5,3,4){F}
+\psPoint(-2.5,3,4){G}
+\psPoint(-2.5,-3,4){H}
+\uput[d](A){A}\uput[d](B){B}
+\uput[dr](C){C}\uput[d](D){D}
+\uput[l](E){E}\uput[r](F){F}
+\uput[ur](G){G}\uput[u](H){H}
+\psPoint(2.5,-3,1){a}
+\psPoint(2.5,3,1){b}
+\psPoint(-2.5,-3,1){d}
+\psPoint(-2.5,3,1){c}
+\uput[l](a){$a$}\uput[r](b){$b$}
+\uput[r](c){$c$}\uput[l](d){$d$}
+\end{pspicture}
+\end{center}
+La démonstration donnée \textit{par une réunion de professeurs} est la suivante :
+
+Soit ABCDEFGH un parallélépipède rectangle. Choisissons une unité $u$ qui puisse être portée un nombre exact de fois
+sur chaque dimension ; soit, par exemple, 6~fois sur AB, 5~fois sur AD, 4~fois sur AE.
+
+On a par \textit{hypothèse} :
+\[
+\mathrm{AB=6}\ ;\qquad \mathrm{AD=5}\ ;\qquad\mathrm{AE=3}.
+\]
+\textit{Je dis que l'on a aussi :}
+\[
+V=6\times 5\times 4
+\]
+En effet, par les points de division de EA, menons des plans parallèles aux bases. \textit{Nous déterminons
+ainsi quatre parallélépipèdes égaux entre eux, comme ayant des bases égales et même hauteur}.
+
+Soit ABCD$abcd$ un de ces volumes partiels. Sa base est un rectangle qui peut être divisé en
+\[
+6\times5\textrm{ carrés-unité.}
+\]
+Sur chacun de ces carrés on peut construire \textbf{un cube qui est, par définition, l'unité de volume.}
+
+Dans un parallélépipède partiel l'unité est contenue :
+\[
+6\times5\textrm{ fois}
+\]
+Dans le parallélépipède donné elle est donc contenue :
+\[
+6\times5\times4\textrm{ fois}
+\]
+Et on a bien :
+\[
+V=6\times 5\times 4
+\]
+Ce dessin est construit en 6 étapes :
+\begin{enumerate}
+  \item On place le parallélépipède qui est à la base du parallélépipède étudié :
+     \begin{verbatim}
+\psSolid[object=parallelepiped,a=5,b=6,c=1](0,0,c 2 div)
+    \end{verbatim}
+  en lui adjoignant, éventuellement, les options de couleur et d'éclairage :
+     \begin{verbatim}
+  [fillcolor=yellow]
+    \end{verbatim}
+\begin{center}
+\psset{SphericalCoor,viewpoint=100 20 20,Decran=100}
+\begin{pspicture}(-6,-1)(6,2)
+\psSolid[object=parallelepiped,a=5,b=6,c=1,fillcolor=yellow](0,0,c 2 div)
+\end{pspicture}
+\end{center}
+  \item Ensuite, on dessine les quadrillages :
+  \begin{itemize}
+    \item sur la face supérieure du parallélépipède ``\textit{socle}'' ;
+    \begin{verbatim}
+\psSolid[object=grille,base=-2.5 2.5 -3 3,action=draw](0,0,1)
+    \end{verbatim}
+\begin{center}
+\psset{SphericalCoor,viewpoint=100 20 20,Decran=100}
+\begin{pspicture}(-6,-1)(6,2)
+\psSolid[object=parallelepiped,a=5,b=6,c=1,fillcolor=yellow](0,0,c 2 div)
+\psSolid[object=grille,base=-2.5 2.5 -3 3,action=draw](0,0,1)
+\end{pspicture}
+\end{center}
+    \item sur les faces latérales visibles de ce même parallélépipède :
+     \begin{verbatim}
+\psSolid[object=grille,base=-2 2 -3 3,RotY=90,action=draw](2.5,0,2)
+\psSolid[object=grille,base=-2.5 2.5 -2 2,RotX=-90,action=draw](0,3,2)
+    \end{verbatim}
+\begin{center}
+\psset{SphericalCoor,viewpoint=100 20 20,Decran=100}
+\begin{pspicture}(-6,-1)(6,4)
+\psSolid[object=parallelepiped,a=5,b=6,c=1,fillcolor=yellow](0,0,c 2 div)
+\psSolid[object=grille,base=-2.5 2.5 -3 3,action=draw](0,0,1)
+\psSolid[object=grille,base=-2 2 -3 3,RotY=90,action=draw](2.5,0,2)
+\psSolid[object=grille,base=-2.5 2.5 -2 2,RotX=-90,action=draw](0,3,2)
+\end{pspicture}
+\end{center}
+    \item sur la face supérieure du parallélépipède étudié.
+    \begin{verbatim}
+\psSolid[object=grille,base=-2.5 2.5 -3 3,action=draw](0,0,4)
+    \end{verbatim}
+\begin{center}
+\psset{SphericalCoor,viewpoint=100 20 20,Decran=100}
+\begin{pspicture}(-6,-1)(6,5)
+\psSolid[object=parallelepiped,a=5,b=6,c=1,fillcolor=yellow](0,0,c 2 div)
+\psSolid[object=grille,base=-2.5 2.5 -3 3,action=draw](0,0,1)
+\psSolid[object=grille,base=-2 2 -3 3,RotY=90,action=draw](2.5,0,2)
+\psSolid[object=grille,base=-2.5 2.5 -2 2,RotX=-90,action=draw](0,3,2)
+\psSolid[object=grille,base=-2.5 2.5 -3 3,action=draw](0,0,4)
+\end{pspicture}
+\end{center}
+  \end{itemize}
+\item on dessine le cube unité :
+    \begin{verbatim}
+\psSolid[object=cube,fillcolor=red,a=1](2,2.5,0.5)
+    \end{verbatim}
+\begin{center}
+\psset{SphericalCoor,viewpoint=100 20 20,Decran=100}
+\begin{pspicture}(-6,-1)(6,5)
+\psSolid[object=parallelepiped,a=5,b=6,c=1,fillcolor=yellow](0,0,c 2 div)
+\psSolid[object=grille,base=-2.5 2.5 -3 3,action=draw](0,0,1)
+\psSolid[object=grille,base=-2 2 -3 3,RotY=90,action=draw](2.5,0,2)
+\psSolid[object=grille,base=-2.5 2.5 -2 2,RotX=-90,action=draw](0,3,2)
+\psSolid[object=grille,base=-2.5 2.5 -3 3,action=draw](0,0,4)
+\psSolid[object=cube,fillcolor=red,a=1](2,2.5,0.5)
+\end{pspicture}
+\end{center}
+  \item on complète le dessin par le parallélépipède étudié, dessiné avec un trait plus épais :
+    \begin{verbatim}
+\psSolid[object=parallelepiped,a=5,b=6,c=4,%
+         linewidth=2\pslinewidth,%
+         action=draw](0,0,c 2 div)
+    \end{verbatim}
+\begin{center}
+\psset{SphericalCoor,viewpoint=100 20 20,Decran=100}
+\begin{pspicture}(-6,-1)(6,5)
+\psSolid[object=parallelepiped,a=5,b=6,c=1,fillcolor=yellow](0,0,c 2 div)
+\psSolid[object=grille,base=-2.5 2.5 -3 3,action=draw](0,0,1)
+\psSolid[object=grille,base=-2 2 -3 3,RotY=90,action=draw](2.5,0,2)
+\psSolid[object=grille,base=-2.5 2.5 -2 2,RotX=-90,action=draw](0,3,2)
+\psSolid[object=grille,base=-2.5 2.5 -3 3,action=draw](0,0,4)
+\psSolid[object=cube,fillcolor=red,a=1](2,2.5,0.5)
+\psSolid[object=parallelepiped,a=5,b=6,c=4,linewidth=2\pslinewidth,action=draw](0,0,c 2 div)
+\end{pspicture}
+\end{center}
+  \item Les étapes suivantes consistent à annoter le schéma :
+    \begin{verbatim}
+\psPoint(2.5,-3,0){A}
+\psPoint(2.5,3,0){B}
+\uput[d](A){A}\uput[d](B){B}
+etc.
+    \end{verbatim}
+\end{enumerate}
+\end{document}

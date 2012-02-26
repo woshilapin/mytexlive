@@ -1,0 +1,31 @@
+\section{Annoter un schéma}
+
+Il est évidemment intéressant de pouvoir annoter un schéma, prenons
+l'exemple de la molécule de méthane dont nous voulons indiquer les
+distances et les angles. 
+
+Une première étape consiste à représenter la molécule avec uniquement
+les liaisons et les grandeurs caractéristiques, puis la molécule dans 
+une représentation plus esthétique.
+\input \datapath liaisons-methane.tex
+La construction de la molécule est détaillée dans le document
+\texttt{molecules.tex}. Pour annoter le schéma il suffit de repérer 
+les sommets du tétraèdre :
+\begin{verbatim}
+\psPoint(0,10.93,0){H1}
+\psPoint(10.3,-3.64,0){H2}
+\psPoint(-5.15,-3.64,8.924){H3}
+\psPoint(-5.15,-3.64,-8.924){H4}
+\end{verbatim}
+et d'utiliser toute la puissance du package \texttt{pst-node}. D'abord pour les distances :
+\begin{verbatim}
+\pcline[offset=0.25]{<->}(H2)(H3)
+\aput{:U}{17,8 pm}
+\pcline[offset=0.15]{<->}(H2)(O)
+\aput{:U}{10,93 pm}
+\psPoint(-5.15,-3.64,-8.924){H4}
+\end{verbatim}
+Puis, pour les angles, en s'aidant du package \texttt{pst-eucl}
+\begin{verbatim}
+\pstMarkAngle[arrows=<->]{H1}{O}{H3}{\small 109,5$^{\mathrm{o}}$}
+\end{verbatim}

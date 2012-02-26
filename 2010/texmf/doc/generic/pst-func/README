@@ -1,0 +1,45 @@
+pst-func: plotting special mathematical functions:
+-- psBezier
+-- Chebyshev polynomials
+-- psPolynomial (with derivations)
+-- psBernstein (with envelope option)
+-- psFourier
+-- psBessel
+-- psSi and pssi (integral sin)
+-- psCi (integral cosin)
+-- psIntegral
+-- psCumIntegral
+-- psConv
+-- psGauss
+-- psPoisson
+-- psBinomial
+-- psBinomialN
+-- psFDist for F-distribution
+-- psGammaDist
+-- psChiIIDist
+-- psTDist for Student's t-distribution
+-- psBetaDist for Beta distribution
+-- psWeibull for Weibull distribution 
+-- psLame (Lam\`e\ Curve -- a superellipse)
+-- psThomae (popcorn function)
+-- psplotImp (plotting implicit defined functions)
+-- psVolume (rotating f(x) around the x-axis)
+-- psPrintValue
+
+
+Save the files pst-func.sty|pro|tex in a directory, which is part of your 
+local TeX tree. The pro file should go into $TEXMF/dvips/pstricks/
+Then do not forget to run texhash to update this tree.
+For more information  see the documentation of your LATEX distribution 
+on installing packages into your local TeX system or read the 
+TeX Frequently Asked Questions:
+(http://www.tex.ac.uk/cgi-bin/texfaq2html?label=instpackages).
+
+pst-func needs pst-plot (pstricks-add) and pstricks, which should 
+be part of your local TeX installation, otherwise get it from a 
+CTAN server, http://mirror.ctan.org
+
+PSTricks is PostScript Tricks, the documentation cannot be run
+with pdftex, use the sequence latex->dvips->ps2pdf.
+
+%% $Id: README 286 2010-02-11 09:40:41Z herbert $

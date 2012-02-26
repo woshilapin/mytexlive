@@ -1,0 +1,174 @@
+\section {Tore de Noël}
+\bgroup
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                                  %%
+%%      Examples with AeB_Pro and solides3d         %%
+%%                                                  %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                                  %%
+%%        D. P. Story  dpstory@acrotex.net          %%
+%%        J. Gilg      gilg@acrotex.net             %%
+%%     The AcroTeX Software Development Team        %%
+%%                                                  %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                                  %%
+%% The actual version of AeB_Pro is available under %%
+%% http://www.math.uakron.edu/~dpstory/aeb_pro.html %%
+%%                                                  %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\definecolor{red}{rgb}{0.73,0.00,0.00}
+\definecolor{green}{rgb}{0.00,0.53,0.38}
+
+\psset{unit=0.5}
+\psset{lightsrc=10 5 10,SphericalCoor,viewpoint=20 10 30,Decran=50}
+
+
+\begin{pspicture}(-4,-4)(4,10)
+\rput(5,-4){\psSolid[%
+    object=tore,
+    r1=5,
+    r0=1.5,
+    fillcolor=green,
+    incolor=lightgray,
+    ngrid=36 72,
+    solidmemory=true,
+    action=none,
+    name=outer,
+    ](0,0,0)
+\psSolid[%
+    object=cylindre,
+    h=4,
+    r=1,
+    fillcolor=red,
+    incolor=gray,
+    ngrid=4 32,
+    solidmemory=true,
+    action=none,
+    name=inner1,
+    ](0 cos 5 mul,0 sin 5 mul,0.85)
+\psSolid[%
+    object=cylindre,
+    h=0.3,
+    r=0.1,
+    fillcolor=black,
+    incolor=gray,
+%    ngrid=4 32,
+    solidmemory=true,
+    action=none,
+    name=innerd1,
+    ](0 cos 5 mul,0 sin 5 mul,4.85)
+\psSolid[%
+    object=cone,
+    h=0.5,
+    r=0.25,
+    fillcolor=yellow,
+    solidmemory=true,
+    action=none,
+    name=innerc1,
+    ](0 cos 5 mul,0 sin 5 mul,5.05)
+\psSolid[%
+    object=cylindre,
+    h=3,
+    r=1,
+    fillcolor=red,
+    incolor=gray,
+    ngrid=4 32,
+    solidmemory=true,
+    action=none,
+    name=inner2,
+    ](90 cos 5 mul,90 sin 5 mul,0.85)
+\psSolid[%
+    object=cylindre,
+    h=0.3,
+    r=0.1,
+    fillcolor=black,
+    incolor=gray,
+%    ngrid=4 32,
+    solidmemory=true,
+    action=none,
+    name=innerd2,
+    ](90 cos 5 mul,90 sin 5 mul,3.85)
+\psSolid[%
+    object=cone,
+    h=0.5,
+    r=0.25,
+    fillcolor=yellow,
+    solidmemory=true,
+    action=none,
+    name=innerc2,
+    ](90 cos 5 mul,90 sin 5 mul,4.05)
+\psSolid[%
+    object=cylindre,
+    h=2,
+    r=1,
+    fillcolor=red,
+    incolor=gray,
+    ngrid=4 32,
+    solidmemory=true,
+    action=none,
+    name=inner3,
+    ](180 cos 5 mul,180 sin 5 mul,0.85)
+\psSolid[%
+    object=cylindre,
+    h=0.3,
+    r=0.1,
+    fillcolor=black,
+    incolor=gray,
+%    ngrid=4 32,
+    solidmemory=true,
+    action=none,
+    name=innerd3,
+    ](180 cos 5 mul,180 sin 5 mul,2.85)
+\psSolid[%
+    object=cone,
+    h=0.5,
+    r=0.25,
+    fillcolor=yellow,
+    solidmemory=true,
+    action=none,
+    name=innerc3,
+    ](180 cos 5 mul,180 sin 5 mul,3.05)
+\psSolid[%
+    object=cylindre,
+    h=1,
+    r=1,
+    fillcolor=red,
+    incolor=gray,
+    ngrid=4 32,
+    solidmemory=true,
+    action=none,
+    name=inner4,
+    ](270 cos 5 mul,270 sin 5 mul,0.95)
+\psSolid[%
+    object=cylindre,
+    h=0.3,
+    r=0.1,
+    fillcolor=black,
+    incolor=gray,
+%    ngrid=4 32,
+    solidmemory=true,
+    action=none,
+    name=innerd4,
+    ](270 cos 5 mul,270 sin 5 mul,1.95)
+\psSolid[%
+    object=cone,
+    h=0.5,
+    r=0.25,
+    fillcolor=yellow,
+    solidmemory=true,
+    action=none,
+    name=innerc4,
+    ](270 cos 5 mul,270 sin 5 mul,2.15)
+\psSolid[%
+    object=fusion,
+    base=inner1 inner2 inner3 inner4 innerd1 innerd2 innerd3 innerd4 innerc1 innerc2 innerc3 innerc4 outer,
+    name=spiro,
+    action=draw**
+    ](0,0,0)%
+\composeSolid}
+
+
+\end{pspicture}
+
+\egroup

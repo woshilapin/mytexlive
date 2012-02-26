@@ -1,0 +1,41 @@
+\section{Corne}
+
+\bgroup
+\renewcommand\quadrillage{%
+ \psSolid[object=parallelepiped,
+    a=8,b=8,c=4,action=draw](0,1,0)
+ \multido{\ix=-4+1}{9}{%
+     \psPoint(\ix\space,5,-2){X1}
+     \psPoint(\ix\space,5 .2 add,-2){X2}
+     \psline(X1)(X2)
+     \uput[-120](X1){\small\ix}}
+ \multido{\iy=-3+1}{9}{%
+     \psPoint(4,\iy\space,-2){Y1}
+     \psPoint(4 .2 add,\iy\space,-2){Y2}
+     \psline(Y1)(Y2)
+     \uput[l](Y1){\small\iy}}
+ \multido{\iz=-2+1}{5}{%
+     \psPoint(4,-3,\iz\space){Z1}
+     \psPoint(4,-3 .2 sub,\iz\space){Z2}
+     \psline(Z1)(Z2)
+    \uput[l](Z1){\small\iz}}
+ \psPoint(0,5 0.5 add,-2){X0}
+ \uput[-120](X0){$x$}
+     \psPoint(4 .5 add,0,-2){Y0}
+ \uput[l](Y0){$y$}}
+
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(-7,-6)(7,5)
+\psframe*[linecolor=gray!30](-7,-6)(7,5)
+\psset[pst-solides3d]{viewpoint=100 50 20,SphericalCoor,Decran=100,lightsrc=10 15 10}
+\defFunction[algebraic]{corne}(u,v){(2 + u*cos(v))*sin(2*pi*u)}{(2 + u*cos(v))*cos(2*pi*u) + 2*u}{u *sin(v)}
+\psSolid[object=grille,base=-4 4 -3 5,action=draw*,linecolor=blue](0,0,-2)
+\psSolid[object=surfaceparametree,linecolor=blue,
+   base=0 1 0 2 pi mul,fillcolor=blue!50,incolor=yellow!50,
+   function=corne,linewidth=0.5\pslinewidth,
+   ngrid=20]%
+\quadrillage
+\end{pspicture}
+\end{LTXexample}
+
+\egroup

@@ -1,0 +1,89 @@
+\section {Transformer un point et le mémoriser}
+
+Soit un point initial $A(x,y,z)$. On fait subir à ce point des
+rotations autour des axes $Ox$, $Oy$ et $Oz$ d'angles respectifs :
+\texttt{[RotX=valeurX,RotX=valeurY,RotX=valeurZ]}, dans cet ordre,
+puis on opère une translation de vecteur $(v_x,v_y,v_z)$. Le problème
+a été de récupérer les coordonnées du point final $A'(x',y',z')$.
+
+La commande
+ \psframebox[fillstyle=solid,fillcolor=yellow,linecolor=yellow]{\texttt{$\backslash$psTransformPoint[RotX=valeurX,RotX=valeurY,RotX=valeurZ](x
+ y z)(vx,vy,vz)\{A'\}}} 
+ permet de stocker dans le n\oe{}ud $A'$, les coordonnées du point
+ transformé. 
+
+Dans l'exemple suivant $A(2,2,2)$ est l'un des sommets du cube
+initial, dont le centre est placé à l'origine du repère. 
+{\red
+\begin{verbatim}
+\psSolid[object=cube,a=4,action=draw*,linecolor=red]%
+\end{verbatim}
+}
+Ce cube subit différentes transformations :
+{\red
+\begin{verbatim}
+\psSolid[object=cube,a=4,action=draw*,RotX=-30,RotY=60,RotZ=-60](7.5,11.25,10)%
+\end{verbatim}
+}
+Pour obtenir l'image de $A$, on applique la commande suivante :
+{\red
+\begin{verbatim}
+\psTransformPoint[RotX=-30,RotY=60,RotZ=-60](2 2 2)(7.5,11.25,10){A'}
+\end{verbatim}
+}
+Ce qui permet, par exemple, de nommer ces points et de dessiner le vecteur $\overrightarrow{AA'}$.
+\begin{center}
+\begin{pspicture}(-2,-4)(6,6)
+\psframe(-2,-4)(6,6)
+\psset{unit=0.5}
+%\psSolid[object=cube,a=4,action=draw,linecolor=red,fontsize=40,numfaces=all]%
+\psSolid[object=cube,a=4,action=draw*,linecolor=red]%
+\psPoint(2,2,2){A}\psdot(A)
+%\psSolid[object=cube,a=4,action=draw,RotX=-30,RotY=60,RotZ=-60,fontsize=40,numfaces=all](7.5,11.25,10)%
+\psSolid[object=cube,a=4,action=draw*,RotX=-30,RotY=60,RotZ=-60](7.5,11.25,10)%
+\psTransformPoint[RotX=-30,RotY=60,RotZ=-60](2 2 2)(7.5,11.25,10){A'}
+\psdot(A')\psline[linecolor=blue,arrowsize=0.3]{{o-v}}(A)(A')
+\uput[u](A'){$A'$}\uput[u](A){$A$}
+\psset{solidmemory}
+\psSolid[object=cube,a=4,
+   name=A1,
+   action=none](0,0,0)
+\psset{fontsize=100,
+%   phi=90,
+   no=0,
+   solidname=A1}
+\psProjection[object=texte,linecolor=red,text=A]%
+\psset{fontsize=100,
+%   phi=180,
+   no=1,
+   solidname=A1}
+\psProjection[object=texte,linecolor=red,text=B]%
+\psset{fontsize=100,
+%   phi=90,
+   no=4,
+   solidname=A1}
+\psProjection[object=texte,linecolor=red,text=E]%
+%
+\psset{solidmemory}
+\psSolid[object=cube,a=4,RotX=-30,RotY=60,RotZ=-60,
+   name=A2,
+   action=none](7.5,11.25,10)
+\psset{fontsize=100,
+%   phi=25,
+   no=0,
+   solidname=A2}
+\psProjection[object=texte,text=A]%
+\psset{fontsize=100,
+%   phi=160,
+   no=2,
+   solidname=A2}
+\psProjection[object=texte,text=C]%
+\psset{fontsize=100,
+%   phi=255,
+   no=1,
+   solidname=A2}
+\psProjection[object=texte,text=B]%
+\axesIIID(2,2,2)(10,10,8)
+\end{pspicture}
+\end{center}
+

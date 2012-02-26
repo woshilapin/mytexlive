@@ -1,0 +1,24 @@
+The pst-dbicons package is based on PSTricks and is intended to be
+used by programmers to create a ER model.
+
+This material is subject to the LaTeX Project Public License. See
+http://www.ctan.org/tex-archive/help/Catalogue/licenses.lppl.html
+for the details of that license.
+
+pst-dbicons.dtx - The dtx file
+pst-dbicons.ins - The ins file
+pst-dbicons.pdf - The documentation, generated from the docstrip file
+
+to get the sty, the tex and the pdf file, run the Makefile or alternative
+
+latex pst-dbicons.ins
+latex pst-dbicons.dtx
+makeindex -s gind.ist pst-dbicons
+makeindex -s gglo.ist -o pst-dbicons.gls pst-dbicons.glo
+latex pst-dbicons.dtx
+dvips pst-dbicons.dvi
+ps2pdf pst-dbicons.ps
+
+
+------------------------------
+Herbert Voss 2006-11-26

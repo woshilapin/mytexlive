@@ -1,0 +1,25 @@
+\section {Un shu}
+\bgroup
+\psset{lightsrc=50 10 30}
+
+\psset{SphericalCoor,viewpoint=50 60 10,Decran=100}
+\begin{pspicture*}(-7,-2)(7,10)
+\psframe*(-7,-2)(7,10)
+\psSolid[object=grille,base=-4 4 -4 4,action=draw**,ngrid=4,linecolor=red]%
+\psSolid[object=new,RotX=90,RotZ=90,hue=0 0.1 0.8 1,hollow,incolor=yellow!50,
+    sommets= (sommets_shu.dat) run,linewidth=0.5\pslinewidth,
+    faces={(faces_shu.dat) run}]%
+\end{pspicture*}
+
+
+\psset{lightsrc=50 10 -20}
+\psset{SphericalCoor,viewpoint=50 90 -20,Decran=100}
+\begin{pspicture*}(-7,-2)(7,10)
+\psframe*(-7,-2)(7,10)
+%\psSolid[object=grille,base=-4 4 -4 4,action=draw**,ngrid=4,linecolor=red]%
+\psSolid[object=new,RotX=90,RotZ=90,hue=0.6 1 0.5 1,hollow,incolor=yellow!50,
+    sommets= (sommets_shu.dat) run,linewidth=0.5\pslinewidth,
+    faces={(faces_shu.dat) run}]%
+\end{pspicture*}
+
+\egroup

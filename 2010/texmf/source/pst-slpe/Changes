@@ -1,0 +1,13 @@
+pst-slpe.tex --------
+1.31 2011/10/25 fix bug with \psBall (hv)
+1.3  2008/08/20 added fading style (hv)
+1.2  2008/06/19 \textbackslash psBall (hv)
+1.1  2006/06/19 using the extended pst-xkey 
+	       instead of the old pst-key package; 
+	       creating a dtx file (hv)
+1.0  2005/03/05 More compatible to the other PStricks 
+	       packages. (RN)
+
+
+pst-slpe.pro --------
+1.3  2008/08/20 added fading style (hv)

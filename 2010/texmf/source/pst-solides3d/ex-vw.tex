@@ -1,0 +1,13 @@
+\section {Une VW multicolore}
+\bgroup
+\psset{lightsrc=50 10 30}
+
+\psset{SphericalCoor,viewpoint=50 -10 30,Decran=30}
+\begin{pspicture}(-5,-2)(5,5)
+\psframe(-5,-2)(5,5)
+\psSolid[object=new,RotX=90,RotY=-20,RotZ=20,hue=0 0.9 0.5 1,hollow,incolor=yellow!50,
+    sommets= (sommets_vw.dat) run,linewidth=0.5\pslinewidth,
+    faces={(faces_vw.dat) run}]%
+\end{pspicture}
+
+\egroup

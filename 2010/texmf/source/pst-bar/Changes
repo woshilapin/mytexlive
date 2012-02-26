@@ -1,0 +1,54 @@
+pst-bar.tex -------------------
+ v 0.92   2008/11/26
+    move the key handling to the extended xkeyval package (hv)
+    
+ v 0.91   2008/04/16
+    Bar labels now set within parboxes to keep them from becoming too
+    long or overlapping with neighboring labels. New keys
+    ``labelalign'' and ``labelwidth'' added to control this behavior.
+    WARNING: These new features are not yet fully tested!
+
+ v 0.9    2005/10/07
+    Code now uses pst-xkey instead of pst-keyval for managing keys.
+
+ v 0.8    2005/02/13
+    Adjusted the code for stacked bar styles so the Postscript code argument to
+    \psbarscale so the Postscript code is only applied to the bottom bar.
+
+ v 0.7a   2004/09/24
+    Removed some debugging code that was accidentally left in the last release.
+    The removed code was harmless, but caused confusion for some users.
+
+ v 0.7    2004/09/15
+    Made a minor change to \psbarscale so its functionality would be more
+    closely analogous to the \pstScale command from the pstricks-add pacakge.
+    Improved documentation. Set default barstyle to list of all available
+    barstyles. First release to CTAN.
+
+ v 0.6    2004/09/09
+    Added orientation parameter and horizontal bar-drawing capability. Removed
+    erroneous correction factor for linewidth from stacked bar chart.
+
+ v 0.5    2004/09/02
+    Added header parameter for \readpsbardata. Improved handling of headers in
+    the data file -- spaces may now be included in a header item, though commas
+    still may not.
+
+ v 0.4    2004/08/29
+    Added "block" chartstyle. Updated \readpsbardata to use .csv for both
+    header and data. Introduced \psbarscale command. First release to pstricks
+    mailing list, 2004/09/01.
+
+ v 0.3    2004/08/26
+    Added command \readpsbardata to read data for bar chart directly from a
+    .csv file with the first row containing the column labels.
+
+ v 0.2a   2004/08/23
+    Changed colsep parameter name to barcolsep to avoid clash with psmatrix.
+
+ v 0.2    2004/08/22
+    Added stacked bar chart, chartstyle parameter, and introduced pst-bar.pro
+    prologue with transpose command.
+
+ v 0.1    2004/08/21
+    Clustered bar chart.

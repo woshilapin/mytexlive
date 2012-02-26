@@ -1,0 +1,222 @@
+\section{Présentation}
+
+Cette commande prend la forme suivante :
+\begin{verbatim}
+\psSurface[options](xmin,ymin)(xmax,ymax){equation de la surface z=f(x,y)}
+\end{verbatim}
+avec comme options possibles les mêmes que dans le cas des solides
+avec quelques options spécifiques :
+\begin{itemize}
+  \item Le maillage de la surface est défini par le paramètre
+    \verb+[ngrid=n1 n2]+, qui possède quelques particularités :
+
+\psframebox[fillstyle=solid,fillcolor=yellow,linestyle=none]{%
+\begin{minipage}{1\linewidth}
+  \begin{itemize}
+    \item Si \texttt{n1} et/ou  \texttt{n2 } sont entiers, ce(s)
+      nombre(s) représente(nt) le nombre de mailles suivant $Ox$ et/ou
+      $Oy$.
+    \item Si \texttt{n1} et/ou  \texttt{n2 } sont décimaux, ce(s)
+      nombre(s) représente(nt) le pas d'incrémentation suivant $Ox$
+      et/ou $Oy$.
+    \item Si \texttt{[ngrid=n]} ne possède qu'un seul paramètre, alors
+      le nombre de mailles ou, suivant le cas, le pas d'incrémentation
+      sera identique sur les deux axes.
+  \end{itemize}
+\end{minipage}
+  }
+  \item \textbf{\textdbend{} \texttt{[algebraic]} : cette option
+  permet d'écrire la fonction en notation algébrique, \texttt{pstricks.pro} contient maintenant le code \texttt{AlgToPs}
+   de Dominique Rodriguez qui le permet et qui auparavant était inclus dans \texttt{pstricks-add.pro}. Cette version de \texttt{pstricks}
+   est fournie avec \texttt{pst-solides3d}. Le cas échéant, il faudra inclure le package \texttt{pstricks-add} dans le préambule de votre document.}
+  \item \texttt{[grid]} : par défaut le maillage est activé, si
+  l'option \texttt{[grid]} est écrite, alors le maillage est désactivé~!
+  \item \texttt{[axesboxed]} : cette option permet de tracer un
+  quadrillage 3D de façon semi-automatique, car il convient de placer
+  à la main les bornes de $z$, par défaut cette option est désactivée :
+   \begin{itemize}
+     \item \texttt{[Zmin]} ;
+     \item \texttt{[Zmax]} ;
+     \item \texttt{[QZ]} : permet de décaler verticalement le repère
+  de la valeur \texttt{[QZ=valeur]} ;
+     \item \texttt{[spotX]} : permet de placer, si le choix fait par
+  défaut n'est pas satisfaisant, les valeurs des graduations sur l'axe
+  des $x$ autour de l'extrémité de la graduation.
+      Cette valeur est celle que l'on indique à la commande \verb+\uput[angle](x,y){donnée}+ ;
+     \item \texttt{[spotY]} : idem ;
+     \item \texttt{[spotZ]} : idem.
+   \end{itemize}
+\end{itemize}
+Si l'option \texttt{[axesboxed]} ne vous donne pas satisfaction il est
+possible d'adapter la commande suivante, qui convient au premier
+exemple :
+{\small
+\begin{verbatim}
+\psSolid[object=parallelepiped,a=8,b=8,c=8,action=draw](0,0,0)
+\multido{\ix=-4+1}{9}{%
+    \psPoint(\ix\space,4,-4){X1}
+    \psPoint(\ix\space,4.2,-4){X2}
+    \psline(X1)(X2)\uput[dr](X1){\ix}}
+\multido{\iy=-4+1}{9}{%
+    \psPoint(4,\iy\space,-4){Y1}
+    \psPoint(4.2,\iy\space,-4){Y2}
+    \psline(Y1)(Y2)\uput[dl](Y1){\iy}}
+\multido{\iz=-4+1}{9}{%
+    \psPoint(4,-4,\iz\space){Z1}
+    \psPoint(4,-4.2,\iz\space){Z2}
+    \psline(Z1)(Z2)\uput[l](Z1){\iz}}
+\end{verbatim}}
+L'option \verb+hue+ permet de remplir les facettes avec des dégradés
+de couleur. Il suffit de positionner \verb+hue=true+ dans
+\verb+\psSolid+, ce qui s'écrit tout simplement \verb+[hue=0 1]+.
+
+\section{Exemple 1 : selle de cheval}
+
+\begin{LTXexample}[pos=t,numbersep=1em]
+\psset{unit=0.75}
+\psset{lightsrc=30 30 25}
+\psset{SphericalCoor,viewpoint=50 40 30,Decran=50}
+\begin{pspicture}(-6,-8)(7,8)
+\psSurface[ngrid=.25 .25,incolor=yellow,
+   linewidth=0.5\pslinewidth,axesboxed,
+   algebraic,hue=0 1](-4,-4)(4,4){%
+   ((y^2)-(x^2))/4 }
+\end{pspicture}
+\end{LTXexample}
+
+\newpage
+
+\section{Exemple 2 : selle de cheval sans maillage}
+
+Les lignes du maillage sont supprimées en écrivant dans les options :
+\verb+grid+.
+\begin{LTXexample}[pos=t,numbersep=1em]
+\psset{unit=0.75}
+\psset{lightsrc=30 30 25}
+\psset{SphericalCoor,viewpoint=50 40 30,Decran=50}
+\begin{pspicture}(-6,-8)(7,8)
+\psSurface[fillcolor=red!50,ngrid=.25 .25,
+   incolor=yellow,linewidth=0.5\pslinewidth,
+   grid,axesboxed](-4,-4)(4,4){%
+   y dup mul x dup mul sub 4 div }
+\end{pspicture}
+\end{LTXexample}
+
+\newpage
+
+\section{Exemple 3 : paraboloïde}
+
+\begin{LTXexample}[pos=t,numbersep=1em]
+\psset{unit=0.75}
+\psset{lightsrc=30 -10 10,linewidth=0.5\pslinewidth}
+\psset{SphericalCoor,viewpoint=50 40 30,Decran=50}
+\begin{pspicture}(-6,-4)(7,12)
+\psSolid[object=grille,base=-4 4 -4 4,action=draw]%
+\psSurface[
+   fillcolor=cyan!50,
+   tracelignedeniveau=true,
+   hauteurlignedeniveau=5,
+   linewidthlignedeniveau=3,
+   couleurlignedeniveau=blue,
+   ngrid=.25 .25,incolor=yellow,
+   axesboxed,Zmin=0,Zmax=8,QZ=4](-4,-4)(4,4){%
+   y dup mul x dup mul add 4 div }
+\end{pspicture}
+\end{LTXexample}
+
+\newpage
+
+\section{Exemple 4}
+\begin{LTXexample}[pos=t,numbersep=1em]
+\psset{unit=0.75}
+\psset{lightsrc=30 -10 10}
+\psset{SphericalCoor,viewpoint=50 20 30,Decran=70}
+\begin{pspicture}(-7,-8)(7,8)
+\psSurface[ngrid=.2 .2,algebraic,axesboxed,Zmin=-1,Zmax=1,
+           linewidth=0.5\pslinewidth,spotX=r,spotY=d,spotZ=l,
+           hue=0 1](-5,-5)(5,5){%
+   sin((x^2+y^2)/3) }
+\end{pspicture}
+\end{LTXexample}
+
+\newpage
+
+\section{Exemple 5}
+Dans cet exemple, on montre comment colorier les facettes chacune avec
+une teinte différente en utilisant directement le code
+\texttt{postscript}.
+\begin{LTXexample}[pos=t,numbersep=1em]
+\psset{unit=0.5}
+\psset{lightsrc=30 -10 10}
+\psset{SphericalCoor,viewpoint=100 20 20,Decran=80}
+\begin{pspicture}(-6,-12)(7,14)
+\psSurface[ngrid=0.4 0.4,algebraic,axesboxed,Zmin=-2,Zmax=10,QZ=4,
+           linewidth=0.25\pslinewidth,
+           fcol=0 1 4225
+           {/iF ED iF [iF 4225 div 0.75 1] (sethsbcolor) astr2str} for
+          ](-13,-13)(13,13){%
+   10*sin(sqrt((x^2+y^2)))/(sqrt(x^2+y^2)) }
+\end{pspicture}
+\end{LTXexample}
+
+\newpage
+
+\section{Exemple 6 : paraboloïde hyperbolique d'équation $z = xy$}
+
+Dans cet exemple, on combine le tracé de la surface et celui des
+contours de l'intersection du paraboloïde avec les plans $z=4$  et
+$z=-4$.
+Pour cela on utilise \verb+\psSolid[object=courbe]+.
+\begin{verbatim}
+\defFunction{F}(t){t}{4 t div 4 min}{4}
+\psSolid[object=courbe,range=1 4,
+   linecolor=red,linewidth=2\pslinewidth,
+   function=F]
+\end{verbatim}
+On notera l'utilisation de deux fonctions \texttt{min} et
+\texttt{max}, qui permettent à partir d'un couple de valeurs,
+d'extraire la plus petite ou la plus grande.
+\begin{center}
+\psset{unit=0.75}
+\psset{lightsrc=40 15 25,linewidth=0.5\pslinewidth}
+\psset{SphericalCoor,viewpoint=50 20 30,Decran=50}
+\begin{pspicture}(-6,-7)(7,7)
+\psSurface[
+   hue=0 1,ngrid=.1 .1,
+   incolor=yellow,axesboxed,
+   Zmin=-4,Zmax=4,spotX=r](-4,-4)(4,4){%
+   x y mul 4 min -4 max}
+\defFunction{F}(t){t}{4 t div 4 min}{4}
+\psSolid[object=courbe,range=1 4,
+   linecolor=red,linewidth=2\pslinewidth,
+   function=F]
+\defFunction{G}(t){t}{4 t div -4 max}{4}
+\psSolid[object=courbe,range=-1 -4,
+   linecolor=red,linewidth=2\pslinewidth,
+   function=G]
+\defFunction{H}(t){t neg}{4 t div -4 max}{-4}
+\psSolid[object=courbe,range=-1 -4,
+   linecolor=red,linewidth=2\pslinewidth,
+   function=H]
+\end{pspicture}
+\end{center}
+\begin{verbatim}
+\psSurface[hue=0 1,ngrid=.2 .5,incolor=yellow,axesboxed,
+           Zmin=-4,Zmax=4,spotX=r](-4,-4)(4,4){x y mul 4 min -4 max}
+\end{verbatim}
+\newpage
+
+\section{Exemple 8 : surface d'équation $z = xy(x^2+y^2)$}
+
+\begin{LTXexample}[pos=t,numbersep=1em]
+\psset{unit=0.5}
+\psset{lightsrc=10 12 20,linewidth=0.5\pslinewidth}
+\psset{SphericalCoor,viewpoint=30 50 60,Decran=50}
+\begin{pspicture}(-10,-10)(10,10)
+\psSurface[
+   fillcolor=cyan!50,algebraic,axesboxed,
+   ngrid=.25 .25,incolor=yellow,hue=0 1,
+   Zmin=-3,Zmax=3](-3,-3)(3,3){%
+   x*y*(x^2-y^2)*0.1}
+\end{pspicture}
+\end{LTXexample}

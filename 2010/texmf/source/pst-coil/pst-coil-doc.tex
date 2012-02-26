@@ -1,0 +1,580 @@
+%% $Id: pst-coil-doc.tex 539 2011-07-12 08:22:33Z herbert $
+\documentclass[11pt,english,BCOR10mm,DIV12,bibliography=totoc,parskip=false,smallheadings
+    headexclude,footexclude,oneside,dvipsnames,svgnames]{pst-doc}
+\listfiles
+
+\usepackage[utf8]{inputenc}
+\usepackage{pst-plot,pst-node,pst-coil}
+\SpecialCoor
+\let\pstFV\fileversion
+\let\belowcaptionskip\abovecaptionskip
+%
+\def\bgImage{%
+\begin{pspicture}(6,2)
+   \cnode*(0,1){4pt}{A}\cnode*(6,1){4pt}{B}
+   \pcsin[linecolor=red,amplitude=0.75,periods=20,function=dup 0.1 mul sin exch cos add](A)(B)
+\end{pspicture}
+}
+\lstset{explpreset={pos=l,width=-99pt,overhang=0pt,hsep=\columnsep,vsep=\bigskipamount,rframe={}},
+    escapechar=?}
+\def\textat{\char064}%
+
+\begin{document}
+\title{\texttt{pst-coil}\\Special node connections \\\small v.\pstFV}
+\docauthor{Herbert Vo\ss}
+\author{Timothy Van Zandt\\Herbert Vo\ss\\Michael Sharpe}
+\date{\today}
+
+\maketitle
+
+\begin{abstract}
+Coils, springs and zigzag curves
+do not really count to the ordinary when creating graphics. They are of some
+importance though when dealing with the creation of coilish connections. They
+can also be used for node connections which will be shown
+at the end of this chapter.
+
+The parameters especially for the \verb+coil+ variants are only easy to
+understand when keeping in mind that three dimensional helixes are dealt with,
+which are only projected onto the two dimensional paper plane. This will be
+elaborated on at the corresponding places.
+
+\vfill
+\noindent
+Thanks to:  
+Marco Daniel, Denis Girou, Uwe Siart.
+\end{abstract}
+
+\clearpage
+\tableofcontents
+
+\clearpage
+% ---------------------------------------------------------------------------------------
+\section{Parameters}\label{sec:pstcoil:parameter}
+% ---------------------------------------------------------------------------------------
+Table~\ref{tab:pst-coil:parameter} shows a compilation of the special parameters
+valid for \LPack{pst-coil}.
+
+\begin{table}[!htb]
+\caption{Compilation of all parameters for  \texttt{pst-coil}}\label{tab:pst-coil:parameter}
+\centering
+\begin{tabular}{@{}>{\ttfamily}l>{\ttfamily}l>{\ttfamily}l@{}}\toprule
+\textrm{name} & \textrm{value}  & \textrm{default}\\\midrule
+\Lkeyword{coilwidth}  &  <value[unit]> & 1cm\\
+\Lkeyword{coilheight}  &  <value> & 1\\
+\Lkeyword{coilarm}  &  <value[unit]> & 0.5cm\\
+\Lkeyword{coilarmA}  &  <value[unit]> & 0.5cm\\
+\Lkeyword{coilarmB}  &  <value[unit]> & 0.5cm\\
+\Lkeyword{coilaspect}  &  <angle> & 45\\
+\Lkeyword{coilinc}  &  <angle> & 45\\
+\Lkeyword{periods}  &  <value> & 1\\
+\Lkeyword{amplitude}  &  <value> & 1\\
+\Lkeyword{function}  &  <PS code> & sin\\
+\Lkeyword{ppoints}  &  <dots per periods> & 360\\
+\Lkeyword{bow}      &  <value[unit]> & 0cm\\\bottomrule
+\end{tabular}
+\end{table}
+
+% ---------------------------------------------------------------------------------------
+\subsection{\texttt{coilwidth}}\label{subsec:pstcoil:coilwidth}
+% ---------------------------------------------------------------------------------------
+\Lkeyword{coilwidth} denotes the diameter\index{diameter} of the
+coil resp. the height of a zigzag line\index{zigzag line}\index{coil}. The
+diameter corresponds to the height with a perpendicular parallel projection
+transverse to the length.
+
+\medskip\noindent
+\begin{minipage}[t]{5cm}\vspace{0pt}
+\begin{pspicture}(0,-5)(5,5)
+\pscoil(0,4)(3.5,4)
+{
+\psset{linewidth=0.2pt}
+\psline[arrowscale=2,tbarsize=3mm]{|<->|}(4.5,3.5)(4.5,4.5)
+\psline[linestyle=dashed](3.25,4.5)(4.5,4.5)
+\psline[linestyle=dashed](2.75,3.5)(4.5,3.5)
+}
+\uput*[0](3.5,4){coilwidth}
+\pscoil[coilwidth=0.75cm](0,2.6)(3.6,2.6)
+\uput*[0](3.5,2.6){0.75cm}
+\pscoil[coilwidth=0.5cm](0,1.8)(3.5,1.8)
+\uput*[0](3.5,1.8){0.50cm}
+\pscoil[coilwidth=0.25cm](0,1.2)(3.5,1.2)
+\uput*[0](3.5,1.2){0.25cm}
+\pscoil*[coilwidth=0.5cm](0,0.5)(3.5,0.5)
+\uput*[0](3.5,0.5){0.50cm}
+% zigzag
+\pszigzag(0,-4)(3.5,-4)
+{
+\psset{linewidth=0.2pt}
+\psline[arrowscale=2,tbarsize=3mm]{|<->|}(4.5,-3.5)(4.5,-4.5)
+\psline[linestyle=dashed](3.25,-4.5)(4.5,-4.5)
+\psline[linestyle=dashed](2.75,-3.5)(4.5,-3.5)
+}
+\uput*[0](3.5,-4){coilwidth}
+\pszigzag[coilwidth=0.75cm](0,-2.6)(3.6,-2.6)
+\uput*[0](3.5,-2.6){0.75cm}
+\pszigzag[coilwidth=0.5cm](0,-1.8)(3.5,-1.8)
+\uput*[0](3.5,-1.8){0.50cm}
+\pszigzag[coilwidth=0.25cm](0,-1.2)(3.5,-1.2)
+\uput*[0](3.5,-1.2){0.25cm}
+\pszigzag*[coilwidth=0.5cm](0,-0.5)(3.5,-0.5)
+\uput*[0](3.5,-0.5){0.50cm}
+\end{pspicture}
+\end{minipage}\hfill%
+\begin{minipage}[t]{\linewidth-5cm-1em}\vspace{0pt}
+\begin{lstlisting}
+\begin{pspicture}(0,-5)(5,5)
+\pscoil(0,4)(3.5,4)
+{\psset{linewidth=0.2pt}
+\psline[arrowscale=2,tbarsize=3mm]{|<->|}(4.5,3.5)(4.5,4.5)
+\psline[linestyle=dashed](3.25,4.5)(4.5,4.5)
+\psline[linestyle=dashed](2.75,3.5)(4.5,3.5)}
+\uput*[0](3.5,4){coilwidth}
+\pscoil[coilwidth=0.75cm](0,2.6)(3.6,2.6)
+\uput*[0](3.5,2.6){0.75cm}
+\pscoil[coilwidth=0.5cm](0,1.8)(3.5,1.8)
+\uput*[0](3.5,1.8){0.50cm}
+\pscoil[coilwidth=0.25cm](0,1.2)(3.5,1.2)
+\uput*[0](3.5,1.2){0.25cm}
+\pscoil*[coilwidth=0.5cm](0,0.5)(3.5,0.5)
+\uput*[0](3.5,0.5){0.50cm}
+% zigzag
+\pszigzag(0,-4)(3.5,-4)
+
+[ ... ]
+\end{lstlisting}
+\end{minipage}
+
+
+
+% ---------------------------------------------------------------------------------------
+\subsection{\texttt{coilheight}}\label{subsec:pstcoil:coilheight}
+% ---------------------------------------------------------------------------------------
+\Lkeyword{coilheight} is in contrast to \Lkeyword{coilwidth} no
+length but only a factor, whereat the distance between two
+windings\index{winding} resp. jags is composed as follows:
+$dx = coilheight\cdot coilwidth$
+
+
+\medskip\noindent
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(0,-3)(5,4)
+\pscoil(0,4)(3.5,4)
+{\psset{linewidth=0.2pt}
+\psline[arrowscale=2,tbarsize=3mm]{|<->|}(4.5,3.5)(4.5,4.5)
+\psline[linestyle=dashed](3.25,4.5)(4.5,4.5)
+\psline[linestyle=dashed](2.75,3.5)(4.5,3.5)
+\psline[arrowscale=2,tbarsize=3mm]{|<->|}(1.75,3.2)(2.5,3.2)
+\uput[-90](2.15,3){\footnotesize\texttt{coilheight$\times$coilwidth}}}
+\uput*[0](3.5,4){coilwidth}
+\pscoil[coilheight=0.75](0,1.5)(3.6,1.5)
+\uput*[0](3.5,1.5){0.75}
+\pscoil[coilheight=0.5](0,0)(3.5,0)
+\uput*[0](3.5,0){0.50}
+\pscoil[coilheight=1.25](0,-1.5)(3.5,-1.5)
+\uput*[0](3.5,-1.5){1.25}
+\pscoil*[coilheight=0.5](0,-3)(3.5,-3)
+\uput*[0](3.5,-3){0.50}
+\end{pspicture}
+\end{LTXexample}
+
+\vspace{0pt}\noindent
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}[shift=2cm](0,-3)(5,4)
+\pszigzag(0,4)(3.5,4)
+{ \psset{linewidth=0.2pt}
+\psline[arrowscale=2,tbarsize=3mm]{|<->|}(4.5,3.5)(4.5,4.5)
+\psline[linestyle=dashed](2.5,4.5)(4.5,4.5)
+\psline[linestyle=dashed](2.75,3.5)(4.5,3.5)
+\psline[arrowscale=2,tbarsize=3mm]{|<->|}(1.75,3.2)(2.75,3.2)
+\uput[-90](2.15,3){\footnotesize\texttt{coilheight$\times$coilwidth}} }
+\uput*[0](3.5,4){coilwidth}
+\pszigzag[coilheight=0.75](0,1.5)(3.6,1.5)
+\uput*[0](3.5,1.5){0.75}
+\pszigzag[coilheight=0.5](0,0)(3.5,0)
+\uput*[0](3.5,0){0.50}
+\pszigzag[coilheight=1.25](0,-1.5)(3.5,-1.5)
+\uput*[0](3.5,-1.5){1.25}
+\pszigzag*[coilheight=0.5](0,-3)(3.5,-3)
+\uput*[0](3.5,-3){0.50}
+\end{pspicture}
+\end{LTXexample}
+
+\bigskip
+As can be seen in the above example, not the same physical distance is
+yielded. This is caused by the internal three dimensional
+representation\index{three dimensional representation} of the coil; it is not
+seen under an angle of $90^\circ$ but $45^\circ$. (Section~\ref{subsec:pstcoil:coilaspect})
+
+
+% ---------------------------------------------------------------------------------------
+\subsection{\texttt{coilarm}, \texttt{coilarmA} and \texttt{coilarmB}}\label{subsec:pstcoil:coilarm}
+% ---------------------------------------------------------------------------------------
+\Lkeyword{coilarm}, \Lkeyword{coilarmA}, and \Lkeyword{coilarmB} denotes the
+part of a straight line made left and right. Negative values are possible, but
+do not make a lot of sense as a rule. As can be gathered from the example, the
+coil is lenghtened by a negative value in this case, so that the part of a
+straight line is led back to the specified starting point resp. endpoint and
+consequently has a negative ``direction''{}. This parameter is not available for
+\Lcs{psCoil}.
+
+\medskip\noindent
+\begin{LTXexample}[width=4cm]
+\begin{pspicture}(4,4.5)
+\pscoil(0,4)(4,4)
+\psset{coilwidth=0.5}
+\pscoil[coilarm=0](0,3)(4,3)
+\pscoil[coilarmA=1cm,coilarmB=0.2cm](0,2)(4,2)
+\pscoil[coilarm=-10pt](0,1)(4,1)
+\end{pspicture}
+\end{LTXexample}
+
+\medskip\noindent
+\begin{LTXexample}[width=4cm]
+\begin{pspicture}(4,4.5)
+\pszigzag(0,4)(4,4)
+\psset{coilwidth=0.5}
+\pszigzag[coilarm=0](0,3)(4,3)
+\pszigzag[coilarmA=1cm,coilarmB=0.2cm](0,2)(4,2)
+\pszigzag[coilarm=-10pt](0,1)(4,1)
+\end{pspicture}
+\end{LTXexample}
+
+
+
+% ---------------------------------------------------------------------------------------
+\subsection{\texttt{coilaspect}}\label{subsec:pstcoil:coilaspect}
+% ---------------------------------------------------------------------------------------
+In Section~\ref{subsec:pstcoil:coilheight} the three
+dimensional representation of the coil has been pointed out already. If it was
+regarded right-angled to its axis, the windings would not be recognizable. With
+\Lkeyword{coilaspect} this ``perspective''{} can be influenced, which is only
+possible for the ``coil''{} variants of course. \Lkeyword{coilaspect}=0 yields a
+sine curve.
+
+\medskip\noindent
+\begin{LTXexample}[width=4cm]
+\begin{pspicture}(4,4.5)
+\pscoil(0,4)(4,4)
+\psset{coilwidth=0.75}
+\pscoil[coilaspect=0](0,3)(4,3)
+\pscoil[coilaspect=30,coilheight=0.3](0,2)(4,2)
+\pscoil[coilaspect=-30,coilheight=0.3](0,1)(4,1)
+\end{pspicture}
+\end{LTXexample}
+
+
+% ---------------------------------------------------------------------------------------
+\subsection{\texttt{coilinc}}\label{subsec:pstcoil:coilinc}
+% ---------------------------------------------------------------------------------------
+The curve is drawn with the \Lps{lineto} procedure of \PS,
+whereat \Lkeyword{coilinc} specifies the rotation angle in the angular measure at
+which the next point is calculated. It has already been mentioned that the
+calculation is done as a three dimensional coil and is projected onto the two
+dimensional plane only in the end.
+
+\Lkeyword{coilinc} does also not make sense for zigzag lines, so that this parameter
+again only is available for the \Lkeyword{coil} variant. Large angles result in a
+polygon line, small angles in harmonic progressions with increased calculation
+effort.
+
+\medskip\noindent
+\begin{LTXexample}[width=4cm]
+\begin{pspicture}(4,4.5)
+\psset{coilwidth=0.8}
+\pscoil(0,4)(4,4)
+\psset{coilinc=0}
+\pscoil[coilinc=5](0,3)(4,3)
+\pscoil[coilinc=30](0,2)(4,2)
+\pscoil[coilinc=60](0,1)(4,1)
+\end{pspicture}
+\end{LTXexample}
+
+
+% ---------------------------------------------------------------------------------------
+\subsection{\texttt{bow}}\label{subsec:pstcoil:bow}
+% ---------------------------------------------------------------------------------------
+The default value for \Lkeyword{bow} is 0pt which leads to the shown direct connections
+between the two given point. With a positive or negative value circular zigzags are
+possible. This option is not available for coils.
+
+\medskip\noindent
+\begin{LTXexample}[width=6cm]
+\psset{unit=0.6}
+\begin{pspicture}[showgrid,shift=2cm](-1,-1)(9,9)
+\pszigzag[bow=-0.4cm,coilheight=.3,
+  coilwidth=.75cm]{*->}(0,0)(4,4)
+\pczigzag[linecolor=red,bow=2.5cm,
+  coilheight=0.3,
+  coilwidth=.75cm]{*->}(0,2)(6,6)
+\pnode(3,5){A}\pnode(5,0){B}
+\nczigzag[bow=2cm,
+  coilheight=0.3,]{A}{B}
+\end{pspicture}
+\end{LTXexample}
+
+\vspace{2\normalbaselineskip}
+% ---------------------------------------------------------------------------------------
+\subsection{\nxLkeyword{ppoints}}
+% ---------------------------------------------------------------------------------------
+By default a line or node connection divides the total length into 360 segments.
+This should be increased for long distances or a large number of periodss.
+ 
+\medskip\noindent
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(5,2)
+\pssin[ppoints=2000,
+  periods=30](0,1)(5,1)
+\end{pspicture}
+\end{LTXexample}
+
+
+% ---------------------------------------------------------------------------------------
+\subsection{\nxLkeyword{periods}}
+% ---------------------------------------------------------------------------------------
+The line from A to B is plotted by default as one period, which is the same as the relative
+\Lkeyword{periods}=1. A setting of \Lkeyword{periods}=3.3 plots the function 3.3 times
+for the given length.
+ 
+\medskip\noindent
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(5,2)
+\pssin[linecolor=blue](0,1)(5,1)
+\pssin[periods=3.3](0,1)(5,1)
+\end{pspicture}
+\end{LTXexample}
+
+A value without an unit for the period is always relative, with an unit it will
+be an absolute value.
+
+\medskip\noindent
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(5,2)
+\psaxes(5mm,0)(4.5,2)
+\psset{coilarm=5mm}
+\pssin[linecolor=blue](0,1)(5,1)
+\pssin[periods=1cm](0,1)(5,1)
+\pssin[periods=2cm,linestyle=dashed](0,1)(5,1)
+\end{pspicture}
+\end{LTXexample}
+
+With a star as prefix the absolute real value will be truncated to get an
+integer number of periods.
+
+\medskip\noindent
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(5,2)
+\psset{coilarm=5mm}
+\psaxes(5mm,0)(4.5,2)
+\pssin[periods=1.1cm,linestyle=dotted,
+  linecolor=red](0,1)(5,1)
+\pssin[periods=*1.1cm,linecolor=red](0,1)(5,1)
+\pssin[periods=2.2cm,linestyle=dotted,
+  linecolor=blue](0,1)(5,1)
+\pssin[periods=*2.2cm,linecolor=blue](0,1)(5,1)
+\end{pspicture}
+\end{LTXexample}
+
+With a double star as prefix the absolute real value will be rounded instead of truncated to get an
+integer number of periods.
+
+\medskip\noindent
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(5,2)
+\psset{coilarm=5mm}
+\psaxes(5mm,0)(4.5,2)
+\pssin[periods=1.1cm,linestyle=dotted,
+  linecolor=red](0,1)(5,1)
+\pssin[periods=**1.1cm,linecolor=red](0,1)(5,1)
+\pssin[periods=2.2cm,linestyle=dotted,
+  linecolor=blue](0,1)(5,1)
+\pssin[periods=**2.2cm,linecolor=blue](0,1)(5,1)
+\end{pspicture}
+\end{LTXexample}
+
+
+% ---------------------------------------------------------------------------------------
+\subsection{\nxLkeyword{amplitude}}
+% ---------------------------------------------------------------------------------------
+As usual the \Lkeyword{amplitude} is the maximum of the plotted curve and preset to 
+\Lcs{psyunit}, eg 1cm. 
+ 
+\medskip\noindent
+\begin{LTXexample}[width=5.5cm]
+\begin{pspicture}(5,2)
+\pssin[linecolor=blue](0,1)(5,1)
+\pssin[amplitude=0.5,
+  linecolor=red](0,1)(5,1)
+\end{pspicture}
+\end{LTXexample}
+
+% ---------------------------------------------------------------------------------------
+\subsection{\nxLkeyword{function}}
+% ---------------------------------------------------------------------------------------
+By default the curve is plotted as $y=sin(x)$, The optional argument \Lkeyword{function} allows
+to define any other object in \PS\ notation. The value of the variable $x$ is already on the stack!
+The following example plots the defualt curve and one with the function $y=cos(x\cdot\sin(x))$:
+ 
+\medskip\noindent
+\begin{LTXexample}[pos=t]
+\begin{pspicture}(\linewidth,2)
+\pssin[linecolor=blue](0,1)(\linewidth,1)
+\pssin[function=dup sin mul cos,
+  linecolor=red,ppoints=10000,
+  periods=6](0,1)(\linewidth,1)
+\end{pspicture}
+\end{LTXexample}
+
+% ---------------------------------------------------------------------------------------
+\section{Makros}\label{sec:pstcoil:makros}
+% ---------------------------------------------------------------------------------------
+\LPack{pst-coil} defines three macros, which make the creation of coil or zigzag
+shaped lines possible.\index{zigzag line}
+
+\begin{BDef}
+\LcsStar{pscoil}\OptArgs\OptArg*{\Largb{arrows}}\OptArg*{\coord0}\coord1\\
+\LcsStar{psCoil}\OptArgs\Largb{angle1}\Largb{angle2}\\
+\LcsStar{pszigzag}\OptArgs\OptArg*{\Largb{arrows}}\OptArg*{\coord0}\coord1\\
+\LcsStar{pssin}\OptArgs\OptArg*{\Largb{arrows}}\OptArg*{\coord0}\coord1
+\end{BDef}
+
+\begin{itemize}
+\item If only one coordinate pair is specified, the first point is automatically
+	set to the origin of ordinates $(0,0)$.
+\item Arrows may be set with the own parameter or with the optional parameter
+	with \Lkeyword{arrows}\texttt{=<\ldots-\ldots>}.
+\item For \Lcs{psCoil} the coils are principally drawn without ``arms''{}.
+\end{itemize}
+
+
+The asterisk version are in principle pointless, since they do not allow a
+meaningful representation. Some could be seen with the description of
+parameters, but will not be described further in the following.
+
+
+% ---------------------------------------------------------------------------------------
+\subsection{\nxLcs{pscoil}}\label{subsec:pstcoil:pscoil}
+% ---------------------------------------------------------------------------------------
+Since \Lcs{pscoil} is nothing else than a polygon line, also all parameters are
+available which apply for lines.
+
+\medskip\noindent
+\begin{LTXexample}[width=4cm]
+\begin{pspicture}(4,4)
+\pscoil[coilarm=.5cm,linewidth=1.5pt,coilwidth=.5cm]{|->}(4,3)
+\pscoil[linecolor=red,coilheight=0.25](3,4)(3,1)
+\pscoil[doubleline=true,linecolor=cyan,coilheight=0.75](0,4)(3,0)
+\end{pspicture}
+\end{LTXexample}
+
+% ---------------------------------------------------------------------------------------
+\subsection{\nxLcs{psCoil}}\label{subsec:pstcoil:psCoil}
+% ---------------------------------------------------------------------------------------
+\Lcs{psCoil} draws starting at the current point to the angle $\alpha$ an
+invisible line and then from $\alpha$ to $\beta$ a helix.
+\Lcs{rput} has to be used if they are to be placed at a
+particular position. The advantage is that with \Lcs{psCoil} the number of
+helixes to draw can be specified exactly.
+
+\medskip\noindent
+\begin{LTXexample}[width=4cm]
+\begin{pspicture}(4,4)
+\psCoil[linewidth=1.5pt,coilwidth=.5cm]{1800}{3600}
+\rput{-90}(3,4){\psCoil[linecolor=red,coilheight=0.25]{0}{3600}}
+\rput{-45}(0,3.5){\psCoil[doubleline=true,linecolor=cyan,coilheight=0.75]{100}{2700}}
+\end{pspicture}
+\end{LTXexample}
+
+
+
+% ---------------------------------------------------------------------------------------
+\subsection{\nxLcs{pszigzag}}\label{subsec:pstcoil:zigzag}
+% ---------------------------------------------------------------------------------------
+This macro represents the two dimensional variant and is
+correspondly easy to use. Especially the \Lkeyword{linearc} option can bring good
+results for \Lcs{pszigzag}. The specification of the ``arm length''{} is not
+absolute here, since the line is principally ended in the geometrical middle and
+then led to the specified arm length.
+
+\medskip\noindent
+\begin{LTXexample}[width=4cm]
+\begin{pspicture}(4,4)
+\pszigzag[coilarm=.5cm,linewidth=1.5pt,coilwidth=.5cm]{|->}(4,3)
+\pszigzag[linecolor=red,coilheight=0.2](3,4)(3,1)
+\pszigzag[doubleline,linecolor=cyan,coilheight=0.75](0,4)(3,0)
+\end{pspicture}
+\end{LTXexample}
+
+
+\medskip\noindent
+\begin{LTXexample}[width=4cm]
+\begin{pspicture}(4,4)
+\pszigzag[coilarm=.5cm,
+  linewidth=1.5pt,bow=5mm,
+  coilwidth=.5cm]{|->}(4,3)
+\pszigzag[linecolor=red,bow=-1cm,
+  coilheight=0.2](3,4)(3,1)
+\pszigzag[doubleline,
+  linecolor=cyan,bow=1cm,
+  coilheight=0.75](0,4)(3,0)
+\end{pspicture}
+\end{LTXexample}
+
+% ---------------------------------------------------------------------------------------
+\section{Node connections}\label{sec:pstcoil:knotenverbindungen}
+% ---------------------------------------------------------------------------------------
+Prerequisite for this macro is that \LPack{pst-node}
+is loaded, then the following node connections are available:
+
+\bigskip
+\begin{BDef}
+\LcsStar{nccoil}\OptArgs\OptArg*{\Largb{arrows}}\Largb{nodeA}\Largb{nodeB}\\
+\LcsStar{nczigzag}\OptArgs\OptArg*{\Largb{arrows}}\Largb{nodeA}\Largb{nodeB}\\
+\LcsStar{pccoil}\OptArgs\OptArg*{\Largb{arrows}}\Largb{nodeA}\Largb{nodeB}\\
+\LcsStar{pczigzag}\OptArgs\OptArg*{\Largb{arrows}}\Largb{nodeA}\Largb{nodeB}\\
+\LcsStar{ncsin}\OptArgs\OptArg*{\Largb{arrows}}\Largb{nodeA}\Largb{nodeB}\\
+\LcsStar{pcsin}\OptArgs\OptArg*{\Largb{arrows}}\Largb{nodeA}\Largb{nodeB}
+\end{BDef}
+
+\medskip\noindent
+\begin{LTXexample}[width=4cm]
+\begin{pspicture}(4,3)
+\pnode(0.5,0.5){A}
+\pnode(3.5,2.5){B}
+\ncsin{<->}{A}{B}
+\end{pspicture}
+\end{LTXexample}
+
+
+\medskip\noindent
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(5,2)
+\pnode(0,1){A}
+\pnode(5,1){B}
+\ncsin[amplitude=0.5,periods=30,coilarm=5pt,
+  function=dup 0.1 mul sin exch sin add]{A}{B}
+\end{pspicture}
+\end{LTXexample}
+
+
+Th other connections behave completely analogue to those dealt with the
+package \LPack{pst-node} so that
+no further explanations are needed here.
+
+\clearpage
+
+\section{List of all optional arguments for \texttt{pst-coil}}
+
+\xkvview{family=pst-coil,columns={key,type,default}}
+
+\nocite{*}
+\bgroup
+\RaggedRight
+\bibliographystyle{plain}
+\bibliography{pst-coil-doc}
+\egroup
+
+\printindex
+
+
+\end{document}

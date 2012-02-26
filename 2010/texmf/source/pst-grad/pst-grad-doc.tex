@@ -1,0 +1,429 @@
+\documentclass[english]{article}
+%
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\listfiles
+\usepackage[scaled]{luximono}
+\usepackage{lmodern}
+\usepackage{xspace,setspace,caption}
+\usepackage[bottom]{footmisc}
+\usepackage{tabularx,amsmath,eurosym}
+\usepackage{longtable}
+\usepackage[NewCommands,NewParameters]{ragged2e}
+\usepackage[dvipsnames]{pstricks}
+\usepackage{pst-text,pst-grad}
+\let\GRADfileversion\fileversion
+\let\GRADfiledate\filedate
+\usepackage{graphicx,multido,framed}
+\definecolor{hellgelb}{rgb}{1,1,0.8}
+\makeatletter
+\newcount\pst@cntm%
+\newcount\pst@cntn%
+\newcount\pst@cnto%
+\newcount\pst@cntp%
+\def\modulo#1#2#3{%
+  \begingroup%
+  \pst@cntm=#1\pst@cntn=#2\relax%
+  \pst@cnto=\pst@cntm%
+  \divide\pst@cntm by \pst@cntn%
+  \multiply\pst@cntn by \pst@cntm%
+  \advance\pst@cnto by -\pst@cntn%
+  \edef\value{\endgroup\def\noexpand#3{\number\pst@cnto}}\value%
+}
+\makeatother
+%
+\def\PST{{\texttt{PSTricks}}\xspace}
+\def\PDF{{\texttt{PDF}}\xspace}
+\def\pst{{\texttt{pstricks}}\xspace}
+\def\PS{PostScript\xspace}
+\newcommand*\CMD[1]{{\UrlFont\texttt{\textbackslash #1}}}
+%
+\def\tIndex#1{\index{#1@{\UrlFont\texttt{#1}}}}
+\def\cIndex#1{\index{#1@\CMD{#1}}}
+\def\pIndex#1{\index{Parameter@\textbf{Parameter}!{\UrlFont\texttt{#1}}}}
+\def\ppIndex#1{\index{Parameter@\textbf{Parameter}!{#1}}}
+\def\sIndex#1{\index{Syntax@\textbf{Syntax}!\CMD{#1}}}
+\def\csIndex#1{\sIndex{#1}\cIndex{#1}}
+\def\PIndex#1{\index{Paket@\textbf{Paket}!\texttt{#1}}}
+\def\mIndex#1{\texttt{#1}\tIndex{#1}\pIndex{#1}}
+%
+\pretolerance=500
+\tolerance=1000 
+\hbadness=3000
+\vbadness=3000
+\hyphenpenalty=400
+
+\usepackage{showexpl}% not a real PSTricks package
+\usepackage{babel}
+\usepackage{makeidx}
+\makeindex
+\usepackage[dvips,colorlinks,linktocpage]{hyperref} % PDF-support
+%
+\renewcommand{\ttdefault}{ul9}% Luxi Mono
+\lstset{keywordstyle=\small\ttfamily\bfseries,preset=\raggedright} 
+\lstset{language=PSTricks,moredelim=**[is][\bf\color{blue}]{§}{§}}%
+%
+
+\begin{document}
+%
+\title{\texttt{pst-grad}:Gradients \\[10pt]\footnotesize v. \GRADfileversion\ -- \GRADfiledate}
+\author{Herbert Voß\thanks{Thanks to Lars Kotthoff and Angelo Rossi for translating this documentation!}
+}
+\maketitle
+
+\begin{abstract}
+\PIndex{pst-grad}\tIndex{pst-grad}\verb+pst-grad+ 
+is also one of the older and smaller
+packages. It  provides only one fill style. A
+gradient could be created with the macros known from \PST, too, the use of
+\verb+pst-grad+ offers advantages though, since one does not need to take care
+of the calculation of the intermediate colour values.
+
+This version of \verb+pst-grad+ integrates the function of the
+\verb+pst-ghsb+ package, which supports the HSB color model.
+
+\end{abstract}
+
+\tableofcontents
+
+\clearpage
+
+\section{Introduction}
+
+
+All parameters are only available when \textbf{gradient} is used as
+		fill style.
+There are further packages which support such fill styles, especially for
+circular gradients (\verb+pst-slpe+\PIndex{pst-slpe}).
+
+
+% ---------------------------------------------------------------------------------------
+\section{Parameters}\label{sec:pstgrad:parameter}
+% ---------------------------------------------------------------------------------------
+Table~\ref{tab:pst-grad:parameter} shows a compilation of the special parameters
+valid for \verb+pst-grad+.
+
+\begin{longtable}{>{\ttfamily}l>{\ttfamily}l>{\ttfamily}l}
+\caption{Summary of all parameters for \texttt{pst-grad} and
+\texttt{pst-ghsb}}\label{tab:pst-grad:parameter}\\[-5pt]
+\textrm{name} & \textrm{values}  & \textrm{default}\\\hline
+\endfirsthead
+\textrm{name} & \textrm{values}  & \textrm{default}\\\hline
+\endhead
+gradbegin     &  <colour>        & gradbegin\\
+gradend       &  <colour>        & gradend\\
+gradlines     &  <value>         & 500\\
+gradmidpoint  &  <value>         & 0.9\\
+gradangle     &  <angle>       & 0\\
+gradientHSB   &  false|true     & false\\
+GradientCircle&  false|true     & false\\
+GradientScale &  <value>         & 1.0\\
+GradientPos   &  <(x,y)>        & (0,0)\\
+\end{longtable}
+\tIndex{gradbegin}\tIndex{gradend}\tIndex{gradlines}\tIndex{gradmidpoint}\tIndex{gradangle}
+\pIndex{gradbegin}\pIndex{gradend}\pIndex{gradlines}\pIndex{gradmidpoint}\pIndex{gradangle}
+\tIndex{gradientHSB}\pIndex{gradientHSB}%
+\tIndex{GradientCircle}\pIndex{GradientCircle}%
+\tIndex{GradientPos}\pIndex{GradientPos}%
+\tIndex{GradientScale}\pIndex{GradientScale}
+
+
+% ---------------------------------------------------------------------------------------
+\subsection{\texttt{gradbegin}}\label{subsec:pstgrad:gradbegin}
+% ---------------------------------------------------------------------------------------
+\tIndex{gradbegin}\verb+gradbegin+ denotes the parameter as well as the starting
+colour, which is a little bit confusing here.
+\begin{verbatim}
+\newrgbcolor{gradbegin}{0 .1 .95} % default
+\end{verbatim}
+
+Consequently this starting colour can be changed by redefining the colour or by
+an assignment through the parameter.
+\begin{verbatim}
+\newrgbcolor{gradbegin}{0 0 1} 
+\definecolor{rgb}{gradbegin}{0 0 1} % requires color/xcolor package
+\psset{gradbegin=blue}
+\end{verbatim}
+
+
+\medskip\noindent
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(5,3.5)
+\psframe[fillstyle=gradient,gradbegin=white](5,1.5)
+\newrgbcolor{gradbegin}{0 1 1}
+\psframe[fillstyle=gradient](0,2)(5,3.5)
+\end{pspicture}
+\end{LTXexample}
+
+
+\medskip
+%\begin{shaded}
+\begin{itemize}
+	\item \verb+gradbegin+ should be defined as \verb+RGB+ colour\tIndex{RGB},
+		since a faultless function for \verb+CMYK+ or gray scales is not
+		warranted in every case.
+\item Con\TeX{}t users change the colour with\\
+    \verb+\definecolor{rgb}{gradbegin}{r=0,g=0,b=1}+
+\end{itemize}
+%\end{shaded}
+
+
+
+% ---------------------------------------------------------------------------------------
+\subsection{\texttt{gradend}}\label{subsec:pstgrad:gradend}
+% ---------------------------------------------------------------------------------------
+\tIndex{gradend}\verb+gradend+ is \textbf{not} the counterpart to
+\verb+gradbegin+, for it is the colour which is reached at the relative point
+\verb+gridmidpoint+. In every case it is ambiguous as \verb+gradbegin+ again.
+\begin{verbatim}
+\newrgbcolor{gradend}{0 1 1} % default
+\end{verbatim}
+
+
+Changes can be made differently again.
+\begin{verbatim}
+\newrgbcolor{gradend}{1 0 0} 
+\definecolor{rgb}{gradend}{1 0 0} % requires color/xcolor package
+\psset{gradend=red}
+\end{verbatim}
+
+
+\medskip\noindent
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(5,3.5)
+\psframe[fillstyle=gradient,gradend=white](5,1.5)
+\newrgbcolor{gradend}{1 0 0}
+\psframe[fillstyle=gradient](0,2)(5,3.5)
+\end{pspicture}
+\end{LTXexample}
+
+
+\medskip
+%\begin{shaded}
+\begin{itemize}
+	\item \verb+gradend+ should be defined as \verb+RGB+ colour\tIndex{RGB},
+		since a faultless function for \verb+CMYK+ or gray scales is not
+		warranted in every case.
+\item Con\TeX{}t users change the colour with\\
+\verb+\definecolor{rgb}{gradend}{r=1,g=1,b=0}+
+\end{itemize}
+%\end{shaded}
+
+
+
+% ---------------------------------------------------------------------------------------
+\subsection{\texttt{gradlines}}\label{subsec:pstgrad:gradlines}
+% ---------------------------------------------------------------------------------------
+\tIndex{gradlines}A gradient is nothing but a string of coloured lines. The
+width of those depends only on the resolution of the monitor resp. the printer
+in the end. But since this is very user-specific, \verb+pst-grad+ allows any
+number of lines, which can be changed through \verb+gradlines+.
+
+
+
+\medskip\noindent
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(5,4)
+\psset{fillstyle=gradient,linestyle=none}
+\psframe[gradlines=5](5,1)
+\psframe(0,1.5)(5,2.5)
+\psframe[gradlines=1000](0,3)(5,4)
+\end{pspicture}
+\end{LTXexample}
+
+
+
+
+% ---------------------------------------------------------------------------------------
+\subsection{\texttt{gradmidpoint}}\label{subsec:pstgrad:gradmidpoint}
+% ---------------------------------------------------------------------------------------
+\tIndex{gradmidpoint}Denotes the relative point where the colour \verb+gradend+
+is reached. Then it is proceeded in reverse order.
+
+
+\medskip\noindent
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(5,4)
+\psset{fillstyle=gradient,linestyle=none}
+\psframe[gradmidpoint=0](5,1)
+\psframe[gradmidpoint=0.5](0,1.5)(5,2.5)
+\psframe[gradmidpoint=1](0,3)(5,4)
+\end{pspicture}
+\end{LTXexample}
+
+
+
+% ---------------------------------------------------------------------------------------
+\subsection{\texttt{gradangle}}\label{subsec:pstgrad:gradangle}
+% ---------------------------------------------------------------------------------------
+\tIndex{gradangle}\verb+gradangle+ determines the gradient angle of the straight
+line.
+
+\medskip\noindent
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(5,4)
+\psset{fillstyle=gradient,linestyle=none,gradmidpoint=0.5}
+\psframe[gradangle=0](5,1)
+\psframe[gradangle=45](0,1.5)(5,2.5)
+\psframe[gradangle=90](0,3)(5,4)
+\end{pspicture}
+\end{LTXexample}
+
+% ---------------------------------------------------------------------------------------
+\subsection{\texttt{GradientCircle}, \texttt{GradientScale} and \texttt{GradientPos}   }\label{subsec:pstgrad:GradientCircle}
+% ---------------------------------------------------------------------------------------
+\tIndex{GradientCircle}\tIndex{GradientScale}\tIndex{GradientPos}With the option
+\verb+GradientCircle+ circular gradients can be created. The radius can be
+influenced through \verb+GradientScale+ and the centre with \verb+GradientPos+.
+The specification of the coordinates refers to the based coordinate system,
+which is given by the \verb+pspicture+ environment as a rule.
+
+\medskip\noindent
+\begin{LTXexample}[width=5cm]
+\begin{pspicture}(5,4)
+\psset{fillstyle=gradient,linestyle=none}
+\psframe[GradientCircle=true](5,1)%
+\psframe[GradientCircle=true,GradientScale=3](0,1.5)(5,2.5)%
+\psframe[GradientCircle=true,GradientScale=2,%
+         GradientPos={(4,3.5)}](0,3)(5,4)%
+\end{pspicture}
+\end{LTXexample}
+
+\vspace{1cm}
+\begin{center}
+\bgroup
+\DeclareFixedFont{\RM}{T1}{ptm}{b}{n}{3cm}
+\DeclareFixedFont{\Rm}{T1}{ptm}{m}{n}{2mm}
+
+\psset{fillstyle=gradient,gradbegin=red,gradend=white}
+\begin{pspicture}(\linewidth,3cm)
+\resizebox{\linewidth}{!}{\pscharpath[gradangle=90]{\RM PostScript}}
+\end{pspicture}\\
+\begin{pspicture}(\linewidth,3cm)
+\resizebox{\linewidth}{!}{\pscharpath[gradangle=0]{\RM PostScript}}
+\end{pspicture}\\
+\begin{pspicture}(\linewidth,3cm)
+\resizebox{\linewidth}{!}{\pscharpath[gradmidpoint=0,gradangle=90]{\RM PostScript}}
+\end{pspicture}
+\egroup
+\captionof{figure}{Shadow games\ldots}
+\end{center}
+
+
+\clearpage
+\subsection{\texttt{GradientHSB}}\label{subsec:pstgrad:gradientHSB}
+
+\medskip\noindent
+\begin{LTXexample}[width=5.5cm]
+\newcommand{\Fig}[1][]{%
+\begin{pspicture}(5.5,5.5)
+  \psframe[#1](5,5)
+\end{pspicture}}
+\newhsbcolor{ColorA}{0 0 0.7}
+\newhsbcolor{ColorB}{0 1 0.7}
+\newhsbcolor{ColorC}{.5 0.8 0}
+\newhsbcolor{ColorD}{.5 0.8 1}
+\psset{fillstyle=gradient,gradientHSB=true}
+\Fig[gradmidpoint=1,gradbegin=ColorA,gradend=ColorB]
+\Fig[gradmidpoint=0.5,gradbegin=ColorC,gradend=ColorD]
+\end{LTXexample}
+
+
+\newcommand{\Fig}[1][]{%
+\begin{pspicture}(5.5,5.5)
+  \psframe[#1](5,5)
+\end{pspicture}}
+\definecolor{ColorA}{hsb}{0.7, 0.1, 0.8}
+\definecolor{ColorB}{hsb}{0.7, 0.9, 0.8}
+\definecolor{ColorC}{hsb}{0, 0, 0}
+\definecolor{ColorD}{hsb}{0, 0, 1}
+\definecolor{ColorE}{hsb}{0, 0, 0.5}
+\definecolor{ColorF}{hsb}{0, 1, 0.5}
+\definecolor{ColorG}{hsb}{0, 0, 0.5}
+\definecolor{ColorH}{hsb}{0.99999, 0, 0.5}   % As it's cycliç 1=0 !
+\definecolor{ColorI}{hsb}{1, 1, 1}
+\definecolor{ColorJ}{hsb}{1, 0, 0}
+\definecolor{ColorK}{hsb}{0.99999, 1, 1}     % As it's cyclic 1=0 !
+\definecolor{ColorL}{hsb}{0, 1, 0}
+\definecolor{ColorM}{hsb}{0.99999, 1, 1}     % As it's cyclic 1=0 !
+\definecolor{ColorN}{hsb}{0, 0, 1}
+\definecolor{ColorO}{hsb}{0, 0.6, 0.7}
+\definecolor{ColorP}{hsb}{0.99999, 0.7, 0.7} % As it's cyclic 1=0 !
+\definecolor{ColorQ}{hsb}{0.3, 0, 0.8}
+\definecolor{ColorR}{hsb}{0.3, 1, 0.8}
+\definecolor{ColorS}{hsb}{0.6, 0.3, 0}
+\definecolor{ColorT}{hsb}{0.6, 0.3, 1}
+\psset{fillstyle=gradient,gradmidpoint=1}
+\Fig[gradbegin=yellow,gradend=green]
+\Fig[gradientHSB=true,gradbegin=ColorA,gradend=ColorB]
+
+\Fig[gradbegin=green,gradend=yellow]
+\psset{gradientHSB=true}
+\Fig[gradbegin=ColorC,gradend=ColorD]
+
+\Fig[gradbegin=ColorE,gradend=ColorF]
+\Fig[gradbegin=ColorG,gradend=ColorH]
+
+\Fig[gradbegin=ColorI,gradend=ColorJ]
+\Fig[gradbegin=ColorK,gradend=ColorL]
+
+\Fig[gradbegin=ColorM,gradend=ColorN]
+\Fig[gradbegin=ColorO,gradend=ColorP]
+
+\Fig[gradbegin=ColorQ,gradend=ColorR]
+\Fig[gradbegin=ColorS,gradend=ColorT]
+
+\begin{lstlisting}
+\definecolor{ColorA}{hsb}{0.7, 0.1, 0.8}
+\definecolor{ColorB}{hsb}{0.7, 0.9, 0.8}
+\definecolor{ColorC}{hsb}{0, 0, 0}
+\definecolor{ColorD}{hsb}{0, 0, 1}
+\definecolor{ColorE}{hsb}{0, 0, 0.5}
+\definecolor{ColorF}{hsb}{0, 1, 0.5}
+\definecolor{ColorG}{hsb}{0, 0, 0.5}
+\definecolor{ColorH}{hsb}{0.99999, 0, 0.5}   % As it's cycliç 1=0 !
+\definecolor{ColorI}{hsb}{1, 1, 1}
+\definecolor{ColorJ}{hsb}{1, 0, 0}
+\definecolor{ColorK}{hsb}{0.99999, 1, 1}     % As it's cyclic 1=0 !
+\definecolor{ColorL}{hsb}{0, 1, 0}
+\definecolor{ColorM}{hsb}{0.99999, 1, 1}     % As it's cyclic 1=0 !
+\definecolor{ColorN}{hsb}{0, 0, 1}
+\definecolor{ColorO}{hsb}{0, 0.6, 0.7}
+\definecolor{ColorP}{hsb}{0.99999, 0.7, 0.7} % As it's cyclic 1=0 !
+\definecolor{ColorQ}{hsb}{0.3, 0, 0.8}
+\definecolor{ColorR}{hsb}{0.3, 1, 0.8}
+\definecolor{ColorS}{hsb}{0.6, 0.3, 0}
+\definecolor{ColorT}{hsb}{0.6, 0.3, 1}
+\psset{fillstyle=gradient,gradmidpoint=1}
+\Fig[gradbegin=yellow,gradend=green]
+\Fig[gradientHSB=true,gradbegin=ColorA,gradend=ColorB]
+
+\Fig[gradbegin=green,gradend=yellow]
+\psset{gradientHSB=true}
+\Fig[gradbegin=ColorC,gradend=ColorD]
+
+\Fig[gradbegin=ColorE,gradend=ColorF]
+\Fig[gradbegin=ColorG,gradend=ColorH]
+
+\Fig[gradbegin=ColorI,gradend=ColorJ]
+\Fig[gradbegin=ColorK,gradend=ColorL]
+
+\Fig[gradbegin=ColorM,gradend=ColorN]
+\Fig[gradbegin=ColorO,gradend=ColorP]
+
+\Fig[gradbegin=ColorQ,gradend=ColorR]
+\Fig[gradbegin=ColorS,gradend=ColorT]
+\end{lstlisting}
+
+
+\nocite{*}
+\bgroup
+\raggedright
+\bibliographystyle{plain}
+\bibliography{\jobname}
+\egroup
+
+\printindex
+
+
+\end{document}

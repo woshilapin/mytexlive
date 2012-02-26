@@ -1,0 +1,13 @@
+%% $Id: README 279 2011-03-13 19:55:38Z herbert $
+
+pst-graphicx allows the use of the LaTeX package graphicx
+together with Plain TeX, e.g.
+
+\input pst-graphicx% also loads the base pstricks.tex
+
+\psframebox[shadow]{\includegraphics[width=5cm]{tiger}}
+\bye
+
+pst-graphicx does't load the package keyval, to prevent
+a package mismatch with xkeyval, which is load by PSTricks.
+

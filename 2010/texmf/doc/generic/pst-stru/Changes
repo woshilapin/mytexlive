@@ -1,0 +1,10 @@
+pst-stru.sty --------
+
+
+pst-stru.tex --------
+v. 0.2  2007-07-22  - adding license
+                    - using always \ps@object
+
+
+pst-stru-doc.tex --------
+v. 1.00  2007-07-22  new documentation

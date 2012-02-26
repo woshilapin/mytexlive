@@ -1,0 +1,245 @@
+%% $Id: pst-func-doc.tex 86 2009-01-29 10:34:00Z herbert $
+\documentclass[11pt,english,BCOR10mm,DIV12,bibliography=totoc,parskip=false,smallheadings
+    headexclude,footexclude,oneside]{pst-doc}
+\usepackage[utf8]{inputenc}
+\usepackage{pst-gantt}
+\let\pstGanntFV\fileversion
+\usepackage{pstricks-add}
+\usepackage{lscape}
+\lstset{explpreset={pos=l,width=0.4\linewidth,overhang=0pt,hsep=\columnsep,vsep=\bigskipamount,rframe={}},
+    escapechar=?}
+%
+\begin{document}
+
+\title{\texttt{pst-gannt}}
+\subtitle{Gannt charts; v.\pstGanntFV}
+\author{Denis Girou\\Herbert Vo\ss}
+\docauthor{Herbert Vo\ss}
+\date{\today}
+\maketitle
+
+\tableofcontents
+
+\clearpage
+
+\begin{abstract}
+\noindent
+\LPack{pst-gannt} loads by default the following packages: \LPack{pst-node}, 
+\LPack{pst-grad}, \LPack{pst-xkey}, and, of course \LPack{pstricks}.
+All should be already part of your local \TeX\ installation. If not, or in case
+of having older versions, go to \url{http://www.CTAN.org/} and load the newest version.
+
+\vfill\noindent
+%Thanks to: \\
+%and last but not least \url{http://mathworld.wolfram.com}
+
+\end{abstract}
+
+\section{Environments and Macros}
+
+The main environemnt is \Lenv{PstGanttChart} with the following syntax:
+
+\begin{BDef}
+\LBEG{PstGanttChart}\OptArgs\Largb{vertical units}\Largb{horizontal units}\\
+\ldots
+\LEND{PstGanttChart}\\[5pt]
+\Lcs{PstGanttTask}\OptArgs\Largb{Start}\Largb{End}
+\end{BDef}
+
+
+
+
+\begingroup
+\begin{LTXexample}
+\newpsstyle{Important}{fillstyle=solid,fillcolor=red}
+\newpsstyle{NotImportant}{fillstyle=vlines}
+\begin{PstGanttChart}{5}{7}
+\PstGanttTask{0}{3}
+\PstGanttTask{2}{1}
+\PstGanttTask[TaskStyle=Important,
+    TaskInsideLabel=Important]{2}{5}
+\PstGanttTask[TaskStyle=NotImportant]{4}{2}
+\PstGanttTask{5}{2}
+\end{PstGanttChart}
+\end{LTXexample}
+\endgroup
+\xLkeyset{fillstyle=vlines}\xLenv{PstGanttChart}\xLcs{PstGanttTask}\xLkeyword{TaskStyle}
+\xLkeyword{TaskInsideLabel}
+% Example 2
+%
+
+\begingroup
+\begin{LTXexample}
+\newpsstyle{Important}{fillstyle=solid,fillcolor=red}
+\newpsstyle{NotImportant}{fillstyle=vlines}
+\begin{PstGanttChart}[yunit=2]{5}{7}
+\PstGanttTask{0}{3}
+\PstGanttTask{2}{1}
+\PstGanttTask[TaskStyle=Important,%
+  TaskInsideLabel=Important]{2}{5}
+\PstGanttTask[TaskStyle=NotImportant]{4}{2}
+\PstGanttTask{5}{2}
+\end{PstGanttChart}
+\end{LTXexample}
+\endgroup
+\xLkeyset{fillstyle=vlines}\xLenv{PstGanttChart}\xLcs{PstGanttTask}\xLkeyword{TaskStyle}
+\xLkeyword{TaskInsideLabel}
+
+\vspace{1cm}
+%
+% Example 3
+%
+
+\begingroup
+\begin{LTXexample}[pos=t]
+\newpsstyle{Important}{fillstyle=solid,fillcolor=red}
+\newpsstyle{NotImportant}{fillstyle=vlines}
+\begin{PstGanttChart}[unit=2,TaskOutsideLabelMaxSize=1,
+   ChartShowIntervals]{5}{7}
+\PstGanttTask[TaskOutsideLabel={Task 1}]{0}{3}
+\PstGanttTask[TaskOutsideLabel={Task 2},TaskUnitType=Day]{15}{3}%3 days start at 15
+\PstGanttTask[TaskStyle=Important,TaskOutsideLabel={Task 3},
+  TaskInsideLabel={\Large\textcolor{white}{\textbf{Important}}}]{2}{5}
+\PstGanttTask[TaskStyle=NotImportant,TaskOutsideLabel={Task 4}]{4}{2}
+\PstGanttTask[TaskOutsideLabel={Task 5}]{5}{2}
+\end{PstGanttChart}
+\end{LTXexample}
+\endgroup
+\xLkeyset{fillstyle=vlines}\xLenv{PstGanttChart}\xLcs{PstGanttTask}\xLkeyword{TaskStyle}
+\xLkeyword{TaskOutsideLabel}\xLkeyword{TaskOutsideLabelMaxSize}\xLkeyword{ChartShowIntervals}
+\xLkeyword{TaskInsideLabel}\xLkeyset{TaskUnitType=Day}
+
+
+%
+% Example 4
+%
+\psset{unit=1cm}
+\begin{LTXexample}[pos=t]
+\begin{PstGanttChart}[yunit=1.5,
+  ChartUnitIntervalName=KW,ChartUnitBasicIntervalName=KW,
+  ChartModulo,ChartModuloValue=52,
+  TaskUnitIntervalValue=14,TaskUnitType=KW,ChartStartInterval=49,
+  ChartShowIntervals]{4}{8}
+ \PstGanttTask[TaskInsideLabel={Task 1}]{0}{1}
+ \PstGanttTask[TaskInsideLabel={Task 2}]{3}{4} 
+  \PstGanttTask[TaskInsideLabel={Task 3}]{2}{2}
+  \PstGanttTask[TaskInsideLabel={Task 4}]{3}{5}
+\end{PstGanttChart}
+\end{LTXexample}
+\xLkeyword{ChartModulo}
+\xLkeyword{ChartModuloValue}
+\xLkeyword{ChartStartInterval}
+
+%
+% Example 5
+%
+\begin{LTXexample}[pos=t]
+\begin{PstGanttChart}[yunit=2,ChartUnitIntervalName=Month,
+  TaskUnitIntervalValue=30,TaskUnitType=Month,ChartShowIntervals]{3}{4}
+\PstGanttTask[TaskInsideLabel={Task 1}]{0}{1}
+\PstGanttTask[TaskInsideLabel={Task 2},TaskUnitType=Day]{24}{40}% 40 days start at 24
+\PstGanttTask[TaskInsideLabel={Task 3}]{2}{2}
+\end{PstGanttChart}
+\end{LTXexample}
+\xLkeyset{TaskUnitType=Day}\xLkeyset{TaskUnitType=Month}\xLkeyset{ChartUnitIntervalName=Month}
+\xLkeyset{TaskUnitIntervalName=Month}\xLkeyset{TaskUnitIntervalValue=Month}\xLkeyword{ChartShowIntervals}
+
+%
+% Example 6
+%
+\begin{LTXexample}
+\begin{PstGanttChart}[yunit=1.5,
+  ChartUnitIntervalName=Year,
+  ChartUnitBasicIntervalName=Month,
+  TaskUnitIntervalValue=12,
+  TaskUnitType=Year,
+  ChartShowIntervals]{4}{4}
+\PstGanttTask[TaskInsideLabel={Task 1}]{0}{1}
+\PstGanttTask[TaskInsideLabel={Task 2},
+    TaskUnitType=Month]{6}{24}% 24 months start at 6
+\PstGanttTask[TaskInsideLabel={Task 3}]{2}{2}
+\PstGanttTask[TaskInsideLabel={Task 4}]{3}{1}
+\end{PstGanttChart}
+\end{LTXexample}
+\xLkeyword{yunit}
+\xLkeyword{ChartUnitIntervalName=Year}
+\xLkeyword{ChartUnitBasicIntervalName=Month}
+\xLkeyword{TaskUnitIntervalValue=12}
+\xLkeyword{TaskUnitType=Year}
+\xLkeyword{ChartShowIntervals}
+
+
+
+
+\begin{landscape}
+\definecolor{LightCyan}   {rgb}{0.88,1.,1.}
+\definecolor{Orange}      {rgb}{1.,0.65,0.}
+\definecolor{PaleGreen}   {rgb}{0.6,0.98,0.6}
+\definecolor{Pink}        {rgb}{1.,0.75,0.8}
+\psset{gradmidpoint=0,fillstyle=gradient,gradbegin=LightCyan,gradend=white}
+\newpsstyle{TaskStyleA}{gradbegin=cyan,gradend=blue}
+\newpsstyle{TaskStyleB}{gradbegin=red,gradend=Pink}
+\newpsstyle{TaskStyleC}{gradbegin=yellow,gradend=Orange}
+\newpsstyle{TaskStyleD}{gradbegin=green,gradend=PaleGreen}
+
+\begin{PstGanttChart}[yunit=2.5,xunit=3.5,ChartUnitIntervalName=Semaine,
+                      ChartUnitBasicIntervalName=Jour,TaskUnitType=Jour,
+                      TaskOutsideLabelMaxSize=14,ChartShowIntervals]{8}{43}
+  \psset{gradangle=90,TaskStyle=TaskStyleA}
+  \PstGanttTask[TaskOutsideLabel={\'Etude}]{0}{10}
+  \PstGanttTask[TaskOutsideLabel={R\'edaction dossier}]{6}{7}
+  \PstGanttTask[TaskOutsideLabel={Relecture et corrections}]{14}{2}
+  \PstGanttTask[TaskOutsideLabel={Soumission},TaskStyle=TaskStyleB]{17}{1}
+  \psset{TaskStyle=TaskStyleC}
+  \PstGanttTask[TaskOutsideLabel={R\'ealisation}]{25}{14}
+  \PstGanttTask[TaskOutsideLabel={Tests}]{35}{6}
+  \PstGanttTask[TaskOutsideLabel={V\'erification}]{39}{3}
+  \PstGanttTask[TaskOutsideLabel={Recette},TaskStyle=TaskStyleD]{42}{1}
+\end{PstGanttChart}
+\end{landscape}
+
+\begin{lstlisting}
+\definecolor{LightCyan}   {rgb}{0.88,1.,1.}
+\definecolor{Orange}      {rgb}{1.,0.65,0.}
+\definecolor{PaleGreen}   {rgb}{0.6,0.98,0.6}
+\definecolor{Pink}        {rgb}{1.,0.75,0.8}
+\psset{gradmidpoint=0,fillstyle=gradient,gradbegin=LightCyan,gradend=white}
+\newpsstyle{TaskStyleA}{gradbegin=cyan,gradend=blue}
+\newpsstyle{TaskStyleB}{gradbegin=red,gradend=Pink}
+\newpsstyle{TaskStyleC}{gradbegin=yellow,gradend=Orange}
+\newpsstyle{TaskStyleD}{gradbegin=green,gradend=PaleGreen}
+
+\begin{PstGanttChart}[yunit=2.5,xunit=3.5,ChartUnitIntervalName=Semaine,
+                      ChartUnitBasicIntervalName=Jour,TaskUnitType=Jour,
+                      TaskOutsideLabelMaxSize=14,ChartShowIntervals]{8}{43}
+  \psset{gradangle=90,TaskStyle=TaskStyleA}
+  \PstGanttTask[TaskOutsideLabel={\'Etude}]{0}{10}
+  \PstGanttTask[TaskOutsideLabel={R\'edaction dossier}]{6}{7}
+  \PstGanttTask[TaskOutsideLabel={Relecture et corrections}]{14}{2}
+  \PstGanttTask[TaskOutsideLabel={Soumission},TaskStyle=TaskStyleB]{17}{1}
+  \psset{TaskStyle=TaskStyleC}
+  \PstGanttTask[TaskOutsideLabel={R\'ealisation}]{25}{14}
+  \PstGanttTask[TaskOutsideLabel={Tests}]{35}{6}
+  \PstGanttTask[TaskOutsideLabel={V\'erification}]{39}{3}
+  \PstGanttTask[TaskOutsideLabel={Recette},TaskStyle=TaskStyleD]{42}{1}
+\end{PstGanttChart}
+\end{lstlisting}
+
+\section{List of all optional arguments for \texttt{pst-gantt}}
+
+\xkvview{family=pst-gantt,columns={key,type,default}}
+
+\bgroup
+\raggedright
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{pst-gantt-doc}
+\egroup
+
+\printindex
+
+
+
+\end{document}
+
+

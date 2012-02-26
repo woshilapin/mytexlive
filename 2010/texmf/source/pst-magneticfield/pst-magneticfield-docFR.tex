@@ -1,0 +1,711 @@
+%% $Id: pst-magneticfield-docFR.tex 347 2010-06-12 06:33:02Z herbert $
+\documentclass[11pt,english,french,BCOR10mm,DIV12,bibliography=totoc,parskip=false,smallheadings
+    headexclude,footexclude,oneside]{pst-doc}
+\usepackage[latin1]{inputenc}
+\usepackage{pst-magneticfield}
+\let\pstMFfv\fileversion
+
+%\newenvironment{postscript}{}{} % uncomment, when running with latex
+
+\lstset{pos=t,language=PSTricks,
+    morekeywords={psmagneticfield,psmagneticfieldThreeD},basicstyle=\footnotesize\ttfamily}
+\newcommand\Cadre[1]{\psframebox[fillstyle=solid,fillcolor=black,linestyle=none,framesep=0]{#1}}
+\def\bgImage{}
+%
+\begin{document}
+
+\title{\texttt{pst-magneticfield}}
+\subtitle{Magnetic field lines of a solenoid; v.\pstMFfv}
+\author{Juergen Gilg\\ Manuel Luque\\Herbert Vo\ss}
+%\docauthor{Juergen Gilg\\Manuel Luque\\Herbert Vo\ss}
+\date{\today}
+\maketitle
+
+
+\clearpage%
+\begin{abstract}
+Le package \LPack{pst-magneticfield} a pour objet de tracer l'allure des lignes de
+champ d'un solénoïde. Les paramètres physiques du solénoïde sont le rayon, le nombre
+de spires et la longueur, les valeurs par défaut sont données ci-dessous :
+\begin{enumerate}
+  \item le nombre de spires : \LKeyset{N=6} ;
+  \item le rayon : \LKeyset{R=2} ;
+  \item la longueur : \LKeyset{L=4}.
+\end{enumerate}
+Le tracé a été modélisé avec la méthode de Runge-Kutta 2 qui, après plusieurs essais,
+semble être le meilleur compromis entre rapidité des calculs et précision du tracé.
+Le calcul des intégrales elliptiques nécessaires à l'évaluation du champ magnétique
+a été réalisé par des approximations polynômiales tirées du ``\textit{Handbook of
+Mathematical Functions With Formulas, Graph, And Mathematical Tables}'' de
+Milton Abramowitz et Irene.A. Stegun \url{http://www.math.sfu.ca/~cbm/aands/}.
+\end{abstract}
+
+\clearpage
+\tableofcontents
+
+
+\clearpage
+
+\section{Introduction}
+Les options de tracé, avec les valeurs par défaut, sont les suivantes :
+\begin{enumerate}
+  \item Le nombre de points maximum sur chaque ligne de l'ensemble de la bobine : \LKeyset{pointsB=500} ;
+  \item le nombre de points maximum sur des lignes autour de spires choisies : \LKeyset{pointsS=1000} ;
+  \item le nombre de lignes de l'ensemble de la bobine : \LKeyset{nL=8} ;
+  \item le pas du tracé pour les lignes de l'ensemble de la bobine : \LKeyset{PasB=0.02} ;
+  \item le pas du tracé pour les lignes autour de spires choisies : \LKeyset{PasS=0.00275} ;
+  \item la possibilité de choisir individuellement des spires pour améliorer le rendu
+  du tracé : \LKeyset{numSpires=\{\}} , on place à la suite du signe ``='' les numéros
+  des spires \textsf{1 2 3 etc.} en partant de la spire du haut. Par défaut,
+  toutes les spires sont ciblées.
+  \item Le nombre de lignes de champ autour des spires choisies : \LKeyset{nS=1}.
+  \item On peut décider de ne pas représenter le solénoïde avec l'option \LKeyset{drawSelf=false},
+  c'est utile pour la représentation en 3D.
+  \item les options de tracé des spires (couleur, épaisseur, flèches) sont :
+  \begin{enumerate}
+    \item La couleur et l'épaisseur du trait des spires : \Lkeyset{styleSpire=styleSpire} ;
+    \item le fléchage du sens du courant : \Lkeyset{styleCourant=sensCourant}.
+  \end{enumerate}
+
+\begin{verbatim}
+\newpsstyle{styleSpire}{linecap=1,linecolor=red,linewidth=2\pslinewidth}
+\newpsstyle{sensCourant}{linecolor=red,linewidth=2\pslinewidth,arrowinset=0.1}
+\end{verbatim}
+
+    \item La couleur et l'épaisseur des lignes de champ se règlent avec les paramètres usuels
+    de \LPack{pstricks} : \Lkeyword{linecolor} et  \Lkeyword{linewidth}.
+   \item On peut mettre en image de fond la carte de la densité de flux avec l'option \textsf{StreamDensityPlot}, celle-ci est par défaut en couleur, mais il  est possible de l'afficher en niveaux de gris avec \textsf{setgray}.
+\end{enumerate}
+Une commande \Lcs{psmagneticfieldThreeD} permet la visualisation en 3D du solénoïde et
+des lignes de champ.
+
+\clearpage
+\section{Influence des paramètres physiques sur la carte du champ magnétique}
+\subsection{La longueur du solénoïde}
+
+\begin{center}
+\begin{postscript}
+\psset{unit=0.5cm}
+\begin{pspicture*}(-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{006633}},N=3,R=2,StreamDensityPlot](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{99FF66}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{L=4}},N=3,R=2,StreamDensityPlot]}
+\end{pspicture*}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{006633}},L=8,N=3,R=2,nS=1,PasB=0.0025,pointsB=5500](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{99FF66}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{L=8}},N=3,R=2,nS=1]}
+\end{pspicture*}
+\end{postscript}
+\end{center}
+
+\begin{lstlisting}
+\psset{unit=0.5cm}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{006633}},N=3,R=2,nS=1](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{99FF66}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{L=4}},N=3,R=2,nS=1]}
+\end{pspicture*}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{006633}},L=8,N=3,R=2,nS=1,PasB=0.0025,pointsB=5500](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{99FF66}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{L=8}},N=3,R=2,nS=1]}
+\end{pspicture*}
+\end{lstlisting}
+
+
+\textbf{Remarque :} pour affiner le tracé du deuxième solénoïde, on a du augmenter
+le nombre de points et diminuer le pas du tracé :
+\begin{postscript}
+\Cadre{\textcolor{white}{pointsB=5500,PasB=0.0025}}
+\end{postscript},
+ce qui rallonge la durée des calculs.
+
+
+
+\clearpage
+
+\subsection{Le nombre de spires}
+\begin{center}
+\begin{postscript}
+\psset{unit=0.5}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{006633}},N=1,R=2,nS=0](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{99FF66}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{N=1}},R=2,nS=0]}
+\end{pspicture*}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{006633}},N=2,R=2,L=2,PasS=0.003,nS=2](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{99FF66}}](-7,7)(7,8)
+\rput(0,7.5){\Cadre{\textcolor{white}{Bobines de Helmholtz}}}
+\psframe*[linecolor={[HTML]{99FF66}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{N=2}},R=2,L=2,PasS=0.003,nS=2]}
+\end{pspicture*}
+\end{postscript}
+\end{center}
+
+\begin{lstlisting}
+\psset{unit=0.5}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{006633}},N=1,R=2,nS=0](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{99FF66}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{N=1}},R=2,nS=0]}
+\end{pspicture*}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{006633}},N=2,R=2,L=2,PasS=0.003,nS=2](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{99FF66}}](-7,7)(7,8)
+\rput(0,7.5){\Cadre{\textcolor{white}{Bobines de Helmholtz}}}
+\psframe*[linecolor={[HTML]{99FF66}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{N=2}},R=2,L=2,PasS=0.003,nS=2]}
+\end{pspicture*}
+\end{lstlisting}
+
+
+\begin{center}
+\begin{postscript}
+\psset{unit=0.5}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{006633}},N=4,R=2,numSpires=2 3](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{99FF66}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{N=4}},R=2,L=4]}
+\end{pspicture*}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{006633}},N=5,R=2,L=5,PasS=0.004,numSpires=2 3 4](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{99FF66}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{N=5}},R=2,L=5]}
+\end{pspicture*}
+\end{postscript}
+\end{center}
+
+\begin{lstlisting}
+\psset{unit=0.5}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{006633}},N=4,R=2,numSpires=2 3](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{99FF66}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{N=4}},R=2,L=4]}
+\end{pspicture*}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{006633}},N=5,R=2,L=5,PasS=0.004,numSpires=2 3 4](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{99FF66}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{N=5}},R=2,L=5]}
+\end{pspicture*}
+\end{lstlisting}
+
+
+\clearpage
+\section{Les options de tracé}
+\subsection{Le nombre de lignes de champ}
+En raison de la symétrie du phénomène le nombre de lignes de champ donné en option
+\Lkeyword{nL} est la moitié du nombre réellement représenté auquel il faut ajouter
+la ligne confondue avec l'axe de révolution. Il faut aussi rajouter les lignes
+autour des spires \Lkeyword{nS}, ces spires pouvant être choisies individuellement
+avec \Lkeyword{numSpires}.
+
+
+
+\begin{center}
+\begin{postscript}
+\psset{unit=0.5}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{000099}},N=1,R=2](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{3399FF}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{nL=8}},N=1,R=2]}
+\end{pspicture*}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{000099}},N=1,R=2,nL=12](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{3399FF}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{nL=12}},N=1,R=2]}
+\end{pspicture*}
+\end{postscript}
+\end{center}
+
+\begin{lstlisting}
+\psset{unit=0.5}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{000099}},N=1,R=2](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{3399FF}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{nL=8}},N=1,R=2]}
+\end{pspicture*}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{000099}},N=1,R=2,nL=12](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{3399FF}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{nL=12}},N=1,R=2]}
+\end{pspicture*}
+\end{lstlisting}
+
+\clearpage
+\subsection{Le nombre de points et le pas du tracé}
+Le tracé des lignes de champ est réalisé par une méthode numérique (RK2) et il s'ensuit
+le pas du tracé et le nombre de points choisis influent sur la précision du tracé,
+comme dans les deux exemples ci-dessous :
+
+\begin{center}
+\begin{postscript}
+\psset{unit=0.5}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{660066}},N=2,R=2,L=2,PasB=0.1,nS=0,nL=7,pointsB=100](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{996666}}](-7,7)(7,8)
+\rput(0,7.5){\Cadre{\textcolor{white}{Bobines de Helmholtz}}}
+\psframe*[linecolor={[HTML]{996666}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{PasB=0.1,nL=4,pointsB=100}}]}
+\end{pspicture*}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{660066}},N=2,R=2,L=2,PasB=0.4,nS=0,nL=7,pointsB=100](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{996666}}](-7,7)(7,8)
+\rput(0,7.5){\Cadre{\textcolor{white}{Bobines de Helmholtz}}}
+\psframe*[linecolor={[HTML]{996666}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{PasS=0.4,pointsB=100}}]}
+\end{pspicture*}
+\end{postscript}
+\end{center}
+
+\begin{lstlisting}
+\psset{unit=0.5}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{660066}},N=2,R=2,L=2,PasB=0.1,nS=0,nL=7,pointsB=100](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{996666}}](-7,7)(7,8)
+\rput(0,7.5){\Cadre{\textcolor{white}{Bobines de Helmholtz}}}
+\psframe*[linecolor={[HTML]{996666}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{PasB=0.1,nL=4,pointsB=100}}]}
+\end{pspicture*}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{660066}},N=2,R=2,L=2,PasB=0.4,nS=0,nL=7,pointsB=100](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{996666}}](-7,7)(7,8)
+\rput(0,7.5){\Cadre{\textcolor{white}{Bobines de Helmholtz}}}
+\psframe*[linecolor={[HTML]{996666}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{PasS=0.4,pointsB=100}}]}
+\end{pspicture*}
+\end{lstlisting}
+
+
+Si les valeurs par défaut ne conviennent pas il faut donc trouver par des
+essais les valeurs qui donnent un tracé correct.
+
+
+\clearpage
+
+\section{Le paramètre: numSpires}
+\begin{center}
+\begin{postscript}
+\psset{unit=0.5}
+\begin{pspicture*}[showgrid](-8,-10)(8,10)
+\psset{linecolor=blue}
+\psmagneticfield[R=2,L=12,N=8,pointsS=500,nL=14,nS=1,numSpires=1 3 6 8,PasB=0.075](-8,-10)(8,10)
+\psframe*[linecolor={[HTML]{99FF66}}](-8,-10)(8,-9)
+\rput(0,-9.5){[\Cadre{\textcolor{white}{numSpires=1 3 6 8}},R=2,L=14]}
+\multido{\i=0+1}{8}{\rput[l](!6 6 12 7 div \i\space mul sub){\the\multidocount}}
+\end{pspicture*}\quad
+\begin{pspicture*}[showgrid](0,-10)(16,10)
+\psset{linecolor=blue}
+\psmagneticfield[R=2,L=12,N=8,pointsS=500,nL=14,numSpires=,nS=1,PasB=0.075](0,-10)(16,10)
+\psframe*[linecolor={[HTML]{99FF66}}](0,-10)(16,-9)
+\rput(8,-9.5){[\Cadre{\textcolor{white}{numSpires=all}},R=2,L=14]}
+\multido{\i=0+1}{8}{\rput[l](!6 6 12 7 div \i\space mul sub){\the\multidocount}}
+\end{pspicture*}
+\end{postscript}
+\end{center}
+
+
+\begin{lstlisting}
+\psset{unit=0.5}
+\begin{pspicture*}[showgrid](-8,-10)(8,10)
+\psset{linecolor=blue}
+\psmagneticfield[R=2,L=12,N=8,pointsS=500,nL=14,nS=1,numSpires=1 3 6 8,PasB=0.075](-8,-10)(8,10)
+\psframe*[linecolor={[HTML]{99FF66}}](-8,-10)(8,-9)
+\rput(0,-9.5){[\Cadre{\textcolor{white}{numSpires=1 3 6 8}},R=2,L=14]}
+\multido{\i=0+1}{8}{\rput[l](!6 6 12 7 div \i\space mul sub){\the\multidocount}}
+\end{pspicture*}\quad
+\begin{pspicture*}[showgrid](0,-10)(16,10)
+\psset{linecolor=blue}
+\psmagneticfield[R=2,L=12,N=8,pointsS=500,nL=14,numSpires=,nS=1,PasB=0.075](0,-10)(16,10)
+\psframe*[linecolor={[HTML]{99FF66}}](0,-10)(16,-9)
+\rput(8,-9.5){[\Cadre{\textcolor{white}{numSpires=all}},R=2,L=14]}
+\multido{\i=0+1}{8}{\rput[l](!6 6 12 7 div \i\space mul sub){\the\multidocount}}
+\end{pspicture*}
+\end{lstlisting}
+
+\clearpage
+\section{Le param\`etre \nxLkeyword{AntiHelmholtz}}
+\begin{center}
+\begin{postscript}
+\psset{unit=0.75,AntiHelmholtz,N=2,
+  R=2,pointsB=500,pointsS=1000,PasB=0.02,PasS=0.00275,nS=10,
+  nL=2,drawSelf=true,styleSpire=styleSpire,styleCourant=sensCourant}
+\newpsstyle{grille}{subgriddiv=0,gridcolor=blue!50,griddots=10}
+\newpsstyle{cadre}{linecolor=yellow!50}
+\begin{pspicture*}[showgrid](-7,-6)(7,6)
+\psframe*[linecolor={[HTML]{996666}}](-7,6)(7,6)
+\psmagneticfield[linecolor={[HTML]{660066}}]
+\end{pspicture*}
+\end{postscript}
+\end{center}
+
+\begin{lstlisting}
+\psset{unit=0.75,AntiHelmholtz,N=2,
+  R=2,pointsB=500,pointsS=1000,PasB=0.02,PasS=0.00275,nS=10,
+  nL=2,drawSelf=true,styleSpire=styleSpire,styleCourant=sensCourant}
+\newpsstyle{grille}{subgriddiv=0,gridcolor=blue!50,griddots=10}
+\newpsstyle{cadre}{linecolor=yellow!50}
+\begin{pspicture*}[showgrid](-7,-6)(7,6)
+\psframe*[linecolor={[HTML]{996666}}](-7,6)(7,6)
+\psmagneticfield[linecolor={[HTML]{660066}}]
+\end{pspicture*}
+\end{lstlisting}
+
+
+\clearpage
+\section{La vue en 3D}
+La vue en 3D utilise la commande
+
+\begin{BDef}
+\Lcs{psmagneticfield}\OptArgs\coord1\coord2\\
+\Lcs{psmagneticfieldThreeD}\OptArgs\coord1\coord2
+\end{BDef}
+
+dans laquelle  les options sont les paramètres de
+\Lcs{psmagneticfield} et \verb+(x1,y1)(x2,y2)+ les coordonnées des coins
+inférieur gauche et supérieur droit du cadre dans lequel est encapsulée
+la carte du champ comme pour \Lcs{psframe}. On pourra utiliser l'option \Lkeyword{viewpoint} du
+package \LPack{pst-3d} pour modifier le point de vue.
+
+Les options du cadre sont, par défaut, les suivantes :
+\begin{verbatim}
+\newpsstyle{grille}{subgriddiv=0,gridcolor=lightgray,griddots=10}
+\newpsstyle{cadre}{linecolor=green!20}
+\end{verbatim}
+
+Ce sont donc celles-ci qu'il faudra modifier si on souhaite en changer, comme dans l'exemple ci-dessous.
+
+
+\begin{center}
+\begin{postscript}
+\psset{unit=0.7cm}
+\newpsstyle{grille}{subgriddiv=0,gridcolor=blue!50,griddots=10}
+\newpsstyle{cadre}{linecolor=yellow!50}
+\begin{pspicture}(-7,-6)(7,6)
+\psmagneticfieldThreeD[N=8,R=2,L=8,pointsB=1200,linecolor=blue,pointsS=2000](-7,-6)(7,6)
+\end{pspicture}
+\end{postscript}
+\end{center}
+
+\begin{lstlisting}
+\psset{unit=0.7cm}
+\newpsstyle{grille}{subgriddiv=0,gridcolor=blue!50,griddots=10}
+\newpsstyle{cadre}{linecolor=yellow!50}
+\begin{pspicture}(-7,-6)(7,6)
+\psmagneticfieldThreeD[N=8,R=2,L=8,pointsB=1200,linecolor=blue,pointsS=2000](-7,-6)(7,6)
+\end{pspicture}
+\end{lstlisting}
+
+
+\begin{center}
+\begin{postscript}
+\psset{unit=0.7cm}
+\begin{pspicture}(-7,-6)(7,6)
+\psmagneticfieldThreeD[N=2,R=2,L=2,linecolor=blue](-7,-6)(7,6)
+\ThreeDput{\rput(0,-7){\textbf{Bobines de HELMHOLTZ}}}
+\end{pspicture}
+\end{postscript}
+\end{center}
+
+\begin{lstlisting}
+\psset{unit=0.7cm}
+\begin{pspicture}(-7,-6)(7,6)
+\psmagneticfieldThreeD[N=2,R=2,L=2,linecolor=blue](-7,-6)(7,6)
+\ThreeDput{\rput(0,-7){\textbf{Bobines de HELMHOLTZ}}}
+\end{pspicture}
+\end{lstlisting}
+
+\begin{center}
+\begin{postscript}
+\psset{unit=0.75cm,AntiHelmholtz,N=2,
+  R=2,pointsB=500,pointsS=1000,PasB=0.02,PasS=0.00275,nS=10,
+  nL=2,drawSelf,styleSpire=styleSpire,styleCourant=sensCourant}
+\newpsstyle{grille}{subgriddiv=0,gridcolor=blue!50,griddots=10}
+\newpsstyle{cadre}{linecolor=yellow!50}
+\begin{pspicture}(-7,-6)(7,6)
+\psmagneticfieldThreeD[linecolor={[HTML]{660066}}](-7,-6)(7,6)
+\end{pspicture}
+\end{postscript}
+\end{center}
+
+\begin{lstlisting}
+\psset{unit=0.75cm,AntiHelmholtz,N=2,
+  R=2,pointsB=500,pointsS=1000,PasB=0.02,PasS=0.00275,nS=10,
+  nL=2,drawSelf,styleSpire=styleSpire,styleCourant=sensCourant}
+\newpsstyle{grille}{subgriddiv=0,gridcolor=blue!50,griddots=10}
+\newpsstyle{cadre}{linecolor=yellow!50}
+\begin{pspicture}(-7,-6)(7,6)
+\psmagneticfieldThreeD[linecolor={[HTML]{660066}}](-7,-6)(7,6)
+\end{pspicture}
+\end{lstlisting}
+
+
+\section{Density plots}
+\begin{center}
+\begin{postscript}
+\begin{pspicture}(-6,-4)(6,4)
+\psmagneticfield[N=3,R=2,L=2,StreamDensityPlot](-6,-4)(6,4)
+\end{pspicture}
+\end{postscript}
+\end{center}
+
+\begin{lstlisting}
+\begin{pspicture}(-6,-4)(6,4)
+\psmagneticfield[N=3,R=2,L=2,StreamDensityPlot](-6,-4)(6,4)
+\end{pspicture}
+\end{lstlisting}
+
+\begin{center}
+\begin{postscript}
+\psset{unit=0.75}
+\begin{pspicture}(-6,-5)(6,5)
+\psmagneticfield[N=2,R=2,L=1,StreamDensityPlot,setgray](-6,-5)(6,5)
+\end{pspicture}
+\end{postscript}
+\end{center}
+
+\begin{lstlisting}
+\psset{unit=0.75}
+\begin{pspicture}(-6,-5)(6,5)
+\psmagneticfield[N=2,R=2,L=1,StreamDensityPlot,setgray](-6,-5)(6,5)
+\end{pspicture}
+\end{lstlisting}
+
+
+\begin{center}
+\begin{postscript}
+\psset{unit=0.75,AntiHelmholtz,
+  R=2,pointsB=500,pointsS=2000,PasB=0.02,PasS=0.00275,nS=10,
+  nL=2,drawSelf=true,styleSpire=styleSpire,styleCourant=sensCourant}
+\begin{pspicture*}(-7,-6)(7,6)
+\psmagneticfield[linecolor={[HTML]{660066}},StreamDensityPlot](-7,-6)(7,6)
+\end{pspicture*}
+\end{postscript}
+\end{center}
+
+
+\begin{lstlisting}
+\psset{unit=0.75,AntiHelmholtz,
+  R=2,pointsB=500,pointsS=2000,PasB=0.02,PasS=0.00275,nS=10,
+  nL=2,drawSelf=true,styleSpire=styleSpire,styleCourant=sensCourant}
+\begin{pspicture*}(-7,-6)(7,6)
+\psmagneticfield[linecolor={[HTML]{660066}},StreamDensityPlot](-7,-6)(7,6)
+\end{pspicture*}
+\end{lstlisting}
+
+\section{Un article très intéressant}
+Il s'agit de celui paru dans le bulletin de l'union des physiciens \no{}918(2) de novembre 2009 : 
+\textit{Intégrales elliptiques et champ magnétique créé par une spire circulaire}, dans lequel 
+Thierry PRÉ démontre l'expression des composantes du champ magnétique de deux façons, à partir de 
+la loi de Biot-Savart, puis à partir du potentiel vecteur ; il donne aussi différentes représentations 
+des lignes de champ de plusieurs configurations de spires, obtenues à l'aide du logiciel \textit{Mathematica}.
+
+\url{http://www.udppc.asso.fr/bupdoc/textes/fichierjoint/918/0918D119.zip}
+
+Thierry met les sources \textsf{Mathematica} des figures illustrant son article à la disposition de 
+ceux qui ont la chance de posséder ou de pouvoir utiliser ce logiciel :
+\begin{verbatim}
+Commandes à copier dans mathematica pour les figures de mon article .........
+
+**************************************************************************************************************
+bx[x_, y_, a_, R_, I_] :=
+ I*(y - R)/x/
+   Sqrt[(a + Abs[x])^2 + (y - R)^2]*(-EllipticK[
+      4*a*Abs[x]/((a + Abs[x])^2 + (y - R)^2)] + (a^2 +
+        Abs[x]^2 + (y - R)^2)/((a - Abs[x])^2 + (y - R)^2)*
+     EllipticE[4*a*Abs[x]/((a + Abs[x])^2 + (y - R)^2)])
+**************************************************************************************************************
+by[x_, y_, a_, R_, I_] :=
+ I/Sqrt[(a + Abs[x])^2 + (y - R)^2]*(EllipticK[
+     4*a*Abs[x]/((a + Abs[x])^2 + (y - R)^2)] + (a^2 -
+        Abs[x]^2 - (y - R)^2)/((a - Abs[x])^2 + (y - R)^2)*
+     EllipticE[4*a*Abs[x]/((a + Abs[x])^2 + (y - R)^2)])
+**************************************************************************************************************
+StreamPlot[{bx[x, y, 1, 0, 1], by[x, y, 1, 0, 1]}, {x, -4, 4}, {y, -4,
+   4}]
+
+**************************************************************************************************************
+
+StreamDensityPlot[{bx[x, y, 1, 0, 1], by[x, y, 1, 0, 1]}, {x, -4,
+  4}, {y, -4, 4}, ImageSize -> Large, StreamStyle -> Black,
+ ColorFunction -> "Rainbow" ,
+  StreamPoints -> Fine]
+**************************************************************************************************************
+
+StreamDensityPlot[{bx[x, y, 1, 1, 1] + bx[x, y, 1, -1, 1],
+  by[x, y, 1, -1, 1] + by[x, y, 1, 1, 1]}, {x, -4, 4}, {y, -4, 4},
+ ImageSize -> Large, StreamStyle -> Black, ColorFunction -> "Rainbow" ,
+  StreamPoints -> Fine]
+**************************************************************************************************************
+StreamDensityPlot[{bx[x, y, 1, 1, 1] + bx[x, y, 1, -1, 1] +
+   bx[x, y, 1, 0, 1],
+  by[x, y, 1, -1, 1] + by[x, y, 1, 1, 1] + by[x, y, 1, 0, 1]}, {x, -4,
+   4}, {y, -4, 4}, ImageSize -> Large, StreamStyle -> Black,
+ ColorFunction -> "Rainbow" ,
+  StreamPoints -> Fine]
+**************************************************************************************************************
+StreamDensityPlot[{bx[x, y, 1, 0.5, 1] + bx[x, y, 1, -0.5, 1] +
+   bx[x, y, 1, 1.5, 1] + bx[x, y, 1, -1.5, 1],
+  by[x, y, 1, 0.5, 1] + by[x, y, 1, -0.5, 1] + by[x, y, 1, 1.5, 1] +
+   by[x, y, 1, -1.5, 1]}, {x, -4, 4}, {y, -4, 4}, ImageSize -> Large,
+ StreamStyle -> Black, ColorFunction -> "Rainbow" ,
+  StreamPoints -> Fine]
+**************************************************************************************************************
+
+StreamDensityPlot[{bx[x, y, 1, 1, 1] + bx[x, y, 1, -1, 1] +
+   bx[x, y, 1, 2, 1] + bx[x, y, 1, -2, 1] + bx[x, y, 1, 0, 1],
+  by[x, y, 1, 1, 1] + by[x, y, 1, -1, 1] + by[x, y, 1, 2, 1] +
+   by[x, y, 1, -2, 1] + by[x, y, 1, 0, 1]}, {x, -4, 4}, {y, -4, 4},
+ ImageSize -> Large, StreamStyle -> Black, ColorFunction -> Hue ,
+  StreamPoints -> Fine]
+**************************************************************************************************************
+
+StreamDensityPlot[{bx[x, y, 1, 1.5, 1] + bx[x, y, 1, -1.5, 1],
+  by[x, y, 1, -1.5, 1] + by[x, y, 1, 1.5, 1]}, {x, -4, 4}, {y, -4, 4},
+  ImageSize -> Large, StreamStyle -> Black,
+ ColorFunction -> "Rainbow" ,
+  StreamPoints -> Fine]
+
+**************************************************************************************************************
+StreamDensityPlot[{bx[x, y, 1, 1, 1] + bx[x, y, 1, -1, 1],
+  by[x, y, 1, -1, 1] + by[x, y, 1, 1, 1]}, {x, -4, 4}, {y, -4, 4},
+ ImageSize -> Large, StreamStyle -> Black, ColorFunction -> "Rainbow" ,
+  StreamPoints -> Fine]
+**************************************************************************************************************
+StreamDensityPlot[{bx[x, y, 1, 0.5, 1] + bx[x, y, 1, -0.5, 1],
+  by[x, y, 1, -0.5, 1] + by[x, y, 1, 0.5, 1]}, {x, -4, 4}, {y, -4, 4},
+  ImageSize -> Large, StreamStyle -> Black,
+ ColorFunction -> "Rainbow" ,
+  StreamPoints -> Fine]
+
+**************************************************************************************************************
+StreamDensityPlot[{bx[x, y, 1, 0.25, 1] + bx[x, y, 1, -0.25, 1],
+  by[x, y, 1, -0.25, 1] + by[x, y, 1, 0.25, 1]}, {x, -4, 4}, {y, -4,
+  4}, ImageSize -> Large, StreamStyle -> Black,
+ ColorFunction -> "Rainbow" ,
+  StreamPoints -> Fine]
+**************************************************************************************************************
+
+StreamDensityPlot[{bx[x, y, 1, 0.125, 5] + bx[x, y, 1, -0.125, 5],
+  by[x, y, 1, -0.125, 5] + by[x, y, 1, 0.125, 5]}, {x, -4, 4}, {y, -4,
+   4}, ImageSize -> Large, StreamStyle -> Black,
+ ColorFunction -> "Rainbow" ,
+  StreamPoints -> Fine]
+**************************************************************************************************************
+StreamDensityPlot[{bx[x, y, 1, 0.5, 1] + bx[x, y, 1, -0.5, -1],
+  by[x, y, 1, -0.5, -1] + by[x, y, 1, 0.5, 1]}, {x, -4, 4}, {y, -4,
+  4}, ImageSize -> Large, StreamStyle -> Black, ColorFunction -> Hue ,
+  StreamPoints -> Fine]
+
+**************************************************************************************************************
+StreamDensityPlot[{bx[x, y, 1, 0.5, 4] + bx[x, y, 1, -0.5, 2] +
+   bx[x, y, 1, 1.5, 8] + bx[x, y, 1, -1.5, 1],
+  by[x, y, 1, 0.5, 4] + by[x, y, 1, -0.5, 2] + by[x, y, 1, 1.5, 8] +
+   by[x, y, 1, -1.5, 1]}, {x, -4, 4}, {y, -4, 4}, ImageSize -> Large,
+ StreamStyle -> Black, ColorFunction -> Hue ,
+  StreamPoints -> Fine]
+
+**************************************************************************************************************
+StreamDensityPlot[{bx[x, y, 1, 0.5, 1] + bx[x, y, 0.5, -0.5, 1] +
+   bx[x, y, 2, 1.5, 1] + bx[x, y, 0.25, -1.5, 1],
+  by[x, y, 1, 0.5, 1] + by[x, y, 0.5, -0.5, 1] + by[x, y, 2, 1.5, 1] +
+    by[x, y, 0.25, -1.5, 1]}, {x, -4, 4}, {y, -4, 4},
+ ImageSize -> Large, StreamStyle -> Black, ColorFunction -> Hue ,
+  StreamPoints -> Fine]
+**************************************************************************************************************
+
+StreamDensityPlot[{
+  bx[x - 2, y, 0.5, 0, 1]
+   - by[-y + 2, x, 0.5, 0, 1]
+   - bx[x + 2, y, 0.5, 0, 1] +
+   by[-y - 2, x, 0.5, 0, 1]
+  ,
+  by[x - 2, y, 0.5, 0, 1] +
+   bx[-y + 2, x, 0.5, 0, 1]
+   - by[x + 2, y, 0.5, 0, 1]
+   - bx[-y - 2, x, 0.5, 0, 1]
+  }, {x, -4, 4}, {y, -4, 4}, ImageSize -> Large, StreamStyle -> Black,
+  ColorFunction -> Hue ,
+  StreamPoints -> Fine]
+
+**************************************************************************************************************
+
+StreamDensityPlot[{
+  bx[x - 2, y, 0.5, 0, 1]
+   - by[-y + 2, x, 0.5, 0, 1]
+   - bx[x + 2, y, 0.5, 0, 1] +
+   by[-y - 2, x, 0.5, 0, 1] +
+   bx[0.707*(x - 2*0.707) + 0.707*(y - 2*0.707),
+     0.707*(y - 2*0.707) - 0.707*(x - 2*0.707), 0.5, 0, 1]*0.707 -
+   by[0.707*(x - 2*0.707) + 0.707*(y - 2*0.707),
+     0.707*(y - 2*0.707) - 0.707*(x - 2*0.707), 0.5, 0, 1]*0.707 +
+   -bx[-0.707*(x + 2*0.707) +
+       0.707*(y - 2*0.707), -0.707*(y - 2*0.707) -
+       0.707*(x + 2*0.707), 0.5, 0, 1]*0.707 -
+   by[-0.707*(x + 2*0.707) +
+      0.707*(y - 2*0.707), -0.707*(y - 2*0.707) - 0.707*(x + 2*0.707),
+      0.5, 0, 1]*0.707 +
+   -bx[-0.707*(x + 2*0.707) -
+       0.707*(y + 2*0.707), -0.707*(y + 2*0.707) +
+       0.707*(x + 2*0.707), 0.5, 0, 1]*0.707 +
+   by[-0.707*(x + 2*0.707) -
+      0.707*(y + 2*0.707), -0.707*(y + 2*0.707) + 0.707*(x + 2*0.707),
+      0.5, 0, 1]*0.707 +
+   bx[0.707*(x - 2*0.707) - 0.707*(y + 2*0.707),
+     0.707*(y + 2*0.707) + 0.707*(x - 2*0.707), 0.5, 0, 1]*0.707 +
+   by[0.707*(x - 2*0.707) - 0.707*(y + 2*0.707),
+     0.707*(y + 2*0.707) + 0.707*(x - 2*0.707), 0.5, 0, 1]*0.707
+  ,
+  by[x - 2, y, 0.5, 0, 1] +
+   bx[-y + 2, x, 0.5, 0, 1]
+   - by[x + 2, y, 0.5, 0, 1]
+   - bx[-y - 2, x, 0.5, 0, 1] +
+   bx[0.707*(x - 2*0.707) + 0.707*(y - 2*0.707),
+     0.707*(y - 2*0.707) - 0.707*(x - 2*0.707), 0.5, 0, 1]*0.707 +
+   by[0.707*(x - 2*0.707) + 0.707*(y - 2*0.707),
+     0.707*(y - 2*0.707) - 0.707*(x - 2*0.707), 0.5, 0, 1]*0.707 +
+   bx[-0.707*(x + 2*0.707) +
+      0.707*(y - 2*0.707), -0.707*(y - 2*0.707) - 0.707*(x + 2*0.707),
+      0.5, 0, 1]*0.707 -
+   by[-0.707*(x + 2*0.707) +
+      0.707*(y - 2*0.707), -0.707*(y - 2*0.707) - 0.707*(x + 2*0.707),
+      0.5, 0, 1]*0.707 +
+   -bx[-0.707*(x + 2*0.707) -
+       0.707*(y + 2*0.707), -0.707*(y + 2*0.707) +
+       0.707*(x + 2*0.707), 0.5, 0, 1]*0.707 -
+   by[-0.707*(x + 2*0.707) -
+      0.707*(y + 2*0.707), -0.707*(y + 2*0.707) + 0.707*(x + 2*0.707),
+      0.5, 0, 1]*0.707 +
+   -bx[0.707*(x - 2*0.707) - 0.707*(y + 2*0.707),
+      0.707*(y + 2*0.707) + 0.707*(x - 2*0.707), 0.5, 0, 1]*0.707 +
+   by[0.707*(x - 2*0.707) - 0.707*(y + 2*0.707),
+     0.707*(y + 2*0.707) + 0.707*(x - 2*0.707), 0.5, 0, 1]*0.707
+  }, {x, -4, 4}, {y, -4, 4}, ImageSize -> Large, StreamStyle -> Black,
+  ColorFunction -> Hue ,
+  StreamPoints -> Fine
+ ]
+**************************************************************************************************************
+\end{verbatim}
+
+
+
+\clearpage
+\section{Liste des arguments optionnels pour \texttt{pst-magneticfield}}
+
+\xkvview{family=pst-magneticfield,columns={key,type,default}}
+
+\nocite{*}
+\bgroup
+\raggedright
+\bibliographystyle{plain}
+\bibliography{pst-magneticfield-doc}
+\egroup
+
+
+\printindex
+
+
+
+
+\end{document}

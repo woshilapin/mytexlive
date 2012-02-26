@@ -1,0 +1,46 @@
+pst-eucl.pro --------
+1.00 2011/08/05	 - fix bug in /InterLines
+
+
+pst-eucl.tex --------
+1.42 2011/12/22	 - modified code for marks (hv)
+1.41 2011/11/19	 - added different marks for angles (hv)
+1.40 2011/11/16	 - fix for \pstMarkAngle (hv)
+1.39 2011/09/22	 - fixed introduced bug in \psInterCC
+1.38 2011/08/05	 - set nodes directly with \pnode(!..) istead of \rput
+1.37 2011/05/05	 - rewrite of \pstMarkAngle (hv)
+1.36 2010/08/23	 - fix for \pstMarkAngle (hv)
+1.35 2009/01/19	 - new option labelColor (hv)
+1.34 2006/01/28	 - use \psscalebox instead of \scalebox
+     	         - small tweaks
+%% 2000-10-16 : creation of the file from a first LaTeX protype sty file
+%% 2001-05-7  : distribution of the first beta version
+%% 2002-03-21 : distribution of the second beta version
+%% 2002-12-01 : distribution of the pre-release 1.0
+%% 2003-03-23 : direct computation of coordinates for the center of gravity and
+%%              the center of the circum circle, avoiding creation of intermediates
+%%              nodes.
+%% 2003-12-16 : Integration of modifications given by Alain DELPLANQUE
+%%              automatic computation of PosAngle for several commands,
+%%              and ability to give a list of point for pstGeonode, pstOIJGeonode
+%% 2004-09-05 : Improvement of the management of the Point name end of the param lists
+%% 2004-11-04 : Improvement of the management of the display of the Point name
+%% 2004-12-10 : New parameters for coding the circum circle : SegmentSymbolA B & C
+%% 2004-12-14 : New parametre RightAngleType for regional difference
+%% 2005-01-17 : transition towards pst-xkey (thanks to "Hendri Adriaens" <Hendri@uvt.nl>)
+%% 2005-02-21 : correction for spurious blank (thanks to Herbert Voss <Herbert.Voss@alumni.TU-Berlin.DE>)
+%%              in pstTriangleABC (search for "-- hv")
+%% 2005-03-25 : Modification of the transformations macros: management of a points list
+%%              coding for rotation & translation
+%%              draw a curve for a points list (geonode & oijgeonode & transform macros)
+%% 2005-04-10 : Modification of the transformations macros: management of a points list
+%%              management directly within the first point argument
+%%              Plotting of a curve linking a list of points
+%% 2005-10-09 : problem solved with CodeFigAB
+%% 2005-12-31 : use \psscalbox instead of \scalebox (hv)
+%% 2006-01-29 : minor changes for file version (hv)
+%% 2006-01-30 : correction of pstArcOAB for pscustom (dr)
+
+
+pst-eucl.sty --------
+2006/01/28	 - write some infos into the file list (hv)

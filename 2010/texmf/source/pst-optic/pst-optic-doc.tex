@@ -1,0 +1,1317 @@
+%% $Id: pst-func-doc.tex 64 2008-12-08 22:14:27Z herbert $
+\documentclass[11pt,english,BCOR10mm,DIV13,bibliography=totoc,parskip=false,smallheadings
+    headexclude,footexclude,oneside]{pst-doc}
+\usepackage[utf8]{inputenc}
+\usepackage{pst-text}
+\usepackage{pst-optic}
+\let\pstOpticFV\fileversion
+\lstset{pos=t,wide=true,language=PSTricks,basicstyle=\footnotesize\ttfamily}
+\let\belowcaptionskip\abovecaptionskip
+%
+\begin{document}
+
+\title{\texttt{pst-optic}}
+\subtitle{Lenses and Mirrors; v.\pstOpticFV}
+
+\author{Manuel Luque \\Herbert Vo\ss}
+\docauthor{Herbert Vo\ss}
+\date{\today}
+\maketitle
+
+\tableofcontents
+
+\clearpage
+
+\begin{abstract}
+\noindent
+\LPack{pst-optic} loads by default the following packages: 
+\LPack{pstricks}, \LPack{pst-node}, \LPack{pst-plot}, \LPack{pst-3d},
+\LPack{pst-grad}, \LPack{pst-math}, \LPack{multido}, and \LPack{pst-xke}.
+All should be already part of your local \TeX\ installation. If not, or in case
+of having older versions, go to \url{http://www.CTAN.org/} and load the newest version.
+
+\vfill\noindent
+Thanks to: \\
+Jean-C\^ome Charpentier, 
+Arnaud Schmittbuhl.
+\end{abstract}
+
+\section{General Options}
+
+All options are by default document wide valid but not supported by all macros. 
+Table~\ref{tab:generalOptions} shows the general ones. Others are shown in 
+Table~\ref{tab:defaultLens} and \ref{tab:defaultSpiegel}.
+
+\begin{table}[!htb]
+\centering
+\caption{General options and the defaults}\label{tab:generalOptions}
+\begin{tabular}{@{}l l l @{}}
+	\emph{Option} & \emph{Name} & \emph{Default}\\\hline
+	Left value of the picture in cm	 & \Lkeyword{xLeft}	& -7.5\\
+	Right value of the picture in cm	& \Lkeyword{xRight}	& 7.5\\
+	Lowest value of the picture in cm	& \Lkeyword{xBottom}	& -3\\
+	Highest value of the picture in cm	& \Lkeyword{xTop}	& 3\\
+	x-Offset 				& \Lkeyword{XO}	& 0\\
+	y-Offset 				& \Lkeyword{YO}	& 0\\
+	Node A as string		& \Lkeyword{nameA}	& A\\
+	Angle A in degrees		& \Lkeyword{spotA}	& 270\\
+	Node B as string		& \Lkeyword{nameB}	& B\\
+	Angle B in degrees		& \Lkeyword{spotB}	& 270\\
+	Node F as string		& \Lkeyword{nameF}	& F\\
+	Angle F in degrees		& \Lkeyword{spotF}	& 270\\
+	Node O as string		& \Lkeyword{nameO}	& O\\
+	Angle O in degrees		& \Lkeyword{spotO}	& 225\\
+	Node A' as string		& \Lkeyword{nameAi}	& A'\\
+	Angle A' in degrees		& \Lkeyword{spotAi}	& 90\\
+	Node B' as string		& \Lkeyword{nameBi}	& B'\\
+	Angle B' in degrees		& \Lkeyword{spotBi}	& 270\\
+	Node F' as string		& \Lkeyword{nameFi}	& B'\\
+	Angle F' in degrees		& \Lkeyword{spotFi}	& 270\\
+	Ray color			& \Lkeyword{rayColor} & black\\\hline
+\end{tabular}
+\end{table}
+
+\Lcs{pst-optic} puts the lens and mirror macros in an own \Lenv{pspicture} environment. 
+The star version enables the clipping option of \LPack{pstricks}:
+
+\begin{lstlisting}[style=syntax]
+\begin{pspicture}*(xLeft,yBottom)(xRight,yTop)
+  \lens[focus=2,OA=-3,AB=1,XO=0,YO=0,xLeft=-7.5,xRight=7.5,yBottom=-3,yTop=3]
+\end{pspicture}
+\end{lstlisting}
+
+
+
+If you need other values for the \Lenv{pspicture} environment, then use the \Lcs{rput} 
+command to place the macro at any position.
+
+\begin{LTXexample}
+\begin{pspicture}[showgrid=true](-5,-2.2)(7,4)
+\rput(1.5,1.5){%
+  \lens[lensType=DVG,lensGlass=true,lensWidth=0.5,rayColor=red,
+      focus=-2,AB=2,spotAi=270,spotBi=90]}
+\end{pspicture}
+\end{LTXexample}
+
+\subsection{\nxLcs{resetOpticOptions}}
+The Macro \Lcs{resetOpticOptions} resets all \LPack{pst-optic} options to the default value.
+
+\subsection{Optical axis line style}
+\LPack{pst-optic} definies a line style \Lnotation{opticalAxis} with the predefines values
+of:
+\begin{lstlisting}[style=syntax]
+\newpsstyle{opticalAxis}{linewidth=0.5pt,linecolor=black,linestyle=solid}
+\end{lstlisting}
+
+It can be overwritten in the same way with \Lcs{newpsstyle}.
+
+\begin{LTXexample}
+\newpsstyle{opticalAxis}{linewidth=0.5pt,linecolor=blue,linestyle=dashed}
+\lens
+\end{LTXexample}
+
+\newpsstyle{opticalAxis}{linewidth=0.5pt,linecolor=black,linestyle=solid}% reset the changes
+
+\clearpage
+\section{Lenses}
+
+There are macros for the convergent and divergent lens 
+\begin{BDef}
+\Lcs{lens}\OptArgs\\
+\Lcs{lensCVG}\OptArgs\% \textbf{C}on\textbf{v}er\textbf{g}ent (Collecting lens ) -- default\\
+\Lcs{lensDVG}\OptArgs\% \textbf{D}i\textbf{v}er\textbf{g}ent (Scatter lens )
+\end{BDef}
+
+\subsection{The Coordinates of the predefined Nodes}
+
+The following figure shows the coordinates of the predefined nodes (see Table~\ref{tab:generalOptions}).
+
+\resizebox{\textwidth}{!}{%
+\begin{pspicture*}(-8,-3.25)(8,3.25)
+\rput(0,0){%
+	\lens[drawing=false]
+	\psline[linewidth=1pt](xLeft)(xRight)
+	\qdisk(A){1.5pt}
+	\qdisk(B){1.5pt}
+	\qdisk(A'){1.5pt}\qdisk(B'){1.5pt}
+	\qdisk(F){1.5pt}\qdisk(F'){1.5pt}
+	\qdisk(O){1.5pt}\qdisk(I){1.5pt}
+	\qdisk(I'){1.5pt}\qdisk(I1){1.5pt}
+	\qdisk(I2){1.5pt}
+	\uput[270](A){A}\uput[90](B){B}\uput[270](F){F}\uput[0](I){I}
+	\uput[0](I'){$\mathrm{I'}$}\uput[270](F'){$\mathrm{F'}$}
+	\uput[270](B'){$\mathrm{B'}$}\uput[90](A'){$\mathrm{A'}$}
+	\uput[180](I1){I1}\uput[0](I2){I2}}
+	\psgrid[subgriddiv=0,griddots=4,gridlabels=7pt]
+\end{pspicture*}}
+\captionof{figure}{Coodinates of the predefined Nodes}\label{fig:nodes}
+
+\subsection{The Lens Type}
+
+\begin{LTXexample}[wide=false]
+\lens[lensType=CVG]
+\end{LTXexample}
+\vspace*{-2ex}
+\captionof{figure}{Collecting lens}\label{fig:defaultCVG}
+
+\begin{LTXexample}[wide=false]
+\lens[lensType=PCVG]
+\end{LTXexample}
+\vspace*{-2ex}
+\captionof{figure}{Plan Collecting lens}
+
+\enlargethispage{2ex}
+
+\begin{LTXexample}[wide=false]
+\psscalebox{0.75}{\lens[lensType=DVG,focus=-2,spotAi=270,spotBi=90]}
+\end{LTXexample}
+\vspace*{-2ex}
+\captionof{figure}{Scatter lens}\label{fig:defaultDVG}
+
+\begin{LTXexample}[wide=false]
+\lens[lensType=PDVG,focus=-2,spotAi=270,spotBi=90]
+\end{LTXexample}
+\vspace*{-2ex}
+\captionof{figure}{Plan Scatter lens}
+
+\clearpage
+
+Using \Lcs{lens}\OptArg{\Lkeyword{lensType}=\ldots} gives the in figures \ref{fig:defaultCVG} and 
+\ref{fig:defaultDVG} shown lenses with the default values from Table~\ref{tab:defaultLens}.
+
+
+
+
+\begin{table}[!htb]
+\centering
+\begin{minipage}{\columnwidth}
+\centering
+\caption{Available options for lenses with the defaults}\label{tab:defaultLens}
+\begin{tabular}{@{} l l l @{}}
+	\emph{Option} & \emph{Name} & \emph{Default}\\\hline
+	Lense type (\Lkeyval{CVG}|\Lkeyval{DVG}|\Lkeyval{PCVG}|\Lkeyval{PDVG}) & \Lkeyword{lensType}	& \Lkeyval{CVG}\\
+	Lense height in cm		& \Lkeyword{lensHeight} & 5cm\\
+	Lense width in cm 		& \Lkeyword{lensWidth}  & 0.5cm\footnotemark\\
+	vertical scale (obsolet)	& \Lkeyword{lensScale}  & 1\\
+	View the lens 			& \Lkeyword{lensGlass}  & \false\\
+	Second lens			& \Lkeyword{lensTwo}	& \false\\
+	Focus  in cm			& \Lkeyword{focus}	& 2\\
+	Distance $\mathrm{\overline{OA}}$& \Lkeyword{OA}	& -4\\
+	Distance $\mathrm{\overline{AB}}$& \Lkeyword{AB}	& 1.5\\
+	Lens color			& \Lkeyword{lenscolor}  & \black\\
+	Arrow length in cm		& \Lkeyword{lensarrowsize}  & 0.2\\
+	Arrow inset in cm		& \Lkeyword{lensarrowinset} & 0.5\\
+\end{tabular}
+\footnotetext{\textsuperscript{1} only for \Lkeyset{lensGlass=true}, otherwise set to \texttt{2\textbackslash pslinewidth}}
+\end{minipage}
+\end{table}
+
+The origin of the coordinate system is by default vertically and horinzontally symmetric. 
+If you want to place the lens at another coordinates then define your own 
+\Lenv{pspicture}-environment and use the \Lcs{rput}-command:
+
+\begin{lstlisting}[style=syntax]
+\begin{pspicture}(-7.5,-3)(7.5,3)
+   \rput(x,y){\lens[...]}
+\begin{pspicture}
+\begin{pspicture*}(-7.5,-3)(7.5,3)
+   \rput(x,y){\lens[...]}
+\begin{pspicture*}
+\end{lstlisting}
+
+The star version enables the clipping option.
+
+
+
+\subsection{\nxLcs{Transform}}
+
+The \Lcs{Transform}-macro renames all existing nodes in names with an additional 
+,,1``. Table~\ref{tab:Transform} shows a list of all nodes. 
+\Lcs{Transform} also defines a new node \verb|factice|\index{factice@\texttt{factice}} with the coordinates  
+\verb|(XO1,YO1)|. The renaming of all nodes makes it easier to handle objects with more than one lens. 
+With the option \Lkeyset{lensTwo=true} it is possible to chain the different rays of the lenses 
+(Figure~\ref{fig:lensTwoC}).
+
+\begin{table}[!htb]
+\addtolength{\tabcolsep}{-2pt}
+\caption{Renaming of the nodes after calling the macro \nxLcs{Transform}}\label{tab:Transform}
+\centering
+{\ttfamily\begin{tabular}{@{}l|lllllllllllll @{}}
+\emph{old} & A & B & A' & B' & O & F & F' & I & I' & XO & YO & OA' & A'B'\\\hline
+\emph{new} &A1& B1& A'1& B'1& O1& F1& F'1& I1& I'1& XO1& YO1& O1A1'& A'1B'1
+\end{tabular}}
+\end{table} 
+
+
+\begin{LTXexample}[wide=false]
+\begin{pspicture*}(-7.5,-2.75)(7.5,3)
+\rput(0,0){\lens[lensScale=0.6,XO=-4,focus=1,OA=-2,lensGlass=true, lensWidth=0.5]}
+\rput(0,0){\lens[lensScale=1.2,XO=2,focus=2,lensGlass=true,lensWidth=0.5]}
+\end{pspicture*}
+\end{LTXexample}
+\vspace*{-2ex}
+\captionof{figure}{Definition of two unchained lenses}
+
+\begin{LTXexample}[wide=false]
+\begin{pspicture*}(-7.5,-2.75)(7.5,3)
+\rput(0,0){\lens[lensScale=0.6,XO=-4,focus=1,OA=-2,lensGlass=, lensWidth=0.5]}
+\Transform
+\rput(0,0){\lens[lensScale=1.2,XO=2,focus=2,lensTwo=true,lensGlass=true,lensWidth=0.5]}
+\end{pspicture*}
+\end{LTXexample}
+\vspace*{-2ex}
+\captionof{figure}{Definition of two chained lenses}
+
+\begin{LTXexample}[wide=false]
+\begin{pspicture*}(-7.5,-2.75)(7.5,3)
+\rput(0,0){\lens[lensScale=0.6,XO=-4,nameF=F_1,nameA=A_1,nameB=B_1,
+  nameFi=F'_1,nameAi={ },nameBi={},nameO=O_1,focus=1,OA=-2,lensGlass=true, lensWidth=0.5]}
+\pspolygon[style=rayuresJaunes,linestyle=none](B)(I)(B')(I')(B)
+\Transform
+\rput(0,0){\lens[lensScale=1.2,XO=2,focus=2,nameA=A'_1,spotA=90,nameB=B'_1,spotB=270,
+  nameO=O_2,nameAi=A'_2,spotAi=270,nameBi=B'_2,spotBi=90,nameF=F_2,nameFi=F'_2,
+  lensTwo=true,lensGlass=true,lensWidth=0.5]}
+\pspolygon[style=rayuresJaunes,linestyle=none](B)(I)(B')(I')(B)
+\end{pspicture*}
+\end{LTXexample}
+\vspace*{-2ex}
+\captionof{figure}{Definition of two chained lenses and an additional modification of the node labels.}\label{fig:lensTwoC}
+
+\clearpage
+
+\subsection{\nxLcs{rayInterLens}}
+
+This macro is only useful for a two-lens-system. Figure~\ref{fig:RayInter} shows such a system. 
+The nodes \Lnotation{B1}, \Lnotation{I11}, \Lnotation{F'1}, and \Lnotation{B'1} are predefined 
+by the \Lcs{lens}-macro. To draw the two rays 
+from the left lense via the node \Lnotation{B'1} to the second lens, we need the coordinates of these 
+points. \Lcs{rayInterLense} defines such nodes. The Syntax: 
+
+\begin{BDef}
+\Lcs{rayInterLense}\Largr{StartNode}\Largr{IntermediatNode}\Largr{LensDistance}\Largb{LensNode}
+\end{BDef}
+
+Two parallel lines are drawn with the \Lcs{Parallel}-Macro. 
+
+\begin{LTXexample}
+\begin{pspicture*}(-7.5,-4)(7.5,4)
+\rput(0,0){\lens[focus=1.5,OA=-2,AB=0.6,XO=-5,lensGlass,yBottom=-4,yTop=4,drawing=false,
+  lensWidth=0.5,lensScale=0.5,nameF=F_1,nameFi=F'_1]}
+\psline[linewidth=1pt](xLeft)(xRight)
+\Transform
+\rput(0,0){\lens[focus=2,XO=4,lensGlass,yBottom=-4,yTop=4,drawing=false,lensWidth=0.5,
+  lensHeight=7,nameF=F_2,nameFi=F'_2,spotF=90,spotFi=90]}
+\psline{->}(A1)(B1)\psline{->}(A'1)(B'1)
+\psset{linecolor=red}
+\uput[45](B1){B1} \uput[90](O){O} \uput[225](O1){O1} \uput[45](I11){I11} \uput[45](B'1){$B'_1$}
+\rayInterLens(I11)(B'1){4}{Inter1L2} \rayInterLens(O1)(B'1){4}{Inter2L2}
+\uput[350](Inter1L2){Inter1L2}
+\psline(B1)(I11)(B'1)(Inter1L2) \psline(B1)(O1)(B'1)(Inter2L2)
+\Parallel(B'1)(O)(Inter2L2){B2inftyRigth} \Parallel(B'1)(O)(Inter1L2){B3inftyRigth}
+\psset{length=-2,linestyle=dashed}
+\Parallel(B'1)(O)(Inter2L2){B2inftyLeft} \Parallel(B'1)(O)(Inter1L2){B3inftyLeft}
+\psline[linestyle=dotted, linewidth=2pt,linecolor=black]{->}(0,-4)(0,+4)
+\end{pspicture*}
+\end{LTXexample}
+\captionof{figure}{Demonstration of \nxLcs{rayInterLens}\label{fig:RayInter}}
+
+
+
+
+
+\subsection{\nxLcs{telescope}}
+
+Figure~\ref{fig:defaultTele} shows the configuration of a telescope and Table~\ref{tab:defaultSpiegel} 
+the special options for the \Lcs{telescop}-Macro.
+
+
+\begin{LTXexample}[wide=false]
+\telescope
+\end{LTXexample}
+\captionof{figure}{\nxLcs{telescope}-Macro}\label{fig:defaultTele}
+
+
+
+\section{Mirrors}
+
+\subsection{options}
+Figure~\ref{fig:Spiegel} shows the available mirrors and Table~\ref{tab:defaultSpiegel} the possible options.
+
+
+
+
+\begin{table}[!htb]
+\centering
+\caption{List of options for mirrors with the predefines values}\label{tab:defaultSpiegel}
+\begin{tabularx}{\linewidth}{@{} >{\RaggedRight}X l l @{}}
+\emph{Option} & \emph{Name} & \emph{Default}\\\hline
+Left value of the picture in cm	& \Lkeyword{xLeft}	& -0.5\\
+Right value of the picture in cm	& \Lkeyword{xRight}	& 11\\
+Lowest value of the picture in cm	& \Lkeyword{xBottom}	& -6\\
+Highest value of the picture in cm	& \Lkeyword{xTop}	& 2.5\\
+Mirror height in cm	& \Lkeyword{mirrorHeight}	& 5\\
+Mirror depth in cm	& \Lkeyword{mirrorDepth}	& 1\\
+Mirror width in cm	& \Lkeyword{mirrorWidth}	& 0.25\\
+Mirror color		& \Lkeyword{mirrorColor}	& lightgray\\
+Ray color		& \Lkeyword{rayColor}		& black\\
+Focus in cm 
+(only together with the option \Lkeyword{posMirrorTwo} senseful)	& \Lkeyword{mirrorFocus}	& 8\\
+Position of the 2. mirror in cm	& \Lkeyword{posMirrorTwo}	& 8\\
+Inclination of the 2. mirror in degrees & \Lkeyword{mirrorTwoAngle}	& 45\\
+Draw lines & \Lkeyword{drawing}	& true\\
+\end{tabularx}
+\end{table}
+
+
+\begin{LTXexample}[width=4cm,pos=l]
+\begin{pspicture*}[showgrid=true](-1,-3)(3,3)
+\rput(0,0){\mirrorCVG[mirrorColor=gray,drawing=false]}
+\psaxes[linestyle=dashed,linecolor=red,linewidth=1pt,arrows=->](0,0)(-1,-3)(3,3)
+\qdisk(Focus){2pt}  \rput(Focus){\rput(0,0.25){Focus}}
+\pcline[arrows=|-|](-0.75,-2.5)(-0.75,2.5)\ncput*[nrot=:U]{mirrorHeight}
+\pcline[arrows=|-|](0,2.75)(1,2.75)       \rput[l](1.1,2.75){mirrorDepth}
+\pcline[arrows=|-|](1,-2.75)(0.75,-2.75)  \rput[l](1.1,-2.75){mirrorWidth}
+\rput[l](1,-1){mirrorColor}
+\psline{<-}(0.2,-1)(0.8,-1)
+\end{pspicture*}
+\end{LTXexample}
+
+\begin{LTXexample}[width=5cm,pos=l]
+\begin{pspicture*}[showgrid=true](-4,-3)(1,3)
+\rput(0,0){\mirrorDVG[mirrorColor=gray,drawing=false]}
+\psaxes[linestyle=dashed,linecolor=red,linewidth=1pt,arrows=->](0,0)(-4,-3)(1,3)
+\qdisk(Focus){2pt}                         \rput(Focus){\rput(0,0.25){Focus}}
+\pcline[arrows=|-|](.5,-2.5)(.5,2.5)       \ncput*[nrot=:U]{mirrorHeight}
+\pcline[arrows=|-|](-1.25,2.75)(-.25,2.75) \rput[r](-1.3,2.75){mirrorDepth}
+\pcline[arrows=|-|](-1.25,-2.75)(-1,-2.75) \rput[r](-1.3,-2.75){mirrorWidth}
+\rput[r](-2,-2){mirrorColor}               \psline{->}(-2,-2)(-0.9,-2)
+\end{pspicture*}
+\end{LTXexample}
+
+\begin{LTXexample}[width=4cm,pos=l]
+\begin{pspicture}[showgrid=true](-2,-2)(2,2)
+\pnode(-1.5,-1.5){M1} \pnode(1,1){M2}
+\uput[-90](M1){$\mathrm{M_1}$}\uput[90](M2){$\mathrm{M_2}$}
+\pnode(-1.5,1.5){A}
+\planMirrorRay(A)(M1)(M2){A'}
+\psline[linewidth=5pt](M1)(M2)\pscircle*(A){2pt}
+\uput[0](A){A}      \uput[0](A'){$\mathrm{A'}$}
+\pscircle*(A'){2pt} \psline[linestyle=dashed](A)(A')
+\end{pspicture}
+\end{LTXexample}
+\captionof{figure}{The different mirror macros: a) \nxLcs{mirrorCVG} b) \nxLcs{mirrorDVG} c) 
+\nxLcs{planMirrorRay}}\label{fig:Spiegel}\label{fig:planMirror}
+
+\subsection{\nxLcs{mirrorCVG}}
+
+Figure~\ref{fig:mirrorCVG} shows the default for the \Lcs{mirrorCVG}-macro with the 
+predefined nodes anf three default rays.
+
+
+\begin{LTXexample}[width=7cm,pos=l]
+\begin{pspicture*}[showgrid=true](-1,-3)(6,3)
+  \rput(0,0){\mirrorCVG[rayColor=red]}
+\end{pspicture*}
+\end{LTXexample}
+\captionof{figure}{Parabolic Mirror \nxLcs{mirrorCVG}}\label{fig:mirrorCVG}
+
+\begin{LTXexample}[width=8.5cm,pos=l]
+\begin{pspicture*}(-0.5,-4)(8,4)
+  \rput(0,0){\mirrorCVG[mirrorHeight=8,mirrorDepth=4,drawing=false]}
+  \multido{\rY=-4.00+0.25}{33}{%
+    \mirrorCVGRay[linewidth=0.5pt,mirrorHeight=8,
+      mirrorDepth=4](10,\rY)(1,\rY){Dummy}}
+\end{pspicture*}
+\end{LTXexample}
+\captionof{figure}{Example}\label{fig:CVGAnwendung}
+
+
+\clearpage
+
+\section{\nxLcs{mirrorDVG}}
+
+%Figure~\ref{fig:mirrorDVG} shows the defaults for the macro \Lcs{mirrorDVG}-Makros.
+
+
+\begin{LTXexample}[width=7cm,pos=l]
+\begin{pspicture*}[showgrid=true](-2,-2.6)(5,3)
+  \rput(0,0){\mirrorDVG[rayColor=red]}
+\end{pspicture*}
+\end{LTXexample}
+\vspace{-10mm}
+\captionof{figure}{\nxLcs{mirrorDVG}}\label{fig:mirrorDVG}
+
+
+\enlargethispage{13mm}
+
+\begin{LTXexample}[wide]
+\begin{pspicture*}[showgrid=true](-4,-4)(6,4)
+\rput(0,0){\mirrorCVG[drawing=false,mirrorDepth=0.75,mirrorHeight=7]}
+\qdisk(Focus){2pt}  \rput(6,2.5){\eye}
+\pnode(1.75,-1.5){A}\pnode(1.75,1){B}\psline[arrows=->,linewidth=4pt](A)(B)
+\uput{0.2}[0](2,0){\Huge G} \psset{linecolor=red}
+\mirrorCVGRay[rayColor=red,mirrorHeight=7,mirrorDepth=0.75](A)(0,-0.9){P1}
+\psOutLine[length=3](P1)(P1'){PEnd}\psBeforeLine[length=5,linestyle=dashed](P1)(P1'){PBegin}
+\mirrorCVGRay[rayColor=red,mirrorHeight=7,mirrorDepth=0.75](A)(0,-0.2){P2}
+\psOutLine[length=3](P2)(P2''){PEnd}\psBeforeLine[length=5,linestyle=dashed](P2)(P2'){PBegin}
+%
+\mirrorCVGRay[rayColor=red,mirrorHeight=7,mirrorDepth=0.75](B)(0,2.75){P3}
+\psOutLine[length=3](P3)(P3'){PEnd}\psBeforeLine[length=5,linestyle=dashed](P3)(P3'){PBegin}
+\mirrorCVGRay[rayColor=red,mirrorHeight=7,mirrorDepth=0.75](B)(0,1.8){P4}
+\psOutLine[length=3](P4)(P4'){PEnd}\psBeforeLine[length=5,linestyle=dashed](P4)(P4'){PBegin}
+\ABinterCD(P3)(P3')(P4)(P4'){A'}\ABinterCD(P1)(P1')(P2)(P2'){B'}
+\psline[arrows=->,linewidth=4pt,linestyle=dashed](B')(A')
+\nodeBetween(A')(B'){G''}\uput{0}[0](G''){\Huge G'}
+\end{pspicture*}
+\end{LTXexample}
+\captionof{figure}{Example as a magnifier}\label{fig:DVGAnwendung}
+
+\clearpage
+
+\subsection{Drawing Rays in the Mirror Macros}
+
+There are two different macros for drawing rays:
+
+
+
+
+\begin{BDef}
+\Lcs{mirrorCVGRay}\OptArgs\Largr{Node1}\Largr{Node2}\Largb{MirrorNode}\\
+\Lcs{mirrorDVGRay}\OptArgs\Largr{Node1}\Largr{Node2}\Largr{MirrorNode}
+\end{BDef}
+
+The \Lnotation{MirrorNode} maybe :
+
+\begin{tabularx}{\textwidth}{l|X}
+\Lnotation{MirrorNode}   & first point on the mirror\\
+\Lnotation{MirrorNode'}  & end node or second point on the mirror if one more reflection happens\\
+\Lnotation{MirrorNode''} & end node for a second reflection
+\end{tabularx}
+
+If there are only one reflection, then \Lnotation{MirrorNode'} and \Lnotation{MirrorNode''} are the same.
+
+\subsection{\nxLcs{planMirrorRay}}
+
+The \Lcs{planMirrorRay}-Macro caculates the coordinates of a mirrored point. In 
+Figure~\ref{fig:planMirror} is a given node \verb|A|, whereas \verb|A'| is calculated by the macro. The syntax is:
+
+\begin{BDef}
+\Lcs{planMirrorRay}\Largr{Mirrorbegin}\Largr{Mirrorend}\Largr{Originalpoint}\Largb{New point}
+\end{BDef}
+
+The macro doesn't draw any lines, only the coordinates of the new point are saved by the new node name.
+
+\subsection{\nxLcs{symPlan}}
+
+\verb|\symPlan| allows to mirroring complete plain graphical objects along a virtual center line. Figure \ref{fig:symPlan} shows that this mirroring is a mathematical one and not a physical one. For more examples look at  \cite{pstoptic:2001}. The syntax is:
+
+\begin{BDef}
+\Lcs{symPlan}\Largr{node1}\Largr{node2}\Largb{graphic object}
+\end{BDef}
+
+The two nodes define the mirror axis and the graphics object is in most cases a user defined macro, f.ex:
+This example needs the package \LPack{pst-text} for the \Lcs{pstextpath} macro.
+
+\begin{center}
+\begin{LTXexample}[wide=false]
+\newcommand{\dtk}{\pstextpath(0,0){%
+  \psplot[linestyle=none]{0}{8}{x sqrt sqrt 2 mul}}%
+    {\Large Die \TeX{}nische Kom\"odie von DANTE}}
+\begin{pspicture}(-4.5,-2.5)(2.5,5)
+\pnode(-4,-2){M1}  \uput[-90](M1){M1}
+\pnode(4,4){M2}\uput[90](M2){M2}
+\psline[linewidth=5\pslinewidth,linecolor=lightgray](M1)(M2)
+\rput(-3.5,-1.75){\dtk}
+\symPlan(M1)(M2){\rput(-3.5,-1.75){\dtk}}
+\end{pspicture}
+\end{LTXexample}
+\captionof{figure}{Demonstration of the \nxLcs{symPlan}-Macro} \label{fig:symPlan}
+\end{center}
+
+\clearpage
+
+\subsection{Beam Light}
+
+This macro is useful for the demonstration of high and low beam light. The syntax for this macro is:
+
+\begin{BDef}
+\Lcs{beamLight}\OptArgs
+\end{BDef}
+
+The predefined options especially for the \Lenv{pspicture}-coordinates are
+\begin{lstlisting}[style=syntax]
+\psset[pst-optic]{xLeft=-5,xRight=5,yBottom=-5,yTop=5,drawing=false}% the default
+\end{lstlisting}
+
+You can place this macro with the \Lcs{rput}-command at any place in your own \Lenv{pspicture}-environment.
+
+\begin{minipage}[b]{0.35\textwidth}
+\begin{LTXexample}
+\begin{pspicture}(-1,-3)(3,3)
+  \rput(0,0){\beamLight}
+\end{pspicture}
+\end{LTXexample}
+\captionof{figure}{\nxLcs{beamLight} without any Options}
+\end{minipage}\hfill%
+\begin{minipage}[b]{0.5\textwidth}
+\centering
+\begin{LTXexample}
+\begin{pspicture}(-1,-5.5)(5,5.5)
+\rput(0,0){\beamLight[mirrorDepth=4.75,
+  mirrorWidth=0.1,mirrorHeight=10,
+  linecolor=lightgray]}
+\end{pspicture}
+\end{LTXexample}
+\captionof{figure}{\nxLcs{beamLight} with Options}
+\end{minipage}
+
+
+\clearpage
+
+\section{Refraction}
+
+\section{\nxLcs{refractionRay}}
+The syntax is
+
+\begin{BDef}
+\Lcs{refractionRay}\Largr{A}\Largr{B}\Largr{C}\Largr{D}\Largb{n1}\Largb{n2}\Largb{EndNode}
+\end{BDef}
+
+
+The macro uses the law of Snell
+
+\begin{align}
+\frac{n_1}{n_2}&=\frac{\sin \beta}{\sin \alpha}\label{snell}
+\end{align}
+
+where the $n_1$ and $n_2$ are the refraction numbers with the predefined values 
+
+\begin{align}
+	n_1 &= 1 \\
+	n_2 &= 1.41 
+\end{align}
+
+and $\alpha$ the incoming abd $\beta$ the outgoing angle of the ray.
+
+The refractionnumbers have the internal names \Lnotation{refractA} and \Lnotation{refractB}.
+
+A total reflection instead of a refraction is possible, 
+when the ray starts in a medium with a higher refrectionnumber. This happens when 
+$\sin\beta>1$ in Equ.~\ref{snell}. In this case we have $\alpha =\beta$, a 
+total reflection.
+
+
+\begin{LTXexample}[width=5cm,pos=l,wide=false]
+\begin{pspicture}[showgrid=true](5,5)
+\pnode(0.5,1.5){A}\qdisk(A){2pt}\uput[90](A){A}
+\pnode(2,3){B}\qdisk(B){2pt}\uput[90](B){B}
+\psline[linewidth=1.5pt,linecolor=red]{->}(A)(B)
+\pnode(3,5){C}\qdisk(C){2pt}\uput[225](C){C}
+\pnode(4,0){D}\qdisk(D){2pt}\uput[135](D){D}
+\pspolygon[fillstyle=solid,fillcolor=lightgray,
+  linecolor=lightgray](C)(D)(5,0)(5,5)(C)
+\psline[linewidth=1.5pt,linecolor=red](C)(D)
+\rput(2,2){\Large$n_1$} \rput(4.5,2){\Large$n_2$}
+\refractionRay(A)(B)(C)(D){1}{4}{E}
+\psline[linestyle=dashed,linecolor=red](B)(E)
+\psline[linestyle=dashed,linecolor=red](E)(E')
+\qdisk(E){2pt}\uput[-20](E){E}
+\qdisk(E'){2pt}\uput[-90](E'){E'}
+\end{pspicture}
+\end{LTXexample}
+
+The macro needs the values for the four nodes, the two refractionnumbers and the name for 
+the end node. As you can see in the figure the end node of the ray is the intermediate 
+point between the linear ray and the linear medium. The end node of the refracted ray has 
+the same name with an additional single quotation mark. In the figure the macro was called as 
+
+\begin{BDef}
+\Lcs{refractionRay}\Largr{A}\Largr{B}\Largr{C}\Largr{D}\Largb{1}\Largb{4}\Largb{E}
+\end{BDef}
+
+\begin{align}n_1&<n_2\end{align}
+
+
+It is no problem to draw a ray which is going straight through another medium. 
+It can be done by using the macro twice as shown in the following examples.
+
+
+\subsection{Total Reflection}
+
+
+\begin{LTXexample}[width=5cm,pos=l,wide=false]
+\begin{pspicture}[showgrid=true](5,5)
+\pnode(0.5,1.5){A}\pnode(2,3){B}
+\pnode(3,5){C}    \pnode(4,0){D}
+\pspolygon[fillstyle=solid,fillcolor=lightgray,
+  linecolor=lightgray](C)(D)(0,0)(0,5)(C)
+\qdisk(A){2pt}\uput[90](A){A}
+\qdisk(B){2pt}\uput[90](B){B}
+\qdisk(C){2pt}\uput[225](C){C}
+\qdisk(D){2pt}\uput[135](D){D}
+\psline[linewidth=1.5pt,linecolor=red]{->}(A)(B)
+\psline[linewidth=1.5pt,linecolor=red](C)(D)
+\rput(2,2){\Large$n_1$}\rput(4.5,2){\Large$n_2$}
+\refractionRay(A)(B)(C)(D){4}{1}{E}
+\psline[linestyle=dashed,linecolor=red](B)(E)
+\psline[linestyle=dashed,linecolor=red](E)(E')
+\qdisk(E){2pt}\uput[-20](E){E}
+\qdisk(E'){2pt}\uput[-90](E'){E'}
+\end{pspicture}
+\end{LTXexample}
+
+
+In the figure the macro was called as 
+
+\begin{lstlisting}[style=syntax]
+\refractionRay(A)(B)(C)(D){4}{1}{E}
+\end{lstlisting}
+
+\begin{align}n_1&>n_2\end{align}
+
+
+
+\section{Prism}
+This command allows to simulate the deviation of a mono-chromatic
+light ray with a prism. There are only few parameters. The indicated
+values are the default ones.
+
+\smallskip\noindent
+\begin{tabularx}{\linewidth}{@{} l X l @{}}
+\emph{name} & \emph{meaning} & \emph{default} \\\hline
+\Lkeyword{AnglePrism} & The angle to the top of prism. & 60\\
+\Lkeyword{AnglePlan1}  & The angle between the plane (1), where the tranmitter takes
+   place, and the vertical. Negative values are allowed. & 25 \\
+\Lkeyword{AnglePlan2} & The angle between the plane (2) (the screen), and the vertical. 
+  Negative values are allowed. & 55\\
+\Lkeyword{k} & Position of transmitter relative to choosen origin $C_1$ on the
+   plane : $\overrightarrow{C_1E_1} = k\overrightarrow{u_1}$. & 1 \\
+\Lkeyword{lambda} & The wavelength , in nm. & 632.8 \\
+\Lkeyword{notations} & The plane where transmitting source takes place, with all
+   indications, origin, angle, etc., as well as the screen are
+   displayed by default. This can be useful in order to finalize a
+   figure, but it is possible to deactivate this feature with the
+   option. & \false\\\hline
+\end{tabularx}
+
+\bigskip
+With \Lkeyword{AnglePlan1} the incident ray direction can be changed. The incidence spot changes according to \Lkeyword{k}.
+
+The outline of processing we have adopted is the Gernot Hoffmann
+one. For more details look into the document:
+\url{http://www.fho-emden.de/~hoffmann/prism16072005.pdf}
+
+\subsection{Figure with default values and construction indications}
+
+
+\begin{LTXexample}[wide=false]
+\begin{pspicture*}(-8,0)(8,8)
+\psprism
+\end{pspicture*}
+\end{LTXexample}
+
+
+\subsection{Figure with default values, without construction indications}
+
+\begin{LTXexample}[wide=false]
+\begin{pspicture*}(-8,0)(8,6)
+\psprism[notations=false]
+\end{pspicture*}
+\end{LTXexample}
+
+\subsection{Color matches wavelength}
+
+\begin{LTXexample}[wide=false]
+\begin{pspicture*}(-8,0)(8,8)
+\psprism[lambda=530]%
+\end{pspicture*}
+\end{LTXexample}
+
+
+
+Note: we have not planned physical impossibilities. When $r_2$ is greater
+than the limit angle, there is no transmission in air, and it's
+impossible to calculate $i_2$. Then, we have a PostScript message:
+
+
+
+
+\begin{lstlisting}
+Displaying page 1
+Displaying page 2
+Displaying page 3
+Displaying page 4
+Error: /rangecheck in --sqrt--
+Operand stack:
+   alpha2   -1.02701   -0.0547467
+\end{lstlisting}
+We remind you that \Lkeyword{alpha2} is $i_2$.
+
+For instance, \Lkeyword{AnglePrism}=65, other default parameters remains unchanged.
+
+\begin{LTXexample}[wide=false]
+\begin{pspicture*}(-7,-0.2)(7,8)
+\psprism[AnglePrism=65]
+\end{pspicture*}
+\end{LTXexample}
+
+It will become right when we change the incident ray slope:
+
+\begin{LTXexample}[wide=false]
+\begin{pspicture*}(-8,-0.2)(8,8)
+\psprism[AnglePrism=65,AnglePlan1=51,k=-1.5]
+\end{pspicture*}
+\end{LTXexample}
+
+We choose \Lkeyword{k}=-1.5 in order to have a incident ray
+which strikes (?) the input side roudly in its center. But, in these
+particular cases, the physicist know-how is important (\emph{bis repetita}). Isn't it?
+
+
+
+\section{Spherical Optic}
+
+
+\subsection{\nxLcs{lensSPH}}
+The syntax is
+
+\begin{BDef}
+\Lcs{lensSPH}\OptArgs
+\end{BDef}
+
+
+It changes some default values for the options to:
+
+
+\begin{center}
+\begin{tabular}{@{} lll @{}}
+\textbf{meaning} & \textbf{name} & \textbf{default}\\\hline
+Object Distance in cm   & \Lkeyword{OA} & -7 \\
+Lens Height in cm       & \Lkeyword{lensHeight} & 6  \\
+Lens Width in cm        & \Lkeyword{lensWidth}  & 1.5\\
+Refraction Number $n_2$ & \Lkeyword{refractB}   & 2
+\end{tabular} 
+\end{center}
+
+
+
+\subsubsection{Convergent Lens}
+Without any option it draws a spherical convergent lens. \Lcs{lensSPH} is equivilant to 
+\Lcs{lensSPH}\Largs{\Lkeyset{lensType=CVG}}.
+
+\begin{LTXexample}[wide=false]
+\lensSPH
+\end{LTXexample}
+
+\subsubsection{Divergent Lens}
+
+The syntax is
+
+\begin{BDef}
+\Lcs{lensSPH}\OptArg{\Lkeyset{lensType=DVG},\ldots}
+\end{BDef}
+
+It draws a spherical divergent lens:
+
+\begin{LTXexample}[wide=false]
+\lensSPH[lensType=DVG,lensWidth=0.5]
+\end{LTXexample}
+
+It changes some default values for the options in the same way as for the convergent lens.
+
+
+\subsection{Options}
+
+The macro uses the law of Snell
+
+\begin{align}
+\frac{n_1}{n_2}&=\frac{\sin \beta}{\sin \alpha}
+\end{align}
+
+where the $n_1$ and $n_2$ are the refraction numbers with the predefined values 
+
+\begin{align}
+	n_1 &= 1 \\
+	n_2 &= 1.41 
+\end{align}
+
+and $\alpha$ the incoming abd $\beta$ the outgoing angle of the ray.
+
+The refractionnumbers have the internal names \Lnotation{refractA} and \Lnotation{refractB}.
+
+\clearpage
+
+\section{\nxLcs{mirrorCVG}}
+
+The syntax is 
+
+\begin{BDef}
+\Lcs{mirrorCVG}\OptArg{\Lkeyset{mirrorType=SPH}} 
+\end{BDef}
+
+
+
+\resetOpticOptions
+\begin{LTXexample}[wide=false]
+\mirrorCVG[mirrorType=SPH]
+\end{LTXexample}
+
+Without the option \Lkeyset{mirrorType=SPH} you'll get a parabolic mirror, which is the default.
+
+\section{\nxLcs{mirrorDVG}}
+
+The syntax is 
+
+\begin{BDef}
+\Lcs{mirrorDVG}\OptArg{\Lkeyset{mirrorType=SPH}} 
+\end{BDef}
+
+
+\begin{LTXexample}[wide=false]
+\mirrorDVG[mirrorType=SPH]
+\end{LTXexample}
+
+Without the option \Lkeyset{mirrorType=SPH} you'll get a parabolic mirror (option PARA).
+
+\section{\nxLcs{ABinterSPHLens}}
+
+The syntax is 
+
+
+
+\begin{LTXexample}[wide=false]
+\begin{pspicture}[showgrid=true](-6,-3)(6,3)
+\rput(0,0){\lensSPH[lensType=CVG,lensHeight=8,lensWidth=3,drawing=false]}
+\qdisk(Center){2pt}\uput[-90](Center){Center}
+\qdisk(Center'){2pt}\uput[-90](Center'){Center'}
+\pnode(-5,1){A}\qdisk(A){2pt}\uput[90](A){A}
+\pnode(-3,0){B}\qdisk(B){2pt}\uput[90](B){B}
+\psline[linewidth=1.5pt,linecolor=red]{->}(A)(B)
+\pnode(5,-2.5){C}\qdisk(C){2pt}\uput[90](C){C}
+\pnode(3,-2){D}\qdisk(D){2pt}\uput[90](D){D}
+\psline[linewidth=1.5pt,linecolor=red]{->}(C)(D)
+\rput(-4.5,2){\Large $n_1$}\rput(0,2){\Large $n_2$}\rput(4.5,2){\Large $n_1$}
+\ABinterSPHLens(A)(B)(Center'){E}\ABinterSPHLens(C)(D)(Center){F}
+\psline[linestyle=dashed,linecolor=red](B)(E)
+\psline[linestyle=dashed,linecolor=red](D)(F)
+\qdisk(E){2pt}\uput[-20](E){E}\qdisk(F){2pt}\uput[-90](F){F}
+\end{pspicture}
+\end{LTXexample}
+The macro needs two nodes for the rays, the coordinates/nodes of the center/middle of the 
+sperical lens and a name of the intermediate node.In the figure the macro was called as 
+
+
+\begin{lstlisting}[style=syntax]
+\ABinterSPHLens(A)(B)(Center'){E}
+\ABinterSPHLens(C)(D)(Center){F}
+\end{lstlisting}
+
+
+
+\section{\nxLcs{lensSPHRay}}
+
+The syntax is 
+
+\begin{BDef}
+\Lcs{lensSPHRay}\OptArgs\Largr{A}\Largr{B}\Largb{refractA}\Largb{refractB}\Largb{NodeName} 
+\end{BDef}
+
+This macro calculates the coordinates of the given ray $\overline{\mathrm{AB}}$ on its way 
+into the lens. The only possible option \Lkeyword{rightRay}=\false|\true\footnote{Default is \texttt{false}} 
+enables rays from the right to the left. There are still some problems with this option but try it out.
+
+\begin{LTXexample}
+\begin{pspicture*}[showgrid=true](-5,-3)(7,3)
+\rput(0,0){\lensSPH[lensType=CVG,lensHeight=8,lensWidth=3,drawing=false]}
+\qdisk(Center){2pt}\uput[-90](Center){Center}
+\qdisk(Center'){2pt}\uput[-90](Center'){Center'}
+\pnode(-4,1){A}\qdisk(A){2pt}\uput[90](A){A}
+\pnode(-2,0.5){B}\qdisk(B){2pt}\uput[90](B){B}
+\rput(-4.5,2.5){\Large $n_1$}\rput(0,2.5){\Large $n_2=1.5$}\rput(4,2.5){\Large $n_1=1$}
+\multido{\rA=3+-0.5,\rB=2.5+-0.5}{9}{%
+  \lensSPHRay[rightRay=false](-4,\rA)(-2,\rB){1}{1.5}{F}
+  \psline[linewidth=1.5pt,linecolor=red]{->}(-4,\rA)(F)
+  \psline[linestyle=dashed,linecolor=red](-4,\rA)(F)(F')(F'')
+  \psOutLine[linestyle=dashed,linecolor=red,length=4.5](F')(F''){FEnd}}
+\psline[linewidth=1.5pt,linecolor=blue]{->}(A)(B)
+\lensSPHRay[lensType=CVG](A)(B){1}{1.5}{E}
+\psline[linestyle=dashed,linecolor=blue](B)(E)(E')(E'')
+\qdisk(E){2pt}\uput[-20](E){E}\qdisk(E'){2pt}\uput[-20](E'){E'}
+\qdisk(E''){2pt}\uput[-20](E''){E''}
+\end{pspicture*}
+\end{LTXexample}
+
+And the same with $n_2=3$:
+\begin{LTXexample}
+\begin{pspicture*}[showgrid=true](-5,-3)(7,3)
+\rput(0,0){\lensSPH[lensType=CVG,lensHeight=8,lensWidth=3,drawing=false]}
+\qdisk(Center){2pt}\uput[-90](Center){Center}
+\qdisk(Center'){2pt}\uput[-90](Center'){Center'}
+\pnode(-4,1){A}\qdisk(A){2pt}\uput[90](A){A}
+\pnode(-2,0.5){B}\qdisk(B){2pt}\uput[90](B){B}
+\rput(-4.5,2.5){\Large $n_1$}\rput(0,2.5){\Large $n_2=3$}\rput(4,2.5){\Large $n_1=1$}
+\multido{\rA=3+-0.5,\rB=2.5+-0.5}{11}{%
+  \lensSPHRay[rightRay=false](-4,\rA)(-2,\rB){1}{3}{F}
+  \psline[linewidth=1.5pt,linecolor=red]{->}(-4,\rA)(F)
+  \psline[linestyle=dashed,linecolor=red](-4,\rA)(F)(F')(F'')
+  \psOutLine[linestyle=dashed,linecolor=red](F')(F''){FEnd}}
+\psline[linewidth=1.5pt,linecolor=blue]{->}(A)(B)
+\lensSPHRay[lensType=CVG](A)(B){1}{3}{E}
+\psline[linestyle=dashed,linecolor=blue](B)(E)(E')(E'')
+\qdisk(E){2pt}\uput[-20](E){E}\qdisk(E'){2pt}\uput[-20](E'){E'}
+\qdisk(E''){2pt}\uput[-20](E''){E''}
+\end{pspicture*}
+\end{LTXexample}
+
+
+\clearpage
+
+\section{\nxLcs{reflectionRay}}
+
+The syntax is 
+
+\begin{BDef}
+\Lcs{reflectionRay}\OptArgs\Largr{A}\Largr{B}\Largb{NodeName}
+\end{BDef}
+
+This macro calculates the coordinates of the given ray $\overline{\mathrm{AB}}$ 
+on its way out of the mirror. The only senseful option is \Lkeyset{mirrorType=CVG} or \Lkeyset{mirrorType=DVG}. 
+The most important fact is that the point \verb|B| must be the one on the mirror. 
+If you do not know it's coordinates you can use the macro 
+\verb|ABinterSPHLens[lensType=CVG](A1)(A2)(Center){NodeName)|, which calculates the coordinates of the intermediate point.
+
+
+
+\begin{LTXexample}
+\begin{pspicture*}[showgrid=true](-1,-3)(6,3)
+\rput(0,0){%
+  \mirrorCVG[mirrorType=SPH,mirrorHeight=5,mirrorWidth=0.2,yBottom=-3,yTop=3,drawing=false,mirrorDepth=3]
+  \qdisk(Center){2pt}\qdisk(Focus){2pt}\uput[-90](Center){Center}\uput[-90](Focus){F}
+  \psline(O)(xRight)}
+\ABinterSPHLens(5,1)(3,1)(Center){C}
+\reflectionRay[mirrorType=CVG-SPH](5,1)(C){D}
+\qdisk(5,1){2pt}\uput[-90](5,1){A}\qdisk(3,1){2pt}\uput[-90](3,1){B}
+\qdisk(C){2pt}\uput[180](C){C}\qdisk(D){2pt}\uput[45](D){D}
+\psset{linewidth=1.5pt,linecolor=red,arrows=->}
+\psline(5,1)(3,1)\psline(3,1)(C)\psline(C)(D)
+\end{pspicture*}
+\end{LTXexample}
+
+
+
+\clearpage
+\subsection{Refraction at a Spherical surface}
+
+Construction for finding the position of the image point P' of a point object P formed by refraction at a sperical surface.
+
+
+\begin{LTXexample}
+\begin{pspicture*}[showgrid=true](-10,-4)(3,4)
+\rput(0,0){%
+  \lensSPH[lensType=CVG,lensHeight=12,lensWidth=10,yBottom=-6,yTop=6,xLeft=-6,xRight=6,drawing=false]}
+\psset{linecolor=red,linewidth=1.5pt,dotstyle=|}
+\pnode(-9,0){P}\psdots(P)\uput[-90](P){P}\psline(P)(xRight)
+\lensSPHRay(P)(-5,2){1}{9}{Q}  \psline(P)(Q)(Q') \psdots(Q)\uput[90](Q){B}
+\ABinterCD(Q)(Q')(0,0)(5,0){P'}\psdots(Q')\uput[-90](P'){P'}
+\psline[linewidth=0.5pt,linecolor=black](Center')(Q)\psline[linewidth=0.5pt,linecolor=black](Q)(Q|0,0)
+\psdots(Center')\uput[-90](Center'){C}
+\end{pspicture*}
+\end{LTXexample}
+
+
+\clearpage
+Construction for determining the height of an image formed by refraction at a sperical surface.
+
+\begin{LTXexample}
+\begin{pspicture*}[showgrid=true](-13,-3)(3,5)
+\rput(0,0){%
+  \lensSPH[lensType=CVG,lensHeight=12,lensWidth=10,yBottom=-4,yTop=4,xLeft=-5,xRight=5,drawing=false]}
+\psset{linecolor=red,linewidth=1.5pt,dotstyle=|}
+\pnode(-12,0){P}\psdots(P)\uput[-90](P){P}\pnode(-12,4){Q}\psdots(Q)\uput[90](Q){Q}
+\psline[linecolor=blue,linewidth=3pt,arrows=->](P)(Q)\psline(P)(xRight)
+\lensSPHRay(Q)(Center'){1}{9}{S1}\lensSPHRay(Q)(-5,0){1}{9}{S2}%
+\psline(Q)(S1')\psline(Q)(S2)(S2')\ABinterCD(Q)(S1')(S2)(S2'){Q'}\pnode(Q'|0,0){P'}
+\psline[linecolor=blue,linewidth=3pt,arrows=->](P')(Q')
+\uput[90](P'){P'}\uput[-90](Q'){Q'}\psdots(Center')\uput[90](Center'){C}
+\end{pspicture*}
+\end{LTXexample}
+
+
+\section{Utility Macros}
+
+\subsection{\nxLcs{eye}}
+
+Syntax:
+
+\begin{BDef}
+\Lcs{eye}
+\end{BDef}
+There are no Options for this symbol of an human eye (Figure~\ref{fig:auge}).
+Use the \Lcs{rput}-macro to put the eye elsewhere.
+
+\begin{LTXexample}[width=2cm,pos=l,wide=false]
+\begin{pspicture}(-1,-0.75)(1,0.75)
+  \rput(1,0){\eye}
+\end{pspicture}
+\end{LTXexample}
+
+\section{\nxLcs{Arrows}}
+
+Syntax wirh the following options:
+
+\begin{BDef}
+\Lcs{Arrows}\OptArgs\Largr{NodeA}\Largr{NodeB}
+\end{BDef}
+
+\begin{center}
+\begin{tabular}{@{} l l l @{}}
+\emph{Option} & \emph{Name} & \emph{Standard}\\\hline
+Offset for arrow start in cm     & \Lkeyword{posStart} & 0\\
+Length of the arrow in cm        & \Lkeyword{length}   & 2\\\hline
+\end{tabular}
+\end{center}
+
+
+
+
+\begin{LTXexample}[width=6cm,pos=l]
+\begin{pspicture}[showgrid=true](-3,-3)(3,3)
+\psset{linecolor=red}
+\Arrows[posStart=2,length=4](-3,-3)(3,3)
+\qdisk(-3,-3){2pt}\uput[45](-3,-3){A}
+\qdisk(3,3){2pt}\uput[-90](3,3){B}
+\psset{linecolor=green}
+\Arrows[linewidth=3pt,length=2](0,-3)(0,0.5)
+\qdisk(0,-3){2pt}\uput[45](0,-3){A}
+\qdisk(0,0.5){2pt}\uput[-90](0,0.5){B}
+\psset{linecolor=blue}
+\Arrows[linewidth=5pt,linestyle=dashed](3,0)(2,3)
+\qdisk(3,0){2pt}\uput[-90](3,0){A}
+\qdisk(2,3){2pt}\uput[-90](2,3){B}
+\psset{linecolor=black}
+\Arrows[posStart=1,linewidth=5pt,linestyle=dotted,
+  length=3](-3,2)(1,2)
+\qdisk(-3,2){2pt}\uput[-45](-3,2){A}
+\qdisk(1,2){2pt}\uput[-90](1,2){B}
+\end{pspicture}
+\end{LTXexample}
+
+
+
+\section{\nxLcs{psOutLine} and \nxLcs{psBeforeLine}}
+
+Syntax:
+
+\begin{BDef}
+\Lcs{psOutLine}\OptArgs\Largr{NodeA}\Largr{NodeB}\Largb{EndNode}\\
+\Lcs{psBeforeLine}\OptArgs\Largr{NodeA}\Largr{NodeB}\Largb{StartNode}
+\end{BDef}
+
+The only special option is \Lkeyword{length}=\Larga{value}. All other which are possible for
+\Lcs{psline} can be used, too.
+
+\begin{LTXexample}[width=6cm,pos=l]
+\begin{pspicture}[showgrid=true](-3,-3)(3,3)
+\psset{linecolor=red, linewidth=1.5pt}
+\psOutLine[length=3](-2,-2)(0,0){End}
+\qdisk(-2,-2){2pt}\uput[80](-2,-2){A}
+\qdisk(0,0){2pt}\uput[-45](0,0){B}
+\qdisk(2.12,2.12){2pt}\uput[90](2.12,2.12){END}
+%
+\psset{linecolor=blue}
+\psBeforeLine[length=3](1,0)(3,2){START}
+\qdisk(3,2){2pt}\uput[80](3,2){B}
+\qdisk(1,0){2pt}\uput[-45](1,0){A}
+\qdisk(-1.12,-2.12){2pt}\uput[-90](-1.12,-2.12){START}
+\end{pspicture}
+\end{LTXexample}
+
+\section{\nxLcs{Parallel}}
+
+Syntax:
+
+\begin{BDef}
+\Lcs{Parallel}\OptArgs\Largr{NodeA}\Largr{NodeB}\Largr{StartNode}\Largb{End node}
+\end{BDef}
+
+The only special option for \Lcs{Parallel} is \Lkeyword{length}=\Larga{value}. 
+The nodes \verb|nodeA| and \verb|nodeB| are known nodes of a given line 
+and \verb|Start node| is the given node of a parallel line. \verb|End node| is 
+the name of the calculated line end. 
+
+\begin{LTXexample}
+\begin{pspicture*}[showgrid=true](-5,-3.5)(5,3.5)
+\pnode(2,-2){FF}\qdisk(FF){1.5pt} \pnode(-5,5){A} \pnode(0,0){O}
+\multido{\nCountA=-2.4+0.4}{9}{%
+  \Parallel[linecolor=red,length=9](O)(A)(0,\nCountA){P1}
+  \psline[linecolor=red](0,\nCountA)(FF)
+  \psOutLine[linecolor=red,length=9](0,\nCountA)(FF){P2}}
+\psline[linecolor=blue](A)(FF)
+\psOutLine[linecolor=blue,length=5](A)(FF){END1}
+\rput(0,0){\lens[yBottom=-3.5,yTop=3.5,lensGlass=true,lensHeight=6.5,drawing=false,
+    spotFi=315,lensWidth=0.5]
+  \psline[linewidth=1pt](xLeft)(xRight)
+  \psline[length=2,linewidth=2pt,arrows=->](F')(FF)}
+\end{pspicture*}
+\end{LTXexample} 
+
+
+\section{\nxLcs{ABinterCD} and \Lcs{nodeBetween}}
+
+This macro is used by the \Lcs{telescop} macro. It determines the intersection 
+point of two lines, in this case a ray and the mirror axis.
+The following figure shows a part of figure~\ref{fig:defaultTele}. Given are 
+the points A, B (focus), C/D (mirror axis). We need the point E to draw the other 
+rays for the ocular, which can be done with the \Lcs{ABinterCD} macro. The syntax is:
+
+
+\begin{BDef}
+\Lcs{ABinterCD}\Largr{A}\Largr{B}\Largr{C}\Largr{D}\Largb{E}\\
+\Lcs{nodeBetween}\Largr{A}\Largr{B}\Largb{C}
+\end{BDef}
+
+\begin{LTXexample}
+\begin{pspicture*}(-0.5,-2.25)(9,2.25)
+\rput(0,0){\mirrorCVG[mirrorHeight=4,mirrorWidth=0.25,mirrorDepth=0.25,drawing=false]}
+\mirrorCVGRay[mirrorHeight=4,mirrorWidth=0.25,mirrorDepth=0.25,drawing=false](8,1.25)(2,1.25){A}
+\psline[linewidth=0.5\pslinewidth](9,0)
+\rput{-45}(6,0){\mirrorTwo}
+\qdisk(A){2pt}\uput[30](A){A}\pnode(8,0){B}\qdisk(B){2pt}\uput[-45](B){B}
+\pnode(! 6 1 45 cos mul sub 1 45 sin mul){C}
+\qdisk(C){2pt}\uput[90](C){C}\pnode(! 6 1 45 cos mul add 1 45 sin mul neg){D}
+\uput[-45](D){D}\qdisk(D){2pt}\psline[linestyle=dashed](A)(B)
+\ABinterCD(A)(B)(C)(D){Inter1}\qdisk(A){2pt}
+\nodeBetween(A)(B){M}\qdisk(M){2pt}
+{\psset{linecolor=red}
+\qdisk(Inter1){2pt}\uput[220](Inter1){E}\uput[220](M){M}}
+\end{pspicture*}
+\end{LTXexample}
+
+\section{\nxLcs{rotateNode}}
+The syntax is
+
+\begin{BDef}
+\Lcs{rotateNode}\Largb{NodeName}\Largb{Degrees}
+\end{BDef}
+
+The coordinates of the node \verb|A| are changed to the new ones. Negative values are possible for rotating clockwise.
+
+\begin{LTXexample}[width=4cm,pos=l]
+\begin{pspicture}[showgrid=true](4,4)
+\pnode(3,1){A}\qdisk(A){2pt}\uput[20](A){A}
+\rotateNode(A){45}
+\qdisk(A){2pt}\uput[20](A){A}
+\psarc[linecolor=red,
+  linewidth=0.5pt]{->}(0,0){3.16}{19.47}{64.47}
+\end{pspicture}
+\end{LTXexample}
+
+
+\section{\nxLcs{rotateTriangle}}
+The syntax is
+
+\begin{BDef}
+\Lcs{rotateNode}\Largb{NodeNameA}\Largb{NodeNameB}\Largb{NodeNameC}\Largb{Degrees}
+\end{BDef}
+
+The coordinates of the nodes \verb|A,B,C| are changed to the new ones. Negative values are possible for rotating clockwise.
+
+\begin{LTXexample}[width=5cm,pos=l]
+\begin{pspicture}[showgrid=true](-1,0)(4,4)
+\pnode(1,1){A}\pnode(3,1){B}\pnode(2,3){C}
+\qdisk(A){2pt}\uput[180](A){A}\qdisk(B){2pt}\uput[0](B){B}
+\qdisk(C){2pt}\uput[90](C){C}
+\psline(A)(B)(C)(A) \rotateTriangle(A)(B)(C){45}
+\qdisk(A){2pt}\uput[180](A){A}\qdisk(B){2pt}\uput[0](B){B}
+\qdisk(C){2pt}\uput[90](C){C}\psline[linecolor=red](A)(B)(C)(A)
+\psarc[linecolor=red,linewidth=0.5pt]{->}(0,0){3.16}{19.47}{64.47}
+\psarc[linecolor=red,linewidth=0.5pt]{->}(0,0){1.41}{45}{90}
+\psarc[linecolor=red,linewidth=0.5pt]{->}(0,0){3.61}{56.31}{101.31}
+\end{pspicture}
+\end{LTXexample}
+
+
+
+\section{\nxLcs{rotateFrame}}
+The syntax is
+
+\begin{BDef}
+\Lcs{rotateFrame}\Largb{NodeNameA}\Largb{NodeNameB}\Largb{NodeNameC}\Largb{NodeNameD}\Largb{Degrees}
+\end{BDef}
+
+The coordinates of the nodes \verb|A,B,C,D| are changed to the new ones. Negative values are possible for rotating clockwise.
+
+\begin{LTXexample}[width=6cm,pos=l]
+\begin{pspicture}[showgrid=true](-2,0)(4,5)
+\pnode(1,1){A}\pnode(3,1){B}\pnode(3,3){C}\pnode(1,3){D}
+\qdisk(A){2pt}\uput[180](A){A}\qdisk(B){2pt}\uput[0](B){B}
+\qdisk(C){2pt}\uput[90](C){C} \qdisk(D){2pt}\uput[180](D){D}
+\psline(A)(B)(C)(D)(A)
+\rotateFrame(A)(B)(C)(D){45}
+\qdisk(A){2pt}\uput[180](A){A}\qdisk(B){2pt}\uput[0](B){B}
+\qdisk(C){2pt}\uput[90](C){C} \qdisk(D){2pt}\uput[180](D){D}
+\psline[linecolor=red](A)(B)(C)(D)(A)
+\psarc[linecolor=red,linewidth=0.5pt]{->}(0,0){3.16}{19.47}{64.47}
+\psarc[linecolor=red,linewidth=0.5pt]{->}(0,0){1.41}{45}{90}
+\psarc[linecolor=red,linewidth=0.5pt]{->}(0,0){4.24}{45}{90}
+\psarc[linecolor=red,linewidth=0.5pt]{->}(0,0){3.16}{71.57}{116.57}
+\end{pspicture}
+\end{LTXexample}
+
+
+\section{\nxLcs{arrowLine}}
+The syntax is
+
+\begin{BDef}
+\Lcs{arrowLine}\OptArgs\Largr{Start}\Largr{End}\Largb{ArrowNumber}
+\end{BDef}
+
+Draws a line from \verb|Start| to \verb|End| with \verb|ArrowNumber| arrows inside. 
+
+\begin{LTXexample}[width=4cm,pos=l]
+\begin{pspicture}[showgrid=true](4,4)
+\arrowLine[linecolor=red](0,0)(4,3){3}
+\arrowLine[linecolor=green,arrowsize=6pt,arrows=-|](0,0)(3,1){2}
+\arrowLine[linecolor=blue,arrowOffset=0.75,arrowsize=6pt](4,0)(0,3){3}
+\end{pspicture}
+\end{LTXexample}
+
+
+\subsection{Options}
+
+A special option is \Lkeyword{arrowOffset}, which makes it possible to draw lines with 
+different arrows. By default the arrows are placed symetrically. This can be moved by 
+\Lkeyword{arrowOffset}. Additionally all other valid options for pslines are possible her, too.
+
+\begin{LTXexample}[width=4cm,pos=l]
+\begin{pspicture}[showgrid=true](4,2)
+\arrowLine[arrowsize=6pt,linecolor=red](0,0.5)(4,0.5){3}
+\arrowLine[arrowsize=6pt,linecolor=red,
+  arrows=<-](0,1)(4,1){3}
+\arrowLine[arrowsize=6pt,linecolor=red](0,1.5)(4,1.5){3}
+\arrowLine[arrowsize=6pt,linecolor=blue,arrows=<-,
+  arrowOffset=0.2](0,1.5)(4,1.5){3}
+\end{pspicture}
+\end{LTXexample}
+
+
+
+\clearpage
+\section{List of all optional arguments for \texttt{pst-optic}}
+
+\xkvview{family=pst-optic,columns={key,type,default}}
+
+
+
+
+\bgroup
+\raggedright
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{pst-optic-doc}
+\egroup
+
+\printindex
+
+
+\end{document}

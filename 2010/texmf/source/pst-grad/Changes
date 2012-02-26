@@ -1,0 +1,16 @@
+pst-grad.sty --------
+ 2006-08-01  message for loading the pro file
+
+pst-grad.tex --------
+v 1.06  2007/05/24  add cmyk option (hv)
+v 1.05  2006/11/04  integrate the GradientHSB from package 
+                    pst-ghsb, which is now obsolete (hv)
+v 1.00  2006/08/13  use pst-xkey for key handling (hv)
+
+pst-grad.pro --------
+v 1.06  2007/05/24  add ifCMYK switch (hv)
+v 1.05  2006/11/04  integrate the GradientHSB from package 
+                    pst-ghsb, which is now obsolete (hv)
+
+pst-grad-doc.tex --------
+2006-11-04	updated

@@ -1,0 +1,56 @@
+
+\section{Champignons}
+
+\begin{LTXexample}[pos=t]
+\newcommand\SectionChampignon{
+ /r3 0.2 R mul def
+ 0 0 %1
+% 0 r1 0 % 2
+ -33 10 43 { /Angle ED
+    Angle cos 0.5 h mul mul 0.2 h mul sub
+      Angle sin 0.5 h mul mul 0.3 h mul add
+      } for
+ 0 10 90 {
+    /Angle ED
+    0.8 R mul Angle cos mul r3 add 0.8 R mul Angle sin mul 0.6 h mul add
+    } for
+ 0 h
+}
+\begin{pspicture}(-3,-6)(3,6)
+\psframe(-3,-2)(3,6)
+\psset[pst-solides3d]{SphericalCoor=true,viewpoint=100 20 20,Decran=50,lightsrc=90 30 30}
+\psSolid[object=grille,base=-8 8 -8 8,action=draw**,fillcolor=green!50]%
+\psSolid[object=anneau,section=\SectionChampignon,fillcolor=red!20,h=10,R=5,r=0,unit=0.5,RotX=-20,linewidth=0.5\pslinewidth](-4,5,0)
+\psSolid[object=anneau,section=\SectionChampignon,fillcolor=white,h=10,R=5,r=0,linewidth=0.5\pslinewidth]%
+\psSolid[object=anneau,section=\SectionChampignon,fillcolor=yellow!50,h=10,R=5,r=0,unit=0.4,RotY=-90,RotZ=-40,linewidth=0.5\pslinewidth](4,6,0)
+\end{pspicture}
+\end{LTXexample}
+
+\begin{LTXexample}[pos=t]
+\newcommand\SectionAmanite{
+ /radius1 h 8 div 1.52 mul def
+ /xC1 h 8 div 0.25 mul def
+ /yC1 h 8 div 1.5 mul def
+ /radius2 h 8 div 4.5 mul dup mul h 8 div 2 mul dup mul add sqrt 4 div 4.5 mul def
+ /xC2 0 def
+ /yC2 h 8 div 2.46 mul def
+-110 10 70 { /Angle ED
+             Angle cos radius1 mul xC1 add
+               Angle sin radius1 mul yC1 add
+             } for
+h 8 div 0.5 mul h 8 div 6 mul
+40 10 90 {/Angle ED
+             Angle cos radius2 mul xC2 add
+               Angle sin radius2 mul yC2 add
+             } for
+ 0 h
+}
+\begin{pspicture}(-3,-6)(3,6)
+\psframe*(-3,-2)(3,6)
+\psset[pst-solides3d]{SphericalCoor,viewpoint=100 20 20,Decran=50,lightsrc=90 30 30}
+\psSolid[object=grille,base=-8 8 -8 8,action=draw**,hue=0.2 0.5 0.5 1,grid](0,0,0)
+\psSolid[object=anneau,section=\SectionAmanite,h=8,R=5,r=0,hue=0 1 0.5 1,unit=0.5,grid,RotX=-20](-4,5,0)
+\psSolid[object=anneau,section=\SectionAmanite,h=8,R=5,r=0,hue=0 1 0.5 1,grid](0,0,0)
+\psSolid[object=anneau,section=\SectionAmanite,h=8,R=5,r=0,hue=0 1 0.5 1,grid,unit=0.4,RotY=-90,RotZ=-50](4,6,0)
+\end{pspicture}
+\end{LTXexample}

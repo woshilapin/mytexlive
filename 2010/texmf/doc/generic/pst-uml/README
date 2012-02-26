@@ -1,0 +1,106 @@
+Readme.txt file for the latex package "pst-uml"
+-----------------------------------------------
+
+When-Who-Where?
+--------------
+
+who:            Maurice Diamantini  <Maurice.Diamantini at ensta in fr>
+Maintained by:  Herbert Voss        <Herbert.Voss at alumni.TU-Berlin in DE>
+
+where:          http://www.ensta.fr/~diam/latex/contrib/
+                (and CTAN)
+               
+when:           Package "pst-uml":          27/04/98
+                FRENCH doc "pst-uml":       27/04/98    
+                this readme:                18/12/98 :-)
+                see "Modifications" for more recent changes
+              
+pst-uml is in Alpha version, and not yet cleanly packaged.
+I hope to be able to continue it before juny 1999.
+(27 oct 99 : sorry, pst-uml is unchanged!)
+
+********** (But any remarks are welcome :-) ****************
+
+
+
+What is pst-uml
+---------------
+
+pst-uml.sty is a latex package written for my need to draw some
+UML diagramms using pstricks package.
+
+"pst-uml" rely on pstricks (pst-xkey.sty) and some other standard 
+packages. In particular the following files :
+
+  - pst-xkey.sty : use by pst-uml.sty
+                   but include in recent standard latex distribution.
+                   
+  - fancyvrb.sty : NOT USE by  pst-uml.sty, but requested for compiling 
+                   the documentations.
+                   
+  - fvrb-ex.sty :  idem above 
+
+
+How to use pst-uml?
+-------------------
+
+Copy the file pst-uml.sty in your working directory (latex project)
+or in the PATH of TEX input file.
+Normaly, this is the only thing to do...
+
+
+Documentation 
+-------------
+All documentation is IN FRENCH. It is based on the two top files:
+
+  - pst-uml-doc.tex: 
+        reference doc for pst-uml.sty
+        (description of the differents commands provide by pst-keys.sty)
+  
+  - pst-uml-exemples.tex: 
+        some examples of UML diagramms using "pst-uml"
+        This file use secondary files such as :
+           - diagCase.tex
+           - diagClass.tex
+           - diagState.tex
+           - diagSeq.tex
+           
+   - pst-uml-encapsuled-pdf-fig.tex:
+     A seldocumented  exemple for creating encasulated pdf file for using with
+     psdlatex. This feature make use of:
+        - "-E" flag for dvips tool
+        - epstopdf unix filter
+        - \usepackage{pst-eps} from pstricks
+        - \TeXtoEPS and \endTeXtoEPS commands from pstricks
+
+Compiling the documentation files require the packages fancyvrb.sty and 
+fvrb-ex.sty in addition to the pst-uml.sty package.
+There is postscript version of the two documentation files above with
+the "pst-uml" distribution.
+
+Makefile
+--------
+With unix (or macosX), you can use Makefile for compiling documentations to pdf
+(require ps2pdf utility):
+  make 
+     => compile the two documentation files to pdf format
+  make distcleen 
+     => remove all generated files
+  make tgz (ou tbz or zip for other format)
+     => make a snapshot with date and time of the directory, and put it in the 
+        parent directory
+The Makefile can be used to see he various needed unix commands (in particular
+for making encapsulated pdf figure).
+
+Modifications
+-------------
+28/08/06 : - using pst-xkey for the key handling, 
+           - add exemple for creating encapsulated pdf figure
+           - exemple file renamed, and cleanup Makefile and README
+14/05/03 : apply licence lppl before putting  pst-uml
+           on CTAM (by Herbert Voss)
+18/12/98 : modif Makefile and remove out-dated packages from pst-uml 
+           distribution.
+27/04/98 : last update of pst-uml and its documentation
+./
+

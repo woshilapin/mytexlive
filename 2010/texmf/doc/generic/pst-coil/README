@@ -1,0 +1,12 @@
+pst-coil: coils zigzags and coils connections
+
+pst-coil.sty     - The LaTeX file
+pst-coil.tex     - The TeX file
+pst-coil.pro     - The dvips header file
+pst-coil-doc.pdf - The documentation
+pst-coil-doc.tex - The documentation, source
+pst-coil-doc.bib - The documentation, bibfile
+
+
+--
+Herbert Voss 2006-11-05

@@ -1,0 +1,12 @@
+pst-grad: gradient color fillings
+
+pst-grad.sty     - The LaTeX file
+pst-grad.tex     - The TeX file
+pst-grad.pro     - The dvips header file
+pst-grad-doc.tex - The documentation, source file
+pst-grad-doc.bib - The documentation, bibtex data file
+pst-grad-doc.pdf - The documentation, pdf
+
+
+--
+Herbert Voss 2006-11-01

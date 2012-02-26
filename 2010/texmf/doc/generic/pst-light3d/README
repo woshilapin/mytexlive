@@ -1,0 +1,29 @@
+%% Package `pst-light3d.tex'
+%%
+This version of pst-light3d needs the xkeyval package. Get it
+from CTAN if it is not part of your local TeX installation.
+
+Save the files
+
+pst-light3d.sty   TEXMF/tex/latex/pstricks/
+pst-light3d.tex   TEXMF/tex/generic/pstricks/
+pst-light3d.pro   TEXMF/dvips/pstricks/
+
+in any place, where latex or any other TeX program will find it.
+If you like to get the documentation file in another format run 
+
+latex pst-light3d-doc
+latex pst-light3d-doc
+dvips pst-light3d-doc
+
+to get a PostScript file. But pay attention, that the pst-light3d
+files are saved in the above mentioned way, before you run
+latex on the documentation file.
+
+The intermediate DVI file works only with viewers which can 
+interprete the embedded PostScript code.
+
+For another PDF output read the introduction from
+the documentation.
+
+hv, 2004-09-29

@@ -1,0 +1,564 @@
+%% $Id: pst-magneticfield-docEN.tex 347 2010-06-12 06:33:02Z herbert $
+\documentclass[11pt,english,BCOR10mm,DIV12,bibliography=totoc,parskip=false,smallheadings
+    headexclude,footexclude,oneside]{pst-doc}
+\usepackage[latin1]{inputenc}
+\usepackage{pst-magneticfield}
+\let\pstMFfv\fileversion
+\lstset{pos=t,language=PSTricks,
+    morekeywords={psmagneticfield,psmagneticfieldThreeD},basicstyle=\footnotesize\ttfamily}
+
+%\newenvironment{postscript}{}{} % uncomment, when running with latex
+
+\newcommand\Cadre[1]{\psframebox[fillstyle=solid,fillcolor=black,linestyle=none,framesep=0]{#1}}
+\def\bgImage{}
+%
+\begin{document}
+
+\title{\texttt{pst-magneticfield}}
+\subtitle{Magnetic field lines of a solenoid; v.\pstMFfv}
+\author{Juergen Gilg\\ Manuel Luque\\Herbert Vo\ss}
+\date{\today}
+\maketitle
+
+
+\clearpage% 
+\begin{abstract}
+The package \LPack{pst-magneticfield} aims to trace the shape of field lines
+of a solenoid. The physical parameters are the radius of the solenoid, the number of
+turns and its length, the default values are given below:
+
+\begin{enumerate}
+  \item the number of turns: \LKeyset{N=6} ;
+  \item the radius : \LKeyset{R=2} ;
+  \item the length : \LKeyset{L=4}.
+\end{enumerate}
+
+The field lines were calculated with the Runge-Kutta 2 algorithm, which, after several tries, 
+seemed to be the best compromise between speed and accuracy of calculations for the path.
+The calculation of elliptic integrals for the evaluation of the magnetic field
+was achieved by polynomial approximations from the "Handbook of Mathematical
+Functions With Formulas, Graph, And Mathematical Tables" by Milton Abramowitz and
+Irene.\,A. Stegun (\url{http://www.math.sfu.ca/~cbm/aands/}).~\cite{abramowitz}
+\end{abstract}
+
+\clearpage
+\tableofcontents
+
+
+\clearpage
+
+\section{Introduction}
+
+The route options, with the default values are as follows:
+\begin{enumerate}
+  \item The maximum number of points on each line of the entire coil: \LKeyset{pointsB=500};
+  \item the maximum number of points on lines around turns selected: \LKeyset{pointsS=1000};
+  \item the number of lines of the entire coil: \LKeyset{nL=8};
+  \item differential steps for the lines of the entire coil: \LKeyset{PasB=0.02};
+  \item differential steps for the lines around turns selected: \LKeyset{PasS=0.00275};
+  \item the choice of individual coils to improve the rendering of its
+      layout: \LKeyset{numSpires=\{\}}, we place following the sign "=" the numbers of turns \textsf{1 2 3 etc.} 
+      starting from the top spire. By default, all the turns are targeted.
+  \item The number of field lines around the turns selected: \LKeyset{nS=1}.
+  \item We may decide not to represent the solenoid with the option \LKeyset{drawSelf=false}
+      is useful for 3D representation.
+  \item The route options for the turns (color, thickness, arrows) are:
+  \begin{enumerate}
+        \item The color and thickness of the coils: \Lkeyset{styleSpire=styleSpire};
+        \item the current direction signs: \Lkeyset{styleCourant=sensCourant}.
+  \end{enumerate}
+\begin{verbatim}
+\newpsstyle{styleSpire}{linecap=1,linecolor=red,linewidth=2\pslinewidth}
+\newpsstyle{sensCourant}{linecolor=red,linewidth=2\pslinewidth,arrowinset=0.1}
+\end{verbatim}
+      
+ \item The color and thickness of the field lines can be adjusted with the 
+      usual \LPack{pstricks} parameters: \Lkeyword{linecolor} and  \Lkeyword{linewidth}
+\end{enumerate}
+
+A command \Lcs{psmagneticfieldThreeD} allows 3D visualization of the solenoid and
+field lines. 
+
+\begin{BDef}
+\Lcs{psmagneticfield}\OptArgs\OptArg*{\coord1}\OptArg*{\coord2}\\
+\Lcs{psmagneticfieldThreeD}\OptArgs\OptArg*{\coord1}\OptArg*{\coord2}
+\end{BDef}
+
+Missing coordinates are substituted to \verb+(-6,-5)(6,5)+!
+\clearpage
+\section{Influence of physical parameters on the map magnetic field}
+
+\subsection{The length of the solenoid}
+
+\begin{center}
+\begin{postscript}
+\psset{unit=0.5cm}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{006633}},N=3,R=2,nS=1](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{99FF66}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{L=4}},N=3,R=2,nS=1]}
+\end{pspicture*}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{006633}},L=8,N=3,R=2,nS=1,PasB=0.0025,pointsB=5500](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{99FF66}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{L=8}},N=3,R=2,nS=1]}
+\end{pspicture*}
+\end{postscript}
+\end{center}
+
+\begin{lstlisting}
+\psset{unit=0.5cm}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{006633}},N=3,R=2,nS=1](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{99FF66}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{L=4}},N=3,R=2,nS=1]}
+\end{pspicture*}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{006633}},L=8,N=3,R=2,nS=1,PasB=0.0025,pointsB=5500](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{99FF66}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{L=8}},N=3,R=2,nS=1]}
+\end{pspicture*}
+\end{lstlisting}
+
+
+
+\textbf{Note:} To refine the layout of the second solenoid, we had to increase the
+points and lower the pitch of the route: 
+\begin{postscript}
+\Cadre{\textcolor{white}{pointsB=5500,PasB=0.0025}}
+\end{postscript}, which
+takes more time for the calculations.
+
+
+
+\clearpage
+
+\subsection{The number of turns}
+\begin{center}
+\begin{postscript}
+\psset{unit=0.5}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{006633}},N=1,R=2,nS=0](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{99FF66}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{N=1}},R=2,nS=0]}
+\end{pspicture*}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{006633}},N=2,R=2,L=2,PasS=0.003,nS=2](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{99FF66}}](-7,7)(7,8)
+\rput(0,7.5){\Cadre{\textcolor{white}{Bobines de Helmholtz}}}
+\psframe*[linecolor={[HTML]{99FF66}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{N=2}},R=2,L=2,PasS=0.003,nS=2]}
+\end{pspicture*}
+\end{postscript}
+\end{center}
+
+\begin{lstlisting}
+\psset{unit=0.5}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{006633}},N=1,R=2,nS=0](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{99FF66}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{N=1}},R=2,nS=0]}
+\end{pspicture*}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{006633}},N=2,R=2,L=2,PasS=0.003,nS=2](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{99FF66}}](-7,7)(7,8)
+\rput(0,7.5){\Cadre{\textcolor{white}{Bobines de Helmholtz}}}
+\psframe*[linecolor={[HTML]{99FF66}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{N=2}},R=2,L=2,PasS=0.003,nS=2]}
+\end{pspicture*}
+\end{lstlisting}
+
+
+\begin{center}
+\begin{postscript}
+\psset{unit=0.5}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{006633}},N=4,R=2,numSpires=2 3](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{99FF66}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{N=4}},R=2,L=4]}
+\end{pspicture*}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{006633}},N=5,R=2,L=5,PasS=0.004,numSpires=2 3 4](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{99FF66}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{N=5}},R=2,L=5]}
+\end{pspicture*}
+\end{postscript}
+\end{center}
+
+\begin{lstlisting}
+\psset{unit=0.5}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{006633}},N=4,R=2,numSpires=2 3](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{99FF66}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{N=4}},R=2,L=4]}
+\end{pspicture*}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{006633}},N=5,R=2,L=5,PasS=0.004,numSpires=2 3 4](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{99FF66}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{N=5}},R=2,L=5]}
+\end{pspicture*}
+\end{lstlisting}
+
+
+\clearpage
+\section{The three route options}
+\subsection{The number of field lines}
+
+Due to the symmetry of the problem the number of field lines given
+(\Lkeyword{nL}) option is half the number actually represented with an added line
+identic to the the axis of revolution. We must also add the lines around the turns \Lkeyword{nS},
+these turns can be selected individually \Lkeyword{numSpires}.
+
+
+
+\begin{center}
+\begin{postscript}
+\psset{unit=0.5}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{000099}},N=1,R=2](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{3399FF}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{nL=8}},N=1,R=2]}
+\end{pspicture*}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{000099}},N=1,R=2,nL=12](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{3399FF}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{nL=12}},N=1,R=2]}
+\end{pspicture*}
+\end{postscript}
+\end{center}
+
+\begin{lstlisting}
+\psset{unit=0.5}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{000099}},N=1,R=2](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{3399FF}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{nL=8}},N=1,R=2]}
+\end{pspicture*}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{000099}},N=1,R=2,nL=12](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{3399FF}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{nL=12}},N=1,R=2]}
+\end{pspicture*}
+\end{lstlisting}
+
+\clearpage
+\subsection{The number of points for the path}
+  The plot of field lines is achieved by a numerical method (RK2) and
+follows the step of the route and the number of selected points affect the accuracy of the route,
+as in the two examples below:
+
+
+\begin{center}
+\begin{postscript}
+\psset{unit=0.5}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{660066}},N=2,R=2,L=2,PasB=0.1,nS=0,nL=7,pointsB=100](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{996666}}](-7,7)(7,8)
+\rput(0,7.5){\Cadre{\textcolor{white}{Bobines de Helmholtz}}}
+\psframe*[linecolor={[HTML]{996666}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{PasB=0.1,nL=4,pointsB=100}}]}
+\end{pspicture*}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{660066}},N=2,R=2,L=2,PasB=0.4,nS=0,nL=7,pointsB=100](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{996666}}](-7,7)(7,8)
+\rput(0,7.5){\Cadre{\textcolor{white}{Bobines de Helmholtz}}}
+\psframe*[linecolor={[HTML]{996666}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{PasS=0.4,pointsB=100}}]}
+\end{pspicture*}
+\end{postscript}
+\end{center}
+
+\begin{lstlisting}
+\psset{unit=0.5}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{660066}},N=2,R=2,L=2,PasB=0.1,nS=0,nL=7,pointsB=100](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{996666}}](-7,7)(7,8)
+\rput(0,7.5){\Cadre{\textcolor{white}{Bobines de Helmholtz}}}
+\psframe*[linecolor={[HTML]{996666}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{PasB=0.1,nL=4,pointsB=100}}]}
+\end{pspicture*}
+\begin{pspicture*}[showgrid](-7,-8)(7,8)
+\psmagneticfield[linecolor={[HTML]{660066}},N=2,R=2,L=2,PasB=0.4,nS=0,nL=7,pointsB=100](-7,-8)(7,8)
+\psframe*[linecolor={[HTML]{996666}}](-7,7)(7,8)
+\rput(0,7.5){\Cadre{\textcolor{white}{Bobines de Helmholtz}}}
+\psframe*[linecolor={[HTML]{996666}}](-7,-8)(7,-7)
+\rput(0,-7.5){[\Cadre{\textcolor{white}{PasS=0.4,pointsB=100}}]}
+\end{pspicture*}
+\end{lstlisting}
+
+
+If the defaults do not suit it must be found by testing the
+values that give a correct path.
+
+
+
+\clearpage
+
+\section{The parameter \nxLkeyword{numSpires}}
+\begin{center}
+\begin{postscript}
+\psset{unit=0.5}
+\begin{pspicture*}[showgrid](-8,-10)(8,10)
+\psset{linecolor=blue}
+\psmagneticfield[R=2,L=12,N=8,pointsS=500,nL=14,nS=1,numSpires=1 3 6 8,PasB=0.075](-8,-10)(8,10)
+\psframe*[linecolor={[HTML]{99FF66}}](-8,-10)(8,-9)
+\rput(0,-9.5){[\Cadre{\textcolor{white}{numSpires=1 3 6 8}},R=2,L=14]}
+\multido{\i=0+1}{8}{\rput[l](!6 6 12 7 div \i\space mul sub){\the\multidocount}}
+\end{pspicture*}\quad
+\begin{pspicture*}[showgrid](0,-10)(16,10)
+\psset{linecolor=blue}
+\psmagneticfield[R=2,L=12,N=8,pointsS=500,nL=14,numSpires=,nS=1,PasB=0.075](0,-10)(16,10)
+\psframe*[linecolor={[HTML]{99FF66}}](0,-10)(16,-9)
+\rput(8,-9.5){[\Cadre{\textcolor{white}{numSpires=all}},R=2,L=14]}
+\multido{\i=0+1}{8}{\rput[l](!6 6 12 7 div \i\space mul sub){\the\multidocount}}
+\end{pspicture*}
+\end{postscript}
+\end{center}
+
+
+\begin{lstlisting}
+\psset{unit=0.5}
+\begin{pspicture*}[showgrid](-8,-10)(8,10)
+\psset{linecolor=blue}
+\psmagneticfield[R=2,L=12,N=8,pointsS=500,nL=14,nS=1,numSpires=1 3 6 8,PasB=0.075](-8,-10)(8,10)
+\psframe*[linecolor={[HTML]{99FF66}}](-8,-10)(8,-9)
+\rput(0,-9.5){[\Cadre{\textcolor{white}{numSpires=1 3 6 8}},R=2,L=14]}
+\multido{\i=0+1}{8}{\rput[l](!6 6 12 7 div \i\space mul sub){\the\multidocount}}
+\end{pspicture*}\quad
+\begin{pspicture*}[showgrid](0,-10)(16,10)
+\psset{linecolor=blue}
+\psmagneticfield[R=2,L=12,N=8,pointsS=500,nL=14,numSpires=,nS=1,PasB=0.075](0,-10)(16,10)
+\psframe*[linecolor={[HTML]{99FF66}}](0,-10)(16,-9)
+\rput(8,-9.5){[\Cadre{\textcolor{white}{numSpires=all}},R=2,L=14]}
+\multido{\i=0+1}{8}{\rput[l](!6 6 12 7 div \i\space mul sub){\the\multidocount}}
+\end{pspicture*}
+\end{lstlisting}
+
+\clearpage
+\section{The parameter \nxLkeyword{AntiHelmholtz}}
+\begin{center}
+\begin{postscript}
+\psset{unit=0.75,AntiHelmholtz,N=2,
+  R=2,pointsB=500,pointsS=1000,PasB=0.02,PasS=0.00275,nS=10,
+  nL=2,drawSelf=true,styleSpire=styleSpire,styleCourant=sensCourant}
+\newpsstyle{grille}{subgriddiv=0,gridcolor=blue!50,griddots=10}
+\newpsstyle{cadre}{linecolor=yellow!50}
+\begin{pspicture*}[showgrid](-7,-6)(7,6)
+\psframe*[linecolor={[HTML]{996666}}](-7,6)(7,6)
+\psmagneticfield[linecolor={[HTML]{660066}}]
+\end{pspicture*}
+\end{postscript}
+\end{center}
+
+\begin{lstlisting}
+\psset{unit=0.75,AntiHelmholtz,N=2,
+  R=2,pointsB=500,pointsS=1000,PasB=0.02,PasS=0.00275,nS=10,
+  nL=2,drawSelf=true,styleSpire=styleSpire,styleCourant=sensCourant}
+\newpsstyle{grille}{subgriddiv=0,gridcolor=blue!50,griddots=10}
+\newpsstyle{cadre}{linecolor=yellow!50}
+\begin{pspicture*}[showgrid](-7,-6)(7,6)
+\psframe*[linecolor={[HTML]{996666}}](-7,6)(7,6)
+\psmagneticfield[linecolor={[HTML]{660066}}]
+\end{pspicture*}
+\end{lstlisting}
+
+
+\clearpage
+\section{3D views}
+3D views are possible with the macros
+
+\begin{BDef}
+\Lcs{psmagneticfield}\OptArgs\coord1\coord2\\
+\Lcs{psmagneticfieldThreeD}\OptArgs\coord1\coord2
+\end{BDef}
+
+in which options are settings \Lcs{psmagneticfield} and \verb+(x1,y1)(x2,y2)+
+coordinates of bottom left corner and upper right framework
+is encapsulated as the field map for \Lcs{psframe}. We can use the option
+\Lkeyword{viewpoint} of the \LPack{pst-3d} package to change the view.
+  The options framework are by default, the following:
+\begin{verbatim}
+\newpsstyle{grille}{subgriddiv=0,gridcolor=lightgray,griddots=10}
+\newpsstyle{cadre}{linecolor=green!20}
+\end{verbatim}
+
+In the following example we can see the handling of these two psstyles.
+
+\begin{center}
+\begin{postscript}
+\psset{unit=0.7cm}
+\newpsstyle{grille}{subgriddiv=0,gridcolor=blue!50,griddots=10}
+\newpsstyle{cadre}{linecolor=yellow!50}
+\begin{pspicture}(-7,-6)(7,6)
+\psmagneticfieldThreeD[N=8,R=2,L=8,pointsB=1200,linecolor=blue,pointsS=2000](-7,-6)(7,6)
+\end{pspicture}
+\end{postscript}
+\end{center}
+
+\begin{lstlisting}
+\psset{unit=0.7cm}
+\newpsstyle{grille}{subgriddiv=0,gridcolor=blue!50,griddots=10}
+\newpsstyle{cadre}{linecolor=yellow!50}
+\begin{pspicture}(-7,-6)(7,6)
+\psmagneticfieldThreeD[N=8,R=2,L=8,pointsB=1200,linecolor=blue,pointsS=2000](-7,-6)(7,6)
+\end{pspicture}
+\end{lstlisting}
+
+
+\begin{center}
+\begin{postscript}
+\psset{unit=0.7cm}
+\begin{pspicture}(-7,-6)(7,6)
+\psmagneticfieldThreeD[N=2,R=2,L=2,linecolor=blue](-7,-6)(7,6)
+\ThreeDput{\rput(0,-7){\textbf{Bobines de HELMHOLTZ}}}
+\end{pspicture}
+\end{postscript}
+\end{center}
+
+\begin{lstlisting}
+\psset{unit=0.7cm}
+\begin{pspicture}(-7,-6)(7,6)
+\psmagneticfieldThreeD[N=2,R=2,L=2,linecolor=blue](-7,-6)(7,6)
+\ThreeDput{\rput(0,-7){\textbf{Bobines de HELMHOLTZ}}}
+\end{pspicture}
+\end{lstlisting}
+
+\begin{center}
+\begin{postscript}
+\psset{unit=0.75cm,AntiHelmholtz,N=2,
+  R=2,pointsB=500,pointsS=1000,PasB=0.02,PasS=0.00275,nS=10,
+  nL=2,drawSelf,styleSpire=styleSpire,styleCourant=sensCourant}
+\newpsstyle{grille}{subgriddiv=0,gridcolor=blue!50,griddots=10}
+\newpsstyle{cadre}{linecolor=yellow!50}
+\begin{pspicture}(-7,-6)(7,6)
+\psmagneticfieldThreeD[linecolor={[HTML]{660066}}](-7,-6)(7,6)
+\end{pspicture}
+\end{postscript}
+\end{center}
+
+\begin{lstlisting}
+\psset{unit=0.75cm,AntiHelmholtz,N=2,
+  R=2,pointsB=500,pointsS=1000,PasB=0.02,PasS=0.00275,nS=10,
+  nL=2,drawSelf,styleSpire=styleSpire,styleCourant=sensCourant}
+\newpsstyle{grille}{subgriddiv=0,gridcolor=blue!50,griddots=10}
+\newpsstyle{cadre}{linecolor=yellow!50}
+\begin{pspicture}(-7,-6)(7,6)
+\psmagneticfieldThreeD[linecolor={[HTML]{660066}}](-7,-6)(7,6)
+\end{pspicture}
+\end{lstlisting}
+
+\section{Density plots}
+The optional argument \Lkeyword{StreamDensityPlot} allows to plot the
+magnetic field as a colored stream density. A gray colored output is possioble
+with setting the keyword \Lkeyword{setgray}. 
+
+\begin{center}
+\begin{postscript}
+\begin{pspicture}(-6,-4)(6,4)
+\psmagneticfield[N=3,R=2,L=2,StreamDensityPlot](-6,-4)(6,4)
+\end{pspicture}
+\end{postscript}
+\end{center}
+
+\begin{lstlisting}
+\begin{pspicture}(-6,-4)(6,4)
+\psmagneticfield[N=3,R=2,L=2,StreamDensityPlot](-6,-4)(6,4)
+\end{pspicture}
+\end{lstlisting}
+
+\begin{center}
+\begin{postscript}
+\psset{unit=0.75}
+\begin{pspicture}(-6,-5)(6,5)
+\psmagneticfield[N=2,R=2,L=1,StreamDensityPlot,setgray](-6,-5)(6,5)
+\end{pspicture}
+\end{postscript}
+\end{center}
+
+\begin{lstlisting}
+\psset{unit=0.75}
+\begin{pspicture}(-6,-5)(6,5)
+\psmagneticfield[N=2,R=2,L=1,StreamDensityPlot,setgray](-6,-5)(6,5)
+\end{pspicture}
+\end{lstlisting}
+
+
+\begin{center}
+\begin{postscript}
+\psset{unit=0.75,AntiHelmholtz,
+  R=2,pointsB=500,pointsS=2000,PasB=0.02,PasS=0.00275,nS=10,
+  nL=2,drawSelf=true,styleSpire=styleSpire,styleCourant=sensCourant}
+\begin{pspicture*}(-7,-6)(7,6)
+\psmagneticfield[linecolor={[HTML]{660066}},StreamDensityPlot](-7,-6)(7,6)
+\end{pspicture*}
+\end{postscript}
+\end{center}
+
+
+\begin{lstlisting}
+\psset{unit=0.75,AntiHelmholtz,
+  R=2,pointsB=500,pointsS=2000,PasB=0.02,PasS=0.00275,nS=10,
+  nL=2,drawSelf=true,styleSpire=styleSpire,styleCourant=sensCourant}
+\begin{pspicture*}(-7,-6)(7,6)
+\psmagneticfield[linecolor={[HTML]{660066}},StreamDensityPlot](-7,-6)(7,6)
+\end{pspicture*}
+\end{lstlisting}
+
+
+\clearpage
+\section{Stream density}
+
+\begin{BDef}
+\Lcs{psmagneticfield}\OptArgs\coord1\coord2\\
+\Lcs{psmagneticfieldThreeD}\OptArgs\coord1\coord2
+\end{BDef}
+
+
+\begin{center}
+\psset{unit=0.75cm}
+\begin{pspicture*}(-7,-6)(7,6)
+\psmagneticfieldDensity[N=4,R=2,L=3]
+\end{pspicture*}
+\end{center}
+
+\begin{lstlisting}
+\psset{unit=0.75cm}
+\begin{pspicture*}(-7,-6)(7,6)
+\psmagneticfieldDensity[N=4,R=2,L=3]
+\end{pspicture*}
+\end{lstlisting}
+
+\begin{center}
+\psset{unit=0.75cm}
+\begin{pspicture*}[showgrid](-4,-3)(4,3)
+\psmagneticfieldDensity[N=2,R=2,L=2]
+\end{pspicture*}
+\end{center}
+
+\begin{lstlisting}
+\psset{unit=0.75cm}
+\begin{pspicture*}[showgrid](-4,-3)(4,3)
+\psmagneticfieldDensity[N=2,R=2,L=2]
+\end{pspicture*}
+\end{lstlisting}
+
+
+\clearpage
+\section{List of all optional arguments for \texttt{pst-magneticfield}}
+
+\xkvview{family=pst-magneticfield,columns={key,type,default}}
+
+\nocite{*}
+\bgroup
+\raggedright
+\bibliographystyle{plain}
+\bibliography{pst-magneticfield-doc}
+\egroup
+
+
+\printindex
+
+
+
+
+\end{document}

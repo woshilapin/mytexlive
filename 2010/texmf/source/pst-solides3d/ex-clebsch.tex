@@ -1,0 +1,30 @@
+\section {Surface de Clebsch}
+\bgroup
+\definecolor{Tan}{cmyk}{0.14,0.42,0.56,0}
+
+\psset{unit=0.7}
+\psset{lightsrc=50 10 30}
+
+
+\begin{center}
+\begin{pspicture}(-6,-6)(6,6)
+\psset{SphericalCoor,viewpoint=100 45 45,Decran=50}
+\psSolid[object=grille,base=-7 7 -7 7,action=draw*,linecolor=red](0,0,-7)
+\psSolid[object=new,RotX=0,RotY=0,RotZ=0,incolor=yellow!50,hue=0 0.7 0.5 1,hollow,linewidth=0.5\pslinewidth,
+        sommets= (sommets_clebsch.dat) run,
+        faces={(faces_clebsch.dat) run}]%
+\gridIIID[Zmin=-7,Zmax=7](-7,7)(-7,7)
+\end{pspicture}
+\psset{lightsrc=62 35 -70}
+\begin{pspicture}(-6,-6)(6,6)
+\psset{SphericalCoor,viewpoint=100 30 -45,Decran=50}
+\psSolid[object=grille,base=-7 7 -7 7,action=draw,ngrid=4,linecolor=red](0,0,-7)
+\psSolid[object=new,RotX=0,RotY=-30,RotZ=0,incolor=yellow!50,hue=0 0.7 0.5 1,hollow,linewidth=0.5\pslinewidth,
+    sommets= (sommets_clebsch.dat) run,
+    faces={(faces_clebsch.dat) run}]%
+\psSolid[object=parallelepiped,a=14,b=14,c=14,action=draw](0,0,0)
+\end{pspicture}
+\end{center}
+
+
+\egroup

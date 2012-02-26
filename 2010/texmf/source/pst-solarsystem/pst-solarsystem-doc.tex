@@ -1,0 +1,94 @@
+%% $Id: pst-solarsystem-doc.tex 620 2012-01-01 14:09:57Z herbert $
+\documentclass[11pt,english,BCOR10mm,DIV12,bibliography=totoc,parskip=false,
+   smallheadings, headexclude,footexclude,oneside]{pst-doc}
+\usepackage[latin1]{inputenc}
+\usepackage{pst-solarsystem}
+\let\pstFV\fileversion
+\usepackage{pstricks-add}
+\renewcommand\bgImage{\resizebox{0.6\linewidth}{!}{\SolarSystem[Day=1,Month=1,Year=2012,Hour=12,viewpoint=1 -1 2]}}
+
+\lstset{language=PSTricks,
+    morekeywords={psGammaDist,psChiIIDist,psTDist,psFDist,psBetaDist,psPlotImpl},basicstyle=\footnotesize\ttfamily}
+%
+\begin{document}
+
+\title{\texttt{pst-solarsystem}}
+\subtitle{Position of the visible planets, projected on the plane of the ecliptic; v.\pstFV}
+\author{Manuel Luque \\Herbert Vo\ss}
+\docauthor{}
+\date{\today}
+\maketitle
+
+\tableofcontents
+
+\vspace{2cm}
+For the method of calculation, I was guided by:
+\begin{itemize}
+\item that given by \textit{Jean Meeus} astronomical calculations in the book for use by
+published by the Amateur Astronomical Society of France.
+\item and that of Guy Serane in \textit{Astronomy \& PC published} by Wiley \& Sons.
+\end{itemize}
+
+As we can not represent all the planets in the real proportions, only Mercury, Venus, Earth and Mars are the proportions of the orbits and
+their relative sizes observed. Saturn and Jupiter are in the right direction, but
+obviously not at the right distance.
+
+The orbits are shown in solid lines for the portion above the ecliptic
+and dashed for the portion located below.
+
+We can compare the view obtained with the following representation:
+
+\url{http://users.skynet.be/fa274406/rubriques/live/orbites/orbites.htm}
+
+The use of the command is very simple, just specify the date of observation
+with the following parameters, for example:
+\begin{verbatim}
+\SolarSystem[Day=31,Month=06,Year=2001,Hour=23,Minute=59,Second=59]
+\end{verbatim}
+\xLkeyword{Day}\xLkeyword{Month}\xLkeyword{Year}\xLkeyword{Hour}\xLkeyword{Minute}\xLkeyword{Second}
+
+By default, if no parameter is specified, \Lcs{SolarSystem} gives the configuration
+day 0 hours to compile.
+
+The \Lkeyword{values} is enabled by default. It displays the values of
+longitude, latitude, and the distance in astronomical units.
+
+The accuracy of the calculations is about 0.1 to 0.3 degrees (comparing to ephemeris
+the Bureau des Longitudes), which is more than enough for a performance
+graph.
+
+\url{http://www.imcce.fr/fr/ephemerides/formulaire/form_ephepos.php}
+\begin{center}
+\SolarSystem
+
+\SolarSystem[Day=30,Month=06,Year=2001,Hour=23,Minute=59,Second=59,viewpoint=1 -1 2,values=false]
+\end{center}
+
+
+\begin{verbatim}
+\SolarSystem[Day=30,Month=06,Year=2001,
+             Hour=23,Minute=59,Second=59,
+             viewpoint=1 -1 2,values=false]
+\end{verbatim}
+
+
+\clearpage
+\section{List of all optional arguments for \texttt{pst-solarsystem}}
+
+\xkvview{family=pst-solarsystem,columns={key,type,default}}
+
+
+
+
+\bgroup
+\raggedright
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{pst-solarsystem-doc}
+\egroup
+
+\printindex
+
+
+
+\end{document} 

@@ -1,0 +1,10 @@
+pst-am: modulation and demodulation
+
+pst-am.sty     - The LaTeX file
+pst-am-doc.pdf - The documentation
+pst-am-doc.tex - The documentation, source
+pst-am-doc.bib - The documentation, bibfile
+
+
+--
+Herbert Voss 2012-12-08

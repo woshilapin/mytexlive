@@ -1,0 +1,589 @@
+
+\documentclass[12pt]{article}
+\usepackage{pstricks,pst-xkey,pst-asr}
+
+\textwidth=6in
+\oddsidemargin=.25in
+\evensidemargin=.25in
+\rightskip=0pt plus 2em
+
+\newpsstyle{bigsyls}{extragap=.6ex,unitxgap=true,xgap=3.5ex,
+   ts=0pt ($\times$),sy=5.5ex ($\sigma$) .7ex,ph=-4.5ex (pf)}
+\newpsstyle{dotted}{linestyle=dotted,linewidth=1.2pt,dotsep=1.6pt}
+\def\feat#1{$\rm [#1]$}
+\def\crossing{\pscircle[linestyle=solid,linewidth=.5pt](0,0){.7ex}}%
+
+\newdimen\dimpuba
+\newdimen\dimpubb
+\newcount\exno
+\exno=0
+\def\ex{%
+   \vskip2.5em
+   \allowbreak\noindent
+   \global\advance\exno by 1
+   \bgroup
+   \parindent=0pt (\the\exno)\quad
+}
+\def\xe{\par\egroup}
+\def\TO{\quad$\rightarrow$\quad}
+\tiershortcuts
+
+\begin{document}
+
+\centerline{\huge Examples}
+
+\vskip1.5em
+
+\noindent The source file for this pdf file is {\it
+pst-asr-examples.tex}.  It is written in very simple LaTex, using
+no packages other than those that are absolutely necessary for
+illustrating {\it pst-asr\/}: {\it pstricks}, {\it pst-xkey}, and
+{\it pst-asr} itself.  The hope is that potential {\it pst-asr\/}
+users can easily experiment with the various examples and use
+various bits and pieces as models for there own work.
+
+Most of the examples in {\it pst-asr-doc.pdf\/} are given here,
+in the order in which they appear in that document.  The
+numbering is sequential and differs from the numbering in that
+document.
+
+\ex
+\asr logwhin\endasr
+\TO
+\asr \3logwhin\endasr
+\bigskip
+
+\hfill \TO
+\asr \3log\2wVhin\endasr
+\TO
+\asr \3log\2wV\3hin\endasr \kern1em
+\xe
+
+\ex
+\asr \4ki:p\endasr
+\xe
+
+\begingroup % parser and syllable examples
+\asrsetkeys{phB=!-1ex,syB=!1ex,xgap=!1ex}
+
+\ex
+\asr[tssym=$\bullet$] ka:t\endasr
+\xe
+
+\ex
+\asr[tssym=$\bullet$,everyph=\it] ka:t\endasr
+\xe
+
+\ex
+\asr {k$\rm ^h$}a:t\endasr
+\xe
+
+\ex
+\asr k|\pscircle(\xpos,.55ex){1.5ex}|amba\endasr
+\xe
+
+\ex
+\def\goop{\pscircle(\xpos,.55ex){1.5ex}}%
+\asr k\goop amba\endasr
+\qquad
+(alternate code for example above)
+\xe
+
+\ex
+\def\kh{k$\rm ^h$}%
+\asr {\kh}amba\endasr
+\qquad
+(alternate code for earlier example)
+\xe
+
+\ex
+\def\goop{\pscircle(\xpos,.55ex){1.5ex}}%
+\asr kupa:<\goop nu\endasr
+\xe
+
+% syllables
+
+\ex
+\asrsetkeys{phB=!-1ex,syB=!1ex,xgap=!1ex}
+\asr du|\varsyl[linestyle=dashed]{1.5}{0,1,2}|man\endasr
+\xe
+
+\ex
+\asr |\varsyl[sysym=\monosysym]{.5}{0,1}|du
+   |\varsyl[sysym=\bisysym]{1}{0,1,2}|man\endasr
+\xe
+
+\ex
+\asr |\qsyl(\monosysym)2|du|\qsyl(\bisysym)3|man\endasr
+\qquad (alternate code for example above)
+\xe
+
+\ex
+\asr |\qsyl2|du|\qsyl3|man\endasr
+\xe
+
+\ex
+\asr \3kat\3man\2du\endasr
+\xe
+
+\ex
+\newtier{nuc}
+\tiershortcuts
+\asr[style=bigsyls,nuc=(sy) 1em ($\nu$)]
+|\varsyl{.4}{0,1,2}|kat|\varsyl{.4}{0,1,2}|man
+   |\varsyl{-.1}{0,1}|du|
+\@[.2](1,nuc){$\nu$}\-(1,ts)
+\@[.2](4,nuc){$\nu$}\-(4,ts)
+\@[.2](7,nuc){$\nu$}\-(7,ts)
+|\endasr
+\xe
+
+\endgroup % end parser and syllable examples
+
+\ex \asr[style=bigsyls]
+|\qsyl(k)1 \X \varph{a}1 \qsyl(t)1 \X \varph{}{-1} \qsyl(b)1 \X
+\endasr
+\xe
+
+\ex \hskip-1em \hfil
+\small
+\def\\#1#2{$\left[\matrix{\rm #1cons\hfill\cr
+   \rm #2sonor\cr}\right]$}%
+\psset{tssym=Oral,sysym=\\+-,unit=2em,xgap=4.2 em,
+   sy=1.5 (\\++),ts=0 (O),ph=-1.2 (C),asrB=\ASRsyB}
+\newtier{voice,nasal,low,back}
+\asrsetkeys{voice=(ph) -1.4 ([),nasal=(ph) -1 ([),
+   low=(ph) -2 ([),back=(ph) -2.3 ([)}
+\DefList{\lowoff{-.5},\backoff{.4}}
+\def\PharGlot{\varph[tssym=Phar]{Glottal}0}%
+\def\PharSP{\varph[tssym=Phar]{SP}0}%
+\asr
+\2{Coronal}\PharGlot
+\2\PharGlot{Coronal}
+|\qsyl(\\-+)1|{Dorsal}
+|\qsyl(\\++)2|\PharSP{Labial}:%
+<\2\PharGlot
+|\@(1.5,voice){\feat{-voiced}}
+   \-(1,ph)\-(2,ph)
+\@(8,voice){\feat{-voiced}}
+   \-(8,ph)
+\@(5,nasal){\feat{+nasal}}
+   \-(5,ph)
+\@[\lowoff](4,low){\feat{+low}}
+   \-(4,ph)
+\@[\backoff](4,back){\feat{-back}}
+   \-(4,ph)
+\endasr
+\xe
+
+\ex
+\asr[xgap=2em,syB=2.5em] hu'+ari|
+\@(1,sy){L}
+   \-(1,ts)
+\@(2,sy){H}
+   \-(2,ts)
+\@(4,sy){L}
+   \-(4,ts)
+|\endasr
+\TO
+\asr[xgap=2em,syB=2.5em] hwari|
+\@(1,sy){L}
+   \-[xed=true,xedratio=.4](1,ts)\-[style=dotted](2,ts)
+\@(2,sy){H}
+   \-(2,ts)
+\@(4,sy){L}
+   \-(4,ts)
+|\endasr
+\xe
+
+\ex
+\asr[xgap=2em,syB=2.5em]
+\X\X\X\X\X|\@(1,sy){L}\-[xed=true](0,ts)\-[xed=true](4,ts)
+|\endasr
+\xe
+
+\ex
+\newtier{softpal,ant,dist,nasal}%
+\newpsstyle{crossing}{xed=true,xedtype=\xedcirc,style=dotted}
+\tiershortcuts
+\psset{xgap=1.5in,yunit=3em,ts=0 (Pg),sy=1 ([),
+   ph=-1 (Cg),softpal=.3 (Sg),
+   nasal=-.4 ([),ant=-2 ([),dist=-3 ([),
+   tssym=Place,sysym=\feat{+cons},everyph=Coronal}
+\DefList{\softpalA{2.5},\antoffset{-.22},\distoffset{.36}}
+%
+\quad \asr \1{}\1{}\1{}|
+% softpal features
+\@(\softpalA,softpal){Soft Palate}
+   \-(2,sy)
+\@(\softpalA,nasal){\feat{+nas}}
+   \-(\softpalA,softpal)
+% ant features
+\@(\antoffset,ant){\feat{-ant}}
+   \-(0,ph)
+   \-[style=crossing](2,ph)
+\@[1](\antoffset,ant){\feat{\alpha ant}}
+   \-(1,ph)
+\@[2](\antoffset,ant){\feat{-ant}}
+   \-(2,ph)
+% dist features
+\@(\distoffset,dist){\feat{-dist}}
+   \-(0,ph)
+   \-[style=crossing](2,ph)
+\@[1](\distoffset,dist){\feat{\beta dist}}
+   \-(1,ph)
+\@[2](\distoffset,dist){\feat{+dist}}
+   \-(2,ph)
+|\endasr
+\xe
+
+\ex
+\newtier{dorsal,high,back,low,labial,round}
+\psset{xgap=1.5in,yunit=3em,ts=0 (Pg),sy=1 ((),dorsal=-1 (Dg),
+   high=-2 ((),back=-2.6 ((),low=-3.2 ((),
+   labial=-4 (Lg),round=-5 ((),
+   sysym=\feat{-cons},tssym=Place}
+\DefList{\dorsalA{.4},\dorsalB{1.6},\highoffset{-.2},%
+   \backoffsetA{.1},\backoffsetB{-.2},\lowoffsetA{.5},%
+   \lowoffsetB{.3},\labialA{-.2},\labialB{2.2}}
+\asr \1\X\X\1\X
+|\@(1,sy){\feat{+cons}}
+   \-(1,ts)
+\@(\dorsalA,dorsal){Dorsal}\-(0,ts)
+\@(\dorsalB,dorsal){Dorsal}\-(2,ts)
+\@[\highoffset](\dorsalA,high){\feat{-high}}
+   \-(\dorsalA,dorsal)
+   \-(\dorsalB,dorsal)
+\@[\backoffsetA](\dorsalA,back){\feat{+back}}
+   \-(\dorsalA,dorsal)
+   \-[style=dotted](\dorsalB,dorsal)
+\@[\backoffsetB](\dorsalB,back){\feat{+back}}
+   \-[xed=true](\dorsalB,dorsal)
+\@[\lowoffsetA](\dorsalA,low){\feat{-low}}
+   \-(\dorsalA,dorsal)
+   \-[style=dotted](\dorsalB,dorsal)
+\@[\lowoffsetB](\dorsalB,low){\feat{+low}}
+   \-[xed=true](\dorsalB,dorsal)
+\@(\labialA,labial){Labial}
+   \-(0,ts)
+\@(\labialB,labial){Labial}
+   \-(2,ts)
+\@(\labialA,round){\feat{+round}}
+   \-(\labialA,labial)
+   \-[style=dotted](\labialB,labial)
+\@(\labialB,round){\feat{-round}}
+   \-[xed=true](\labialB,labial)
+\endasr
+\xe
+
+\ex
+\DefList{\syloffA{.4},\syloffB{-.1},\nucoff{.2}}
+\asr[style=bigsyls]
+|\varsyl{\syloffA}{0,1,2}|kat
+|\varsyl{\syloffA}{0,1,2}|man
+|\varsyl{\syloffB}{0,1}|du
+|\asrsetkeys{syB=!2.5ex,sysym=$\nu$}
+\setxpos1
+\varsyl{\nucoff}{0}
+\stepxpos3
+\varsyl{\nucoff}{0}
+\stepxpos3
+\varsyl{\nucoff}{0}
+\endasr
+\qquad (alternate code for earlier example)
+\xe
+
+\ex
+\asr[ts=0 (x),sy=1.5 ($*$),ph=-1.6 (C),
+   xgap=1.2em,syB=3.2ex,sysym=$*$]
+|\def\({\tierput[-.7](\xpos,sy){(}}%
+\def\.{{\stepxpos{-.5}\tierput(\xpos,ts){\bf .}}}%
+|C\(\1V\.C\1V\.C\1V\.C\(\1VX\.C\1V\.C\1V\.
+   C\(\1VX\.C\1V\.C\1V\.C\1V\.C\1V
+|\LevelsIncrement
+      \setxpos1
+      \1\(
+      \stepxpos6
+      \1
+      \stepxpos7
+      \1
+   \LevelsIncrement
+      \setxpos1
+      \1
+\endasr
+\xe
+
+\ex
+\asr[unit=3.6ex,yunit=1.3,ts=0 ($\times$),sy=1 ($\sigma$),xgap=1]
+\1\X\2\X\X\2\X\X\1\X\2\X\X\1\X\1\X\2\X\X
+|\dput[Bl](12.5,\ASRtsB){syllable terminal}
+\dput[Bl](12.5,\ASRsyB){syllable}
+\LevelsIncrement
+\asrsetkeys{sysym=Ft,sy=* (F)}
+   \setxpos0
+   \varsyl{.75}{0,1.5}
+   \varsyl{4.25}{3.5,5}
+   \varsyl{7.25}{6.5,8}
+   \varsyl{9.75}{9,10.5}
+   \dput[Bl](12.5,\ASRsyB){foot}
+\LevelsIncrement
+   \asrsetkeys{sysym=Wd,tsht=!.3ex}
+   \varsyl{2.5}{.75,4.25}
+   \varsyl{8.5}{7.25,9.75}
+   \dput[Bl](12,\ASRsyB){Prosodic word}
+\LevelsIncrement
+   \asrsetkeys{sysym=PhP}
+   \varsyl{5.5}{2.5,8.5}
+   \dput[Bl](12,\ASRsyB){Phonological phrase}
+\endasr
+\xe
+
+\ex \quad
+\asr[reptype=nots] \3kat\3man\3du:\endasr
+\qquad versus\qquad
+\asr[reptype=normal] \3kat\3man\3du:\endasr
+\xe
+
+\ex \quad \vtop{%
+\newpsstyle{tonedot}{linestyle=dotted,dotsep=1.2pt,linewidth=1pt}
+\def\H{\varsyl[sysym=H]0{0}}%
+\asrsetkeys{xgap=1em,sysym=L,syB=2.3em,reptype=nots}
+\halign{#\hfil&& \hskip3em #\hfil\cr
+\asr c\H ed\1e{$+$}\H ar\1i\endasr&
+\asr h\1u{$+$}\H ar\1i\endasr& underlying\cr
+\noalign{\bigskip}
+%
+\asr c\H ed{$+$}\H ar\1i
+   |\tierput(2.5,sy){L}\endasr&
+\asr hw{$+$}\H ar\1i
+   |\tierput(1,sy){L}\endasr& syncope/glide formation\cr
+\noalign{\bigskip}
+%
+\asr c\H ed{$+$}\H ar\1i
+   |\tierput(2.5,sy){L}\assoc[style=tonedot](4,ts)\endasr&
+\asr hw{$+$}\H ar\1i
+   |\tierput(1,sy){L}\assoc[style=tonedot](3,ts)\endasr&
+   reassociation\cr
+}}\xe
+
+\begingroup % DM representations
+\asrsetkeys{reptype=DM,
+   ph=-2.3em (ky),ts=0 (Sy),mlevelsep=.8em,
+   lbstyle=normal,rbstyle=normal,xgap=1.4ex}
+
+\ex
+\vtop{%
+\halign{#\hfil&&\hskip1.7em #\hfil\cr
+a. \ Derivational suffix& b. \ /i\~n/-Adjunction&
+   c. \ /zi\~n/-Adjunction\cr
+\noalign{\medskip}
+\hfil
+\asr
+{Stem,amig}{Suffix,on}{n,}{\#,o}|
+\merge{A1,A2,B1}{Suffix}%
+\merge{B1,A3,C1}{n}%
+\merge{C1,A4,D1}{\#}%
+\endasr
+&
+\asr
+{Stem,amig}{n$_1$}{Dim,i\~n}{n$_2$}{\#,o}|
+\merge{A1,A2,B1}{n$_1$}
+\merge{A3,A4,B2}{n$_2$}
+\merge{B1,B2,C1}{n$_1$}
+\merge{C1,A5,D1}[C]{\#}
+\endasr
+&
+\asr
+{Stem,amig}{n}{\#$_1$,o}{Dim,zi\~n}{n}{\#$_2$,o}|
+\merge{A1,A2,B1}{n}%
+\merge{B1,A3,C1}{\#$_1$}%
+\merge{A4,A5,B2}{n}%
+\merge{B2,A6,C2}{\#$_2$}%
+\merge{C1,C2,D1}{\#$_1$}%
+\endasr
+\cr}}\xe
+
+\ex
+\psset{xgap=1.25ex,yunit=.6em,realstyle=spell,
+   lbstyle=normal,rbstyle=head}
+\vtop{%
+\halign{#\hfil&&\hskip1.7em #\hfil\cr
+a. \ Derivational suffix& b. \ /i\~n/-Adjunction&
+   c. \ /zi\~n/-Adjunction\cr
+\noalign{\medskip}
+\hfil
+\asr
+{\sc AMIG,amig}{\sc MOD,on}{n,}{ \#,o}|
+\merge{A1,A2,B1}
+\merge{B1,A3,C1}
+\merge{C1,A4,D}
+\endasr
+&
+\asr
+{\sc AMIG,amig}{n}{Dim,i\~n}{n}{ \#,o}|
+\merge{A1,A2,B1}
+\merge{A3,A4,B2}
+\merge[lbstyle=head,rbstyle=adjunct]{B1,B2,C1}
+\merge{C1,A5,D}
+\endasr
+&
+\asr
+{\sc AMIG,amig}{n}{ \# ,o}{Dim,zi\~n}{n}{ \#,o}|
+\merge{A1,A2,B1}
+\merge{B1,A3,C1}
+\merge{A4,A5,B2}
+\merge{B2,A6,C2}
+\merge[lbstyle=head,rbstyle=adjunct,mslope=.6]{C1,C2,D}
+\endasr
+\cr}}\xe
+
+\endgroup % DM representations
+
+
+
+
+%%%%%%
+\def\skewx(#1,#2)#3{%
+   \pssetxlength\dimpuba{#1}%
+   \pssetylength\dimpubb{#2}%
+   \advance\dimpuba by \slantratio\dimpubb
+   \edef#3{\the\dimpuba}%
+}
+\def\skewline(#1,#2)#3(#4,#5){%
+   \skewx(#1,#2)\tempa
+   \skewx(#4,#5)\tempb
+   \psline(\tempa,#2)(\tempb,#5)%
+}
+\def\skewdput#1(#2,#3){%
+   \skewx(#2,#3)\tempa
+   \dput#1(\tempa,#3)%
+}
+
+\ex
+\newpsstyle{pageborder}{linestyle=dashed,linewidth=.3pt,
+   dash=2pt 1.8pt}
+\def\ts{\psframebox*[framesep=0pt]{$\times$}}%
+\psset{unit=4ex,xgap=1,ts=-.5ex ($\times$),ph=-1.3 (e) .5pt,
+   sy=1.5 (s),tssym=\ts,asrB=1.5}
+\DefList{\vpagetop{2.5},\hpagebot{-1.7},\slantratio{.9}}
+\asr |\psframe[style=pageborder](-1,0)(5,\vpagetop)|
+\X\X\X\X\X
+|\skewx(-1,\hpagebot)\tempa
+\skewx(5,\hpagebot)\tempb
+\psline[style=pageborder]
+   (-1,0)(\tempa,\hpagebot)(\tempb,\hpagebot)(5,0)
+\skewline(1.15,\ASRtsb)(2,\ASRpht)
+\skewline(3,\ASRtsb)(2,\ASRpht)
+\skewdput[B](2,\ASRphB){\bf a}
+\skewdput(-1,\hpagebot){}
+\@(0,sy){\bf k}\-(0,ts)
+\@(2,sy){\bf t}\-(2,ts)
+\@(4,sy){\bf b}\-(4,ts)
+\dput(0,\vpagetop){}
+\endasr
+\xe
+
+\ex
+\DefList{\hioff{.4},\upoff{-.2}}
+\def\\#1{$\scriptstyle\rm #1$}%
+\asr[unit=2em,xgap=5em,ts=0 ($\bullet$) 1ex 0,tssym=$\bullet$,
+   phB=-1,syB=\ASRtst]
+\X\X\X
+|\@[\upoff](0,ph){\\{+upper}}
+   \-(0,ts)
+   \-[style=dotted](1,ts)
+\@[\upoff](1,ph)
+   {\\{-upper}}
+   \-[xed=true,xedratio=.55](1,ts)
+\@[\upoff](2,ph){\\{+upper}}
+   \-(2,ts)
+\asrsetkeys{phB=!-1}
+\setxpos0
+\varph{\\{-hi}}{\hioff}
+\varph{\\{+hi}}{\hioff}
+\varph{\\{-hi}}{\hioff}
+\@(0,sy){H}
+\@(1,sy){L}
+\@(2,sy){H}
+\endasr
+\xe
+
+\ex
+\newtier{nuclear,rhyme}
+\psset{xgap=2em,yunit=1.8em,phB=-1,syB=3.5,nuclear=1 (N),rhyme=2.2 (R)}
+\DefList{\sypos{2.2},\rhymepos{3.1}}
+\asr |\varsyl{\sypos}{0,1}|
+dri:m
+|\@(2.5,nuclear){N}
+   \-(2,ts)
+   \-(3,ts)
+\@(\rhymepos,rhyme){R}
+   \-(\sypos,sy)
+   \-(2.5,nuclear)
+   \-(4,ts)
+\endasr
+\xe
+
+\ex
+\newtier{nuclear,rhyme,coda,onset}
+\psset{xgap=2.5em,yunit=2em,
+   phB=-1,nuclear=.9 (lg),coda=1.2 (dg),rhyme=2.3 (hy),
+   onset=1.8 (tg),syB=3.5}
+\DefList{\onsetpos{.5},\nuclearpos{2.5},\rhymepos{3.25}}
+\asr
+dri:m
+|\@(\nuclearpos,nuclear){nuclear}
+   \-(2,ts)
+   \-(3,ts)
+\@(4,coda){coda}
+   \-(4,ts)
+\@(\onsetpos,onset){onset}
+   \-(0,ts)
+   \-(1,ts)
+\@(\rhymepos,rhyme){rhyme}
+   \-(4,coda)
+   \-(\nuclearpos,nuclear)
+\@(2,sy){$\sigma$}
+   \-(\onsetpos,onset)
+   \-(\rhymepos,rhyme)
+|\endasr
+\xe
+
+\ex
+\def\XS{\bare{$\acute\omega$}}%
+\def\JunctureChoose#1{\ifx#1-\hbox{-}\else #1\fi}%
+\asrsetkeys{tssym=$\omega$,xgap=1.3em,phantomjunctures=true}
+a.\quad
+\vtop{\openup1ex
+\halign{#\hfil\cr
+\asr \X\X\X\X\endasr \cr
+\asr '(\XS\X\X\X\endasr \cr
+\asr '(\XS\X')\X\X\endasr \cr
+\asr '(\XS\X')\XS')\X\endasr \cr
+}}
+\qquad
+b.\quad
+\vtop{\openup1ex
+\halign{#\hfil\cr
+\asr \X\X\X'-\X\endasr \cr
+\asr '(\XS\X\X'-\X\endasr \cr
+\asr '(\XS\X')\X'-\X\endasr \cr
+}}
+\qquad
+c.\quad
+\vtop{\openup1ex
+\halign{#\hfil\cr
+\asr \X\X\X\X'-\X\endasr \cr
+\asr '(\XS\X\X\X'-\X\endasr \cr
+\asr '(\XS\X')\X\X'-\X\endasr \cr
+\asr '(\XS\X')\XS')\X'-\X\endasr \cr
+}}
+\xe
+
+\end{document}
+
+
+
+
+
+

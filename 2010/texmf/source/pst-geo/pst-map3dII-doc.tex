@@ -1,0 +1,276 @@
+%-------------------------------------------------------------------
+%   doc-pst-map3dII.tex    Dec.22,2003 - rev.02  by  M. Luque, G. Matarazzo
+%-------------------------------------------------------------------
+\documentclass[a4paper]{article}
+\usepackage{pstricks,pst-map3dII,url}
+\psset{path=../dataII,level=50}
+\usepackage[francais]{babel}
+\usepackage[ansinew]{inputenc}%
+ \title{The \PstMapThreeDIIPackage{} package\\A PSTricks package for Geographical Projections}
+ \author{Manuel \textsc{Luque}
+         \mbox{\texttt{<Mluque5130@aol.com>}}\\
+         and\\
+         Giuseppe \textsc{Matarazzo} \mbox{\texttt{<joematara@hotmail.com>}}}
+ \date{Version 0.2\\ December 20, 2003\\
+       {\small Documentation revised November 11, 2005 by hv}}
+
+\usepackage{ragged2e,xspace}
+\def\PST{\texttt{PSTricks}\xspace}
+\def\PS{\texttt{PostScript}\xspace}
+
+\newcommand{\PstMapThreeDIIPackage}{`\textsf{pst-map3dII}'}
+\newcommand\Parameter[1]{\colorbox{black}{\textcolor{white}{#1}}}
+\begin{document}
+ \maketitle
+ \begin{abstract}
+ Dans la continuité de \textsf{pst-map2dII}, cette solution se propose
+d'utiliser la base de données géographiques : \textsf{CIA World DataBank II}, que l'on trouvera sur
+\url{http://www.evl.uic.edu/pape/data/WDB/} pour dessiner la
+mappemonde en 3D.
+
+Comme nous l'avions déjà signalé dans le précédent package et si vous ne l'avez pas fait, il faudra récupérera sur ce
+site toutes les données qui pèsent, compressées au format
+\textsf{tgz},  30~Mo et 121~Mo une fois décompactées. Cela donne
+une finesse de tracé exceptionnelle !
+
+\'Evidemment le temps de calcul est proportionnel à la taille des
+données à traiter. Cependant des options permettent de choisir la
+représentation d'un continent ou plusieurs. Un ordinateur puissant
+avec beaucoup de mémoire vive est donc souhaitable : pour un travail confortable 512~Mb semble l'idéal. Cependant si
+on se limite au dessin de certaines parties du monde, le temps de
+calcul est très raisonnable et une mémoire réduite suffisante.
+ \end{abstract}
+
+ \tableofcontents
+
+\section{La mise en forme des données}
+Pour faciliter le travail de PostScript et diminuer le temps de
+calcul les données europe-cil.txt etc. doivent être très
+légèrement adaptées avec un éditeur de texte acceptant les
+fichiers lourds.
+
+Tous les lignes \textsf{segment ...} doivent être remplacées par :
+
+\textsf{][\% segment...}.
+
+Pour la clarté, si l'éditeur le permet
+on insérera un saut de ligne entre les deux crochets \textsf{] [}.
+On modifiera le début et la fin du fichier ainsi obtenu plaçant au
+début, à la place du premier crochet~] :
+
+\textsf{/europe-cil [}
+
+et à la fin, on rajoutera :
+
+\textsf{] ] def}.
+
+On enregistrera le fichier sous le nom \textsf{europe-cil.dat}.
+
+Cet exemple valable pour le fichier \textsf{europe-cil.txt} doit
+être répété et adapté, en modifiant les noms, à tous les autres
+fichiers.
+
+Giuseppe Matarazzo a mis au point un programme permettant de faire
+ce travail automatiquement, il fait partie de la distribution (en cas de problèmes veuillez le contacter).
+
+\section{Un exemple : la région méditerranéenne}
+Elle s'obtient par la commande :
+\begin{verbatim}
+\WorldMapThreeDII[PHI=40,THETA=15,Decran=80,increment=2,%
+                asia=true,africa=true,namer=false,samer=false]%
+\end{verbatim}
+
+Dans laquelle \textsf{PHI=40,THETA=15} fixent en latitude et longitude la
+position du point de vue : sur la carte le point de coordonnées
+géographiques correspondantes sera au centre ; il est nécessaire cependant, que les coordonnées de
+l'environnement \verb+\begin{pspicture}*(-9,-4)(9,4)+ possèdent une symétrie
+centrale. \textsf{Decran=80} fixe la distance de l'écran de projection de
+l'image vue, plus cette distance sera grande et plus l'image obtenue (plus
+l'effet de zoom) sera grande.
+
+\textsf{asia=true,africa=true,namer=false,samer=false} indique les régions
+qui seront ou non représentées, \textsf{europe=true} y est par défaut.
+
+\textsf{increment=2} représente l'écart angulaire, en degrés, entre deux
+parallèles ou deux méridiens. Les explications concernant ces paramètres
+vont être développées dans les exemples suivants, ainsi que celles d'autres
+paramètres.
+
+\makebox[\textwidth]{%
+\begin{pspicture*}(-9,-4)(9,4)
+\WorldMapThreeDII[PHI=35,THETA=15,Decran=80,city=true,%
+    borders=true,asia=true,
+    africa=true,rivers=false,%
+    linewidth=0.5\pslinewidth,increment=5]%
+\end{pspicture*}}
+
+\section{Les paramètres et les options}
+\subsection{Les paramètres}
+\begin{itemize}
+\item \Parameter{PHI=49} : latitude du point de vue.
+\item \Parameter{THETA=0} : longitude du point de vue.
+\item \Parameter{Dobs=20} : distance de l'observateur par rapport au centre de la sphère.
+\item \Parameter{Decran=25} : distance de l'écran de projection par rapport à l'observateur.
+\item \Parameter{Radius=5} : rayon de la sphère.
+\item \Parameter{increment=10} : écart angulaire, en degrés, entre deux
+parallèles ou deux méridiens.
+\item \Parameter{RotX=0} : on fait tourner le globe terrestre autour de l'axe
+\textsf{Ox} et on recalcule les nouvelles coordonnées ;
+\item \Parameter{RotY=0} : on fait tourner le globe terrestre de l'axe
+\textsf{Oy} et on recalcule les nouvelles coordonnées ;
+\item \Parameter{RotZ=0} : on fait tourner le globe terrestre autour de l'axe
+\textsf{Oz} et on recalcule les nouvelles coordonnées.
+\end{itemize}
+$Oxyz$ est le repère ``\textit{absolu}'' dans lequel les coordonnées sont
+définies. Si \Parameter{RotX=0,RotY=0,RotZ=0}, $Oz$ coïncide avec l'axe des
+pôles, le plan $Oxy$ est celui de l'équateur et l'axe $Ox$ correspond à
+la longitude 0.
+
+Les valeurs indiquées sont les valeurs par défaut. L'image sera d'autant
+plus grande que la distance de l'écran par rapport à l'observateur sera
+grande. Les valeurs des distances sont en \textsf{cm}.
+
+\subsection{Les options}
+\begin{itemize}
+\item \Parameter{europe=true} : l'Europe est dessinée(par défaut).
+\item \Parameter{africa=false} : l'Afrique n'est pas dessinée.
+\item \Parameter{asia=false} : l'Asie n'est pas dessinée.
+\item \Parameter{namer=false} : l'Amérique du Nord n'est pas dessinée.
+\item \Parameter{samer=false} : l'Amérique du Sud n'est pas dessinée.
+\item \Parameter{rivers=false} : les rivières ne sont pas dessinées.
+\item \Parameter{borders=false} : les frontières ne sont pas dessinées.
+\item \Parameter{city=true} : les capitales et les villes importantes sont placées.
+\item \Parameter{capital=true} : seules les capitales sont indiquées.
+\item \Parameter{maillage=false} : les parallèles et méridiens ne sont pas tracés.
+\end{itemize}
+\section{Le mode d'emploi}
+\subsection{La mappemonde dans sa totalité}
+C'est évidemment possible, mais le temps de calcul est élevé .Il vaut mieux
+si on ne possède pas un ordinateur rapide avec beaucoup de mémoire vive
+désactiver le tracé de fleuves et des frontières.
+
+En choisissant les valeurs de \Parameter{PHI}  et \Parameter{THETA} on
+fixera le point de vue.
+
+Avec le scénario suivant on se place au-dessus du pôle Nord.
+\begin{verbatim}
+\WorldMapThreeDII[PHI=80,THETA=-10,Decran=25,city=true,%
+                asia=true,africa=true,namer=true,samer=true,%
+                rivers=false,borders=false]%
+\end{verbatim}
+\begin{center}
+\begin{pspicture}*(-7,-7)(7,7)
+\psframe*[linecolor=black](-7,-7)(7,7)
+\WorldMapThreeDII[PHI=80,THETA=-10,Decran=25,city=true,%
+                asia=true,africa=true,namer=true,samer=true,%
+                rivers=false,borders=false,
+                linewidth=0.5\pslinewidth]%
+\end{pspicture}
+\end{center}
+
+\clearpage
+
+Avec les paramètres :
+\begin{verbatim}
+\WorldMapThreeDII[PHI=35,THETA=20,Decran=25,RotX=-45,city=true,%
+                asia=true,africa=true,namer=true,samer=true,%
+                rivers=false,borders=false]%
+\end{verbatim}
+On tourne le globe terrestre de $\mathrm{-45^o}$ autour de $Ox$, dans le repère $Oxyz$
+les nouvelles coordonnées sont re-calculées ; le dessin
+des fleuves et rivières est désactivé.
+\begin{center}
+\begin{pspicture}*(-7,-7)(7,7)
+\psframe*[linecolor=black](-7,-7)(7,7)
+\WorldMapThreeDII[PHI=42,THETA=20,Decran=25,RotX=-45,city=true,%
+                asia=true,africa=true,namer=true,samer=true,%
+                rivers=true,borders=true,
+                linewidth=0.5\pslinewidth]%
+\end{pspicture}
+\end{center}
+
+\subsection{Visualiser une partie du globe terrestre}
+Il est cependant plus intéressant de servir du package pour faire un gros
+plan d'une région du globe. On désactivera alors les régions qui ne sont pas
+représentées, comme nous l'avons vu dans le premier exemple de présentation.
+
+\clearpage
+\subsubsection{La France}
+\begin{verbatim}
+\begin{pspicture}*(-8,-8)(8,8)
+\WorldMapThreeDII[PHI=45,THETA=2,Decran=150,city=true,%
+                asia=false,africa=false,samer=true,europe=true,increment=2]% France
+\end{pspicture}
+\end{verbatim}
+\begin{center}
+\hbox{\hspace{-1.5cm}%
+\begin{pspicture}*(-8,-8)(8,8)
+\WorldMapThreeDII[PHI=45,THETA=2,Decran=150,city=true,%
+                asia=false,africa=false,samer=true,europe=true,increment=2]% France
+\end{pspicture}}
+\end{center}
+
+
+\clearpage
+
+\subsubsection{L'Amérique centrale}
+\begin{verbatim}
+\hbox{\hspace{-1.5cm}%
+\begin{pspicture}*(-8,-8)(8,8)
+\WorldMapThreeDII[PHI=15,THETA=-90,Decran=80,city=true,%
+                asia=false,africa=false,samer=true,europe=false,
+                namer=true,increment=2]% Mexico
+\end{pspicture}}
+\end{verbatim}
+\begin{center}
+\hbox{\hspace{-1.5cm}%
+\begin{pspicture}*(-8,-8)(8,8)
+\WorldMapThreeDII[PHI=15,THETA=-90,Decran=80,city=true,%
+                asia=false,africa=false,samer=true,europe=false,namer=true,increment=2]% Mexico
+\end{pspicture}}
+\end{center}
+
+
+\clearpage
+
+\subsubsection{Madagascar}
+\begin{verbatim}
+\begin{pspicture}*(-5,-5)(5,5)
+\WorldMapThreeDII[PHI=-19,THETA=47.5,Decran=85,Dobs=15,city=true,%
+                asia=false,africa=true,samer=false,europe=false,%
+                namer=false,increment=2]% Madagascar
+\end{pspicture}
+\end{verbatim}
+\begin{center}
+\begin{pspicture}*(-5,-5)(5,5)
+\WorldMapThreeDII[PHI=-19,THETA=47.5,Decran=85,Dobs=15,city=true,%
+                asia=false,africa=true,samer=false,europe=false,namer=false,increment=2]% Madagascar
+\end{pspicture}
+\end{center}
+\section{Téléchargement des fichiers}
+\begin{itemize}
+  \item Les données géographiques sont à télécharger sur :
+
+  \url{http://www.evl.uic.edu/pape/data/WDB/}
+  \item Les fichiers concernant le package sur :
+
+  \url{http://pageperso.aol.fr/manuelluque1/map3dII/doc-pst-map3dii.html}
+\end{itemize}
+\section{Appel à collaboration}
+Il reste beaucoup de choses à faire\ldots par exemple placer, en option, le
+nom des villes, les degrés de méridiens et parallèles etc.
+
+Par conséquent, si ce sujet vous intéresse et si vous souhaitez compléter et
+améliorer ces packages : \textsf{pst-map2d, pst-map3d, pst-map2dII,
+pst-map3dII}, n'hésitez pas à vous manifester\ldots
+
+\nocite{*}
+\bgroup
+\RaggedRight
+\bibliographystyle{plain}
+\bibliography{PSTricks}
+\egroup
+
+
+
+\end{document}

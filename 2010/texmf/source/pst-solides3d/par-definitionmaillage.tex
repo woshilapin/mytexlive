@@ -1,0 +1,272 @@
+\section{Définition du maillage}
+
+L'utilisateur peut spécifier le maillage du solide avec l'option
+\verb+[ngrid]+ dans la commande \verb+\psSolid+.
+
+Pour les objets
+\verb+cube+,
+\verb+prisme+,
+\verb+prismecreux+,
+la syntaxe est \texttt{[ngrid=}$n_1$\texttt{]} où $n_1$ représente le
+nombre de mailles sur l'axe vertical.
+
+Pour les objets
+\verb+cylindre+,
+\verb+cylindrecreux+,
+\verb+cone+,
+\verb+conecreux+,
+\verb+tronccone+,
+\verb+troncconecreux+,
+%%\verb+tore+,
+la syntaxe est \texttt{[ngrid=}$n_1$~$n_2$\texttt{]} où $n_1$ est
+entier supérieur ou égal à 1 (à $2$ pour \verb+tore+) représentant le
+nombre de mailles sur l'axe vertical, et $n_2$ est un entier
+représentant le nombre de divisions sur le cercle.
+
+Pour l'objet
+\verb+sphere+,
+la syntaxe est \texttt{[ngrid=}$n_1$~$n_2$\texttt{]} où $n_1$ est
+entier représentant le nombre de divisions sur l'axe vertical, et
+$n_2$ est un entier représentant le nombre de divisions sur le cercle
+horizontal. 
+
+Pour l'objet
+\verb+tore+,
+la syntaxe est \texttt{[ngrid=}$n_1$~$n_2$\texttt{]} où $n_1$ et $n_2$
+sont des entiers.
+
+Voici quelques exemples :
+
+\subsection {Le cube}
+
+\begin{center}
+\psset{unit=0.5}
+\begin{pspicture}(-7,-7)(7,7)
+\psframe(-7,-7)(7,7)
+\psset[pst-solides3d]{viewpoint=50 40 20,Decran=50,lightsrc=10 10 10}
+\psSolid[a=8,object=cube,ngrid=4,fillcolor=yellow]%
+%\psSolid[a=8,object=cube,linewidth=2pt,action=draw]%
+\psPoint(0,0,0){O}
+%\uput[r](O){$O$}
+\psPoint(0,0,4){Ak}
+\psPoint(0,0,8){Az}
+\uput[u](Az){$z$}
+\psPoint(4,0,0){Ai}
+\psPoint(8,0,0){Ax}
+\uput[u](Ax){$x$}
+\psPoint(0,4,0){Aj}
+\psPoint(0,8,0){Ay}
+\uput[dr](Ay){$y$}
+\psPoint(4,-4,0){A1}
+\psPoint(4,4,0){A2}
+\psPoint(-4,4,0){A3}
+\psPoint(-4,-4,0){A4}
+\uput[dr](Ay){$y$}
+%\psline[linestyle=dashed](O)(Ai)
+%\psline[linestyle=dashed](O)(Aj)
+%\psline[linestyle=dashed](O)(Ak)
+\psline[linecolor=green,arrowsize=2mm,arrowinset=0.2]{->}(Aj)(Ay)
+\psline[linecolor=blue,arrowsize=2mm,arrowinset=0.2]{->}(Ai)(Ax)
+\psline[linecolor=red,arrowsize=2mm,arrowinset=0.2]{->}(Ak)(Az)
+\psdot[linecolor=green](Aj)
+\psdot[linecolor=blue](Ai)
+\psdot[linecolor=red](Ak)
+\end{pspicture}
+\hfill
+\begin{pspicture}(-7,-7)(7,7)
+\psframe(-7,-7)(7,7)
+\psset[pst-solides3d]{SphericalCoor,viewpoint=50 45 10,Decran=40,lightsrc=30 45 0}
+\psSolid[a=8,object=cube,ngrid=3,fcol=\colorfaces,RotY=45,RotX=30,RotZ=20]%
+\end{pspicture}
+\end{center}
+\begin{multicols}{2}
+
+Pour le premier exemple, le maillage des faces est fixé à $4\times4$
+facettes/face et la commande est la suivante~:
+\begin{verbatim}
+\psSolid[a=8,object=cube,ngrid=4,
+         fillcolor=yellow]%
+\end{verbatim}
+Dans le deuxième exemple, le maillage des faces est fixé à $3\times3$
+et les couleurs des facettes sont diverses. On utilise le package
+\texttt{arrayjob} pour stocker les couleurs :
+\begin{verbatim}
+\newarray\colors
+\readarray{colors}{%
+Apricot&Aquamarine%
+etc.}
+\end{verbatim}
+Puis la liste des couleurs à afficher est donnée par la commande :
+\begin{verbatim}
+\edef\colorfaces{}%
+\multido{\i=0+1}{67}{%
+ \checkcolors(\i)
+\xdef\colorfaces{%
+     \colorfaces\i\space(\cachedata)\space}
+     }
+\end{verbatim}
+On place l'option~:~\verb+fcol=\colorfaces+.
+Le cube maillé est appelé par :
+\begin{verbatim}
+\psSolid[a=8,object=cube,ngrid=3,%
+        fcol=\colorfaces,
+        RotY=45,RotX=30,RotZ=20]%
+\end{verbatim}
+L'option \texttt{[grid]} permet, éventuellement, de ne pas
+tracer les traits du quadrillage.
+\end{multicols}
+
+\newpage
+\subsection {La sphère}
+
+\begin{multicols}{2}
+\setlength{\columnseprule}{1pt}
+\psset{unit=0.5}
+\centerline{
+\begin{pspicture}(-5,-5)(5,5)
+\psframe(-5,-5)(5,5)
+\psset{Decran=35}
+\psset{color1=cyan,color2=red}
+\psSolid[
+   fcol=0 (OliveGreen) 2 (color1) 3 (color2),
+   object=sphere,
+   ngrid=16 18,
+   RotZ=30
+]%
+\end{pspicture}}
+%
+\begin{verbatim}
+\psset{color1=cyan,color2=red}
+   fcol=0 (OliveGreen) 2 (color1) 3 (color2),
+   object=sphere,
+   ngrid=16 18,
+   RotZ=30
+\end{verbatim}
+\columnbreak
+\centerline{
+\begin{pspicture}(-5,-5)(5,5)
+\psframe(-5,-5)(5,5)
+\psset{Decran=35}
+\psset{color1=cyan,color2=red}
+\psSolid[
+   action=draw*,
+   fcol=0 (OliveGreen) 2 (color1) 3 (color2),
+   object=sphere,
+   ngrid=4 4,
+   RotZ=30
+]%
+\end{pspicture}}
+\begin{verbatim}
+\psset{color1=cyan,color2=red}
+\psSolid[
+   action=draw*,
+   fcol=0 (OliveGreen) 2 (color1) 3 (color2),
+   object=sphere,
+   ngrid=4 4,
+   RotZ=30
+]%
+\end{verbatim}
+\end{multicols}
+
+\subsection {Cylindres}
+\begin{multicols}{2}
+\psset{unit=0.5}
+\setlength{\columnseprule}{1pt}
+\centerline{
+\begin{pspicture}(-5,-5)(5,5)
+\psframe(-5,-5)(5,5)
+\psset{Decran=20}
+\psset{color1=cyan,color2=red}
+\psSolid[
+   fcol=0 (OliveGreen) 2 (color1) 3 (color2),
+   h=5,r=2,
+   object=cylindrecreux,
+   ngrid=4 30,
+   RotZ=30
+](0,0,-2.5)
+\end{pspicture}}
+\columnbreak
+\begin{verbatim}
+\psset{color1=cyan,color2=red}
+\psSolid[
+   fcol=0 (OliveGreen) 2 (color1) 3 (color2),
+   h=5,r=2,
+   object=cylindrecreux,
+   ngrid=4 30,
+   RotZ=30
+    ](0,0,-2.5)
+\end{verbatim}
+\end{multicols}
+%
+\begin{multicols}{2}
+\psset{unit=0.5}
+\setlength{\columnseprule}{1pt}
+\centerline{
+\begin{pspicture}(-5,-5)(5,5)
+\psframe(-5,-5)(5,5)
+\psset{Decran=20}
+\psset{color1=cyan,color2=red}
+\psSolid[
+   action=draw*,
+   fcol=0 (OliveGreen) 2 (color1) 3 (color2),
+   h=5,r=2,
+   object=cylindre,
+   ngrid=2 12,
+   RotY=-20
+](0,0,-2.5)
+\end{pspicture}}
+\columnbreak
+\begin{verbatim}
+\psset{color1=cyan,color2=red}
+\psSolid[
+   action=draw*,
+   fcol=0 (OliveGreen) 2 (color1) 3 (color2),
+   object=cylindre,
+   ngrid=2 12,
+   RotY=-20
+    ](0,0,-2.5)
+\end{verbatim}
+\end{multicols}
+
+\newpage
+
+\subsection{Tore}
+\begin{multicols}{2}
+\setlength{\columnseprule}{1pt}
+\psset{unit=0.5}
+\centerline{
+ \begin{pspicture}(-5,-5)(5,5)
+% \psframe(-2,-2)(2,2)
+ \psset{Decran=20}
+ \psSolid[r1=2.5,r0=1.5,object=tore,ngrid=4 36, fillcolor=green!30,action=draw**]%
+  \axesIIID(4,4,0)(5,5,4)
+ \end{pspicture}}
+\columnbreak
+\begin{verbatim}
+ \psSolid[r1=2.5,r0=1.5,
+         object=tore,
+         ngrid=4 36,
+         fillcolor=green!30,
+         action=draw**]%
+\end{verbatim}
+\end{multicols}
+%
+\begin{multicols}{2}
+\setlength{\columnseprule}{1pt}
+\psset{unit=0.5}
+\centerline{
+ \begin{pspicture}(-5,-5)(5,5)
+% \psframe(-2,-2)(2,2)
+ \psset{Decran=20}
+ \psSolid[r1=3.5,r0=1,object=tore,ngrid=9 18,fillcolor=magenta!30,action=draw**]%
+  \axesIIID(4.5,4.5,0)(5,5,4)
+ \end{pspicture}}
+\columnbreak
+\begin{verbatim}
+ \psSolid[r1=3.5,r0=1,
+          object=tore,
+          ngrid=9 18,
+          fillcolor=magenta!30,
+          action=draw**]%
+\end{verbatim}
+\end{multicols}

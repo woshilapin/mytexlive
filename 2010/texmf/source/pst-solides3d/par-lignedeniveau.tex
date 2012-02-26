@@ -1,0 +1,68 @@
+\section {Ligne de niveau}
+
+Pour chaque objet de type \textsl {solid}, il est possible de tracer
+une ligne de niveau, autrement dit l'intersection du solide considéré
+avec un plan d'équation $z=z_0$. Quatres paramètres pour cette option~:
+\begin{itemize}
+
+\item \verb+tracelignedeniveau+~: booléen. Positionné à \verb+true+,
+  il y aura tracé de la ligne de niveau
+
+\item \verb+hauteurlignedeniveau+~: la valeur $z_0$ définissant le
+  plan d'intersection
+
+\item \verb+linewidthlignedeniveau+~: l'épaisseur en picas du tracé de
+  la ligne de niveau
+
+\item \verb+couleurlignedeniveau+~: la couleur du tracé.
+
+\end{itemize}
+
+\begin{multicols}{2}
+
+%\begin{center}
+\bgroup
+\psset{unit=0.5}
+\psset{lightsrc=20 -20 10,SphericalCoor=true,viewpoint=50 -20 10,Decran=50}
+\begin{pspicture*}(-5,-4)(5,5)
+\psframe(-5,-4)(5,5)
+\psSolid[object=cube,
+   tracelignedeniveau=true,
+   hauteurlignedeniveau=1,
+   linewidthlignedeniveau=3,
+   couleurlignedeniveau=blue,
+   RotX=20,
+   RotY=90,
+   RotZ=30,
+   a=6,
+   ngrid=4,
+   base=-4 4 -4 4,
+](0,0,0)
+\end{pspicture*}
+\egroup
+%\end{center}
+
+\columnbreak
+
+\begin{verbatim}
+\psSolid[object=cube,
+   tracelignedeniveau=true,
+   hauteurlignedeniveau=1,
+   linewidthlignedeniveau=3,
+   couleurlignedeniveau=blue,
+   RotX=20,
+   RotY=90,
+   RotZ=30,
+   a=6,
+   ngrid=4,
+](0,0,0)
+\end{verbatim}
+
+\end {multicols}
+
+\llap {\dbend} La syntaxe présentée dans ce paragraphe n'est que
+provisoire. Cette option a été introduite quelques jours avant la
+publication de la version $3.0$, et la syntaxe est vouée à changer dès
+la prochaine version de \verb+pst-solides3d+, afin de permettre le
+tracé de plusieurs lignes de niveau sur un même solide.
+

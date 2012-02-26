@@ -1,0 +1,16 @@
+\section {Une chaise}
+\bgroup
+\definecolor{Tan}{cmyk}{0.14,0.42,0.56,0}
+
+\psset{lightsrc=50 10 30}
+
+\psset{SphericalCoor,viewpoint=100 -30 25,Decran=75}
+\begin{pspicture*}(-5,-3)(5,10)
+\psframe*[linecolor=cyan!30](-5,-3)(5,10)
+\psSolid[object=grille,base=-8 8 -8 8,action=draw**,ngrid=4,linecolor=red]%
+\psSolid[object=new,RotX=0,RotY=0,RotZ=30,unit=0.2,fillcolor=Tan,grid,
+    sommets= (sommets_chair.dat) run,
+    faces={(faces_chair.dat) run}]%
+\end{pspicture*}
+
+\egroup

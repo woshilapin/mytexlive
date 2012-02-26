@@ -1,0 +1,23 @@
+\documentclass{article}
+\usepackage{graphicx,pst-calendar,pst-3dplot}% Pakete
+\pagestyle{empty}
+\parindent=0pt\begin{document}
+
+foo\begin{postscript}
+\psframebox{% begin box
+\pspicture(-3,-2)(3,6.5)
+\pstThreeDCoor[zMax=7]
+\pstIIIDCylinder[RotY=30,fillstyle=solid,fillcolor=red!20,linecolor=black!60](0,0,0){2}{5}
+\pstThreeDLine[linecolor=red]{->}(0,0,5)(0,0,7)
+\pstThreeDLine[linecolor=red]{->}(-1,0,0)(4,0,0)
+\pstThreeDLine[linecolor=red]{->}(0,-1,0)(0,4,0)
+\endpspicture}% end box
+\end{postscript}
+bar
+
+\pspicture(3,3)
+\psframe[fillstyle=solid,fillcolor=red!30](3,3)\endpspicture
+
+\includegraphics{tux.jpg}
+% Ende
+\end{document}

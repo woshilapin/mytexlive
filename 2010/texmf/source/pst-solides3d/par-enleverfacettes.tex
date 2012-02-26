@@ -1,0 +1,47 @@
+\section{Enlever des facettes}
+
+L'argument \texttt{[rm=1 2 8]} permet de supprimer les facettes
+visibles $1$, $2$ et $8$, afin de voir l'intérieur des solides creux.
+
+\begin{multicols}{2}
+\setlength{\columnseprule}{1pt}
+\psset{unit=0.5}
+\psset{Decran=15,grid=true,viewpoint=10 10 10}
+\centerline{
+\begin{pspicture}(-5,-5)(5,5)
+\psframe(-5,-5)(5,5)
+\psSolid[rm=1 3 6,object=cylindrecreux,ngrid=2 6,
+h=6,r=2,fillcolor=green!50,incolor=yellow!50,RotZ=-60](0,0,-3)
+\end{pspicture}}
+\columnbreak
+\begin{verbatim}
+\psSolid[rm=1 3 6,
+         object=cylindrecreux,
+         ngrid=2 6,
+         h=6,r=2,fillcolor=green!50,
+         incolor=yellow!50,RotZ=-60](0,0,-3)
+\end{verbatim}
+\end{multicols}
+
+\begin{multicols}{2}
+\setlength{\columnseprule}{1pt}
+\psset{unit=0.5}
+\psset{Decran=15,grid=true,viewpoint=10 10 10}
+\centerline{
+\begin{pspicture}(-5,-5)(5,5)
+\psframe(-5,-5)(5,5)
+\psSolid[object=troncconecreux,
+         rm=1 12 13 14,
+         r0=3,r1=1,h=6,
+         fillcolor=green!50,incolor=yellow,
+         mode=3](0,0,-3)
+\end{pspicture}}
+\columnbreak
+\begin{verbatim}
+\psSolid[object=troncconecreux,
+         rm=1 12 13 14,
+         r0=3,r1=1,h=6,
+         fillcolor=green!50,incolor=yellow,
+         mode=3](0,0,-3)
+\end{verbatim}
+\end{multicols}

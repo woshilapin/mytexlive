@@ -1,0 +1,487 @@
+%\iffalse -*-mode:Latex;tex-command:"latex *;dvips -D600 pst-blur -o"-*- \fi
+%\iffalse
+%% $Id: pst-blur.dtx,v 2.0 2005/09/08 09:48:33 giese Exp $
+%%
+%% Copyright 1998 Martin Giese, Martin.Giese@oeaw.ac.at
+%%           2005 Herbert Voss, voss@pstricks.de
+%% 
+%% This file is under the LaTeX Project Public License 
+%% See CTAN archives in directory macros/latex/base/lppl.txt.
+%%
+%% DESCRIPTION:
+%%   `pst-blur' is a PSTricks package for blurred shadows
+%%
+%  
+%\fi
+%\iffalse
+%<*driver>
+\NeedsTeXFormat{LaTeX2e}
+\documentclass{ltxdoc}
+\usepackage{pst-text}
+\usepackage{pst-node}
+\usepackage{url}
+\usepackage{pst-blur}
+\AtBeginDocument{
+%  \OnlyDescription % comment out for implementation details
+  \EnableCrossrefs
+  \RecordChanges
+  \CodelineIndex}
+\AtEndDocument{
+  \PrintChanges
+  \PrintIndex}
+\hbadness=7000            % Over and under full box warnings
+\hfuzz=3pt
+\MakeShortVerb{\|}
+\newcommand\file[1]{\texttt{#1}}
+\begin{document}
+\DocInput{pst-blur.dtx}
+\end{document}
+%</driver>
+%\fi
+%
+% \CharacterTable
+%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%   Digits        \0\1\2\3\4\5\6\7\8\9
+%   Exclamation   \!     Double quote  \"     Hash (number) \#
+%   Dollar        \$     Percent       \%     Ampersand     \&
+%   Acute accent  \'     Left paren    \(     Right paren   \)
+%   Asterisk      \*     Plus          \+     Comma         \,
+%   Minus         \-     Point         \.     Solidus       \/
+%   Colon         \:     Semicolon     \;     Less than     \<
+%   Equals        \=     Greater than  \>     Question mark \?
+%   Commercial at \@     Left bracket  \[     Backslash     \\
+%   Right bracket \]     Circumflex    \^     Underscore    \_
+%   Grave accent  \`     Left brace    \{     Vertical bar  \|
+%   Right brace   \}     Tilde         \~}
+% \CheckSum{152}
+%
+%
+% \changes{v2.00}{2005/09/08}{%
+%	using the extended pst-xkey instead of the old pst-key package; 
+%	creating a dtx file;
+%	new \LaTeX\ wrapper file (hv)}
+% \changes{v1.80}{2001/02/16}{First public release. (mg)}
+%
+% \DoNotIndex{\!,\",\#,\$,\%,\&,\',\(,\+,\*,\,,\-,\.,\/,\:,\;,\<,\=,\>,\?}
+% \DoNotIndex{\@,\@B,\@K,\@cTq,\@f,\@fPl,\@ifnextchar,\@nameuse,\@oVk}
+% \DoNotIndex{\[,\\,\],\^,\_,\ }
+% \DoNotIndex{\^,\\^,\\\^,$\^$,$\\^$,$\\^$}
+% \DoNotIndex{\0,\2,\4,\5,\6,\7,\8,}
+% \DoNotIndex{\A,\a}
+% \DoNotIndex{\B,\b,\Bc,\begin,\Bq,\Bqc}
+% \DoNotIndex{\C,\c,\catcode,\cJA,\CodelineIndex,\csname}
+% \DoNotIndex{\D,\def,\define@key,\Df,\divide,\DocInput,\documentclass,\pst@addfams}
+% \DoNotIndex{\eCN,\edef,\else,\eHd,\eMcj,\EnableCrossrefs,\end,\endcsname}
+% \DoNotIndex{\endCenterExample,\endExample,\endinput,\endpsclip}
+% \DoNotIndex{\PrintIndex,\PrintChanges,\ProvidesFile}
+% \DoNotIndex{\endpspicture,\endSideBySideExample,\Example}
+% \DoNotIndex{\F,\f,\FdUrr,\fi,\filedate,\fileversion,\FV@Environment}
+% \DoNotIndex{\FV@UseKeyValues,\FV@XRightMargin,\FVB@Example,\fvset}
+% \DoNotIndex{\G,\g,\GetFileInfo,\gr,\GradientLoaded,\gsFKrbK@o,\gsj,\gsOX}
+% \DoNotIndex{\hbadness,\hfuzz,\HLEmphasize,\HLMacro,\HLMacro@i}
+% \DoNotIndex{\HLReverse,\HLReverse@i,\hqcu,\HqY}
+% \DoNotIndex{\I,\i,\ifx,\input,\Ir,\IU}
+% \DoNotIndex{\j,\jl,\JT,\JVodH}
+% \DoNotIndex{\K,\k,\kfSlL}
+% \DoNotIndex{\L,\let}
+% \DoNotIndex{\message,\mHNa,\mIU}
+% \DoNotIndex{\N,\nB,\newcmykcolor,\newdimen,\newif,\nW}
+% \DoNotIndex{\O,\oCDJDo,\ocQhVI,\OnlyDescription,\oRKJ}
+% \DoNotIndex{\P,\p,\ProvidesPackage,\psframe,\pslinewidth,\psset}
+% \DoNotIndex{\PstAtCode,\PSTricksLoaded}
+% \DoNotIndex{\q,\Qr,\qssRXq,\qu,\qXjFQp,\qYL}
+% \DoNotIndex{\R,\r,\RecordChanges,\relax,\RlaYI,\rN,\Rp,\rp,\RPDXNn,\rput}
+% \DoNotIndex{\S,\scalebox,\SgY,\SideBySide@Example,\SideBySideExample}
+% \DoNotIndex{\SgY,\sk,\Sp,\space,\sZb}
+% \DoNotIndex{\T,\the,\tw@}
+% \DoNotIndex{\u,\UiSWGEf@,\uJi,\usepackage,\uVQdMM,\UYj}
+% \DoNotIndex{\VerbatimEnvironment,\VerbatimInput,\VrC@}
+% \DoNotIndex{\WhZ,\WjKCYb,\WNs}
+% \DoNotIndex{\XkN,\XW}
+% \DoNotIndex{\Z,\ZCM,\Ze}
+% \DoNotIndex{\addtocounter,\advance,\alph,\arabic,\AtBeginDocument,\AtEndDocument}
+% \DoNotIndex{\AtEndOfPackage,\begingroup,\bfseries,\bgroup,\box,\csname}
+% \DoNotIndex{\else,\endcsname,\endgroup,\endinput,\expandafter,\fi}
+% \DoNotIndex{\TeX,\z@,\p@,\@one,\xdef,\thr@@,\string,\sixt@@n,\reset,\or,\multiply,\repeat,\RequirePackage}
+% \DoNotIndex{\@cclvi,\@ne,\@ehpa,\@nil,\copy,\dp,\global,\hbox,\hss,\ht,\ifodd,\ifdim,\ifcase,\kern}
+% \DoNotIndex{\chardef,\loop,\leavevmode,\ifnum,\lower,\next,\wd,\setbox}
+% \setcounter{IndexColumns}{2}
+%
+% \title{\textsf{pst-blur} package \\ version \fileversion}
+% \author{Martin Giese\thanks{\protect\url{Martin.Giese@oeaw.ac.at}}}
+% \date{\filedate}
+% \maketitle
+%
+%\section{Introduction}
+% The ability to paint shadows on arbitrary shapes is a standard 
+% feature of PSTricks.  However, these shadows are always `hard':\\
+%{\psset{unit=0.6cm,linewidth=0.5pt}
+% \begin{pspicture}(-5,0)(10,4)
+%   \psset{shadow=true,shadowcolor=gray,shadowsize=0.15cm}
+%   \psframe(1,1)(3,3)
+%   \pscircle(6,2){1}
+%   \rput(9,2){\pscharpath{\fontfamily{ptm}\fontsize{40}{40}\selectfont A}}
+%  \end{pspicture}
+%}\\
+% The |pst-blur| package provides  blurred shadows
+% for closed shapes drawn with PSTricks:\\
+%{\psset{unit=0.6cm,linewidth=0.5pt,blur=true,blurradius=0.07cm}
+% \begin{pspicture}(-5,0)(10,4)
+%   \psset{shadow=true,shadowcolor=gray,shadowsize=0.15cm}
+%   \psframe(1,1)(3,3)
+%   \pscircle(6,2){1}
+%   \rput(9,2){\pscharpath{\fontfamily{ptm}\fontsize{40}{40}\selectfont A}}
+%  \end{pspicture}
+%}\\
+% It also provides a new
+% box command |\psblurbox|, which is similar to |\psshadowbox|,
+% but gives the box a blurred shadow.
+% \medskip
+%
+%The new graphics parameters and macros provided by the package
+% are described in
+%section 2 of this document.  Section 3, if present, documents the 
+%implementation consisting of a generic \TeX\ file and a PostScript
+%header for the |dvi|-to-PostScript converter.  You can get section 3
+%by calling \LaTeX\ as follows on most relevant systems:
+%\begin{verbatim}
+%latex '\AtBeginDocument{\AlsoImplementation}\input{pst-blur.dtx}'
+%\end{verbatim}
+%
+%\section{Package Usage}
+% To use |pst-blur|, you have to say
+% \begin{verbatim}
+%   \usepackage{pst-blur}
+% \end{verbatim}
+% in the document prologue for \LaTeX, and 
+% \begin{verbatim}
+%   \input pst-blur.tex
+% \end{verbatim}
+% in ``plain'' \TeX.
+%
+% \DescribeMacro{blur}
+% To paint shapes with blurred shadows,
+% set the graphics parameters |shadow| and |blur| to |true|, eg
+% \pscircle[shadow=true,blur=true](8,-0.5){0.5}
+% \begin{verbatim}
+%    \psset{unit=1cm}
+%    \pscircle[shadow=true,blur=true](0,0){0.5}
+% \end{verbatim}
+% \psset{unit=1cm}
+% for a circle with a blurred shadow.
+% The parameter |blur| has no influence if |shadow| is |false|.
+% \medskip
+%
+% \DescribeMacro{shadowsize}
+% \DescribeMacro{shadowangle}
+% \DescribeMacro{blurradius}
+% The rendering of blurred shadows is controlled by a number of
+% additional graphics parameters.  The offset of the shadow is controlled
+% by the parameters |shadowsize| and |shadowangle|, which are the same 
+% as for ordinary shadows.\footnote{In particular, |shadowangle| has
+% to be negative for the usual placement of shadows below and to the
+% right of shapes.}  The size of the blurring effect is
+% controlled by the parameter |blurradius|, see Fig~\ref{fig:params}.
+% The default value for |blurradius| is 1.5pt, which fits nicely with
+% the default |shadowsize| of 3pt.
+% \medskip
+%
+% \begin{figure}\caption{Parameters for blurred shadows} 
+% \label{fig:params}
+% \vskip1cm
+% \qquad\qquad\begin{pspicture*}(0,0)(10,6)
+%     \psframe[linewidth=4pt,fillcolor=lightgray,fillstyle=crosshatch,
+%             	shadow=true,blur=true,shadowsize=2cm,shadowangle=-35,
+%		blurradius=1cm,shadowcolor=lightgray](-5,3)(5,10)
+%   \pnode(5,3){A}
+%   \pnode(5.3,2.9){A1}
+%   \pnode(6.64,1.85){B}
+%   \pnode(7.51,2.35){C}
+%   \pscircle(6.64,1.85){1}
+%   \ncline{|-|}{A}{B}
+%   \bput(0.2){|shadowsize|}
+%   \ncline{->}{B}{C}
+%   \bput(1.5){|blurradius|}
+%   \psline(5,3)(6,3)
+%   \psarcn{->}(5,3){0.5}{0}{-35}
+%   \rput(7,3.7){\rnode{D}{$-|shadowangle|$}}
+%   \nccurve[linewidth=0.5pt,angleA=-90,angleB=70]{->}{D}{A1}
+%   \rput[l](6,5.6){|shadowcolor|}
+%   \rput[l](8,5){|blurbg|}
+%   {\psset{linestyle=dotted}
+%    \psline(0,0.85)(6.64,0.85)
+%    \psline(7.64,1.85)(7.64,6)
+%    \psset{linestyle=dashed}
+%    \psline(0,2.85)(5.64,2.85)
+%    \psline(5.64,2.85)(5.64,6)}
+%   {\psset{linewidth=0.5pt}
+%    \psline{*-}(5.64,5.3)(6,5.4)
+%    \psline{*-}(7.64,4.75)(8,4.85)
+%    \ncline{F}{F1}
+%   }
+% \end{pspicture*}
+% \end{figure}
+%
+% \DescribeMacro{shadowcolor}
+% \DescribeMacro{blurbg}
+% The inner, usually darkest part of the shadow is painted in the
+% colour defined by |shadowcolor|.  In the range defined by |blurradius|,
+% the colour gradually fades to the background colour set by |blurbg|.
+% The default value for |blurbg| is white.  You should change this parameter
+% when you want to paint shapes over a coloured background, ie\\
+% \begin{minipage}{\textwidth}
+% \begin{verbatim}
+%   \psframe[fillstyle=solid,fillcolor=yellow](-.7,-.7)(.7,.7)
+%   \pscircle[shadow=true,blur=true,blurbg=yellow](0,0){0.4}
+% \end{verbatim}
+% \rput(11.7,1.4){
+%   \psframe[fillstyle=solid,fillcolor=yellow](-.7,-.7)(.7,.7)
+%   \pscircle[shadow=true,blur=true,blurbg=yellow](0,0){0.4}}
+% \end{minipage}
+%
+% \DescribeMacro{blursteps}
+% The number of distinct colour steps painted between |shadowcolor|
+% and |blurbg| is controlled by the parameter |blursteps|.  The default
+% value for |blursteps| is 20, which is usually more than sufficient.
+% Note, that higher values for |blursteps| result in proportionally slower
+% rendering.  This can be very tiresome with complex shapes.
+% \medskip
+%
+% \DescribeMacro{\psblurbox}
+% Using a
+% \psframebox[shadow=true,blur=true,blurradius=2.5pt,shadowcolor=gray]%
+% {|\ttfamily\symbol{92}psframebox|} 
+% with a blurred 
+% shadow in the middle of some text produces poor results, because \TeX\
+% does not know about the extra space taken by the shadow.  For normal
+% shadows, this problem is solved by the |\psshadowbox| macro, which
+% adds the extra space around the box for the shadow.  For blurred shadows,
+% this is not sufficient: an extra |\blurradius| has to be added.  This 
+% is done by the macro \psblurbox{\ttfamily\symbol{92}psblurbox}, which is otherwise
+% identical to |\psshadowbox|.  Note, that |\psblurbox| shares a
+% deficiency of |\psshadowbox|:  It only works correctly 
+% with $|shadowangle|=-45$, because \TeX\ does not provide trigonometric
+% operations.
+%
+% \StopEventually{}
+%
+% \section{The Code}
+%
+% \subsection{The \file{pst-blur.sty} file}
+%    The \file{pst-blur.sty} file is very simple.  It just loads 
+%    the generic \file{pst-blur.tex} file. 
+%    \begin{macrocode}
+%<*stylefile>
+\RequirePackage{pstricks}
+\ProvidesPackage{pst-blur}[2005/09/08 package wrapper for 
+  pst-blur.tex (hv)]
+\input{pst-blur.tex}
+\ProvidesFile{pst-blur.tex}
+  [\filedate\space v\fileversion\space `PST-blur' (hv)]
+%</stylefile>
+%    \end{macrocode}
+%
+% \subsection{The \file{pst-blur.tex} file}
+%    \file{pst-blur.tex} contains the \TeX-side of things.  We begin
+%    by identifying ourselves and setting things up, the same as in 
+%    other PSTricks packages.
+%    \begin{macrocode}
+%<*texfile>
+\csname PstBlurLoaded\endcsname
+\let\PstBlurLoaded\endinput
+\ifx\PSTricksLoaded\endinput\else
+  \def\next{\input pstricks.tex }\expandafter\next
+\fi
+%    \end{macrocode}
+% \verb+pst-blur+ uses the extended version of the keyvalue interface.
+%    \begin{macrocode}
+\ifx\PSTXKeyLoaded\endinput\else\input pst-xkey \fi
+%    \end{macrocode}
+%%
+%    \begin{macrocode}
+\def\fileversion{2.0}
+\def\filedate{2005/09/08}
+\message{ v\fileversion, \filedate}
+\edef\TheAtCode{\the\catcode`\@}
+\catcode`\@=11
+%    \end{macrocode}
+% Add the package name to the list of family names of the keyvalue list.
+%    \begin{macrocode}
+\pst@addfams{pst-blur}
+\pstheader{pst-blur.pro}
+%    \end{macrocode}
+%
+% \subsubsection{New graphics parameters}
+% \begin{macro}{blur}
+% \begin{macro}{blurradius}
+% \begin{macro}{blursteps}
+% \begin{macro}{blurbg}
+% The definitions of the new graphics parameters follow the definitions
+% for parameters of the same types found in |pstricks.tex|.
+%    \begin{macrocode}
+\newif\ifpsblur
+\define@key[psset]{pst-blur}{blur}[true]{\@nameuse{psblur#1}\pst@setrepeatarrowsflag}
+\psset{blur=false}
+%%
+\define@key[psset]{pst-blur}{blurradius}{\pst@getlength{#1}\psx@blurradius}
+\psset{blurradius=1.5pt}
+%%
+\define@key[psset]{pst-blur}{blursteps}{\pst@getint{#1}\psx@blursteps}
+\psset{blursteps=20}
+%%
+\define@key[psset]{pst-blur}{blurbg}{\pst@getcolor{#1}\psx@blurbg}
+\psset{blurbg=white}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \subsection{Hooking into the PSTricks shadow macros}
+% \begin{macro}{\pst@closedshadow}
+% The macro |\pst@closedshadow| is usually called internally by
+% PSTricks to paint a shadow in the shape of the current path.  
+% This macro has been renamed |\pst@sharpclosedshadow|.  The
+% new |\pst@closedshadow| jumps to either of |\pst@sharpclosedshadow|
+% or |\pst@blurclosedshadow|, depending on |\ifpsblur|, which is
+% directly related to the graphics parameter |blur|.
+%    \begin{macrocode}
+\def\pst@closedshadow{%
+\ifpsblur\pst@blurclosedshadow\else\pst@sharpclosedshadow\fi
+}
+\def\pst@sharpclosedshadow{%
+  \addto@pscode{%
+    gsave
+    \psk@shadowsize \psk@shadowangle \tx@PtoC
+    \tx@Shadow
+    \pst@usecolor\psshadowcolor
+    gsave fill grestore
+    stroke
+    grestore
+    gsave
+    \pst@usecolor\psfillcolor
+    gsave fill grestore
+    stroke
+    grestore}}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\pst@blurclosedshadow}
+% The PostScript code for blurred shadows is produced by the following
+% macro.  It pushes the diverse parameters (|\tx@PtoC| does polar to
+% cartesian coordinate transformation for the shadow offset) and calls
+% |BlurShadow|.  Afterwards, it fills and strokes the current path,
+% same as the original |\pst@closedshadow|.
+%    \begin{macrocode}
+\def\pst@blurclosedshadow{%
+  \addto@pscode{%
+    gsave
+    gsave \pst@usecolor\psshadowcolor currentrgbcolor grestore
+    gsave \pst@usecolor\psx@blurbg currentrgbcolor grestore
+    \psx@blurradius\space
+    \psx@blursteps\space
+    \psk@shadowsize \psk@shadowangle \tx@PtoC
+    tx@PstBlurDict begin BlurShadow end
+    grestore
+    gsave
+    \pst@usecolor\psfillcolor
+    gsave fill grestore
+    stroke
+    grestore}}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\pst@blurclosedshadow}
+% This one looks very impressing.  In fact, it is a verbatim copy
+% of |\psshadowbox|, with only the line 
+% |\advance\pst@dimh\psx@blurradius\p@| added!
+%    \begin{macrocode}
+\def\psblurbox{%
+\def\pst@par{}\pst@object{psblurbox}}
+\def\psblurbox@i{\pst@makebox\psblurbox@ii}
+\def\psblurbox@ii{%
+  \begingroup
+  \pst@useboxpar
+  \psblurtrue
+  \psshadowtrue
+  \psboxseptrue
+  \setbox\pst@hbox=\hbox{\psframebox@ii}%
+  \pst@dimh=\psk@shadowsize\p@
+  \pst@dimh=.7071\pst@dimh
+  \advance\pst@dimh\psx@blurradius\p@
+  \pst@dimg=\dp\pst@hbox
+  \advance\pst@dimg\pst@dimh
+  \dp\pst@hbox=\pst@dimg
+  \pst@dimg=\wd\pst@hbox
+  \advance\pst@dimg\pst@dimh
+  \wd\pst@hbox=\pst@dimg
+  \leavevmode
+  \box\pst@hbox
+\endgroup}
+%%
+\catcode`\@=\TheAtCode\relax
+%</texfile>
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsection{The \file{pst-blur.pro} file}
+%    The file \file{pst-blur.pro} contains PostScript definitions
+%    to be included  in the PostScript output by the 
+%    |dvi|-to-PostScript converter, eg |dvips|. 
+%    This is all rather similar to
+%    \file{pst-slpe.pro}, and I just don't feel like explaining it,
+%    so you'll have to work through it yourself, if you want to
+%    know what happens.  The trick is basically to draw the outline
+%    repeatedly with varying line widths.  The procedure |Shadow|
+%    called in |BlurShadow| is defined in \file{pstricks.pro} and
+%    translates the current path based on an $x$- and $y$-displacement
+%    taken from the stack.
+%    \begin{macrocode}
+%<*prolog>
+/tx@PstBlurDict 60 dict def
+tx@PstBlurDict begin
+/Iterate {
+  /SegLines ED
+  /ThisB ED /ThisG ED /ThisR ED
+  /NextB ED /NextG ED /NextR ED
+  /W 2.0 BlurRadius mul def
+  /WDec W SegLines div def
+  /RInc NextR ThisR sub SegLines div def
+  /GInc NextG ThisG sub SegLines div def
+  /BInc NextB ThisB sub SegLines div def
+  /R ThisR def
+  /G ThisG def
+  /B ThisB def
+  SegLines {
+    R G B
+    sqrt 3 1 roll sqrt 3 1 roll sqrt 3 1 roll
+    setrgbcolor
+    gsave W setlinewidth
+    stroke grestore
+    /W W WDec sub def
+    /R R RInc add def
+    /G G GInc add def
+    /B B BInc add def
+  } bind repeat
+} def
+/BlurShadow {
+  Shadow
+  /BlurSteps ED
+  /BlurRadius ED
+  dup mul /BEnd ED dup mul /GEnd ED dup mul /REnd ED 
+  dup mul /BBeg ED dup mul /GBeg ED dup mul /RBeg ED 
+  RBeg REnd add 0.5 mul /RMid ED
+  GBeg GEnd add 0.5 mul /GMid ED
+  BBeg BEnd add 0.5 mul /BMid ED
+  /OuterSteps BlurSteps 2 div cvi def
+  /InnerSteps BlurSteps OuterSteps sub def
+  1 setlinejoin
+  RMid GMid BMid REnd GEnd BEnd OuterSteps Iterate 
+  gsave RBeg sqrt GBeg sqrt BBeg sqrt setrgbcolor fill grestore
+  clip
+  0 setlinejoin
+  RMid GMid BMid RBeg GBeg BBeg InnerSteps Iterate 
+} def
+end
+%</prolog>
+%    \end{macrocode}
+% \Finale
+%

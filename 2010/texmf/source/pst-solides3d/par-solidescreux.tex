@@ -1,0 +1,149 @@
+\section {\' Evider un solide}
+
+Certains des solides prédéfinis ont un solide  ``{\sl creux}'' qui lui
+est naturellement associé (le cône, le tronc de cône, le cylindre,
+le prisme et la calotte sphérique). Pour ceux là, une option
+\texttt{[hallow=}\textsl{boolean}\texttt{]} est prévue. Positionné à
+\textsl{false}, on a le solide habituel; positionné à \textsl{true} on
+a la version creuse.
+
+\subsubsection {Exemple 1 : cylindre et cylindre creux}
+
+\begin{multicols}{2}
+\psset{unit=0.5}
+\psset{lightsrc=10 20 30,SphericalCoor,viewpoint=50 60 25,Decran=50}
+\setlength{\columnseprule}{1pt}
+\centerline{
+\begin{pspicture}(-2,-3)(6,8)
+\psframe(-2,-3)(6,8)
+\psSolid[object=cylindre,h=6,r=2,
+   fillcolor=yellow,incolor=red,
+   hollow,
+      ](0,4,0)
+\end{pspicture}}
+\begin{verbatim}
+   \psSolid[object=cylindre,
+      h=6,r=2,
+      fillcolor=yellow,
+      incolor=red,
+      hollow,
+      ](0,4,0)
+\end{verbatim}
+\columnbreak
+\centerline{
+\begin{pspicture}(-2,-3)(6,8)
+\psframe(-2,-3)(6,8)
+\psSolid[object=cylindre,h=6,r=2,
+   fillcolor=yellow,
+      ](0,4,0)
+\end{pspicture}}
+\begin{verbatim}
+   \psSolid[object=cylindre,
+      h=6,r=2,
+      fillcolor=yellow,
+      ](0,4,0)
+\end{verbatim}
+\end{multicols}
+
+\subsubsection {Exemple 2 : prisme et prisme creux}
+
+\begin{minipage}{6cm}
+\psset{unit=0.5}
+\psset{lightsrc=10 20 30,SphericalCoor,viewpoint=50 60 25,Decran=50}
+\begin{pspicture}(-6,-4)(6,12)
+\psframe(-9,-3)(8,11)
+\defFunction{F}(t){t cos 3 mul}{t sin 3 mul}{}
+\defFunction{G}(t){t cos}{t sin}{}
+\psSolid[object=grille,base=-6 6 -4 4,action=draw]%
+\psSolid[object=prisme,h=8,fillcolor=yellow,RotX=90,%decal=0,
+      resolution=19,
+      base=0 180 {F} CourbeR2+ 
+           180 0 {G} CourbeR2+ 
+      ](0,4,0)
+\axesIIID(3,4,3)(8,6,10)
+\end{pspicture}
+\end{minipage}
+\hfill
+\begin{minipage}{8cm}
+\small
+\begin{verbatim}
+\defFunction{F}(t){t cos 3 mul}{t sin 3 mul}{}
+\defFunction{G}(t){t cos}{t sin}{}
+\psSolid[object=grille,base=-6 6 -4 4,action=draw]%
+\psSolid[object=prisme,h=8,fillcolor=yellow,RotX=90,
+      resolution=19,
+      base=0 180 {F} CourbeR2+ 
+           180 0 {G} CourbeR2+ 
+      ](0,4,0)
+\axesIIID(3,4,3)(8,6,10)
+\end{verbatim}
+\end{minipage}
+
+\begin{minipage}{6cm}
+\psset{unit=0.5}
+\psset{lightsrc=10 20 30,SphericalCoor,viewpoint=50 60 25,Decran=50}
+\begin{pspicture}(-6,-4)(6,12)
+\psframe(-9,-3)(8,11)
+\defFunction{F}(t){t cos 3 mul}{t sin 3 mul}{}
+\defFunction{G}(t){t cos}{t sin}{}
+\psSolid[object=grille,base=-6 6 -4 4,action=draw]%
+\psSolid[object=prisme,h=8,fillcolor=yellow,RotX=90,
+      hollow,ngrid=4,incolor=red,
+      resolution=19,
+      base=0 180 {F} CourbeR2+ 
+           180 0 {G} CourbeR2+ 
+      ](0,4,0)
+\axesIIID(3,4,3)(8,6,10)
+\end{pspicture}
+\end{minipage}
+\hfill
+\begin{minipage}{8cm}
+\small
+\begin{verbatim}
+\defFunction{F}(t){t cos 3 mul}{t sin 3 mul}{}
+\defFunction{G}(t){t cos}{t sin}{}
+\psSolid[object=grille,base=-6 6 -4 4,action=draw]%
+\psSolid[object=prisme,h=8,fillcolor=yellow,RotX=90,
+      hollow,ngrid=4,incolor=red,
+      resolution=19,
+      base=0 180 {F} CourbeR2+ 
+           180 0 {G} CourbeR2+ 
+      ](0,4,0)
+\axesIIID(3,4,3)(8,6,10)
+\end{verbatim}
+\end{minipage}
+
+\subsubsection {Exemple 3 : calotte sphérique et calotte sphérique creuse}
+
+\begin{multicols}{2}
+\psset{unit=0.5}
+\psset{lightsrc=42 24 13,SphericalCoor,viewpoint=50 30 15,Decran=50}
+\setlength{\columnseprule}{1pt}
+\centerline{
+\begin{pspicture}(-5,-5)(5,5)
+\psframe(-5,-5)(5,5)
+\psSolid[object=calottesphere,r=3,ngrid=16 18,
+   fillcolor=cyan!50,incolor=yellow,theta=45,phi=-30,hollow,RotY=-80]%
+\axesIIID(0,3,3)(6,5,4)
+\end{pspicture}}
+\begin{verbatim}
+\psSolid[object=calottesphere,r=3,
+         ngrid=16 18,
+       fillcolor=cyan!50,incolor=yellow,
+       theta=45,phi=-30,hollow,RotY=-60]%
+\end{verbatim}
+\columnbreak
+\centerline{
+\begin{pspicture}(-5,-3)(5,7)
+\psframe(-5,-3)(5,7)
+\psSolid[object=grille,base=-5 5 -5 5,action=draw]%
+\psSolid[object=calottesphere,r=3,ngrid=16 18,
+   fillcolor=cyan!50,incolor=yellow,theta=45,phi=-30](0,0,1.5)%
+\axesIIID(3,3,3.6)(6,6,5)
+\end{pspicture}}
+\begin{verbatim}
+\psSolid[object=calottesphere,r=3,
+      ngrid=16 18,fillcolor=cyan!50,
+      incolor=yellow,theta=45,phi=-30](0,0,1.5)
+\end{verbatim}
+\end{multicols}

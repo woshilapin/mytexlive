@@ -1,0 +1,16 @@
+              --------------------------------------------------
+              | pst-fr3d: PSTricks package for 3d framed boxes |
+              |                                                |
+              |       Denis Girou <Denis.Girou@idris.fr>       |
+              --------------------------------------------------
+
+  * Run  "tex" on pst-fr3d.ins and copy pst-fr3d.tex 
+    and pst-fr3d.sty in one of your TeX input directories or run 
+    the Makefile, it builds all files and the PDF ducumentation
+
+  * Run "latex" on pst-fr3d.dtx to generate the documentation
+    dvips for the ps  and
+    ps2pdf for the pdf
+
+
+version 1.1 uses the extended key value interface  (hv)  

@@ -1,0 +1,67 @@
+\section {Labrador}
+\bgroup
+\definecolor{Tan}{cmyk}{0.14,0.42,0.56,0}
+\psset{unit=0.75}
+\psset{lightsrc=50 10 80}
+\begin{pspicture*}(-1,-1)(7,6)
+\psset{SphericalCoor,viewpoint=50 -10 10,Decran=70}
+\psframe*[linecolor=blue!20](-1,-1)(7,6)
+\psSolid[object=grille,base=-4 5 -6 6,action=draw**,fillcolor=green!20]%
+\psSolid[object=new,RotX=0,RotZ=0,fillcolor=Tan,unit=5,linewidth=0.5\pslinewidth,
+   sommets= (sommets_retriever.dat) run,grid,
+   faces={(faces_retriever.dat) run}]%
+%\axesIIID(0,0,0)(4,6,5)
+\end{pspicture*}
+\hfill
+\begin{pspicture*}(-2,-1)(6,6)
+\psset{SphericalCoor,viewpoint=50 -10 10,Decran=70}
+\psframe*[linecolor=blue!20](-2,-1)(6,6)
+\psSolid[object=grille,base=-4 5 -6 6,action=draw**,fillcolor=green!20]%
+\psSolid[object=new,RotX=0,RotZ=-45,fillcolor=gray,unit=5,linewidth=0.5\pslinewidth,
+   sommets= (sommets_retriever.dat) run,
+   faces={(faces_retriever.dat) run}]%
+%\axesIIID(0,0,0)(4,6,5)
+\end{pspicture*}
+
+\begin{pspicture*}(-4,-1)(4,6)
+\psset{SphericalCoor,viewpoint=50 -10 10,Decran=70}
+\psframe*[linecolor=blue!20](-4,-1)(4,6)
+\psSolid[object=grille,base=-4 5 -6 6,action=draw**,fillcolor=green!20]%
+\psSolid[object=new,RotX=0,RotZ=-90,fillcolor=Tan,unit=5,linewidth=0.5\pslinewidth,
+   sommets= (sommets_retriever.dat) run,
+   faces={(faces_retriever.dat) run}]%
+%\axesIIID(0,0,0)(4,6,5)
+\end{pspicture*}
+\hfill
+\begin{pspicture*}(-6,-1)(2,6)
+\psset{SphericalCoor,viewpoint=50 -10 10,Decran=70}
+\psframe*[linecolor=blue!20](-6,-1)(2,6)
+\psSolid[object=grille,base=-4 5 -6 6,action=draw**,fillcolor=green!20]%
+\psSolid[object=new,RotX=0,RotZ=-120,fillcolor=gray!20,unit=5,linewidth=0.5\pslinewidth,
+   sommets= (sommets_retriever.dat) run,
+   faces={(faces_retriever.dat) run}]%
+%\axesIIID(0,0,0)(4,6,5)
+\end{pspicture*}
+
+\begin{pspicture*}(-6,-1)(2,6)
+\psset{SphericalCoor,viewpoint=50 -10 30,Decran=70}
+\psframe*[linecolor=blue!20](-6,-1)(2,6)
+\psSolid[object=grille,base=-4 5 -6 6,action=draw**,fillcolor=green!20]%
+\psSolid[object=new,RotX=0,RotZ=-160,fillcolor=Tan,unit=5,linewidth=0.5\pslinewidth,
+   sommets= (sommets_retriever.dat) run,
+   faces={(faces_retriever.dat) run}]%
+%\axesIIID(0,0,0)(4,6,5)
+\end{pspicture*}
+\hfill
+\begin{pspicture*}(-6,0)(2,7)
+\psset{SphericalCoor,viewpoint=50 -10 20,Decran=70}
+\psframe*[linecolor=blue!20](-6,0)(2,7)
+\psSolid[object=grille,base=-4 5 -6 6,action=draw**,fillcolor=green!20]%
+\psSolid[object=new,RotX=0,RotZ=-260,fillcolor=gray!20,unit=5,linewidth=0.5\pslinewidth,
+   sommets= (sommets_retriever.dat) run,
+   faces={(faces_retriever.dat) run}]%
+%\axesIIID(0,0,0)(4,6,5)
+\end{pspicture*}
+
+
+\egroup

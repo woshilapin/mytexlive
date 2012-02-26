@@ -1,0 +1,49 @@
+\section {Un coquillage et son ombre}
+
+\bgroup
+ \renewcommand\quadrillage{%
+\psSolid[object=parallelepiped,a=8,b=8,c=6,action=draw,linecolor=red,linewidth=0.5\pslinewidth]%
+\psset{linecolor=red}\red
+\multido{\ix=-4+1}{9}{%
+     \psPoint(\ix\space,4,-3){X1}
+     \psPoint(\ix\space,4 .2 add,-3){X2}
+     \psline(X1)(X2)
+     \uput[-120](X1){\small\ix}}
+\multido{\iy=-4+1}{9}{%
+     \psPoint(-4,\iy\space,-3){Y1}
+     \psPoint(-4 .2 sub,\iy\space,-3){Y2}
+    \psline(Y1)(Y2)
+     \uput[0](Y1){\small\iy}}
+\multido{\iz=-3+1}{7}{%
+     \psPoint(4,4,\iz\space){Z1}
+     \psPoint(4,4 .2 add,\iz\space){Z2}
+     \psline(Z1)(Z2)
+     \uput[l](Z1){\small\iz}}
+ \psPoint(0,4 0.5 add,-3){X0}
+ \uput[-120](X0){$x$}
+     \psPoint(-4 .5 sub,0,-3){Y0}
+ \uput[0](Y0){$y$}}
+
+\multido{\i=0+20}{1}{%
+\begin{center}
+\begin{pspicture}(-5.5,-6)(4.5,4)
+\psframe*(-5.5,-6)(4.5,4)
+\psset{linewidth=0.75\pslinewidth}
+\psset[pst-solides3d]{viewpoint=20 120 30,SphericalCoor,Decran=15,lightsrc=-10 15 10}
+\psSolid[object=grille,base=-4 4 -4 4,action=draw*,linecolor=gray](0,0,-3)
+\defFunction{shellplan}(u,v){1.2 v exp u Sin dup mul v Cos mul mul}{1.2 v exp u Sin dup mul v Sin mul mul}{-3}
+\psSolid[object=surfaceparametree,
+   base=0 pi pi 4 div neg 5 pi mul 2 div,incolor=gray,fillcolor=gray,
+   function=shellplan,RotZ=\i,
+   ngrid=25]%
+\psSolid[object=grille,base=-4 4 -4 4,action=draw,linecolor=gray](0,0,-3)
+\defFunction{shell}(u,v){1.2 v exp u Sin dup mul v Cos mul mul}{1.2 v exp u Sin dup mul v Sin mul mul}{1.2 v exp u Sin u Cos mul mul}
+\psSolid[object=surfaceparametree,linecolor={[cmyk]{1,0,1,0.5}},
+   base=0 pi pi 4 div neg 5 pi mul 2 div,incolor=yellow!50,
+   function=shell,RotZ=\i,
+   ngrid=30]%
+\quadrillage%
+\end{pspicture}
+\end{center}}
+
+\egroup

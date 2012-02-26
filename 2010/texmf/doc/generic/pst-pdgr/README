@@ -1,0 +1,26 @@
+	  Creating Medical Pedigree with PSTricks and LaTeX
+		  Boris Veytsman & Leila Akhmadeeva
+		       Version 0.2a, April 2006
+	
+This package is a set of macros based on PSTricks to draw medical
+pedigrees according to the recommendations for standardized human
+pedigree nomenclature.  The drawing commands place the symbols on a
+pspicture canvas.  An interface for making trees is also provided.
+The package can be used both with LaTeX and PlainTeX.  A separate
+Perl program for generating TeX files from spreadsheets is
+provided elsewhere on CTAN.
+
+To extract the files, run pst-pdgr.ins through latex.  Then move the
+files pst-pdgr.sty & pst-pdgr.cfg to the place where LaTeX files are
+kept in your system, e. g. /usr/share/texmf/tex/latex/pst-pdgr/, and
+the file pst-pdgr.tex to the place where generic TeX files are kept in
+your system, e.g.  /usr/share/texmf/tex/generic/pstricks/pst-pdgr/.
+
+The documentation is in the file pst-pdgr.pdf. You may use the
+provided Makefile to re-typeset it.
+
+Copyright 2006, Boris Veytsman <borisv@lk.net>, Leila Akhmadeeva
+
+This work may be distributed and/or modified under the conditions of
+the LaTeX Project Public License, either version 1.3 of this license
+or (at your option) any later version.

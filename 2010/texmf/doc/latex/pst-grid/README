@@ -1,0 +1,10 @@
+pst-gris: overlay grids
+
+pst-grid.sty     - The LaTeX file
+pst-grid-doc.pdf - The documentation
+pst-grid-doc.tex - The documentation source
+pst-grid-doc.bib - The documentation bib
+
+
+--
+Herbert Voss 2008-03-17

@@ -1,0 +1,23 @@
+----- pst-vue3d.tex
+1.24	2008-02-21	hv: draw circles for 360 degrees instead of 359
+1.23	2007-03-26	hv: load pst-vue3d.pro instead of 3d.pro
+1.22	2005-05-10	hv: make the unit option available
+1.21	2005-02-21	hv: use always pst-xkey and using \def instead
+                            of \edef for the parameter definitions
+1.2	2004-09-12	hv: use always \pst@object for the definition
+                            of the 3d objects
+1.1	2004-08-23	hv: use the default macro style of pstricks
+1.0i	2004-06-05	hv: fixed bug
+1.0h	2004-01-05	ml: added dodecaedron
+1.0g	2003-12-21	hv: fixed a bug in \pNodeThreeD
+1.0f	2003-12-20	hv: added two eye macros, drop the options for
+                            CX,CY,CZ and Xorigine,...
+                            added option SphericalCoor and modify all
+                            macros to use it
+1.0e	2003-12-18	hv: edit the \AxesThreeD macro
+1.0d	2003-12-18	hv: fix bug in truncated pyramid
+
+
+----- pst-vue3d.pro
+33	2007-03-26	hv: renamed to pst-vue3d.pro
+32	2005-05-10	hv: make the unit option available

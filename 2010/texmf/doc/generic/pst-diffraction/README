@@ -1,0 +1,57 @@
+%% Package `pst-diffraction.tex'
+%%
+%% Manuel Luque (ml _at_ pstricks.de) (France)
+%% Herbert Voss (hv _at_ pstricks.de) (Germany)
+%%
+%% 2007-09-04
+%%
+
+PSTricks offers excellent macros to insert more or less complex 
+graphics into a document. pstricks.tex itself is the base for several 
+other additional packages, which are mostly named pst-xxxx, 
+like pst-diffraction. 
+Diffraction refers to various phenomena associated with wave propagation, 
+such as the bending, spreading and interference of waves passing by an object 
+or aperture that disrupts the wave, like rectangle, circular, or tringle
+slits.
+
+Save the files
+
+pst-diffraction.sty 
+pst-diffraction.tex
+pst-diffraction.pro
+
+in any place, where latex or any other TeX program will find it.
+The pro file should go into $TEXMF$/dvips/pstricks/.
+
+pst-diffraction uses the extended version of the keyval package. So
+be sure that you 
+- have installed xkeyval with the special pst-xkey
+  (CTAN: tex-archive/macros/latex/contrib/xkeyval/)
+- do not load another package after pst-diffraction, which loads
+  the old keyval.sty or pst-key.tex
+
+You can run the documentation with 
+make DE
+make E
+make FR
+
+or for all make all  ;-) this will take a lot of time, because
+the images are very big.
+
+If you like to get the documentation file in another format run 
+
+latex pst-diffraction-docX.tex
+bibtex pst-diffraction-docX
+latex pst-diffraction-docX.tex
+dvips pst-diffraction-docX.dvi
+
+to get a PostScript file. But pay attention, that the pst-diffraction
+files are saved in the above mentioned way, before you run
+latex on the documentation file.
+
+The intermediate DVI file works only with viewers which can 
+interprete the embedded PostScript code.
+
+For another PDF output read the introduction from
+the documentation.

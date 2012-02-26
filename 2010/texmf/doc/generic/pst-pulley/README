@@ -1,0 +1,11 @@
+pst-eps: exporting eps figures
+
+pst-eps.sty     - The LaTeX file
+pst-eps.tex     - The TeX file
+pst-eps-doc.pdf - The documentation
+pst-eps-doc.tex - The documentation source
+pst-eps-doc.bib - The documentation bib
+
+
+--
+Herbert Voss 2006-11-05
