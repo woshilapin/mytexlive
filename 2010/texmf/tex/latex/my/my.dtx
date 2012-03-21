@@ -570,14 +570,14 @@
       }{%
         \textsc[myscstyle=low]{#1}\ %
       }%
-      \textsc[myscstyle=first]{#2}%
+	  \textsc[myscstyle=first]{#2}%
   }{%
     \ifstrempty{#1}%
       {%
       }{%
         \MakeLowercase{#1}\ %
       }%
-    \MakeUppercase{#2}%
+    \makefirstuc{#2}%
   }%
 }
 %    \end{macrocode}
