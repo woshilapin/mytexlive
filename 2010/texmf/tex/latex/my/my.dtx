@@ -33,7 +33,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{184}
+% \CheckSum{190}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -98,6 +98,14 @@
 % The \xclass{my} package mainly define a default configuration for \LaTeXe\ 
 %documents. Some useful macros are also defined and described in this section.
 %
+% \subsection{Options}
+% Options are mainly used for the language settings (with \xpackage{babel}).
+% \subsubsection{Language options}
+% There is two main languages at this time:
+% \begin{description}
+% \item[English] with \xoption{english} option
+% \item[French] with \xoption{french} or \xoption{francais} options
+% \end{description}
 % \subsection{Basic macros}
 % \DescribeMacro{\myemph}
 % \xpackage{my} package define a lot of macros that are already defined by 
@@ -276,6 +284,13 @@
 \RequirePackage{fltpoint}
 \RequirePackage{multido}
 \ifx\PSTFPloaded\endinput\else   \input pst-fp.tex\fi
+%    \end{macrocode}
+%
+% Declare language options.
+%    \begin{macrocode}
+\DeclareOptionX{english}{\PassOptionsToPackage{english}{babel}}
+\DeclareOptionX{french}{\PassOptionsToPackage{french}{babel}}
+\DeclareOptionX{francais}{\PassOptionsToPackage{french}{babel}}
 %    \end{macrocode}
 %
 % All global options are assigned to the current package.
