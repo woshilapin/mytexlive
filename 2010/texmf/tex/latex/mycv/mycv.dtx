@@ -1,0 +1,104 @@
+% \iffalse meta-comment
+%
+% Copyright (C) 2011 by Jean SIMARD
+%
+% This file may be distributed and/or modified under the conditions of the 
+%LaTeX Project Public License, either version 1.2 of this license or (at your 
+%option) any later version.  The latest version of this license is in:
+%
+% http://www.latex-project.org/lppl.txt
+%
+% and version 1.2 or later is part of all distributions of LaTeX version 
+%1999/12/01 or later.
+%
+% \fi
+
+% \iffalse
+%<*driver>
+\ProvidesFile{mycv.dtx}
+%</driver>
+%<class>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+%<class>\ProvidesClass{curve}
+%<*class>
+	[2012/03/21 v1.0 Curriculum Vitae class]
+%</class>
+%<*driver>
+\documentclass[english]{ltxdoc}
+\usepackage{holtxdoc}[2008/08/11]
+\usepackage{my}
+\usepackage{hyperref}
+\EnableCrossrefs
+\CodelineIndex 
+\RecordChanges
+\begin{document}
+\DocInput{mycv.dtx}
+\end{document}
+%</driver>
+% \fi
+%
+% \CheckSum{0}
+%
+%% \CharacterTable
+%%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%%   Lower-case  \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%%   Digits    \0\1\2\3\4\5\6\7\8\9
+%%   Exclamation   \!   Double quote  \"   Hash (number) \#
+%%   Dollar    \$   Percent     \%   Ampersand   \&
+%%   Acute accent  \'   Left paren  \(   Right paren   \)
+%%   Asterisk    \*   Plus      \+   Comma     \,
+%%   Minus     \-   Point     \.   Solidus     \/
+%%   Colon     \:   Semicolon   \;   Less than   \<
+%%   Equals    \=   Greater than  \>   Question mark \?
+%%   Commercial at \@   Left bracket  \[   Backslash   \\
+%%   Right bracket \]   Circumflex  \^   Underscore  \_
+%%   Grave accent  \`   Left brace  \{   Vertical bar  \|
+%%   Right brace   \}   Tilde     \~}
+%
+% \changes{v1.0}{2012/03/21}{Initial version}
+%
+% \GetFileInfo{mycv.dtx}
+%
+% \DoNotIndex{\begin,\end,\\}
+% \DoNotIndex{\RequirePackage}
+% \DoNotIndex{\ClassError,\ClassWarning,\ClassInfo}
+% \DoNotIndex{\PackageError,\PackageWarning,\PackageInfo}
+% \DoNotIndex{\DeclareOption,\ExecuteOptions,\CurrentOption,\ProcessOptions}
+% \DoNotIndex{\DeclareOptionX,\ProcessOptionsX}
+%
+% \title{The \xclass{mycv} class\\create a smart \myemph{curriculum vitae} 
+%\thanks{This document corresponds to the \xclass{mycv}~\fileversion, 
+%dated~\filedate.}}
+% \author{Jean 
+%\myname{Simard}\\\href{mailto:juste.lapin@gmail.com}{\xemail{juste.lapin@gmail.com}}}
+%
+% \maketitle
+%
+% \begin{abstract}
+%   The \xclass{mycv} is providing tools to create a \myemph{curriculum vitae} 
+%on a simple page as well as multi-page \myemph{curriculum vitae} with 
+%bibliography.
+% \end{abstract}
+% \tableofcontents
+%
+% \section{Introduction}
+%
+% \section{Usage}
+%
+% \DescribeMacro{\myinsertprogressbar}
+% \cs{myinsertprogressbar} is mainly defined for use in the predefined theme of 
+%the \xclass{mybeamer} class.
+%
+% \StopEventually{%
+%   \PrintChanges
+%   \PrintIndex
+% }
+%
+% \section{Implementation}
+% \subsection{Initialization}
+% Load \xpackage{my} package to load default configuration.
+%    \begin{macrocode}
+\RequirePackageWithOptions{my}[2011/12/08]
+%    \end{macrocode}
+%
+% \Finale
+\endinput
