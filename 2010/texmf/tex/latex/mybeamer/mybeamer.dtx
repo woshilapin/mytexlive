@@ -90,6 +90,9 @@
 % It adds few theme configuration and a progress bar on the bottom of each 
 %slide in the presentation.
 %
+% The page frame number does not include pages which are in the appendix. The 
+counter of frame number only counts the frames before the \cs{appendix}. The frame in the appendix are count with a new and independent counter.
+%
 % \section{Usage}
 % The \xclass{mybeamer} class does not really define new commands and new 
 %environments for the user.
@@ -452,5 +455,56 @@
   \setbeamercolor{block body example}{fg=black,bg=black!10}
 %    \end{macrocode}
 %
+% \subsection{The appendix}
+% Define a new counter to count the number of pages of the appendix.
+%    \begin{macrocode}
+  \let\appendixtotalframenumber\empty
+  \def\mainend{-1}
+%    \end{macrocode}
+%
+% Define a new \cs{appendix} command based on the old one which includes the 
+%initialisation of the number page counter.
+%    \begin{macrocode}
+  \let\appendixorig\appendix
+  \def\appendix{%
+    \edef\mainend{\theframenumber}%
+    \immediate\write\@auxout{%
+      \string\global\string\@namedef{mainendframenumber}{\mainend}%
+    }%
+    \appendixorig%
+    \def\inserttotalframenumber{\appendixtotalframenumber}%
+    \setcounter{framenumber}{0}%
+}
+%    \end{macrocode}
+%
+% Finalize the document at the end of it.
+%    \begin{macrocode}
+  \def\pageatend{%
+    \edef\appendixend{\theframenumber}%
+    \ifnumgreater{\mainend}{0}{%
+      \immediate\write\@auxout{%
+        \string\global\string\@namedef{appendixtotalframenumber}{\appendixend}%
+      }%
+      \immediate\write\@auxout{%
+        \string\global\string\@namedef{inserttotalframenumber}{\mainend}%
+      }%
+      \immediate\write\@auxout{%
+        \string\@writefile{nav}{%
+          \noexpand \headcommand {%
+            \noexpand \def\noexpand \inserttotalframenumber{\mainend}%
+          }%
+        }%
+      }%
+      \immediate\write\@auxout{%
+        \string\@writefile{nav}{%
+          \noexpand \headcommand {%
+            \noexpand \def\noexpand \appendixtotalframenumber{\appendixend}%
+          }%
+        }%
+      }%
+    }{}%
+  }
+  \AtEndDocument{\pageatend}
+%    \end{macrocode}
 % \Finale
 \endinput
