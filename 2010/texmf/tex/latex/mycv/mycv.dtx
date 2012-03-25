@@ -1,6 +1,6 @@
 % \iffalse meta-comment
 %
-% Copyright (C) 2011 by Jean SIMARD
+% Copyright (C) 2012 by Jean SIMARD
 %
 % This file may be distributed and/or modified under the conditions of the 
 %LaTeX Project Public License, either version 1.2 of this license or (at your 
@@ -81,12 +81,86 @@
 % \tableofcontents
 %
 % \section{Introduction}
+% The \xclass{mycv} class provides different tools to write a 
+%\myemph{curriculum vitae}, based on the \xclass{curve} class: 
+%\myemph{curriculum vitae} on one page, on multiple page, with a title page, 
+%with a table of contents, with a bibliography\dots{}
 %
 % \section{Usage}
+% \subsection{The header}
+% \DescribeMacro{\address}
+% \DescribeMacro{\postal}
+% \DescribeMacro{\city}
+% \DescribeMacro{\country}
+% \DescribeMacro{\phone}
+% \DescribeMacro{\mobile}
+% \DescribeMacro{\fax}
+% \DescribeMacro{\email}
+% \DescribeMacro{\birth}
+% Few commands can be defined to describe the identity and contact details of 
+%the owner of the \myemph{curriculum vitae}.
+% \begin{description}
+%   \item[\cs{address}] for the mail address (ex. |\address{13 rue Pascal}|)
+%   \item[\cs{postal}] for the postal code (ex. |\postal{8000-8099}|)
+%   \item[\cs{city}] for the city (ex. |\city{Zürich}|)
+%   \item[\cs{country}] for the country (ex. |\country{Germany}|)
+%   \item[\cs{phone}] for the phone number (ex. |\phone{01 23 45 67 89}|)
+%   \item[\cs{mobile}] for the mobile number (ex. |\mobile{07 23 45 67 89}|)
+%   \item[\cs{fax}] for the fax number (ex. |\fax{01 23 45 67 90}|)
+%   \item[\cs{email}] for the email (ex. |\email{albert.einstein@emc2.org}|)
+%   \item[\cs{birth}] for the date of birth in format \texttt{dd/mm/aaaa} (ex.  
+%|\birth{14/03/1879}|)
+% \end{description}
 %
-% \DescribeMacro{\myinsertprogressbar}
-% \cs{myinsertprogressbar} is mainly defined for use in the predefined theme of 
-%the \xclass{mybeamer} class.
+% \subsection{The table of contents}
+% \DescribeMacro{\tableofcontents}
+% The \cs{tableofcontents} has been defined and has the same effect as in the 
+%\xclass{article}, \xclass{report} or \xclass{book} classes.
+%
+% \subsection{Rubrics and entries}
+% \begin{declcs}{begin}|{myrubric}|
+% \marg{title}\\
+% |...|\\
+% |\end{myrubric}|
+% \end{declcs}
+% \DescribeEnv{myrubric}
+% The main environment of the \myemph{curriculum vitae} is the |myrubric| 
+%environment. It creates a new rubric which will contains multiple entries (see 
+%below). A rubric must contain a \meta{title}.
+%
+% \begin{declcs}{mymakerubric}
+% \marg{keyword}
+% \marg{title}
+% \end{declcs}
+% \DescribeMacro{\mymakerubric}
+% The \cs{mymakerubric} defines a new rubric in the \myemph{curriculum vitae}.  
+%Depending on the \meta{keyword} argument, it includes the file 
+%\texttt{keyword.tex} or, if there is a flavor, \texttt{keyword.<flavor>.tex}.  
+%The \meta{title} argument is the title of the rubric.
+%
+% \begin{declcs}{begin}|{myentry}|
+% \oarg{duration}
+% \marg{date}\\
+% |  |\meta{content}\\
+% |\end{myentry}|
+% \end{declcs}
+% \DescribeEnv{myentry}
+% In a rubric, there will be multiple entries. Each entry is a experience or a 
+%formation described in the \myemph{curriculum vitae}. The \meta{date} should 
+%be the year of the formation; the \meta{duration} could be added to inform of 
+%the duration of the formation or of the job. The \meta{content} should be used 
+%to describe the formation or the job.
+%
+% \begin{declcs}{begin}|{myheadentry}|
+% \marg{date}\\
+% |  |\meta{title}\\
+% |\end{myheadentry}|
+% \end{declcs}
+% \DescribeEnv{myheadentry}
+% Sometime, a rubric may contain one big entry (with a lot of information). The 
+%|myheadentry| may be used to inform of the beginning of a long entry and 
+%multiple entries (|myentry|) can be used to describe the formation or the job 
+%with two or more points.
 %
 % \StopEventually{%
 %   \PrintChanges
@@ -98,6 +172,298 @@
 % Load \xpackage{my} package to load default configuration.
 %    \begin{macrocode}
 \RequirePackageWithOptions{my}[2011/12/08]
+%    \end{macrocode}
+% The different following options are transfered to the \xclass{curve} class.
+%    \begin{macrocode}
+\DeclareOptionX{a4paper}{\PassOptionsToClass{a4paper}{curve}}
+\DeclareOptionX{a5paper}{\PassOptionsToClass{a5paper}{curve}}
+\DeclareOptionX{b4paper}{\PassOptionsToClass{b4paper}{curve}}
+\DeclareOptionX{letterpaper}{\PassOptionsToClass{letterpaper}{curve}}
+\DeclareOptionX{legalpaper}{\PassOptionsToClass{legalpaper}{curve}}
+\DeclareOptionX{executivepaper}{\PassOptionsToClass{executivepaper}{curve}}
+\DeclareOptionX{10pt}{\PassOptionsToClass{10pt}{curve}}
+\DeclareOptionX{11pt}{\PassOptionsToClass{11pt}{curve}}
+\DeclareOptionX{12pt}{\PassOptionsToClass{12pt}{curve}}
+\DeclareOptionX{final}{\PassOptionsToClass{final}{curve}}
+\DeclareOptionX{draft}{\PassOptionsToClass{draft}{curve}}
+\DeclareOptionX{english}{\PassOptionsToClass{english}{curve}}
+\DeclareOptionX{french}{\PassOptionsToClass{french}{curve}}
+\DeclareOptionX{francais}{\PassOptionsToClass{francais}{curve}}
+\DeclareOptionX{spanish}{\PassOptionsToClass{spanish}{curve}}
+\DeclareOptionX{portuguese}{\PassOptionsToClass{portuguese}{curve}}
+\DeclareOptionX{portuges}{\PassOptionsToClass{portuges}{curve}}
+\DeclareOptionX{brazilian}{\PassOptionsToClass{brazilian}{curve}}
+\DeclareOptionX{brazil}{\PassOptionsToClass{brazil}{curve}}
+\DeclareOptionX{italian}{\PassOptionsToClass{italian}{curve}}
+\DeclareOptionX{german}{\PassOptionsToClass{german}{curve}}
+\DeclareOptionX{ngerman}{\PassOptionsToClass{ngerman}{curve}}
+\DeclareOptionX{dutch}{\PassOptionsToClass{dutch}{curve}}
+\DeclareOptionX{danish}{\PassOptionsToClass{danish}{curve}}
+\DeclareOptionX{swedish}{\PassOptionsToClass{swedish}{curve}}
+\DeclareOptionX*{%
+  \ClassWarning{mycv}{Unknown option `\CurrentOption'}%
+}
+\ProcessOptionsX\relax
+%    \end{macrocode}
+%
+% Undefined the macro \cs{@makefntext} before loading the \xclass{curve} class 
+%to avoid problem of command already defined.
+%    \begin{macrocode}
+\undef\@makefntext
+%    \end{macrocode}
+%
+% The \xclass{curve} class is now loaded with no default option.
+%    \begin{macrocode}
+\LoadClass{curve}[2008/02/25]
+%    \end{macrocode}
+%
+% Some useful packages are loaded here.
+% \begin{itemize}
+%   \item\xpackage{myheadfoot} is used for the header and footer
+%   \item\xpackage{mycolor} for a bundle of personal colors
+%   \item\xpackage{mydate} for a package about dates
+%   \item\xpackage{environ} to define specific environments
+%   \item\xpackage{hyperref} for the links in a document
+% \end{itemize}
+%    \begin{macrocode}
+\RequirePackage{myheadfoot}
+\RequirePackage{mycolor}
+\RequirePackage{mydate}
+\RequirePackage{environ}
+\RequirePackage{makecell}
+\RequirePackage{hyperref}
+%    \end{macrocode}
+%
+% \subsection{The header}
+% Define new fields for the header of the \myemph{curriculum vitae}:
+% \begin{macro}{\address}
+%   The mail address
+%    \begin{macrocode}
+\newcommand{\address}[1]{\def\@address{#1}}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\postal}
+%   The postal code
+%    \begin{macrocode}
+\newcommand{\postal}[1]{\def\@postal{#1}}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\city}
+%   The city
+%    \begin{macrocode}
+\newcommand{\city}[1]{\def\@city{#1}}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\country}
+%   The country
+%    \begin{macrocode}
+\newcommand{\country}[1]{\def\@country{#1}}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\phone}
+%   The phone number
+%    \begin{macrocode}
+\newcommand{\phone}[1]{\def\@phone{#1}}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\mobile}
+%   The mobile number
+%    \begin{macrocode}
+\newcommand{\mobile}[1]{\def\@mobile{#1}}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\fax}
+%   The fax number
+%    \begin{macrocode}
+\newcommand{\fax}[1]{\def\@fax{#1}}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\email}
+%   The email address
+%    \begin{macrocode}
+\newcommand{\email}[1]{\def\@email{\href{mailto:#1}{#1}}}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\birth}
+%   The birth date
+%    \begin{macrocode}
+\newcommand{\birth}[1]{\def\@birth{\mydate[datestyle=short]{#1}}}
+%    \end{macrocode}
+% \end{macro}
+%
+% With the previous defined fields, define the \cs{leftheader} and 
+%\cs{rightheader} which are used by \xclass{curve}.
+%    \begin{macrocode}
+\headerscale{1.0}
+\photoscale{0.2}
+\leftheader{%
+  \ifdef{\@author}{\@author\newline}{}%
+  \ifdef{\@address}{\@address\newline}{}%
+  \ifdef{\@city}{\ifdef{\@postal}{\@postal}{}~\@city\newline}{}%
+  \ifdef{\@country}{\@country\newline}{}%
+  \ifdef{\@birth}{\@birth\newline}{}%
+  \\[-0.5ex]%
+  \begin{tabular}{@{}l@{ -- }l@{}}%
+    \ifdef{\@phone}{Tel & \@phone\tabularnewline}{}%
+    \ifdef{\@mobile}{Mob & \@mobile\tabularnewline}{}%
+    \ifdef{\@fax}{Mob & \@fax\tabularnewline}{}%
+    \ifdef{\@email}{Email & \@email\tabularnewline}{}%
+  \end{tabular}\newline%
+}
+\rightheader{}
+\newrobustcmd\makeheader{\makeheaders}
+%    \end{macrocode}
+%
+% \subsection{The title page}
+% Define a new header/footer style for the title page (without header/footer).
+%    \begin{macrocode}
+\fancypagestyle{firstpage}{%
+  \fancyhead{}%
+  \fancyfoot{}%
+  \renewcommand{\headrulewidth}{0.0pt}%
+  \renewcommand{\footrulewidth}{0.0pt}%
+  \fancyhead[R]{%
+    \ifdef{\@date}{\footnotesize\textcolor{black!70}{\@date}}{}%
+  }%
+}%
+%    \end{macrocode}
+% \begin{macro}{\maketitle}
+%   The \cs{maketitle} only insert the title and the author on a single blank 
+%page. If \cs{date} has been defined, the header/footer style put the date 
+%upper-left on the page.
+%    \begin{macrocode}
+\def\maketitle{%
+  \begin{center}%
+    \null%
+    \thispagestyle{firstpage}%
+    \vfill%
+    {\LARGE \@title}\par
+    \vfill%
+    {\Large \@author}\par
+    \vfill%
+    \null%
+  \end{center}%
+  \clearpage%
+  \pagestyle{plain}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsection{The table of contents}
+% Define the \cs{tableofcontents} using the original definition of \LaTeXe.
+%    \begin{macrocode}
+\setcounter{tocdepth}{1}
+\def\@starttoc#1{%
+  \begingroup
+    \makeatletter
+    \@input{\jobname.#1}%
+    \if@filesw
+      \expandafter\newwrite\csname tf@#1\endcsname
+      \immediate\openout \csname tf@#1\endcsname \jobname.#1\relax
+    \fi
+    \@nobreakfalse
+  \endgroup
+}
+\def\addcontentsline#1#2#3{%
+  \addtocontents{#1}{\protect\contentsline{#2}{#3}{\thepage}}%
+}
+\long\def\addtocontents#1#2{%
+  \protected@write\@auxout
+  {\let\label\@gobble \let\index\@gobble \let\glossary\@gobble}%
+  {\string\@writefile{#1}{#2}}%
+}
+\def\contentsline#1{\csname l@#1\endcsname}
+\newcommand\@pnumwidth{1.55em}
+\newcommand\@tocrmarg{2.55em} 
+\newcommand\@dotsep{4.5}
+\newcommand{\l@toc}{\@dottedtocline{1}{0.5em}{0.5em}}
+\newcommand\tableofcontents{%
+  \clearpage
+  \textbf{\LARGE Sommaire}%
+  \vspace{3ex plus 0.5ex minus 0.5ex}
+  \addtocontents{toc}{\large\vspace{1ex}}%
+  \@starttoc{toc}%
+  \clearpage
+}
+%    \end{macrocode}
+%
+% \subsection{Rubric and entries}
+% \begin{macro}{myrubric}
+%   The \texttt{myrubric} environment is based on the \texttt{rubric} 
+%environment of the \xclass{curve} class.
+%    \begin{macrocode}
+\newenvironment{myrubric}[1]{%
+  \begin{rubric}{#1}%
+}{%
+  \end{rubric}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\mymakerubric}
+%   Use \cs{makerubric} macro from \xclass{curve} class and add the title of 
+%the rubric in the \texttt{.toc} file for the table of contents.
+%    \begin{macrocode}
+\newcommand{\mymakerubric}[2]{%
+  \addcontentsline{toc}{toc}{\large{#2}}%
+  \addtocontents{toc}{\large\vspace{1ex}}%
+  \makerubric{#1}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{myentry}
+%   The \texttt{myentry} environment define an new entry based on the 
+%\xpackage{environ} package. It is a tricky new environment because he must 
+%accept ampersand \texttt{\&} in it.
+%    \begin{macrocode}
+\NewEnviron{myentry}[2][]{%
+  \gdef\@myheadentry{%
+    \footnotesize%
+    \ifstrempty{#1}%
+	  {\makecell[tl]{#2}}%
+      {\makecell[tl]{#2\\#1}}%
+  }%
+  \expandafter\gdef%
+  \expandafter\@myentry%
+  \expandafter{%
+    \expandafter\@myheadentry%
+	\expandafter&%
+	\expandafter\@prefix%
+	\expandafter&\BODY\tabularnewline%
+    \vspace{0.5ex plus 0.25ex minus 0.25ex}%
+  }%
+  \aftergroup\@myentry%
+}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{myheadentry}
+%   The \texttt{myheadentry} environment is like the \texttt{myentry} 
+%environment except it apply bold fonts to every text.
+%    \begin{macrocode}
+\NewEnviron{myheadentry}[1]{%
+  \gdef\@myheadentry{\sffamily\bfseries #1}%
+  \expandafter\gdef%
+  \expandafter\@myentry%
+  \expandafter{%
+    \expandafter\@myheadentry%
+	\expandafter&%
+	\expandafter\@prefix%
+	\expandafter&%
+	\expandafter\bfseries\BODY\tabularnewline%
+    \vspace{0.5ex plus 0.25ex minus 0.25ex}%
+  }%
+  \aftergroup\@myentry%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% The \cs{date} define the \cs{@date} macro. If the user does not want a date, 
+%he will not define \cs{date} but the default configuration of \LaTeXe is to 
+%define \cs{@date} with |\date{\today}|. The following line forces to undefine 
+%\cs{@date}.
+%    \begin{macrocode}
+\undef{\@date}
 %    \end{macrocode}
 %
 % \Finale
