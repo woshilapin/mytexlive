@@ -58,24 +58,24 @@
 \iflanguage{english}{
 	\newcommand{\myref@lang@see}{see}
 	\newcommand{\myref@lang@partname}{part}
-	\newcommand{\myref@lang@chaptername}{\MakeLowercase{\chaptername}}
+	\newcommand{\myref@lang@chaptername}{\chaptername}
 	\newcommand{\myref@lang@sectionname}{section}
 	\newcommand{\myref@lang@subsectionname}{section}
 	\newcommand{\myref@lang@subsubsectionname}{section}
-	\newcommand{\myref@lang@figurename}{\MakeLowercase{\figurename}}
-	\newcommand{\myref@lang@tablename}{\MakeLowercase{\tablename}}
+	\newcommand{\myref@lang@figurename}{\figurename}
+	\newcommand{\myref@lang@tablename}{\tablename}
 	\newcommand{\myref@lang@equationname}{equation}
 	\newcommand{\myref@lang@enumeratename}{step}
 }{}
 \iflanguage{french}{
 	\newcommand{\myref@lang@see}{voir}
 	\newcommand{\myref@lang@partname}{partie}
-	\newcommand{\myref@lang@chaptername}{\MakeLowercase{\chaptername}}
+	\newcommand{\myref@lang@chaptername}{\chaptername}
 	\newcommand{\myref@lang@sectionname}{section}
 	\newcommand{\myref@lang@subsectionname}{section}
 	\newcommand{\myref@lang@subsubsectionname}{section}
-	\newcommand{\myref@lang@figurename}{\MakeLowercase{\figurename}}
-	\newcommand{\myref@lang@tablename}{\MakeLowercase{\tablename}}
+	\newcommand{\myref@lang@figurename}{\figurename}
+	\newcommand{\myref@lang@tablename}{\tablename}
 	\newcommand{\myref@lang@equationname}{équation}
 	\newcommand{\myref@lang@enumeratename}{étape}
 }{}
@@ -130,35 +130,58 @@
 \WithSuffix\newcommand\mycustomsref*[3]{\mycustomsref{refsee=true,#1}{#2}{#3}}
 % Command to create all necessary commands about a particular type of reference
 % For example,
-% \mycreatecustomsref{section}{Section}{Super-section}
-% will create commands '\mysectionref, '\mysectionref*, '\mySectionref' and '\mySectionref*'
+% \mycreatecustomsref{Section}{Super-section}
+% will create commands '\mysectionref, '\mysectionref*, '\mySectionref', 
+%'\mySectionref*', '\mySECTIONref, '\mySECTIONref*
 % All of these new commands will prefix the reference with 'Super-section'.
-\def\mycreatecustomsref#1#2#3{%
-	\expandafter\newcommand\csname my#1ref\endcsname[2][]{\mycustomsref{##1}{\MakeLowercase{#3}}{##2}}%
-	\WithSuffix\expandafter\newcommand\csname my#1ref\endcsname*[2][]{\mycustomsref*{##1}{\MakeLowercase{#3}}{##2}}%
-	\expandafter\newcommand\csname my#2ref\endcsname[2][]{\mycustomsref{##1}{\expandafter\makefirstuc\expandafter{#3}}{##2}}%
-	\WithSuffix\expandafter\newcommand\csname my#2ref\endcsname*[2][]{\mycustomsref*{##1}{\expandafter\makefirstuc\expandafter{#3}}{##2}}%
+% !!!CAREFUL!!! First argument must contain a word with first letter uppercase
+\def\mycreatecustomsref#1#2{%
+	\lowercase{\def\my@macroname{#1}}%
+	\expandafter\gdef\csname my\my@macroname ref\expandafter\endcsname\expandafter{%
+		\def\my@refname@case{\MakeLowercase{#2}}%
+		\csname my#1ref@i\endcsname%
+	}
+	\expandafter\gdef\csname my#1ref\expandafter\endcsname\expandafter{%
+		\def\my@refname@case{\expandafter\MakeUppercase #2}%
+		\csname my#1ref@i\endcsname%
+	}
+	\uppercase{\def\my@macroname{#1}}%
+	\expandafter\gdef\csname my\my@macroname ref\expandafter\endcsname\expandafter{%
+		\def\my@refname@case{\MakeUppercase{#2}}%
+		\csname my#1ref@i\endcsname%
+	}
+	\expandafter\gdef\csname my#1ref@i\expandafter\endcsname\expandafter{%
+		\expandafter\@ifstar\csname my#1refs@ii\expandafter\endcsname\csname my#1ref@ii\endcsname%
+	}%
+	\expandafter\gdef\csname my#1ref@ii\expandafter\endcsname{%
+		\expandafter\@testopt\csname my#1ref@iii\endcsname{}%
+	}%
+	\expandafter\gdef\csname my#1refs@ii\expandafter\endcsname{%
+		\expandafter\@testopt\csname my#1refs@iii\endcsname{}%
+	}%
+	\expandafter\gdef\csname my#1ref@iii\endcsname[##1]##2{\mycustomsref{##1}{\my@refname@case}{##2}}%
+	\expandafter\gdef\csname my#1refs@iii\endcsname[##1]##2{\mycustomsref*{##1}{\my@refname@case}{##2}}%
 }
 %% About specialized command for references.
 %% The starred versions are activating the 'refsee' flag.
 % For reference on part.
-\mycreatecustomsref{part}{Part}{\myref@lang@partname}
+\mycreatecustomsref{Part}{\myref@lang@partname}
 % For reference on chapter.
-\mycreatecustomsref{chapter}{Chapter}{\chaptername}
+\mycreatecustomsref{Chapter}{\myref@lang@chaptername}
 % For reference on section.
-\mycreatecustomsref{section}{Section}{\myref@lang@sectionname}
+\mycreatecustomsref{Section}{\myref@lang@sectionname}
 % For reference on subsection.
-\mycreatecustomsref{subsection}{Subsection}{\myref@lang@subsectionname}
+\mycreatecustomsref{Subsection}{\myref@lang@subsectionname}
 % For reference on subsubsection.
-\mycreatecustomsref{subsubsection}{Subsubsection}{\myref@lang@subsubsectionname}
+\mycreatecustomsref{Subsubsection}{\myref@lang@subsubsectionname}
 % For reference on figure.
-\mycreatecustomsref{figure}{Figure}{\myref@lang@figurename}
+\mycreatecustomsref{Figure}{\myref@lang@figurename}
 % For reference on table.
-\mycreatecustomsref{table}{Table}{\myref@lang@tablename}
+\mycreatecustomsref{Table}{\myref@lang@tablename}
 % For reference on equation
-\mycreatecustomsref{equation}{Equation}{\myref@lang@equationname}
+\mycreatecustomsref{Equation}{\myref@lang@equationname}
 % For reference on enumerate
-\mycreatecustomsref{enumerate}{Enumerate}{\myref@lang@enumeratename}
+\mycreatecustomsref{Enumerate}{\myref@lang@enumeratename}
 
 % End of package
 \endinput
