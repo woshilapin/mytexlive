@@ -4,11 +4,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Declare package options %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Language options
-\newif\if@myenglish \@myenglishfalse
-\DeclareOption{myenglish}{\@myenglishtrue}
-\newif\if@myfrancais \@myfrancaisfalse
-\DeclareOption{myfrancais}{\@myfrancaistrue}
 % In case of unknown options
 \DeclareOption*{%
 	\PackageWarning{mysource}{Unknown option `\CurrentOption'}%
@@ -28,16 +23,16 @@
 %% New configuration %%
 %%%%%%%%%%%%%%%%%%%%%%%
 % Set words depending of the language
-\if@myenglish
+\iflanguage{english}{
 	\def\mysource@lang@listofcodesname{Sources codes}
 	\def\mysource@lang@code{source\xspace}
 	\def\mysource@lang@Code{Source\xspace}
-\fi
-\if@myfrancais
+}{}
+\iflanguage{french}{
 	\def\mysource@lang@listofcodesname{Codes sources}
 	\def\mysource@lang@code{source\xspace}
 	\def\mysource@lang@Code{Source\xspace}
-\fi
+}{}
 \renewcommand{\lstlistingname}{\mysource@lang@Code}
 % Options for 'listings' (default for C language)
 \lstset{%
