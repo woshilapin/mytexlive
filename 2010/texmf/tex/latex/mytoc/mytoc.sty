@@ -4,11 +4,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Declare package options %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Language options
-\newif\if@english \@englishfalse
-\DeclareOption{english}{\@englishtrue}
-\newif\if@francais \@francaisfalse
-\DeclareOption{francais}{\@francaistrue}
 % What is the section level for the table of contents
 \newif\if@chapter \@chapterfalse
 \DeclareOption{chapter}{\@chaptertrue}
@@ -27,12 +22,12 @@
 %% Options to pass to packages
 \if@minitoc
 	\PassOptionsToPackage{francais}{minitoc}
-	\if@francais
+	\iflanguage{french}{
 		\PassOptionsToPackage{francais}{minitoc}
-	\fi
-	\if@english
+	}{}
+	\iflanguage{english}{
 		\PassOptionsToPackage{english}{minitoc}
-	\fi
+	}{}
 \fi
 
 %% Packages to call
@@ -53,10 +48,10 @@
 %% New configuration %%
 %%%%%%%%%%%%%%%%%%%%%%%
 % Redefine names depending on language
-\if@myfrancais
+\iflanguage{french}{
 	\renewcommand{\appendixpagename}{Annexes}
 	\renewcommand{\appendixtocname}{Annexes}
-\fi
+}{}
 % Add page number for appendices
 \appendicestocpagenum
 % Redefine style of sections fonts
