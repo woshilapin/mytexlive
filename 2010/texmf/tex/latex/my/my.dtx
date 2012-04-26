@@ -33,7 +33,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{203}
+% \CheckSum{211}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -101,14 +101,17 @@
 % \subsection{Options}
 % Options are mainly used for the language settings (with \xpackage{babel}).
 % \subsubsection{Language options}
-% There is two main languages at this time:
+% There is a few languages at this time:
 % \begin{description}
 % \item[English] with \xoption{english} option
 % \item[French] with \xoption{french}, \xoption{francais}, \xoption{canadien} 
 %or \xoption{acadian} options
 % \item[German] with \xoption{austrian}, \xoption{german}, \xoption{germanb}, 
 %\xoption{ngerman} or \xoption{naustrian} options
+% \item[Portuguese] with \xoption{portuges}, \xoption{portuguese}, 
+%\xoption{brazilian} or \xoption{brazil} options
 % \end{description}
+%
 % \subsection{Basic macros}
 % \DescribeMacro{\myemph}
 % \xpackage{my} package define a lot of macros that are already defined by 
@@ -301,6 +304,10 @@
 \DeclareOptionX{germanb}{\PassOptionsToPackage{german}{babel}}
 \DeclareOptionX{ngerman}{\PassOptionsToPackage{ngerman}{babel}}
 \DeclareOptionX{naustrian}{\PassOptionsToPackage{ngerman}{babel}}
+\DeclareOptionX{portuges}{\PassOptionsToPackage{portuges}{babel}}
+\DeclareOptionX{portuguese}{\PassOptionsToPackage{portuguese}{babel}}
+\DeclareOptionX{brazilian}{\PassOptionsToPackage{brazilian}{babel}}
+\DeclareOptionX{brazil}{\PassOptionsToPackage{brazil}{babel}}
 %    \end{macrocode}
 %
 % All global options are assigned to the current package.
