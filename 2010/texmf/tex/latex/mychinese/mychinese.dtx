@@ -32,7 +32,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{20}
+% \CheckSum{23}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -121,6 +121,14 @@
 % We will also require the \xpackage{mycolor} package.
 %    \begin{macrocode}
 \RequirePackage{mycolor}
+%    \end{macrocode}
+%
+% Some UTF-8 characters can not be written in the default \LaTeXe 
+%configuration. Define them here.
+%    \begin{macrocode}
+\DeclareUnicodeCharacter{01CE}{%
+  {$\mathrm{\check{a}}$}% Define the `ǎ'
+}
 %    \end{macrocode}
 %
 % \begin{macro}{\mychinese}
