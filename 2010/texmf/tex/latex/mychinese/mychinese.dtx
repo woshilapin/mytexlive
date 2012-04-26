@@ -32,7 +32,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{15}
+% \CheckSum{20}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -87,7 +87,8 @@
 % \DescribeMacro{\mychinese}
 % The \cs{mychinese} macro allow to type inline chinese characters. Without 
 %this macro, \LaTeXe will give you an error of compilation because the 
-%characters are not included in the default table of characters.
+%characters are not included in the default table of characters. An optional 
+%argument allows you to give the PinYin version.
 %
 % \DescribeEnv{myChinese}
 %
@@ -117,14 +118,25 @@
 \RequirePackage[encapsulated]{CJK}
 %    \end{macrocode}
 %
+% We will also require the \xpackage{mycolor} package.
+%    \begin{macrocode}
+\RequirePackage{mycolor}
+%    \end{macrocode}
+%
 % \begin{macro}{\mychinese}
 % Define the inline macro to type chinese characters. The package only takes 
 %UTF-8 file encoding.
 %    \begin{macrocode}
-\newcommand{\mychinese}[1]{%
+\newcommand{\mychinese}[2][]{%
   \begin{CJK}{UTF8}{cyberbit}%
-    #1%
+    #2%
   \end{CJK}%
+  \ifstrempty{#1}{}{%
+    \xspace%
+    \textcolor{black!50}{%
+      \small (#1)%
+    }%
+  }%
 }
 %    \end{macrocode}
 % \end{macro}
