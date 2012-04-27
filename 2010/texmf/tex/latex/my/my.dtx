@@ -33,7 +33,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{211}
+% \CheckSum{225}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -103,7 +103,9 @@
 % \subsubsection{Language options}
 % There is a few languages at this time:
 % \begin{description}
-% \item[English] with \xoption{english} option
+% \item[English] with \xoption{english}, \xoption{USenglish}, 
+%\xoption{american}, \xoption{UKenglish}, \xoption{british}, 
+%\xoption{canadian}, \xoption{australian} or \xoption{newzealand} options
 % \item[French] with \xoption{french}, \xoption{francais}, \xoption{canadien} 
 %or \xoption{acadian} options
 % \item[German] with \xoption{austrian}, \xoption{german}, \xoption{germanb}, 
@@ -295,6 +297,13 @@
 % Declare language options.
 %    \begin{macrocode}
 \DeclareOptionX{english}{\PassOptionsToPackage{english}{babel}}
+\DeclareOptionX{USenglish}{\PassOptionsToPackage{USenglish}{babel}}
+\DeclareOptionX{american}{\PassOptionsToPackage{american}{babel}}
+\DeclareOptionX{UKenglish}{\PassOptionsToPackage{UKenglish}{babel}}
+\DeclareOptionX{british}{\PassOptionsToPackage{british}{babel}}
+\DeclareOptionX{canadian}{\PassOptionsToPackage{canadian}{babel}}
+\DeclareOptionX{australian}{\PassOptionsToPackage{australian}{babel}}
+\DeclareOptionX{newzealand}{\PassOptionsToPackage{newzealand}{babel}}
 \DeclareOptionX{french}{\PassOptionsToPackage{french}{babel}}
 \DeclareOptionX{francais}{\PassOptionsToPackage{french}{babel}}
 \DeclareOptionX{canadien}{\PassOptionsToPackage{french}{babel}}
