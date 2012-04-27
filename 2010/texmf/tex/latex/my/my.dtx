@@ -734,10 +734,10 @@
 %|myquotechangelanguage| boolean flag is used to test if the language of the 
 %quote is the same as the current language of the document.
 %    \begin{macrocode}
-\newbool{myquotechangelanguage}
+\newtoggle{myquotechangelanguage}
 \newrobustcmd{\myquote}[1][default]{%
   \ifstrequal{#1}{default}{}{%
-    \booltrue{myquotechangelanguage}%
+    \toggletrue{myquotechangelanguage}%
     \begin{otherlanguage}{#1}%
     \it%
   }%
@@ -745,9 +745,9 @@
 }
 \def\endmyquote{%
   \end{quote}%
-  \ifbool{myquotechangelanguage}{%
+  \iftoggle{myquotechangelanguage}{%
     \end{otherlanguage}%
-    \boolfalse{myquotechangelanguage}%
+    \togglefalse{myquotechangelanguage}%
   }{}%
 }
 %    \end{macrocode}
