@@ -33,7 +33,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{225}
+% \CheckSum{285}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -293,30 +293,102 @@
 \RequirePackage{multido}
 \ifx\PSTFPloaded\endinput\else   \input pst-fp.tex\fi
 %    \end{macrocode}
-%
-% Declare language options.
+% Boolean variable are declared in order to create macro for each language (see 
+%below).
 %    \begin{macrocode}
-\DeclareOptionX{english}{\PassOptionsToPackage{english}{babel}}
-\DeclareOptionX{USenglish}{\PassOptionsToPackage{USenglish}{babel}}
-\DeclareOptionX{american}{\PassOptionsToPackage{american}{babel}}
-\DeclareOptionX{UKenglish}{\PassOptionsToPackage{UKenglish}{babel}}
-\DeclareOptionX{british}{\PassOptionsToPackage{british}{babel}}
-\DeclareOptionX{canadian}{\PassOptionsToPackage{canadian}{babel}}
-\DeclareOptionX{australian}{\PassOptionsToPackage{australian}{babel}}
-\DeclareOptionX{newzealand}{\PassOptionsToPackage{newzealand}{babel}}
-\DeclareOptionX{french}{\PassOptionsToPackage{french}{babel}}
-\DeclareOptionX{francais}{\PassOptionsToPackage{french}{babel}}
-\DeclareOptionX{canadien}{\PassOptionsToPackage{french}{babel}}
-\DeclareOptionX{acadian}{\PassOptionsToPackage{french}{babel}}
-\DeclareOptionX{austrian}{\PassOptionsToPackage{german}{babel}}
-\DeclareOptionX{german}{\PassOptionsToPackage{german}{babel}}
-\DeclareOptionX{germanb}{\PassOptionsToPackage{german}{babel}}
-\DeclareOptionX{ngerman}{\PassOptionsToPackage{ngerman}{babel}}
-\DeclareOptionX{naustrian}{\PassOptionsToPackage{ngerman}{babel}}
-\DeclareOptionX{portuges}{\PassOptionsToPackage{portuges}{babel}}
-\DeclareOptionX{portuguese}{\PassOptionsToPackage{portuguese}{babel}}
-\DeclareOptionX{brazilian}{\PassOptionsToPackage{brazilian}{babel}}
-\DeclareOptionX{brazil}{\PassOptionsToPackage{brazil}{babel}}
+\newtoggle{my@english@bool}
+\newtoggle{my@french@bool}
+\newtoggle{my@german@bool}
+\newtoggle{my@portuguese@bool}
+%    \end{macrocode}
+%
+% Declare language options. Set the boolean variable of each language true when 
+%necessary.
+%    \begin{macrocode}
+\DeclareOptionX{english}{
+  \PassOptionsToPackage{english}{babel}
+  \toggletrue{my@english@bool}
+}
+\DeclareOptionX{USenglish}{
+  \PassOptionsToPackage{USenglish}{babel}
+  \toggletrue{my@english@bool}
+}
+\DeclareOptionX{american}{
+  \PassOptionsToPackage{american}{babel}
+  \toggletrue{my@english@bool}
+}
+\DeclareOptionX{UKenglish}{
+  \PassOptionsToPackage{UKenglish}{babel}
+  \toggletrue{my@english@bool}
+}
+\DeclareOptionX{british}{
+  \PassOptionsToPackage{british}{babel}
+  \toggletrue{my@english@bool}
+}
+\DeclareOptionX{canadian}{
+  \PassOptionsToPackage{canadian}{babel}
+  \toggletrue{my@english@bool}
+}
+\DeclareOptionX{australian}{
+  \PassOptionsToPackage{australian}{babel}
+  \toggletrue{my@english@bool}
+}
+\DeclareOptionX{newzealand}{
+  \PassOptionsToPackage{newzealand}{babel}
+  \toggletrue{my@english@bool}
+}
+\DeclareOptionX{french}{
+  \PassOptionsToPackage{french}{babel}
+  \toggletrue{my@french@bool}
+}
+\DeclareOptionX{francais}{
+  \PassOptionsToPackage{french}{babel}
+  \toggletrue{my@french@bool}
+}
+\DeclareOptionX{canadien}{
+  \PassOptionsToPackage{french}{babel}
+  \toggletrue{my@french@bool}
+}
+\DeclareOptionX{acadian}{
+  \PassOptionsToPackage{french}{babel}
+  \toggletrue{my@french@bool}
+}
+\DeclareOptionX{austrian}{
+  \PassOptionsToPackage{german}{babel}
+  \toggletrue{my@german@bool}
+}
+\DeclareOptionX{german}{
+  \PassOptionsToPackage{german}{babel}
+  \toggletrue{my@german@bool}
+}
+\DeclareOptionX{germanb}{
+  \PassOptionsToPackage{german}{babel}
+  \toggletrue{my@german@bool}
+}
+\DeclareOptionX{ngerman}{
+  \PassOptionsToPackage{ngerman}{babel}
+  \toggletrue{my@german@bool}
+}
+\DeclareOptionX{naustrian}{
+  \PassOptionsToPackage{ngerman}{babel}
+  \toggletrue{my@german@bool}
+}
+\DeclareOptionX{portuges}{
+  \PassOptionsToPackage{portuges}{babel}
+  \toggletrue{my@portuguese@bool}
+}
+\DeclareOptionX{portuguese}{
+  \PassOptionsToPackage{portuguese}{babel}
+  \toggletrue{my@portuguese@bool}
+}
+\DeclareOptionX{brazilian}{
+  \PassOptionsToPackage{brazilian}{babel}
+  \toggletrue{my@portuguese@bool}
+}
+\DeclareOptionX{brazil}{
+  \PassOptionsToPackage{brazil}{babel}
+  \toggletrue{my@portuguese@bool}
+}
 %    \end{macrocode}
 %
 % All global options are assigned to the current package.
@@ -327,8 +399,8 @@
 % No option is declared for this class.
 % A warning is output for each non-declared option called.
 %    \begin{macrocode}
-\DeclareOptionX*{%
-  \ClassWarning{my}{Unknown option `\CurrentOption'}%
+\DeclareOptionX*{
+  \ClassWarning{my}{Unknown option `\CurrentOption'}
 }
 \ProcessOptionsX*
 %    \end{macrocode}
@@ -380,6 +452,56 @@
 \DeclareUnicodeCharacter{20AC}{%
   {\fontencoding{LGR}\selectfont\char"18\relax}%
 }
+%    \end{macrocode}
+%
+% \begin{macro}{\my@new@language@macro}
+% This macro allow us to define a new macro for each added language to the 
+%\xpackage{babel} package. For example, if the English language has been added, 
+%this macro can create the \cs{myenglish} macro which will insert English text 
+%in a |otherlanguage| environment.
+%    \begin{macrocode}
+\def\my@new@language@macro#1{
+  \expandafter\newrobustcmd\csname my#1\endcsname[1]{%
+    \begin{otherlanguage}{#1}%
+      \textit{##1}%
+    \end{otherlanguage}\relax%
+  }
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% Now, we can create (depending on the boolean variable for languages), the 
+%different macros for each languages.
+%    \begin{macrocode}
+\iftoggle{my@english@bool}{
+  \my@new@language@macro{english}
+  \my@new@language@macro{USenglish}
+  \my@new@language@macro{american}
+  \my@new@language@macro{UKenglish}
+  \my@new@language@macro{british}
+  \my@new@language@macro{canadian}
+  \my@new@language@macro{australian}
+  \my@new@language@macro{newzealand}
+}{}
+\iftoggle{my@french@bool}{
+  \my@new@language@macro{french}
+  \my@new@language@macro{francais}
+  \my@new@language@macro{canadien}
+  \my@new@language@macro{acadian}
+}{}
+\iftoggle{my@german@bool}{
+  \my@new@language@macro{austrian}
+  \my@new@language@macro{german}
+  \my@new@language@macro{germanb}
+  \my@new@language@macro{ngerman}
+  \my@new@language@macro{naustrian}
+}{}
+\iftoggle{my@portuguese@bool}{
+  \my@new@language@macro{portuges}
+  \my@new@language@macro{portuguese}
+  \my@new@language@macro{brazilian}
+  \my@new@language@macro{brazil}
+}{}
 %    \end{macrocode}
 %
 % \begin{macro}{\myemph}
