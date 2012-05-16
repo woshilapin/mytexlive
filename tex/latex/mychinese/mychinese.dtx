@@ -32,7 +32,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{50}
+% \CheckSum{21}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -113,49 +113,15 @@
 \ProcessOptionsX\relax
 %    \end{macrocode}
 %
-% The \xpackage{CJK} package is loaded.
+% The \xpackage{CJK} package is loaded then the \xpackage{pinyin} package.
 %    \begin{macrocode}
 \RequirePackage[encapsulated]{CJK}
+\RequirePackage{pinyin}
 %    \end{macrocode}
 %
 % We will also require the \xpackage{mycolor} package.
 %    \begin{macrocode}
 \RequirePackage{mycolor}
-%    \end{macrocode}
-%
-% Some UTF-8 characters can not be written in the default \LaTeXe 
-%configuration. Define them here.
-%    \begin{macrocode}
-\DeclareUnicodeCharacter{0101}{%
-  {$\mathrm{\bar{a}}$}% Define the `a1'
-}
-\DeclareUnicodeCharacter{01CE}{%
-  {$\mathrm{\check{a}}$}% Define the `a3'
-}
-\DeclareUnicodeCharacter{0113}{%
-  {$\mathrm{\bar{e}}$}% Define the `e1'
-}
-\DeclareUnicodeCharacter{011B}{%
-  {$\mathrm{\check{e}}$}% Define the `e3'
-}
-\DeclareUnicodeCharacter{012B}{%
-  {$\mathrm{\bar{i}}$}% Define the `i1'
-}
-\DeclareUnicodeCharacter{01D0}{%
-  {$\mathrm{\check{i}}$}% Define the `i3'
-}
-\DeclareUnicodeCharacter{014D}{%
-  {$\mathrm{\bar{o}}$}% Define the `o1'
-}
-\DeclareUnicodeCharacter{01D2}{%
-  {$\mathrm{\check{o}}$}% Define the `o3'
-}
-\DeclareUnicodeCharacter{016B}{%
-  {$\mathrm{\bar{u}}$}% Define the `u1'
-}
-\DeclareUnicodeCharacter{01D4}{%
-  {$\mathrm{\check{u}}$}% Define the `u3'
-}
 %    \end{macrocode}
 %
 % \begin{macro}{\mychinese}
