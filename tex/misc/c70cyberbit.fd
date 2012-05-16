@@ -1,0 +1,9 @@
+\ProvidesFile{c70cyberbit.fd}
+% character set: Unicode U+0080 - U+FFFD
+% font encoding: Unicode
+
+\DeclareFontFamily{C70}{cyberbit}{\hyphenchar \font\m@ne}
+\DeclareFontShape{C70}{cyberbit}{m}{n}{<-> CJK * cyberbit}{}
+\DeclareFontShape{C70}{cyberbit}{bx}{n}{<-> CJKb * cyberbit}{\CJKbold}
+
+\endinput
