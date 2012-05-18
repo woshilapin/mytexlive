@@ -1,0 +1,204 @@
+% \iffalse meta-comment
+%
+% Copyright (C) 2012 by Jean SIMARD
+%
+% This file may be distributed and/or modified under the conditions of the 
+%LaTeX Project Public License, either version 1.2 of this license or (at your 
+%option) any later version.  The latest version of this license is in:
+%
+% http://www.latex-project.org/lppl.txt
+%
+% and version 1.2 or later is part of all distributions of LaTeX version 
+%1999/12/01 or later.
+%
+% \fi
+
+% \iffalse
+%<package>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+%<package>\ProvidesPackage{myhyper}
+%<package>  [2012/05/17 v1.0 Default configuration for hyperref package]
+%<*driver>
+\documentclass[french,english]{ltxdoc}
+\usepackage{holtxdoc}[2008/08/11]
+\usepackage{my}
+\usepackage[smarttab]{myfloat}
+\usepackage[smartref]{myref}
+\usepackage{hyperref}
+\EnableCrossrefs
+\CodelineIndex 
+\RecordChanges
+\begin{document}
+\DocInput{myhyper.dtx}
+\end{document}
+%</driver>
+% \fi
+%
+% \CheckSum{29}
+%
+%% \CharacterTable
+%%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%%   Lower-case  \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%%   Digits    \0\1\2\3\4\5\6\7\8\9
+%%   Exclamation   \!   Double quote  \"   Hash (number) \#
+%%   Dollar    \$   Percent     \%   Ampersand   \&
+%%   Acute accent  \'   Left paren  \(   Right paren   \)
+%%   Asterisk    \*   Plus      \+   Comma     \,
+%%   Minus     \-   Point     \.   Solidus     \/
+%%   Colon     \:   Semicolon   \;   Less than   \<
+%%   Equals    \=   Greater than  \>   Question mark \?
+%%   Commercial at \@   Left bracket  \[   Backslash   \\
+%%   Right bracket \]   Circumflex  \^   Underscore  \_
+%%   Grave accent  \`   Left brace  \{   Vertical bar  \|
+%%   Right brace   \}   Tilde     \~}
+%
+% \changes{v1.0}{2012/05/17}{Initial version}
+%
+% \GetFileInfo{myhyper.dtx}
+%
+% \DoNotIndex{\begin,\end,\\,\ }
+% \DoNotIndex{\RequirePackage}
+% \DoNotIndex{\ClassError,\ClassWarning,\ClassInfo}
+% \DoNotIndex{\PackageError,\PackageWarning,\PackageInfo}
+% \DoNotIndex{\DeclareOption,\ExecuteOptions,\CurrentOption,\ProcessOptions}
+% \DoNotIndex{\DeclareOptionX,\ProcessOptionsX}
+%
+% \title{The \xpackage{myhyper} package\\a default configuration for the 
+%\xpackage{hyperref} package \thanks{This document corresponds to the 
+%\xpackage{myhyper}~\fileversion, %dated~\filedate.}}
+% \author{Jean 
+%\myname{Simard}\\\href{mailto:juste.lapin@gmail.com}{\xemail{juste.lapin@gmail.com}}}
+%
+% \maketitle
+%
+% \begin{abstract}
+% The \xpackage{myhyper} package only create a default configuration for the 
+%\xpackage{hyperref}. It defines default colors and multiple possible 
+%configurations like black and white or colored themes.
+% \end{abstract}
+% \tableofcontents
+%
+% \section{Introduction}
+% The \xpackage{myhyper} package is defining a default configuration for the 
+%\xpackage{hyperref} package, particulary for colors used in the hyperlink of 
+%the document.
+%
+% \section{Usage and options}
+% To use this package, you just need to call the package with three possible 
+%options:
+% \begin{itemize}
+% \item\xoption{colour} makes the hyperlinks coloured
+% \item\xoption{black} makes the hyperlinks in black
+%in press
+% \end{itemize}
+%
+% Moreover, you can precise if you prefer a printable version with the 
+%\xoption{print} option which will be printed in black (the hyperlinks will be 
+%coloured but only framed colour).
+%
+% You always can change the configuration using the \cs{hypersetup} macro from 
+%the \xpackage{hyperref} package.
+%
+% \StopEventually{%
+%   \PrintChanges
+%   \PrintIndex
+% }
+%
+% \section{Implementation}
+% \LaTeXe initialization.
+%    \begin{macrocode}
+\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+\ProvidesPackage{mychinese}[2012/05/17 v1.0 Default configuration for hyperref package]
+%    \end{macrocode}
+%
+% Declare toggle variables for options.
+%    \begin{macrocode}
+\newtoggle{myhyper@colour}
+\newtoggle{myhyper@print}
+%    \end{macrocode}
+%
+% The default configuration is coloured version for electronic publishing (not 
+%a printable one).
+%    \begin{macrocode}
+\toggletrue{myhyper@colour}
+\togglefalse{myhyper@print}
+%    \end{macrocode}
+%
+% Declare options for coloured or uncoloured configuration.
+%    \begin{macrocode}
+\DeclareOptionX{colour}{\toggletrue{myhyper@colour}}
+\DeclareOptionX{color}{\toggletrue{myhyper@colour}}
+\DeclareOptionX{black}{\togglefalse{myhyper@colour}}
+\DeclareOptionX{print}{\toggletrue{myhyper@print}}
+\DeclareOptionX{noprint}{\togglefalse{myhyper@print}}
+%    \end{macrocode}
+%
+% Process options.
+%    \begin{macrocode}
+\DeclareOptionX*{%
+  \PackageWarning{myhyper}{Unknown option `\CurrentOption'}%
+}
+\ProcessOptionsX\relax
+%    \end{macrocode}
+%
+% The \xpackage{hyperref} package is loaded.
+%    \begin{macrocode}
+\RequirePackage{hyperref}
+%    \end{macrocode}
+%
+% This is the default configuration for the \xpackage{hyperref} package.
+%    \begin{macrocode}
+\hypersetup{%
+  breaklinks=true,%
+  hypertexnames=true,%
+  naturalnames=true,%
+  nesting=false,% Does not compile with 'true'
+  pageanchor=true,%
+  pdfnewwindow=true,%
+  pdfcenterwindow=true,%
+  pdfdisplaydoctitle=true,%
+  pdffitwindow=true,%
+  pdfhighlight=/I,%
+  pdfnonfullscreenpagemode=UseOutlines,%
+  pdfpagelabels=true,%
+  pdfpagelayout=OneColumn,%
+  pdfpagemode=UseOutlines,%
+  pdfstartview={FitH},%
+  %pdfview={FitB},% Should not be used to have correct links
+  unicode=true%
+}%
+%    \end{macrocode}
+%
+% Configure the colours for each kind of link.
+%    \begin{macrocode}
+\iftoggle{myhyper@colour}{%
+  \hypersetup{%
+    citecolor=green,%
+    filecolor=magenta,%
+    linkcolor=gray,%
+    urlcolor=red%
+  }
+}{
+  \hypersetup{%
+    citecolor=black,%
+    filecolor=black,%
+    linkcolor=black,%
+    urlcolor=black%
+  }
+}
+%    \end{macrocode}
+%
+% Configure the \xpackage{hyperref} to create a printable version or not.
+%    \begin{macrocode}
+\iftoggle{myhyper@print}{%
+  \hypersetup{%
+    colorlinks=false%
+  }%
+}{%
+  \hypersetup{%
+    colorlinks=true%
+  }%
+}
+%    \end{macrocode}
+%
+% \Finale
+\endinput
