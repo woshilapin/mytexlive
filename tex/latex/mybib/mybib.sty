@@ -21,10 +21,6 @@
 \ProcessOptionsX[my]
 
 %% Options to pass to packages
-\@ifpackageloaded{natbib}
-{
-	\PassOptionsToPackage{natbib}{biblatex}
-}{}
 \if@backref
 	\@ifpackageloaded{biblatex}
 	{
@@ -37,17 +33,11 @@
 %% Packages to call
 % The biblatex is the best package to make bibliographies
 \@ifpackageloaded{biblatex}
-{
-	\RequirePackage{csquotes}
-	\RequirePackage{biblatex}
-}{
+{}{
 	% To generate entry in table of content for bibliographies (and other)
 	\RequirePackage{tocbibind}
 	% For more powerful command for bibliography citations
-	\@ifpackageloaded{natbib}
-	{
-		\RequirePackage[sort,comma,square]{natbib}
-	}{}
+	\RequirePackage[sort,comma,square]{natbib}
 	% For seperated bibliographies in sections or chapters
 	% Compatible with natbib
 }
