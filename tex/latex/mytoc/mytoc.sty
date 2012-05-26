@@ -57,16 +57,23 @@
 % Redefine style of sections fonts
 \allsectionsfont{\sffamily}
 \chapterfont{\sffamily}
-\if@minitoc
+\@ifpackageloaded{minitoc}
+{
 	% Redefine the default style for minitoc
 	\mtcsettitlefont{minitoc}{\large\bfseries\sffamily}
 	% Necessary command to create minitoc (before the preamble)
 	\AtBeginDocument{\dominitoc}
-\fi
+}{}
 
 %%%%%%%%%%%%%%%%%%
 %% New commands %%
 %%%%%%%%%%%%%%%%%%
+\@ifpackageloaded{minitoc}
+{
+	\gdef\my@addchapter{\mtcaddchapter}%
+}{
+	\gdef\my@addchapter{}%
+}
 % Define the appendix command
 \newcommand{\myappendix}{%
 	\appendixpage%
@@ -74,7 +81,7 @@
 	\phantomsection%
 	\appendix%
 	\addappheadtotoc%
-	\mtcaddchapter%
+	\my@addchapter%
 }
 % Define the table of contents command,
 % and add the title in the table of contents
@@ -82,7 +89,7 @@
 	\phantomsection%
 	\tableofcontents%
 	% To make compatibility between 'minitoc' and 'tocbibind'
-	\mtcaddchapter%
+	\my@addchapter%
 }
 % Define the list of figures command,
 % and add the title in the table of contents
@@ -90,7 +97,7 @@
 	\phantomsection%
 	\listoffigures%
 	% To make compatibility between 'minitoc' and 'tocbibind'
-	\mtcaddchapter%
+	\my@addchapter%
 }
 % Define the list of tables command,
 % and add the title in the table of contents
@@ -98,7 +105,7 @@
 	\phantomsection%
 	\listoftables%
 	% To make compatibility between 'minitoc' and 'tocbibind'
-	\mtcaddchapter%
+	\my@addchapter%
 }
 \if@minitoc
 	\newcommand{\myminitoc}{\phantomsection\minitoc}
