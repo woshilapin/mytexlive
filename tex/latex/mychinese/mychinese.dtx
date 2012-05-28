@@ -32,7 +32,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{21}
+% \CheckSum{26}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -129,9 +129,11 @@
 %UTF-8 file encoding.
 %    \begin{macrocode}
 \newcommand{\mychinese}[2][]{%
+  \PYactivate%
   \begin{CJK}{UTF8}{cyberbit}%
     #2%
   \end{CJK}%
+  \PYdeactivate%
   \ifstrempty{#1}{}{%
     \xspace%
     \textcolor{black!50}{%
@@ -147,10 +149,18 @@
 %UTF-8 file encoding.
 %    \begin{macrocode}
 \newenvironment{myChinese}{%
+  \PYactivate%
   \begin{CJK}{UTF8}{cyberbit}%
 }{%
   \end{CJK}%
+  \PYdeactivate%
 }
+%    \end{macrocode}
+%
+% Deactivate the pinyin in order to not modify some grec symbol in math 
+%environement.
+%    \begin{macrocode}
+\PYdeactivate
 %    \end{macrocode}
 % \end{environment}
 %
