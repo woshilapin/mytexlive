@@ -55,7 +55,10 @@
 	% Break each too long line with an Carriage Return character
 	prebreak=\textbackslash%
 }
-\labelformat{mySource}{\mysource@lang@code~#1}
+\@ifpackageloaded{varioref}
+{
+	\labelformat{mySource}{\mysource@lang@code~#1}
+}{}
 
 %%%%%%%%%%%%%%%%%%
 %% New commands %%
