@@ -1,0 +1,563 @@
+% \iffalse meta-comment
+%
+% Copyright (C) 2012 by Jean SIMARD
+%
+% This file may be distributed and/or modified under the conditions of the 
+%LaTeX Project Public License, either version 1.2 of this license or (at your 
+%option) any later version.  The latest version of this license is in:
+%
+% http://www.latex-project.org/lppl.txt
+%
+% and version 1.2 or later is part of all distributions of LaTeX version 
+%1999/12/01 or later.
+%
+% \fi
+
+% \iffalse
+%<*driver>
+\ProvidesFile{mythesis.dtx}
+\documentclass[english]{ltxdoc}
+\usepackage{holtxdoc}[2008/08/11]
+\usepackage{my}
+\usepackage{hyperref}
+\EnableCrossrefs
+\CodelineIndex 
+\RecordChanges
+\begin{document}
+\DocInput{mythesis.dtx}
+\end{document}
+%</driver>
+% \fi
+%
+% \CheckSum{472}
+%
+%% \CharacterTable
+%%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%%   Lower-case  \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%%   Digits    \0\1\2\3\4\5\6\7\8\9
+%%   Exclamation   \!   Double quote  \"   Hash (number) \#
+%%   Dollar    \$   Percent     \%   Ampersand   \&
+%%   Acute accent  \'   Left paren  \(   Right paren   \)
+%%   Asterisk    \*   Plus      \+   Comma     \,
+%%   Minus     \-   Point     \.   Solidus     \/
+%%   Colon     \:   Semicolon   \;   Less than   \<
+%%   Equals    \=   Greater than  \>   Question mark \?
+%%   Commercial at \@   Left bracket  \[   Backslash   \\
+%%   Right bracket \]   Circumflex  \^   Underscore  \_
+%%   Grave accent  \`   Left brace  \{   Vertical bar  \|
+%%   Right brace   \}   Tilde     \~}
+%
+% \changes{v1.0}{2012/04/12}{Initial version}
+%
+% \GetFileInfo{mythesis.dtx}
+%
+% \DoNotIndex{\begin,\end,\\}
+% \DoNotIndex{\RequirePackage}
+% \DoNotIndex{\ClassError,\ClassWarning,\ClassInfo}
+% \DoNotIndex{\PackageError,\PackageWarning,\PackageInfo}
+% \DoNotIndex{\DeclareOption,\ExecuteOptions,\CurrentOption,\ProcessOptions}
+% \DoNotIndex{\DeclareOptionX,\ProcessOptionsX}
+%
+% \title{The \xclass{mythesis} class\\Writing a memoir is easy!
+%\thanks{This document corresponds to the \xclass{mythesis}~\fileversion, 
+%dated~\filedate.}}
+% \author{Jean 
+%\myname{Simard}\\\href{mailto:juste.lapin@gmail.com}{\xemail{juste.lapin@gmail.com}}}
+%
+% \maketitle
+%
+% \begin{abstract}
+%   The \xclass{mythesis} provide default tools and presentation to create a 
+%thesis memoir.
+% \end{abstract}
+% \tableofcontents
+%
+% \section{Introduction}
+%
+% \section{Usage}
+%
+% \StopEventually{%
+%   \PrintChanges
+%   \PrintIndex
+% }
+%
+% \section{Implementation}
+% \subsection{Initialization}
+%\iffalse
+%    \begin{macrocode}
+%<*mythesis.cls>
+%    \end{macrocode}
+%\fi
+%
+% Finally, load the \xclass{book} class.
+%    \begin{macrocode}
+\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+\ProvidesClass{mythesis}[2012/04/18 v1.0 Thesis/memoir class]
+%    \end{macrocode}
+%
+% Load \xpackage{my} package to load default configuration.
+%    \begin{macrocode}
+\RequirePackageWithOptions{my}[2011/12/08]
+%    \end{macrocode}
+%
+% Define the default options to send to the \xclass{book} class.
+%    \begin{macrocode}
+\PassOptionsToClass{12pt,a4paper,fleqn,twoside}{book}
+%    \end{macrocode}
+%
+% Redefine all options that can be transmit to the \xclass{book} class.
+%    \begin{macrocode}
+\DeclareOptionX{10pt}{\PassOptionsToClass{10pt}{book}}
+\DeclareOptionX{11pt}{\PassOptionsToClass{11pt}{book}}
+\DeclareOptionX{12pt}{\PassOptionsToClass{12pt}{book}}
+\DeclareOptionX{a4paper}{\PassOptionsToClass{a4paper}{book}}
+\DeclareOptionX{a5paper}{\PassOptionsToClass{a5paper}{book}}
+\DeclareOptionX{b5paper}{\PassOptionsToClass{b5paper}{book}}
+\DeclareOptionX{letterpaper}{\PassOptionsToClass{letterpaper}{book}}
+\DeclareOptionX{executivepaper}{\PassOptionsToClass{executivepaper}{book}}
+\DeclareOptionX{legalpaper}{\PassOptionsToClass{legalpaper}{book}}
+\DeclareOptionX{fleqn}{\PassOptionsToClass{fleqn}{book}}
+\DeclareOptionX{leqno}{\PassOptionsToClass{leqno}{book}}
+\DeclareOptionX{titlepage}{\PassOptionsToClass{titlepage}{book}}
+\DeclareOptionX{notitlepage}{\PassOptionsToClass{notitlepage}{book}}
+\DeclareOptionX{twocolumn}{\PassOptionsToClass{twocolumn}{book}}
+\DeclareOptionX{oneside}{\PassOptionsToClass{oneside}{book}}
+\DeclareOptionX{twoside}{\PassOptionsToClass{twoside}{book}}
+\DeclareOptionX{openright}{\PassOptionsToClass{openright}{book}}
+\DeclareOptionX{openany}{\PassOptionsToClass{openany}{book}}
+\DeclareOptionX{draft}{\PassOptionsToClass{draft}{book}}
+\DeclareOptionX{french}{%
+  \input{mythesis-french.def}%
+  \ClassInfo{mythesis}{Option `french' transmit to `my' package.}%
+}
+\DeclareOptionX{english}{%
+  \input{mythesis-english.def}%
+  \ClassInfo{mythesis}{Option `english' transmit to `my' package.}%
+}
+\DeclareOptionX{ngerman}{%
+  \ClassInfo{mythesis}{Option `ngerman' transmit to `my' package.}%
+}
+%    \end{macrocode}
+%
+% Define new options for the \xclass{mythesis} class.
+%    \begin{macrocode}
+\newtoggle{my@review@bool}
+\DeclareOptionX{review}{\toggletrue{my@review@bool}}
+\DeclareOptionX{noreview}{\togglefalse{my@review@bool}}
+\newtoggle{my@minitoc@bool}
+\DeclareOptionX{minitoc}{\toggletrue{my@minitoc@bool}}
+\DeclareOptionX{nominitoc}{\togglefalse{my@minitoc@bool}}
+\newtoggle{my@smarttab@bool}
+\DeclareOptionX{smarttab}{\toggletrue{my@smarttab@bool}}
+\DeclareOptionX{nosmarttab}{\togglefalse{my@smarttab@bool}}
+%    \end{macrocode}
+%
+% Process the options.
+%    \begin{macrocode}
+\DeclareOptionX*{%
+  \ClassWarning{mythesis}{Unknown option `\CurrentOption'}%
+}
+\ProcessOptionsX\relax
+%    \end{macrocode}
+%
+% Load the base class \xclass{book}.
+%    \begin{macrocode}
+\LoadClass{book}[1995/12/01]
+%    \end{macrocode}
+%
+% Transmit some options to packages.
+%    \begin{macrocode}
+\iftoggle{my@minitoc@bool}
+{
+	\PassOptionsToPackage{minitoc}{mytoc}
+}{}
+\iftoggle{my@smarttab@bool}
+{
+	\PassOptionsToPackage{smarttab}{myfloat}
+}{}
+%    \end{macrocode}
+%
+% Some useful packages are loaded here.
+%    \begin{macrocode}
+\RequirePackage{myfloat}
+\RequirePackage{mytoc}
+\RequirePackage{mycolor}
+%    \end{macrocode}
+%
+% Change the default headers and footers with \xpackage{myheadfoot} package.
+%    \begin{macrocode}
+\RequirePackage{myheadfoot}
+%    \end{macrocode}
+%
+%
+% In case of a review version, the \xpackage{lineno} package is loaded. It will 
+%put number on lines of the document.
+%    \begin{macrocode}
+\iftoggle{my@review@bool}
+{
+  \RequirePackage{lineno}
+}{}
+%    \end{macrocode}
+%
+% \subsection{Configuration}
+% Configurate the review mode with a number each 5 lines. The counter reset on 
+%each page.
+%    \begin{macrocode}
+\iftoggle{my@review@bool}
+{
+  \modulolinenumbers[5]
+  \AfterEndPreamble{%
+    \pagewiselinenumbers%
+    \realpagewiselinenumbers%
+  }
+}{}
+%    \end{macrocode}
+%
+% \subsection{Title page}
+% Some new fields to create the title page are needed to define the jury, the 
+%university, a subtitle\dots
+% \begin{macro}{\subtitle}
+%   The \cs{subtitle} macro defines a subtitle for the title page. An optional 
+%argument allow to define another language for the subtitle.
+%    \begin{macrocode}
+\newcommand{\subtitle}[2][english]{\def\@subtitle{\begin{otherlanguage}{#1}#2\end{otherlanguage}}}%
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\logoleft}
+%   The \cs{logoleft} macro defines a logo for the left side of the title 
+%page.
+%    \begin{macrocode}
+\newcommand{\logoleft}[1]{\def\@logoleft{#1}}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\logoright}
+%   The \cs{logoright} macro defines a logo for the right side of the title 
+%page.
+%    \begin{macrocode}
+\newcommand{\logoright}[1]{\def\@logoright{#1}}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\university}
+%   The \cs{university} macro defines a university for the title page.
+%    \begin{macrocode}
+\newcommand{\university}[1]{\def\@university{#1}}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\laboratory}
+%   The \cs{laboratory} macro defines a laboratory for the title page.
+%    \begin{macrocode}
+\newcommand{\laboratory}[1]{\def\@laboratory{#1}}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\grade}
+%   The \cs{grade} macro defines the grade for which the document is written.
+%    \begin{macrocode}
+\newcommand{\grade}[1]{\def\@grade{#1}}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\jury}
+%   The \cs{jury} macro defines the jury who evaluate the document.
+%    \begin{macrocode}
+\newcommand{\jury}[1]{\def\@jury{#1}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\jurymember}
+%   Moreover, the \cs{jury} macro should be filled with multiple member with 
+%all firstname, lastname, grade\dots The \cs{jurymember} macro help to define 
+%each member.
+%    \begin{macrocode}
+\def\jurymember#1#2{%
+  \@ifnextchar[{\jurymember@i{#1}{#2}}{\jurymember@i{#1}{#2}[]}%
+}
+\def\jurymember@i#1#2[#3]#4#5#6{%
+  #1 & #2~\myname[#3]{#4} & (#5) \\[-0.67ex]%
+  \multicolumn{3}{l}{%
+    \hspace{0.33\textwidth}%
+    \setlength{\parskip}{0.25ex plus 0.5ex minus 0.2ex}%
+    \begin{minipage}[t]{0.655\textwidth}%
+      \scriptsize\textcolor{black!70}{#6}%
+    \end{minipage}%
+    \setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}%
+  } \\%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% At the end, define all default values for the fields of the title page.
+%    \begin{macrocode}
+\author{}
+\title{}
+\subtitle{}
+\university{}
+\laboratory{}
+\grade{}
+\date{}
+\jury{}
+\logoleft{}
+\logoright{}
+%    \end{macrocode}
+%
+% The title page is splitted into three parts, \cs{my@titlepage@top}, 
+%\cs{my@titlepage@bottom} and \cs{my@titlepage@body}. The \cs{my@titlepage@top} 
+%contains the optional logo (one on the left and one on the right).
+%    \begin{macrocode}
+\newcommand{\my@titlepage@top}{%
+  \ifx\@logoleft\@empty%
+  \else%
+    \vbox{\includegraphics[width=3cm]{\@logoleft}}%
+  \fi%
+  \hspace{\stretch{1}}%
+  \ifx\@logoright\@empty%
+  \else%
+    \vbox{\includegraphics[width=3cm]{\@logoright}}%
+  \fi\par%
+}
+%    \end{macrocode}
+%
+% The \cs{my@titlepage@bottom} contains the date of the defence and the jury.
+%    \begin{macrocode}
+\newcommand{\my@titlepage@bottom}{%
+  \ifx\@date\@empty%
+  \else%
+    {\centering\normalsize Thèse soutenue le \@date\par}%
+    \ifx\@grade\@empty%
+    \else%
+      {\centering\small\it pour l'obtention du grade de\par}%
+      {\centering\large\bfseries \@grade\par}%
+    \fi%
+  \fi%
+  \ifx\@jury\@empty%
+  \else%
+    \ifx\@date\@empty%
+    {\centering\normalsize\hspace{2cm}Jury constitué de\par}%
+    \else%
+    {\centering\small\it en présence de\par}%
+    \fi%
+    \vspace{1ex}%
+    {\normalsize\centering\begin{mytabular}{>{\hsize=0.3\textwidth}R>{\hsize=0.425\textwidth}L>{\hsize=0.2\textwidth}R}%
+      \@jury%
+    \end{mytabular}\par}%
+  \vspace{1cm}%
+  \fi%
+}
+%    \end{macrocode}
+%
+% The body part contains the university, the document type, the author(s), the 
+%title and the subtitle.
+%    \begin{macrocode}
+\newcommand{\my@titlepage@body}{%
+  \normalfont%
+  \ifx\@university\@empty%
+  \else%
+  {\raggedright\normalsize\textcolor{black!70}{\@university}\par}%
+  \fi%
+  {\textcolor{myred}{\rule[0.5ex]{\textwidth}{1pt}}\par}%
+  \ifx\@author\@empty%
+  \else%
+    {\large\raggedleft \@author\par}%
+  \fi%
+  \vfill%
+  \ifx\@title\@empty%
+  \else%
+    {\LARGE\centering \@title\par}%
+  \fi%
+  \ifx\@subtitle\@empty%
+  \else%
+    {\vspace{0.5cm}\large\centering \@subtitle\par}%
+  \fi%
+}
+%    \end{macrocode}
+%
+% \begin{macro}{\maketitle}
+% Finally, the \cs{maketitle} macro is defined, depending the three previous 
+%defined macros. The foot/header style page is changed (no number page and no 
+%header).
+%    \begin{macrocode}
+\def\maketitle{%
+  \begin{titlepage}%
+    \null%
+    %\thispagestyle{firstpage}%
+    \my@titlepage@top%
+    \vfill%
+    \my@titlepage@body%
+    \vfill%
+    \my@titlepage@bottom%
+    \null%
+  \end{titlepage}%
+  \clearpage%
+  \thispagestyle{empty}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsection{Preamble of the document}
+% The |myabstract| environment is for the abstract of the document. The 
+%optional argument is the language of the abstract (multiple abstract in 
+%multiple language may be defined).
+%    \begin{macrocode}
+\newenvironment{myabstract}[1][french]{%
+  \begin{otherlanguage}{#1}%
+  \ifundef\expandafter{\csname my@lang@\languagename @Abstract\endcsname}{%
+    \ClassWarning{mythesis}{Unknown language used in 'myabstract' environment}%
+  }{}%
+  \begin{mychapter+}[cha-abstract-\languagename]{\csname my@lang@\languagename @Abstract\endcsname}
+}{%
+  \end{mychapter+}
+  \end{otherlanguage}%
+}
+%    \end{macrocode}
+%
+% The |mykeywords| environment is to define the keywords of the document. The 
+%optional argument is the language of the abstract (multiple abstract in 
+%multiple language may be defined).
+%    \begin{macrocode}
+\newenvironment{mykeywords}{%
+  \ifundef\expandafter{\csname my@lang@\languagename @Keywords\endcsname}{%
+    \ClassWarning{mythesis}{Unknown language used in 'mykeywords' environment}%
+  }{}%
+  \begin{myparagraph}[par-keywords-\languagename]{\csname my@lang@\languagename @Keywords\endcsname}
+}{%
+  \end{myparagraph}
+}
+%    \end{macrocode}
+%
+% \begin{macro}{\mykeyword}
+% An additional macro is defined to describe the keyword and should be used as 
+%a \cs{item} macro to list the keywords.
+%    \begin{macrocode}
+\newrobustcmd{\mykeyword}{\xspace--\xspace}
+%    \end{macrocode}
+% \end{macro}
+%
+% Redefine the default spacing of the paragraphs.
+%    \begin{macrocode}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}
+%    \end{macrocode}
+%
+% Create a default decoration for chapter pages.
+%    \begin{macrocode}
+\def\@makechapterhead#1{%
+	\addtocontents{tcs}{\protect\addvspace{10\p@}}%
+	\addtocontents{tdo}{\protect\addvspace{10\p@}}%
+	\vspace*{50\p@}%
+	{\parindent \z@ \raggedleft \normalfont%
+	\ifnum \c@secnumdepth >\m@ne%
+	\psset{unit=1cm}%
+	\begin{pspicture}(-6,-1)(1,1.5)%
+		\psframe[linewidth=0,linecolor=myred,fillstyle=solid,fillcolor=myred](-5,-1)(0,0)%
+		\psframe[linewidth=0,framearc=.25,linecolor=myred,fillstyle=solid,fillcolor=myred](-1,-1)(1,1)%
+		\psframe[linewidth=0,framearc=.25,linecolor=white,fillstyle=solid,fillcolor=white](-6,-0.95)(-1,1)%
+		\uput[45](-5,-1){\large\bfseries\sffamily\textcolor{myred}{\@chapapp}}%
+		\rput(0,0){\psscaleboxto(1.5,1.5){\white\selectfont\bfseries\sffamily\thechapter}}%
+	\end{pspicture}%
+	\par\nobreak%
+	\fi%
+	\interlinepenalty\@M%
+	\Huge\bfseries\sffamily #1\par\nobreak%
+	\vskip 40\p@%
+	}%
+}
+%    \end{macrocode}
+%
+%\iffalse
+%    \begin{macrocode}
+%</mythesis.cls>
+%    \end{macrocode}
+%\fi
+%
+% \subsection{\xclass{mythesis-french} localisation}
+%\iffalse
+%    \begin{macrocode}
+%<*mythesis-french.def>
+%    \end{macrocode}
+%\fi
+%
+% Identify file.
+%    \begin{macrocode}
+\ProvidesFile{mythesis-french.def}[2012/04/18 v1.0 French localization for 'mythesis' class]
+%    \end{macrocode}
+%
+% Define the name which will be used.
+%    \begin{macrocode}
+\def\my@lang@french@abstract{résumé}
+\def\my@lang@francais@abstract{résumé}
+\def\my@lang@canadien@abstract{résumé}
+\def\my@lang@acadian@abstract{résumé}
+\def\my@lang@french@Abstract{Résumé}
+\def\my@lang@francais@Abstract{Résumé}
+\def\my@lang@canadien@Abstract{Résumé}
+\def\my@lang@acadian@Abstract{Résumé}
+\def\my@lang@french@keywords{mots-clefs}
+\def\my@lang@francais@keywords{mots-clefs}
+\def\my@lang@canadien@keywords{mots-clefs}
+\def\my@lang@acadian@keywords{mots-clefs}
+\def\my@lang@french@Keywords{Mots-clefs}
+\def\my@lang@francais@Keywords{Mots-clefs}
+\def\my@lang@canadien@Keywords{Mots-clefs}
+\def\my@lang@acadian@Keywords{Mots-clefs}
+%    \end{macrocode}
+%
+%\iffalse
+%    \begin{macrocode}
+%</mythesis-french.def>
+%    \end{macrocode}
+%\fi
+%
+% \subsection{\xclass{mythesis-english} localisation}
+%\iffalse
+%    \begin{macrocode}
+%<*mythesis-english.def>
+%    \end{macrocode}
+%\fi
+%
+% Identify file.
+%    \begin{macrocode}
+\ProvidesFile{mythesis-english.def}[2012/04/18 v1.0 English localization for 'mythesis' class]
+%    \end{macrocode}
+%
+% Define the name which will be used.
+%    \begin{macrocode}
+\def\my@lang@english@abstract{abstract}
+\def\my@lang@english@Abstract{Abstract}
+\def\my@lang@english@keywords{keywords}
+\def\my@lang@english@Keywords{Keywords}
+\def\my@lang@USenglish@abstract{abstract}
+\def\my@lang@USenglish@Abstract{Abstract}
+\def\my@lang@USenglish@keywords{keywords}
+\def\my@lang@USenglish@Keywords{Keywords}
+\def\my@lang@american@abstract{abstract}
+\def\my@lang@american@Abstract{Abstract}
+\def\my@lang@american@keywords{keywords}
+\def\my@lang@american@Keywords{Keywords}
+\def\my@lang@UKenglish@abstract{abstract}
+\def\my@lang@UKenglish@Abstract{Abstract}
+\def\my@lang@UKenglish@keywords{keywords}
+\def\my@lang@UKenglish@Keywords{Keywords}
+\def\my@lang@british@abstract{abstract}
+\def\my@lang@british@Abstract{Abstract}
+\def\my@lang@british@keywords{keywords}
+\def\my@lang@british@Keywords{Keywords}
+\def\my@lang@canadian@abstract{abstract}
+\def\my@lang@canadian@Abstract{Abstract}
+\def\my@lang@canadian@keywords{keywords}
+\def\my@lang@canadian@Keywords{Keywords}
+\def\my@lang@australian@abstract{abstract}
+\def\my@lang@australian@Abstract{Abstract}
+\def\my@lang@australian@keywords{keywords}
+\def\my@lang@australian@Keywords{Keywords}
+\def\my@lang@newzealand@abstract{abstract}
+\def\my@lang@newzealand@Abstract{Abstract}
+\def\my@lang@newzealand@keywords{keywords}
+\def\my@lang@newzealand@Keywords{Keywords}
+%    \end{macrocode}
+%
+%\iffalse
+%    \begin{macrocode}
+%</mythesis-english.def>
+%    \end{macrocode}
+%\fi
+%
+% \Finale
+\endinput
