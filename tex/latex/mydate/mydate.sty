@@ -94,6 +94,17 @@
 	\fi%
 	}
 
+\newcommand{\mydaterange}[3][]{%
+	\setkeys[my]{date}{#1}%
+	\ifcase\mydate@numin\relax%
+		{\isodash{\mydate@sep}\isodate\daterange{#2}{#3}\xspace}%
+	\or%
+		{\origdate\printdayon\daterange{#2}{#3}\xspace}%
+	\or%
+		{\origdate\printdayon\daterange{#2}{#3}\xspace}%
+	\fi%
+	}
+
 \newrobustcmd{\myhour}[2][h]{\myhour@i[#1]#2}
 \def\myhour@i[#1]#2#3#4#5{\mynum{#2#3}$\,$#1$\,$\mynum{#4#5}}
 % End of package
