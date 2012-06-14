@@ -29,7 +29,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{472}
+% \CheckSum{474}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -436,28 +436,34 @@
 \setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}
 %    \end{macrocode}
 %
-% Create a default decoration for chapter pages.
+% Create a default decoration for chapter pages. This decoration is only made 
+%if \xpackage{pstricks} package has been loaded. It is defined at the end of 
+%the preamble (if not, \xpackage{pstricks} is not yet loaded).
 %    \begin{macrocode}
-\def\@makechapterhead#1{%
-	\addtocontents{tcs}{\protect\addvspace{10\p@}}%
-	\addtocontents{tdo}{\protect\addvspace{10\p@}}%
-	\vspace*{50\p@}%
-	{\parindent \z@ \raggedleft \normalfont%
-	\ifnum \c@secnumdepth >\m@ne%
-	\psset{unit=1cm}%
-	\begin{pspicture}(-6,-1)(1,1.5)%
-		\psframe[linewidth=0,linecolor=myred,fillstyle=solid,fillcolor=myred](-5,-1)(0,0)%
-		\psframe[linewidth=0,framearc=.25,linecolor=myred,fillstyle=solid,fillcolor=myred](-1,-1)(1,1)%
-		\psframe[linewidth=0,framearc=.25,linecolor=white,fillstyle=solid,fillcolor=white](-6,-0.95)(-1,1)%
-		\uput[45](-5,-1){\large\bfseries\sffamily\textcolor{myred}{\@chapapp}}%
-		\rput(0,0){\psscaleboxto(1.5,1.5){\white\selectfont\bfseries\sffamily\thechapter}}%
-	\end{pspicture}%
-	\par\nobreak%
-	\fi%
-	\interlinepenalty\@M%
-	\Huge\bfseries\sffamily #1\par\nobreak%
-	\vskip 40\p@%
-	}%
+\AtEndPreamble{%
+	\@ifpackageloaded{pstricks}{%
+		\def\@makechapterhead#1{%
+			\addtocontents{tcs}{\protect\addvspace{10\p@}}%
+			\addtocontents{tdo}{\protect\addvspace{10\p@}}%
+			\vspace*{50\p@}%
+			{\parindent \z@ \raggedleft \normalfont%
+				\ifnum \c@secnumdepth >\m@ne%
+				\psset{unit=1cm}%
+				\begin{pspicture}(-6,-1)(1,1.5)%
+					\psframe[linewidth=0,linecolor=myred,fillstyle=solid,fillcolor=myred](-5,-1)(0,0)%
+					\psframe[linewidth=0,framearc=.25,linecolor=myred,fillstyle=solid,fillcolor=myred](-1,-1)(1,1)%
+					\psframe[linewidth=0,framearc=.25,linecolor=white,fillstyle=solid,fillcolor=white](-6,-0.95)(-1,1)%
+					\uput[45](-5,-1){\large\bfseries\sffamily\textcolor{myred}{\@chapapp}}%
+					\rput(0,0){\psscaleboxto(1.5,1.5){\white\selectfont\bfseries\sffamily\thechapter}}%
+				\end{pspicture}%
+				\par\nobreak%
+				\fi%
+				\interlinepenalty\@M%
+				\Huge\bfseries\sffamily #1\par\nobreak%
+				\vskip 40\p@%
+			}%
+		}
+	}{}
 }
 %    \end{macrocode}
 %
