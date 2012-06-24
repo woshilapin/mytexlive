@@ -1,0 +1,461 @@
+% \iffalse meta-comment
+%
+% Copyright (C) 2012 by Jean SIMARD
+%
+% This file may be distributed and/or modified under the conditions of the 
+%LaTeX Project Public License, either version 1.2 of this license or (at your 
+%option) any later version.  The latest version of this license is in:
+%
+% http://www.latex-project.org/lppl.txt
+%
+% and version 1.2 or later is part of all distributions of LaTeX version 
+%1999/12/01 or later.
+%
+% \fi
+
+% \iffalse
+%<*driver>
+\ProvidesFile{mytoc.dtx}
+\documentclass[english]{ltxdoc}
+\usepackage{holtxdoc}[2008/08/11]
+\usepackage{my}
+\usepackage{hyperref}
+\EnableCrossrefs
+\CodelineIndex 
+\RecordChanges
+\begin{document}
+\DocInput{mytoc.dtx}
+\end{document}
+%</driver>
+% \fi
+%
+% \CheckSum{183}
+%
+%% \CharacterTable
+%%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%%   Lower-case  \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%%   Digits    \0\1\2\3\4\5\6\7\8\9
+%%   Exclamation   \!   Double quote  \"   Hash (number) \#
+%%   Dollar    \$   Percent     \%   Ampersand   \&
+%%   Acute accent  \'   Left paren  \(   Right paren   \)
+%%   Asterisk    \*   Plus      \+   Comma     \,
+%%   Minus     \-   Point     \.   Solidus     \/
+%%   Colon     \:   Semicolon   \;   Less than   \<
+%%   Equals    \=   Greater than  \>   Question mark \?
+%%   Commercial at \@   Left bracket  \[   Backslash   \\
+%%   Right bracket \]   Circumflex  \^   Underscore  \_
+%%   Grave accent  \`   Left brace  \{   Vertical bar  \|
+%%   Right brace   \}   Tilde     \~}
+%
+% \changes{v1.0}{2012/06/14}{Initial version}
+%
+% \GetFileInfo{mytoc.dtx}
+%
+% \DoNotIndex{\begin,\end,\\}
+% \DoNotIndex{\RequirePackage}
+% \DoNotIndex{\ClassError,\ClassWarning,\ClassInfo}
+% \DoNotIndex{\PackageError,\PackageWarning,\PackageInfo}
+% \DoNotIndex{\DeclareOption,\ExecuteOptions,\CurrentOption,\ProcessOptions}
+% \DoNotIndex{\DeclareOptionX,\ProcessOptionsX}
+%
+% \title{The \xpackage{mytoc} package\\simplify the tables of contents 
+%\thanks{This document corresponds to the \xpackage{mytoc}~\fileversion, 
+%dated~\filedate.}}
+% \author{Jean 
+%\myname{Simard}\\\href{mailto:juste.lapin@gmail.com}{\xemail{juste.lapin@gmail.com}}}
+%
+% \maketitle
+%
+% \begin{abstract}
+%   The \xpackage{mytoc} package is simplifying the use of table of contents 
+%and sectionnement of the document. It provides new environments to replace the 
+%traditional |\chapter|, |\section| and other sectioning macros.
+% \end{abstract}
+% \tableofcontents
+%
+% \section{Introduction}
+%
+% \section{Usage}
+%
+% \StopEventually{%
+%   \PrintChanges
+%   \PrintIndex
+% }
+%
+% \section{Implementation}
+% \subsection{\xpackage{mytoc} package}
+%\iffalse
+%    \begin{macrocode}
+%<*mytoc.sty>
+%    \end{macrocode}
+%\fi
+% \LaTeXe initialization.
+%    \begin{macrocode}
+\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+\ProvidesPackage{mytoc}[2012/06/14 v1.0 For exercises and correction]
+%    \end{macrocode}
+%
+% Load \xpackage{my} package to load default configuration.
+%    \begin{macrocode}
+\RequirePackageWithOptions{my}[2011/12/08]
+%    \end{macrocode}
+%
+% If language options are not called, the default language is loaded (the 
+default of this method is that only the last one will be allowed).
+%    \begin{macrocode}
+\iflanguage{french}{%
+\input{mytoc-french.def}
+}{}
+%    \end{macrocode}
+%
+% The \xoption{solution} and \xoption{nosolution} allow to make the document 
+%with or without corrections. The default compilation is without corrections.
+%    \begin{macrocode}
+\newtoggle{mytoc@minitoc@bool}
+\DeclareOptionX[mytoc]{minitoc}{\toggletrue{mytoc@minitoc@bool}}
+\DeclareOptionX[mytoc]{nominitoc}{\togglefalse{mytoc@minitoc@bool}}
+\DeclareOptionX[mytoc]{french}{\input{mytoc-french.def}}
+\DeclareOptionX[mytoc]*{%
+  \PackageWarning{mytoc}{Unknown option `\CurrentOption'}%
+}
+\ProcessOptionsX[mytoc]\relax
+%    \end{macrocode}
+%
+% Some useful packages are loaded here.
+% \begin{itemize}
+%   \item\xpackage{minitoc} to create mini-table of contents (only if 
+%\xoption{minitoc} option)
+%   \item\xpackage{sectsty} to change the style of the sections
+%   \item\xpackage{tocbibind} to improve the table of contents and links for 
+%section macros
+%   \item\xpackage{appendix} to improve the standard appendices from \LaTeXe
+%   \item\xpackage{bookmark} to improve final PDF version
+% \end{itemize}
+%    \begin{macrocode}
+\iftoggle{mytoc@minitoc@bool}{%
+  \RequirePackage[hints]{minitoc}
+}{}
+\RequirePackage{sectsty}
+\RequirePackage{tocbibind}
+\RequirePackage[toc]{appendix}
+\RequirePackage{bookmark}
+%    \end{macrocode}
+%
+% Add the page number to the appendix part.
+%    \begin{macrocode}
+\appendicestocpagenum
+%    \end{macrocode}
+%
+% Change the font style for sectioning macros.
+%    \begin{macrocode}
+\allsectionsfont{\sffamily}
+\chapterfont{\sffamily}
+\@ifpackageloaded{minitoc}{
+  \mtcsettitlefont{minitoc}{\large\bfseries\sffamily}
+  \AtBeginDocument{\dominitoc}
+}{}
+%    \end{macrocode}
+%
+% Define useful commands depending on the loading of \xpackage{hyperref} or 
+%\xpackage{minitoc} packages.
+%    \begin{macrocode}
+\@ifpackageloaded{hyperref}{%
+  \newrobustcmd{\my@phantomsection}{\phantomsection}%
+}{%
+  \newrobustcmd{\my@phantomsection}{}%
+}
+\@ifpackageloaded{minitoc}{%
+  \newrobustcmd{\my@mtcaddchapter}{\mtcaddchapter}%
+  \newrobustcmd{\my@minitoc}{\minitoc}%
+  \newrobustcmd{\my@addstarredpart}[1]{\addstarredpart{#1}}%
+  \ifdef{\chapter}{%
+    \newrobustcmd{\my@addstarredchapter}[1]{\addstarredchapter{#1}}%
+    \newrobustcmd{\my@addstarredsection}[1]{\addcontentsline{toc}{section}{#1}}%
+  }{%
+    \newrobustcmd{\my@addstarredchapter}[1]{}%
+    \newrobustcmd{\my@addstarredsection}[1]{\addstarredsection{#1}}%
+  }
+  \newrobustcmd{\my@addstarredsubsection}[1]{\addcontentsline{toc}{subsection}{#1}}%
+  \newrobustcmd{\my@addstarredsubsubsection}[1]{\addcontentsline{toc}{subsubsection}{#1}}%
+}{%
+  \newrobustcmd{\my@mtcaddchapter}{}%
+  \newrobustcmd{\my@minitoc}{}%
+  \newrobustcmd{\my@addstarredpart}[1]{\addcontentsline{toc}{part}{#1}}%
+  \newrobustcmd{\my@addstarredchapter}[1]{\addcontentsline{toc}{chapter}{#1}}%
+  \newrobustcmd{\my@addstarredsection}[1]{\addcontentsline{toc}{section}{#1}}%
+  \newrobustcmd{\my@addstarredsubsection}[1]{\addcontentsline{toc}{subsection}{#1}}%
+  \newrobustcmd{\my@addstarredsubsubsection}[1]{\addcontentsline{toc}{subsubsection}{#1}}%
+}
+%    \end{macrocode}
+%
+% \begin{macro}{\mytoc}
+% Define the macro for the table of contents.
+%    \begin{macrocode}
+\newrobustcmd{\mytoc}{%
+  \tableofcontents%
+  \my@phantomsection%
+  \my@mtcaddchapter%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\mylof}
+% Define the macro for the list of figures.
+%    \begin{macrocode}
+\newrobustcmd{\mylof}{%
+  \listoffigures%
+  \my@phantomsection%
+  \my@mtcaddchapter%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\mylot}
+% Define the macro for the list of tables.
+%    \begin{macrocode}
+\newrobustcmd{\mylot}{%
+  \listoftables%
+  \my@phantomsection%
+  \my@mtcaddchapter%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{environment}{mypart}
+% Define the |mypart| environment in place of the |\part| macro.
+%    \begin{macrocode}
+\newenvironment{mypart}[2][]{%
+	\cleardoublepage%
+	\part{#2}%
+	\label{#1}%
+}{}
+%    \end{macrocode}
+% \end{environment}
+%
+% \begin{environment}{mypart-}
+% Define the |mypart-| environment in place of the |\part*| macro.
+%    \begin{macrocode}
+\newenvironment{mypart-}[1]{%
+	\cleardoublepage%
+	\part*{#1}%
+}{}
+%    \end{macrocode}
+% \end{environment}
+%
+% \begin{environment}{mypart+}
+% Define the |mypart+| environment in place of the |\part*| macro but is still 
+%added in the table of contents.
+%    \begin{macrocode}
+\newenvironment{mypart+}[2][]{%
+	\cleardoublepage%
+	\part*{#2}%
+	\label{#1}%
+	\my@phantomsection%
+	\my@addstarredpart{#2}%
+}{}
+%    \end{macrocode}
+% \end{environment}
+%
+% \begin{environment}{mychapter}
+% Define the |mychapter| environment in place of the |\chapter| macro.
+%    \begin{macrocode}
+\newenvironment{mychapter}[2][]{%
+	\cleardoublepage%
+	\chapter{#2}%
+	\label{#1}%
+	\my@minitoc%
+}{}
+%    \end{macrocode}
+% \end{environment}
+%
+% \begin{environment}{mychapter-}
+% Define the |mychapter-| environment in place of the |\chapter*| macro.
+%    \begin{macrocode}
+\newenvironment{mychapter-}[1]{%
+	\cleardoublepage%
+	\chapter*{#1}%
+	\markboth{#1}{#1}%
+}{}
+%    \end{macrocode}
+% \end{environment}
+%
+% \begin{environment}{mychapter+}
+% Define the |mychapter+| environment in place of the |\chapter*| macro but is still 
+%added in the table of contents.
+%    \begin{macrocode}
+\newenvironment{mychapter+}[2][]{%
+	\cleardoublepage%
+	\chapter*{#2}%
+	\label{#1}%
+	\my@phantomsection%
+	\my@addstarredchapter{#2}%
+	\markboth{#2}{#2}%
+}{}
+%    \end{macrocode}
+% \end{environment}
+%
+% \begin{environment}{mysection}
+% Define the |mysection| environment in place of the |\section| macro.
+%    \begin{macrocode}
+\newenvironment{mysection}[2][]{%
+	\section{#2}%
+	\label{#1}%
+}{}
+%    \end{macrocode}
+% \end{environment}
+%
+% \begin{environment}{mysection-}
+% Define the |mysection-| environment in place of the |\section*| macro.
+%    \begin{macrocode}
+\newenvironment{mysection-}[1]{%
+	\section*{#1}%
+	\markboth{#1}{#1}%
+}{}
+%    \end{macrocode}
+% \end{environment}
+%
+% \begin{environment}{mysection+}
+% Define the |mysection+| environment in place of the |\section*| macro but is still 
+%added in the table of contents.
+%    \begin{macrocode}
+\newenvironment{mysection+}[2][]{%
+	\section*{#2}%
+	\label{#1}%
+	\my@phantomsection%
+	\my@addstarredsection{#2}%
+	\markboth{#2}{#2}%
+}{}
+%    \end{macrocode}
+% \end{environment}
+%
+% \begin{environment}{mysubsection}
+% Define the |mysubsection| environment in place of the |\subsection| macro.
+%    \begin{macrocode}
+\newenvironment{mysubsection}[2][]{%
+	\subsection{#2}%
+	\label{#1}%
+}{}
+%    \end{macrocode}
+% \end{environment}
+%
+% \begin{environment}{mysubsection-}
+% Define the |mysubsection-| environment in place of the |\subsection*| macro.
+%    \begin{macrocode}
+\newenvironment{mysubsection-}[1]{%
+	\subsection*{#1}%
+}{}
+%    \end{macrocode}
+% \end{environment}
+%
+% \begin{environment}{mysubsection+}
+% Define the |mysubsection+| environment in place of the |\subsection*| macro but is still 
+%added in the table of contents.
+%    \begin{macrocode}
+\newenvironment{mysubsection+}[2][]{%
+	\subsection*{#2}%
+	\label{#1}%
+	\my@phantomsubsection%
+	\my@addstarredsubsection{#2}%
+}{}
+%    \end{macrocode}
+% \end{environment}
+%
+% \begin{environment}{mysubsubsection}
+% Define the |mysubsubsection| environment in place of the |\subsubsection| macro.
+%    \begin{macrocode}
+\newenvironment{mysubsubsection}[2][]{%
+	\subsubsection{#2}%
+	\label{#1}%
+}{}
+%    \end{macrocode}
+% \end{environment}
+%
+% \begin{environment}{mysubsubsection-}
+% Define the |mysubsubsection-| environment in place of the |\subsubsection*| macro.
+%    \begin{macrocode}
+\newenvironment{mysubsubsection-}[1]{%
+	\subsubsection*{#1}%
+}{}
+%    \end{macrocode}
+% \end{environment}
+%
+% \begin{environment}{mysubsubsection+}
+% Define the |mysubsubsection+| environment in place of the |\subsubsection*| macro but is still 
+%added in the table of contents.
+%    \begin{macrocode}
+\newenvironment{mysubsubsection+}[2][]{%
+	\subsubsection*{#2}%
+	\label{#1}%
+	\my@phantomsubsubsection%
+	\my@addstarredsubsubsection{#2}%
+}{}
+%    \end{macrocode}
+% \end{environment}
+%
+% \begin{environment}{myparagraph}
+% Define the |myparagraph| environment in place of the |\paragraph| macro.
+%    \begin{macrocode}
+\newenvironment{myparagraph}[2][]{%
+	\paragraph{#2}%
+	\label{#1}%
+}{}
+%    \end{macrocode}
+% \end{environment}
+%
+% \begin{environment}{mysubparagraph}
+% Define the |mysubparagraph| environment in place of the |\subparagraph| macro.
+%    \begin{macrocode}
+\newenvironment{mysubparagraph}[2][]{%
+	\subparagraph{#2}%
+	\label{#1}%
+}{}
+%    \end{macrocode}
+% \end{environment}
+%
+% \begin{macro}{\myappendix}
+% Define the macro for the beginning of the appendices.
+%    \begin{macrocode}
+\newrobustcmd{\myappendix}{%
+  \appendixpage%
+  \cleardoublepage%
+  \appendix%
+  \my@mtcaddchapter%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%\iffalse
+%    \begin{macrocode}
+%</mytoc.sty>
+%    \end{macrocode}
+%\fi
+%
+%\subsection{\xpackage{mytoc-french} localisation}
+%\iffalse
+%    \begin{macrocode}
+%<*mytoc-french.def>
+%    \end{macrocode}
+%\fi
+%
+% Identify file.
+%    \begin{macrocode}
+\ProvidesFile{mytoc-french.def}[2012/06/14 v1.0 French localization for 'mytoc' package]
+%    \end{macrocode}
+%
+% Change the name of appendices to French (the \xpackage{appendix} package has 
+%a bad localization).
+%    \begin{macrocode}
+\AtBeginDocument{%
+  \renewcommand{\appendixpagename}{Annexes}
+  \renewcommand{\appendixtocname}{Annexes}
+}
+%    \end{macrocode}
+%
+%\iffalse
+%    \begin{macrocode}
+%</mytoc-french.def>
+%    \end{macrocode}
+%\fi
+%
+% \Finale
+\endinput
