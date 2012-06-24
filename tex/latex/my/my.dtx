@@ -408,9 +408,9 @@
 % \subsection{Loading packages}
 % There is a few default packages that are loaded in \xpackage{my} package.
 % \begin{itemize}
+% \item\xpackage{fontenc} defines the font encoding to \xoption{T1}
 % \item\xpackage{inputenc} allow only \xoption{utf8} encoding for \LaTeXe\ 
 %files
-% \item\xpackage{fontenc} defines the font encoding to \xoption{T1}
 % \item\xpackage{lmodern} loads the \myemph{Latin modern} font
 % \item\xpackage{amsmath} loads default configuration for mathematical 
 %notations
@@ -423,8 +423,8 @@
 %option choose the right locale)
 % \end{itemize}
 %    \begin{macrocode}
-\RequirePackage[utf8]{inputenc}
 \RequirePackage[T1]{fontenc}
+\RequirePackage[utf8]{inputenc}
 \RequirePackage{lmodern}
 \RequirePackage{amsmath}
 \RequirePackage{babel}
