@@ -53,6 +53,11 @@
 %% New commands %%
 %%%%%%%%%%%%%%%%%%
 %% To include a bibliography
+\@ifpackageloaded{minitoc}{%
+  \newrobustcmd{\mybib@mtcaddchapter}{\mtcaddchapter}%
+}{%
+  \newrobustcmd{\mybib@mtcaddchapter}{}%
+}
 \@ifpackageloaded{biblatex}%
 {%
 	\newrobustcmd\mybiblio[1][]{%
@@ -63,11 +68,13 @@
 		}{%
 			\printbibliography[heading=bibintoc,#1]%
 		}%
+		\mybib@mtcaddchapter%
 	}
 }{%
 	\newrobustcmd\mybiblio[1][]{%
 		\bibliographystyle{apalike}%
 		\bibliography{biblio}%
+		\mybib@mtcaddchapter%
 	}%
 }
 % Replace the command '\cite'
