@@ -29,7 +29,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{474}
+% \CheckSum{482}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -462,6 +462,20 @@
 				\Huge\bfseries\sffamily #1\par\nobreak%
 				\vskip 40\p@%
 			}%
+		}
+	}{}
+}
+%    \end{macrocode}
+%
+% Change the default theme for the bibliography.
+%    \begin{macrocode}
+\AtEndPreamble{%
+	\@ifpackageloaded{biblatex}{%
+		\renewbibmacro{begentry}{%
+			\hspace{-2em}\printtext[brackets]{%
+				\printnames{labelname}~\usebibmacro{cite:labelyear+extrayear}%
+			}%
+			\newline%
 		}
 	}{}
 }
