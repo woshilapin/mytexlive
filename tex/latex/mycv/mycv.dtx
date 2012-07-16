@@ -36,7 +36,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{0}
+% \CheckSum{322}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -108,6 +108,8 @@
 %   \item[\cs{mobile}] for the mobile number (ex. |\mobile{07 23 45 67 89}|)
 %   \item[\cs{fax}] for the fax number (ex. |\fax{01 23 45 67 90}|)
 %   \item[\cs{email}] for the email (ex. |\email{albert.einstein@emc2.org}|)
+%   \item[\cs{web}] for the web url (ex.  
+%|\url{https://en.wikipedia.org/wiki/HTTP_404}|)
 %   \item[\cs{birth}] for the date of birth in format \texttt{dd/mm/aaaa} (ex.  
 %|\birth{14/03/1879}|)
 % \end{description}
@@ -284,6 +286,12 @@
 \newcommand{\email}[1]{\def\@email{\href{mailto:#1}{#1}}}
 %    \end{macrocode}
 % \end{macro}
+% \begin{macro}{\web}
+%   The personal web URL
+%    \begin{macrocode}
+\newcommand{\web}[1]{\def\@web{\href{#1}{#1}}}
+%    \end{macrocode}
+% \end{macro}
 % \begin{macro}{\birth}
 %   The birth date
 %    \begin{macrocode}
@@ -306,8 +314,9 @@
   \begin{tabular}{@{}l@{ -- }l@{}}%
     \ifdef{\@phone}{Tel & \@phone\tabularnewline}{}%
     \ifdef{\@mobile}{Mob & \@mobile\tabularnewline}{}%
-    \ifdef{\@fax}{Mob & \@fax\tabularnewline}{}%
+    \ifdef{\@fax}{Fax & \@fax\tabularnewline}{}%
     \ifdef{\@email}{Email & \@email\tabularnewline}{}%
+    \ifdef{\@web}{Web & \@web\tabularnewline}{}%
   \end{tabular}\newline%
 }
 \rightheader{}
