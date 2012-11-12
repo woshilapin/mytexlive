@@ -32,7 +32,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{26}
+% \CheckSum{30}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -163,6 +163,13 @@
 \PYdeactivate
 %    \end{macrocode}
 % \end{environment}
+%
+% \begin{macro}{\mychinese}
+% Define the macro for the pinyin notation
+%    \begin{macrocode}
+\newrobustcmd{\mypinyin}[1]{\PYactivate#1\PYdeactivate}
+%    \end{macrocode}
+% \end{macro}
 %
 % \Finale
 \endinput
