@@ -1,0 +1,267 @@
+% \iffalse meta-comment
+%
+% Copyright (C) 2012 by Jean SIMARD
+%
+% This file may be distributed and/or modified under the conditions of the 
+%LaTeX Project Public License, either version 1.2 of this license or (at your 
+%option) any later version.  The latest version of this license is in:
+%
+% http://www.latex-project.org/lppl.txt
+%
+% and version 1.2 or later is part of all distributions of LaTeX version 
+%1999/12/01 or later.
+%
+% \fi
+
+% \iffalse
+%<package>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+%<package>\ProvidesPackage{myglossary}
+%<package>  [2012/10/10 v1.0 A package for a glossary]
+%<*driver>
+\documentclass[english]{ltxdoc}
+\usepackage{holtxdoc}[2008/08/11]
+\usepackage{my}
+\usepackage{hyperref}
+\EnableCrossrefs
+\CodelineIndex 
+\RecordChanges
+\begin{document}
+\DocInput{myglossary.dtx}
+\end{document}
+%</driver>
+% \fi
+%
+% \CheckSum{107}
+%
+%% \CharacterTable
+%%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%%   Lower-case  \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%%   Digits    \0\1\2\3\4\5\6\7\8\9
+%%   Exclamation   \!   Double quote  \"   Hash (number) \#
+%%   Dollar    \$   Percent     \%   Ampersand   \&
+%%   Acute accent  \'   Left paren  \(   Right paren   \)
+%%   Asterisk    \*   Plus      \+   Comma     \,
+%%   Minus     \-   Point     \.   Solidus     \/
+%%   Colon     \:   Semicolon   \;   Less than   \<
+%%   Equals    \=   Greater than  \>   Question mark \?
+%%   Commercial at \@   Left bracket  \[   Backslash   \\
+%%   Right bracket \]   Circumflex  \^   Underscore  \_
+%%   Grave accent  \`   Left brace  \{   Vertical bar  \|
+%%   Right brace   \}   Tilde     \~}
+%
+% \changes{v1.0}{2012/10/10}{Initial version}
+%
+% \GetFileInfo{myglossary.dtx}
+%
+% \DoNotIndex{\begin,\end,\\,\ }
+% \DoNotIndex{\RequirePackage}
+% \DoNotIndex{\ClassError,\ClassWarning,\ClassInfo}
+% \DoNotIndex{\PackageError,\PackageWarning,\PackageInfo}
+% \DoNotIndex{\DeclareOption,\ExecuteOptions,\CurrentOption,\ProcessOptions}
+% \DoNotIndex{\DeclareOptionX,\ProcessOptionsX}
+%
+% \title{The \xpackage{myglossary} package\\Create a glossary
+%\thanks{This document corresponds to the \xpackage{myglossary}~\fileversion, 
+%dated~\filedate.}}
+% \author{Jean 
+%\myname{Simard}\\\href{mailto:juste.lapin@gmail.com}{\xemail{juste.lapin@gmail.com}}}
+%
+% \maketitle
+%
+% \begin{abstract}
+% The \xpackage{myglossary} package provide commands to create a glossary in 
+%your document
+% \end{abstract}
+% \tableofcontents
+%
+% \section{Introduction}
+%
+% \section{Usage}
+%
+% \StopEventually{%
+%   \PrintChanges
+%   \PrintIndex
+% }
+%
+% \section{Implementation}
+% \LaTeXe initialization.
+%    \begin{macrocode}
+\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+\ProvidesPackage{myglossary}[2012/10/10 v1.0 A package for a glossary]
+%    \end{macrocode}
+%
+% An option to create (or not) an alternate glossary for the acronyms.
+%    \begin{macrocode}
+\newif\if@acronym \@acronymfalse
+\DeclareOptionX{acronym}{%
+  \PassOptionsToPackage{acronym=true}{glossaries}
+}
+%    \end{macrocode}
+%
+% Process options.
+%    \begin{macrocode}
+\DeclareOptionX*{%
+  \PackageWarning{myglossary}{Unknown option `\CurrentOption'}%
+}
+\ProcessOptionsX\relax
+%    \end{macrocode}
+%
+% Load the correct languages to the \xpackage{glossaries} and % 
+%\xpackage{translator} packages.
+%    \begin{macrocode}
+\iflanguage{english}{
+  \PassOptionsToPackage{xindy={language=english,codepage=utf8}}{glossaries}
+  \PassOptionsToPackage{english}{translator}
+}{}
+\iflanguage{french}{
+  \PassOptionsToPackage{xindy={language=french,codepage=utf8}}{glossaries}
+  \PassOptionsToPackage{french}{translator}
+}{}
+%    \end{macrocode}
+%
+% Load the needed packages.
+%    \begin{macrocode}
+\RequirePackage[toc=true,style=altlist]{glossaries}
+\RequirePackage{translator}
+%    \end{macrocode}
+%
+% To create the glossary, the \cs{makeglossaries} macro should be called at the 
+% end of the preamble.
+%    \begin{macrocode}
+\AtEndPreamble{\makeglossaries}
+%    \end{macrocode}
+%
+% \begin{macro}{\myglossary}
+% Define the macro to print the glossary.
+%    \begin{macrocode}
+\newrobustcmd\myglossary{%
+  \printglossaries%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\mynewglos}
+% Define the macro to define a new glossary entry.
+%    \begin{macrocode}
+\newrobustcmd\mynewglos[2]{\newglossaryentry{#1}{sort={#1},#2}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\mynewglos}
+% Define the macro to define a new glossary entry specific for acronyms.
+%    \begin{macrocode}
+\ifglsacronym
+  %% To create a new acronym entry
+  % All options from '\mynewglos' are allowed and some others:
+  % - first: displayed text the first time in the document
+  % - firstplural: displayed text the first time in the document (plural 
+  %context)
+  \newrobustcmd\mynewacro[2]{\newglossaryentry{#1}{type=\acronymtype,sort={#1},#2}}
+\fi
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\mycustomglos}
+% This macro should not be used by user. It is only a macro to automatically
+%create a serie of new macros. It will create eight variants of a same macro.
+%
+% For example, the \cs{mygloss} macro will have the following derived macros:
+% \begin{itemize}
+% \item\cs{mygloss-} condensed version (mainly for acronyms)
+% \item\cs{mygloss+} expanded version (mainly for acronyms)
+% \item\cs{mygloss*} plural version
+% \item\cs{myglossnl} condensed version (mainly for acronyms) without hyperlink
+% \item\cs{myglossnl-} condensed version (mainly for acronyms) without hyperlink
+% \item\cs{myglossnl+} expanded version (mainly for acronyms) without hyperlink
+% \item\cs{myglossnl*} plural version without hyperlink
+% \end{itemize}
+%    \begin{macrocode}
+\def\mycustomglos#1#2{
+  % With hyperlink
+  \expandafter%
+  \newrobustcmd\csname my#1\endcsname[1]{%
+    \protect\csname #2\endcsname{##1}%
+  }
+  \WithSuffix\expandafter%
+  \newrobustcmd\csname my#1\endcsname-[1]{%
+    \protect\csname #2text\endcsname{##1}%
+  }
+  \WithSuffix\expandafter%
+  \newrobustcmd\csname my#1\endcsname+[1]{%
+    \protect\csname #2first\endcsname{##1}
+  }
+  \WithSuffix\expandafter%
+  \newrobustcmd\csname my#1\endcsname*[1]{%
+    \protect\csname #2pl\endcsname{##1}
+  }
+  % With no hyperlink
+  \expandafter%
+  \newrobustcmd\csname my#1nl\endcsname[1]{%
+    \protect\csname #2\endcsname*{##1}%
+  }
+  \WithSuffix\expandafter%
+  \newrobustcmd\csname my#1nl\endcsname-[1]{%
+    \protect\csname #2text\endcsname*{##1}%
+  }
+  \WithSuffix\expandafter%
+  \newrobustcmd\csname my#1nl\endcsname+[1]{%
+    \protect\csname #2first\endcsname*{##1}%
+  }
+  \WithSuffix\expandafter%
+  \newrobustcmd\csname my#1nl\endcsname*[1]{%
+    \protect\csname #2pl\endcsname*{##1}%
+  }
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\myglos}
+% Create a new glossary citation (lowercase).
+%    \begin{macrocode}
+\mycustomglos{glos}{gls}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\myGlos}
+% Create a new glossary citation (first letter uppercase).
+%    \begin{macrocode}
+\mycustomglos{Glos}{Gls}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\myGLOS}
+% Create a new glossary citation (uppercase).
+%    \begin{macrocode}
+\mycustomglos{GLOS}{GLS}
+%    \end{macrocode}
+% \end{macro}
+%
+%    \begin{macrocode}
+\ifglsacronym
+%    \end{macrocode}
+% \begin{macro}{\myacro}
+% Create a new acronym citation (lowercase).
+%    \begin{macrocode}
+  \mycustomglos{acro}{gls}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\myAcro}
+% Create a new acronym citation (first letter uppercase).
+%    \begin{macrocode}
+  \mycustomglos{Acro}{Gls}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\myACRO}
+% Create a new acronym citation (uppercase).
+%    \begin{macrocode}
+  \mycustomglos{ACRO}{GLS}
+%    \end{macrocode}
+% \end{macro}
+%    \begin{macrocode}
+\fi
+%    \end{macrocode}
+%
+% \Finale
+\endinput
