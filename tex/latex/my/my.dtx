@@ -33,7 +33,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{288}
+% \CheckSum{290}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -438,6 +438,13 @@
 %    \begin{macrocode}
 \setlength{\parindent}{0cm}
 \setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}
+%    \end{macrocode}
+%
+% The Latin-Modern font does not provide a small-caps shape for bold font. In
+%this case, use the Computer-Modern font which provide this particular shape.
+%    \begin{macrocode}
+\normalfont
+\DeclareFontShape{T1}{lmr}{bx}{sc}{ <-> ssub * cmr/bx/sc }{}
 %    \end{macrocode}
 %
 % Finally, attach the unicode \texttt{20AC} for euro symbol to the correct 
