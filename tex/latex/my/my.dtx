@@ -33,7 +33,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{284}
+% \CheckSum{288}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -197,7 +197,7 @@
 %letter upper case''. As an example, the new |\textsf{\textsc{hello}}| is 
 %producing \textsf{\textsc{hello}} but the original |\textsf{\textsc{hello}}| 
 %is producing \textsc{hello} (look at the serif which should not be here).
-% The \meta{option} can only take the argument |myscstyle| which can have three 
+% The \meta{option} can only take the argument |scstyle| which can have three 
 %different values: |low| (only small caps), |up| (only upper case with no small 
 %caps) and |first| (the first letter is upper case and the others are in small 
 %caps).
@@ -667,17 +667,17 @@
 %\xpackage{relsize} package.
 % It redefined the \LaTeXe\ command for \cs{textsc}.
 %    \begin{macrocode}
-\define@choicekey[my]{my}{myscstyle}[\my@textsc@uservalue\my@textsc@numin]{up,low,first}[low]{}
+\define@choicekey[my]{my}{scstyle}[\my@textsc@uservalue\my@textsc@numin]{up,low,first,normal}[low]{}
 \newrobustcmd{\mytextsmaller}[2][1]{%
-	\pstFPsub{\myfontsize}{\f@size}{#1}%
-	{\fontsize{\myfontsize}{\f@baselineskip}\selectfont #2}%
+    \pstFPsub{\myfontsize}{\f@size}{#1}%
+    {\fontsize{\myfontsize}{\f@baselineskip}\selectfont #2}%
 }
 \newrobustcmd{\mytextlarger}[2][1]{%
-	\pstFPadd{\myfontsize}{\f@size}{#1}%
-	{\fontsize{\myfontsize}{\f@baselineskip}\selectfont#2}%
+    \pstFPadd{\myfontsize}{\f@size}{#1}%
+    {\fontsize{\myfontsize}{\f@baselineskip}\selectfont#2}%
 }
 \let\oldtextsc\textsc
-\renewrobustcmd{\textsc}[2][myscstyle=low]{%
+\renewrobustcmd{\textsc}[2][scstyle=normal]{%
   \setkeys[my]{my}{#1}%
   \ifdefstring{\f@family}{lmss}{%
     \ifcase\my@textsc@numin\relax%
@@ -686,6 +686,8 @@
       {\mytextsmaller[2]{\MakeUppercase{#2}}}%
     \or%
       {\mytextsmaller[2]{\MakeUppercase{\mytextlarger[2]#2}}}%
+    \or%
+      {\oldtextsc{#2}}%
     \fi%
   }{%
     \ifcase\my@textsc@numin\relax%
@@ -694,6 +696,8 @@
       {\oldtextsc{\MakeLowercase{#2}}}%
     \or%
       {\oldtextsc{\makefirstuc{\MakeLowercase{#2}}}}%
+    \or%
+      {\oldtextsc{#2}}%
     \fi%
   }%
 }
@@ -711,9 +715,9 @@
     \ifstrempty{#1}%
       {%
       }{%
-        \textsc[myscstyle=low]{#1}\ %
+        \textsc[scstyle=low]{#1}\ %
       }%
-	  \textsc[myscstyle=first]{#2}%
+      \textsc[scstyle=first]{#2}%
   }{%
     \ifstrempty{#1}%
       {%
