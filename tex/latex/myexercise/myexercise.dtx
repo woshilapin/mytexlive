@@ -32,7 +32,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{98}
+% \CheckSum{100}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -130,6 +130,13 @@
   \PackageWarning{myexercise}{Unknown option `\CurrentOption'}%
 }
 \ProcessOptionsX\relax
+%    \end{macrocode}
+%
+% If a language is already loaded, automatically load the corresponding file.
+%    \begin{macrocode}
+\iflanguage{french}{
+  \input{myexercise-french.def}
+}{}
 %    \end{macrocode}
 %
 % Some useful packages are loaded here.
