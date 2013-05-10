@@ -1,5 +1,6 @@
 import os
 import os.path
+import sys
 import subprocess
 import re
 
@@ -11,7 +12,7 @@ def file_time(filename):
 	return modified_time
 
 path = os.getcwd()
-for rep_name in os.listdir(path):
+for rep_name in ( sys.argv[1:] or os.listdir(path) ):
 	os.chdir(path)
 	if os.path.isdir(rep_name):
 		os.chdir(rep_name)
