@@ -40,7 +40,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{352}
+% \CheckSum{353}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -351,7 +351,9 @@
 
     \makeatletter%
     \begin{center}%
-      \textbf{\textcolor{structure.fg}\large\inserttitle}%
+      \textbf{\inserttitle}%
+
+      \textcolor{black}{\footnotesize\insertsubtitle}%
 
       \pgfuseshading{separationtitlepagelineshading}%
       \vskip\baselineskip%
