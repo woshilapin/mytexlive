@@ -23,7 +23,7 @@
 	[2012/03/21 v1.0 Curriculum Vitae class]
 %</class>
 %<*driver>
-\documentclass[english]{ltxdoc}
+\documentclass[french,english]{ltxdoc}
 \usepackage{holtxdoc}[2008/08/11]
 \usepackage{my}
 \usepackage{hyperref}
@@ -36,7 +36,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{323}
+% \CheckSum{335}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -88,6 +88,13 @@
 %
 % \section{Usage}
 % \subsection{The header}
+% \DescribeMacro{\job}
+% Main title of the \myemph{curriculum vitae} describing the name of the asked 
+%job.
+% \begin{description}
+%   \item[\cs{job}] for the job of the CV (ex. |\job{Engineer in Computer Sciences}|)
+% \end{description}
+%
 % \DescribeMacro{\address}
 % \DescribeMacro{\postal}
 % \DescribeMacro{\city}
@@ -238,6 +245,12 @@
 %
 % \subsection{The header}
 % Define new fields for the header of the \myemph{curriculum vitae}:
+% \begin{macro}{\job}
+%   The job title
+%    \begin{macrocode}
+\newcommand{\job}[1]{\def\@job{#1}}
+%    \end{macrocode}
+% \end{macro}
 % \begin{macro}{\address}
 %   The mail address
 %    \begin{macrocode}
@@ -320,7 +333,14 @@
   \end{tabular}\newline%
 }
 \rightheader{}
-\newrobustcmd\makeheader{\makeheaders}
+\newrobustcmd\makeheader{%
+  \makeheaders%
+  \ifdef{\@job}{%
+    \begin{center}%
+      {\LARGE\bfseries\sffamily\@job}%
+    \end{center}%
+  }{}%
+}
 %    \end{macrocode}
 %
 % \subsection{The title page}
