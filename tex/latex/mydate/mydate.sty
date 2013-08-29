@@ -23,7 +23,7 @@
 
 %% Packages to call
 % Package to display date in a ISO format
-\RequirePackage[iso,printdayon]{isodate}
+\RequirePackage[iso]{isodate}
 
 %%%%%%%%%%%%%%%%%%
 %% New commands %%
@@ -88,9 +88,9 @@
 	\ifcase\mydate@numin\relax%
 		{\isodash{\mydate@sep}\isodate\printdate{#2}\xspace}%
 	\or%
-		{\origdate\printdayon\printdate{#2}\xspace}%
+		{\origdate\printdate{#2}\xspace}%
 	\or%
-		{\origdate\printdayon\printdate{#2}\xspace}%
+		{\origdate\printdate{#2}\xspace}%
 	\fi%
 	}
 
@@ -99,9 +99,9 @@
 	\ifcase\mydate@numin\relax%
 		{\isodash{\mydate@sep}\isodate\daterange{#2}{#3}\xspace}%
 	\or%
-		{\origdate\printdayon\daterange{#2}{#3}\xspace}%
+		{\origdate\daterange{#2}{#3}\xspace}%
 	\or%
-		{\origdate\printdayon\daterange{#2}{#3}\xspace}%
+		{\origdate\daterange{#2}{#3}\xspace}%
 	\fi%
 	}
 
