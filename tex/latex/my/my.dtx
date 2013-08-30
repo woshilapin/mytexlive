@@ -33,7 +33,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{299}
+% \CheckSum{300}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -421,6 +421,7 @@
 %files
 % \item\xpackage{lmodern} loads the \myemph{Latin modern} font
 % \item\xpackage{babel} loads the language specifications
+% \item\xpackage{iflang} defines |\IfLanguageNameName| macro
 % \item\xpackage{xspace} useful to have finishing commands with a space without 
 %suffixing it with a backslash and a space
 % \item\xpackage{mfirstuc} to make only the first letter of word upper case
@@ -433,6 +434,7 @@
 \RequirePackage[utf8]{inputenc}
 \RequirePackage{lmodern}
 \RequirePackage{babel}
+\RequirePackage{iflang}
 \RequirePackage{xspace}
 \RequirePackage{mfirstuc}
 \RequirePackage[autolanguage]{numprint}
@@ -570,7 +572,7 @@
 %the \cs{xspace} command at end.
 %    \begin{macrocode}
 \newrobustcmd{\myafortiori}{%
-  \iflanguage{french}{%
+  \IfLanguageName{french}{%
     \textit{a fortiori}%
   }{%
     a fortiori%
@@ -584,7 +586,7 @@
 %\cs{xspace} command at end.
 %    \begin{macrocode}
 \newrobustcmd{\myapriori}{%
-  \iflanguage{french}{%
+  \IfLanguageName{french}{%
     \textit{a priori}%
   }{%
     a priori%
@@ -598,7 +600,7 @@
 %\cs{xspace} command at end.
 %    \begin{macrocode}
 \newrobustcmd{\mycf}{%
-  \iflanguage{french}{%
+  \IfLanguageName{french}{%
     \textit{c.f.}%
   }{%
     c.f.%
@@ -612,7 +614,7 @@
 %\cs{xspace} command at end.
 %    \begin{macrocode}
 \newrobustcmd{\myeg}{%
-  \iflanguage{french}{%
+  \IfLanguageName{french}{%
     \textit{e.g.}%
   }{%
     e.g.%
@@ -626,7 +628,7 @@
 %\cs{xspace} command at end.
 %    \begin{macrocode}
 \newrobustcmd{\myie}{%
-  \iflanguage{french}{%
+  \IfLanguageName{french}{%
     \textit{i.e.}%
   }{%
     i.e.%
@@ -640,7 +642,7 @@
 %\cs{xspace} command at end.
 %    \begin{macrocode}
 \newrobustcmd{\myetc}{%
-  \iflanguage{french}{%
+  \IfLanguageName{french}{%
     \textit{etc.}%
   }{%
     etc.%
@@ -654,7 +656,7 @@
 %\cs{xspace} command at end.
 %    \begin{macrocode}
 \newrobustcmd{\myetal}{%
-  \iflanguage{french}{%
+  \IfLanguageName{french}{%
     \textit{et al.}%
   }{%
     et al.%
@@ -668,7 +670,7 @@
 %\cs{xspace} command at end.
 %    \begin{macrocode}
 \newrobustcmd{\myvs}{%
-  \iflanguage{french}{%
+  \IfLanguageName{french}{%
     \textit{vs.}%
   }{%
     vs.%
@@ -741,7 +743,7 @@
 %the previously redefined \cs{textsc} macro for French small caps.
 %    \begin{macrocode}
 \newrobustcmd{\myname}[2][]{%
-  \iflanguage{french}{%
+  \IfLanguageName{french}{%
     \ifstrempty{#1}%
       {%
       }{%

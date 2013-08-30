@@ -37,12 +37,12 @@
 %% New commands %%
 %%%%%%%%%%%%%%%%%%
 % Define some language commands
-\iflanguage{english}{
+\IfLanguageName{english}{
 	\newcommand{\mytodo@lang@todosname}{List of \emph{Todos}}
 	\newcommand{\mytodo@lang@sectionname}{Section}
 	\newcommand{\mytodo@lang@todo}{Incomplete}
 }{}
-\iflanguage{french}{
+\IfLanguageName{french}{
 	\newcommand{\mytodo@lang@todosname}{Liste des \emph{À faire}}
 	\newcommand{\mytodo@lang@sectionname}{Section}
 	\newcommand{\mytodo@lang@todo}{Incomplet}

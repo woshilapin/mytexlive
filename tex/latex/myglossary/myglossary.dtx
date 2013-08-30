@@ -109,11 +109,11 @@
 % Load the correct languages to the \xpackage{glossaries} and % 
 %\xpackage{translator} packages.
 %    \begin{macrocode}
-\iflanguage{english}{
+\IfLanguageName{english}{
   \PassOptionsToPackage{xindy={language=english,codepage=utf8}}{glossaries}
   \PassOptionsToPackage{english}{translator}
 }{}
-\iflanguage{french}{
+\IfLanguageName{french}{
   \PassOptionsToPackage{xindy={language=french,codepage=utf8}}{glossaries}
   \PassOptionsToPackage{french}{translator}
 }{}
