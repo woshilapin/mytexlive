@@ -20,7 +20,7 @@
 %<class>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
 %<class>\ProvidesClass{mycv}
 %<*class>
-	[2012/03/21 v1.0 Curriculum Vitae class]
+    [2012/03/21 v1.0 Curriculum Vitae class]
 %</class>
 %<*driver>
 \documentclass[french,english]{ltxdoc}
@@ -36,7 +36,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{335}
+% \CheckSum{440}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -55,6 +55,7 @@
 %%   Right brace   \}   Tilde     \~}
 %
 % \changes{v1.0}{2012/03/21}{Initial version}
+% \changes{v1.1}{2016/07/25}{Improve US version with centered header}
 %
 % \GetFileInfo{mycv.dtx}
 %
@@ -98,19 +99,26 @@
 % \DescribeMacro{\address}
 % \DescribeMacro{\postal}
 % \DescribeMacro{\city}
+% \DescribeMacro{\state}
 % \DescribeMacro{\country}
+% Few commands can be defined to describe the address of the owner of the
+%\myemph{curriculum vitae}.
+% \begin{description}
+%   \item[\cs{address}] for the mail address (ex. |\address{13 rue Pascal}|)
+%   \item[\cs{postal}] for the postal code (ex. |\postal{8000-8099}|)
+%   \item[\cs{city}] for the city (ex. |\city{Zürich}|)
+%   \item[\cs{state}] for the state (ex. |\state{MI}|)
+%   \item[\cs{country}] for the country (ex. |\country{Germany}|)
+% \end{description}
+
 % \DescribeMacro{\phone}
 % \DescribeMacro{\mobile}
 % \DescribeMacro{\fax}
 % \DescribeMacro{\email}
 % \DescribeMacro{\birth}
-% Few commands can be defined to describe the identity and contact details of 
-%the owner of the \myemph{curriculum vitae}.
+% A few other commands can be defined for contact details of the owner of the
+%\myemph{curriculum vitae}.
 % \begin{description}
-%   \item[\cs{address}] for the mail address (ex. |\address{13 rue Pascal}|)
-%   \item[\cs{postal}] for the postal code (ex. |\postal{8000-8099}|)
-%   \item[\cs{city}] for the city (ex. |\city{Zürich}|)
-%   \item[\cs{country}] for the country (ex. |\country{Germany}|)
 %   \item[\cs{phone}] for the phone number (ex. |\phone{01 23 45 67 89}|)
 %   \item[\cs{mobile}] for the mobile number (ex. |\mobile{07 23 45 67 89}|)
 %   \item[\cs{fax}] for the fax number (ex. |\fax{01 23 45 67 90}|)
@@ -183,6 +191,7 @@
 \RequirePackageWithOptions{my}[2011/12/08]
 %    \end{macrocode}
 % The different following options are transfered to the \xclass{curve} class.
+% First about the size of paper to use.
 %    \begin{macrocode}
 \DeclareOptionX{a4paper}{\PassOptionsToClass{a4paper}{curve}}
 \DeclareOptionX{a5paper}{\PassOptionsToClass{a5paper}{curve}}
@@ -190,11 +199,23 @@
 \DeclareOptionX{letterpaper}{\PassOptionsToClass{letterpaper}{curve}}
 \DeclareOptionX{legalpaper}{\PassOptionsToClass{legalpaper}{curve}}
 \DeclareOptionX{executivepaper}{\PassOptionsToClass{executivepaper}{curve}}
+%    \end{macrocode}
+%
+% Then about the size of the font.
+%    \begin{macrocode}
 \DeclareOptionX{10pt}{\PassOptionsToClass{10pt}{curve}}
 \DeclareOptionX{11pt}{\PassOptionsToClass{11pt}{curve}}
 \DeclareOptionX{12pt}{\PassOptionsToClass{12pt}{curve}}
+%    \end{macrocode}
+%
+% About the status of the document.
+%    \begin{macrocode}
 \DeclareOptionX{final}{\PassOptionsToClass{final}{curve}}
 \DeclareOptionX{draft}{\PassOptionsToClass{draft}{curve}}
+%    \end{macrocode}
+%
+% And finally about the language.
+%    \begin{macrocode}
 \DeclareOptionX{english}{\PassOptionsToClass{english}{curve}}
 \DeclareOptionX{french}{\PassOptionsToClass{french}{curve}}
 \DeclareOptionX{francais}{\PassOptionsToClass{francais}{curve}}
@@ -209,6 +230,10 @@
 \DeclareOptionX{dutch}{\PassOptionsToClass{dutch}{curve}}
 \DeclareOptionX{danish}{\PassOptionsToClass{danish}{curve}}
 \DeclareOptionX{swedish}{\PassOptionsToClass{swedish}{curve}}
+%    \end{macrocode}
+%
+% Dismissed all other options.
+%    \begin{macrocode}
 \DeclareOptionX*{%
   \ClassWarning{mycv}{Unknown option `\CurrentOption'}%
 }
@@ -269,6 +294,12 @@
 \newcommand{\city}[1]{\def\@city{#1}}
 %    \end{macrocode}
 % \end{macro}
+% \begin{macro}{\state}
+%   The state
+%    \begin{macrocode}
+\newcommand{\state}[1]{\def\@state{#1}}
+%    \end{macrocode}
+% \end{macro}
 % \begin{macro}{\country}
 %   The country
 %    \begin{macrocode}
@@ -311,16 +342,42 @@
 \newcommand{\birth}[1]{\def\@birth{\mydate[datestyle=short]{#1}}}
 %    \end{macrocode}
 % \end{macro}
+% \begin{macro}{\centerheader}
+%    Define an additional center header
+%    \begin{macrocode}
+\def\@centerheader{%
+  \ClassError{curve}{No \protect\centerheader\space given}{%
+    You have called \protect\makeheaders, %
+    but you didn't provide a left header.\MessageBreak
+    Type X <return> to quit, add a call to \protect\centerheader\space %
+    in the preamble of your CV,\MessageBreak
+    and rerun LaTeX.}}
+\newcommand\centerheader[1]{\gdef\@centerheader{#1}}
+\@onlypreamble\centerheader
+%    \end{macrocode}
+% \end{macro}
 %
-% With the previous defined fields, define the \cs{leftheader} and 
-%\cs{rightheader} which are used by \xclass{curve}.
+% With the previous defined fields, define the \cs{leftheader},
+%\cs{centerheader} and \cs{rightheader} which are used by \xclass{curve}.
 %    \begin{macrocode}
 \headerscale{1.0}
 \photoscale{0.2}
 \leftheader{%
   \ifdef{\@author}{\@author\newline}{}%
   \ifdef{\@address}{\@address\newline}{}%
-  \ifdef{\@city}{\ifdef{\@postal}{\@postal}{}~\@city\newline}{}%
+  \iflanguage{french}{%
+    \ifdef{\@city}{%
+      \ifdef{\@postal}{\@postal}{}~\@city%
+      \newline%
+    }{}%
+  }{
+    \ifdef{\@city}{%
+      \@city%
+      \ifdef{\@state}{, \@state}{}%
+      \ifdef{\@postal}{, \@postal}{}%
+      \newline%
+    }{}%
+  }
   \ifdef{\@country}{\@country\newline}{}%
   \ifdef{\@birth}{\@birth\newline}{}%
   \\[-0.5ex]%
@@ -332,14 +389,48 @@
     \ifdef{\@web}{Web & \@web\tabularnewline}{}%
   \end{tabular}\newline%
 }
+\centerheader{%
+  {\LARGE\bfseries\sffamily%
+    \ifdef{\@author}{\@author}{} -- \ifdef{\@job}{\@job}{}%
+    \newline%
+  }%
+  \ifdef{\@address}{\@address\newline}{}%
+  \iflanguage{french}{%
+    \ifdef{\@city}{%
+      \ifdef{\@postal}{\@postal}{}~\@city%
+      \newline%
+    }{}%
+  }{
+    \ifdef{\@city}{%
+      \@city%
+      \ifdef{\@state}{, \@state}{}%
+      \ifdef{\@postal}{, \@postal}{}%
+      \newline%
+    }{}%
+  }
+  \ifdef{\@country}{\@country\newline}{}%
+  \ifdef{\@birth}{\@birth\newline}{}%
+  \\[-0.5ex]%
+  \begin{tabular}{@{}r@{ -- }l@{}}%
+    \ifdef{\@phone}{Tel & \@phone\tabularnewline}{}%
+    \ifdef{\@mobile}{Mob & \@mobile\tabularnewline}{}%
+    \ifdef{\@fax}{Fax & \@fax\tabularnewline}{}%
+    \ifdef{\@email}{Email & \@email\tabularnewline}{}%
+    \ifdef{\@web}{Web & \@web\tabularnewline}{}%
+  \end{tabular}\newline%
+}
 \rightheader{}
 \newrobustcmd\makeheader{%
-  \makeheaders%
-  \ifdef{\@job}{%
-    \begin{center}%
-      {\LARGE\bfseries\sffamily\@job}%
-    \end{center}%
-  }{}%
+  \iflanguage{french}{%
+    \makeheaders%
+    \ifdef{\@job}{%
+      \begin{center}%
+        {\LARGE\bfseries\sffamily\@job}%
+      \end{center}%
+    }{}%
+  }{%
+    \parbox[c]{\textwidth}{\centering\@centerheader}%
+  }
 }
 %    \end{macrocode}
 %
@@ -451,16 +542,16 @@
   \gdef\@myheadentry{%
     \footnotesize%
     \ifstrempty{#1}%
-	  {\makecell[tl]{#2}}%
+      {\makecell[tl]{#2}}%
       {\makecell[tl]{#2\\#1}}%
   }%
   \expandafter\gdef%
   \expandafter\@myentry%
   \expandafter{%
     \expandafter\@myheadentry%
-	\expandafter&%
-	\expandafter\@prefix%
-	\expandafter&\BODY\tabularnewline%
+    \expandafter&%
+    \expandafter\@prefix%
+    \expandafter&\BODY\tabularnewline%
     \vspace{0.5ex plus 0.25ex minus 0.25ex}%
   }%
   \aftergroup\@myentry%
@@ -477,10 +568,10 @@
   \expandafter\@myentry%
   \expandafter{%
     \expandafter\@myheadentry%
-	\expandafter&%
-	\expandafter\@prefix%
-	\expandafter&%
-	\expandafter\bfseries\BODY\tabularnewline%
+    \expandafter&%
+    \expandafter\@prefix%
+    \expandafter&%
+    \expandafter\bfseries\BODY\tabularnewline%
     \vspace{0.5ex plus 0.25ex minus 0.25ex}%
   }%
   \aftergroup\@myentry%
