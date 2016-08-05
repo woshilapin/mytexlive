@@ -36,7 +36,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{440}
+% \CheckSum{442}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -383,7 +383,7 @@
   \\[-0.5ex]%
   \begin{tabular}{@{}l@{ -- }l@{}}%
     \ifdef{\@phone}{Tel & \@phone\tabularnewline}{}%
-    \ifdef{\@mobile}{Mob & \@mobile\tabularnewline}{}%
+    \ifdef{\@mobile}{\iflanguage{french}{Mob}{Cell} & \@mobile\tabularnewline}{}%
     \ifdef{\@fax}{Fax & \@fax\tabularnewline}{}%
     \ifdef{\@email}{Email & \@email\tabularnewline}{}%
     \ifdef{\@web}{Web & \@web\tabularnewline}{}%
@@ -392,32 +392,32 @@
 \centerheader{%
   {\LARGE\bfseries\sffamily%
     \ifdef{\@author}{\@author}{} -- \ifdef{\@job}{\@job}{}%
-    \newline%
+    \par%
   }%
-  \ifdef{\@address}{\@address\newline}{}%
+  \ifdef{\@address}{\@address\par}{}%
   \iflanguage{french}{%
     \ifdef{\@city}{%
       \ifdef{\@postal}{\@postal}{}~\@city%
-      \newline%
+      \par%
     }{}%
   }{
     \ifdef{\@city}{%
       \@city%
       \ifdef{\@state}{, \@state}{}%
       \ifdef{\@postal}{, \@postal}{}%
-      \newline%
+      \par%
     }{}%
   }
-  \ifdef{\@country}{\@country\newline}{}%
-  \ifdef{\@birth}{\@birth\newline}{}%
-  \\[-0.5ex]%
+  \ifdef{\@country}{\@country\par}{}%
+  \ifdef{\@birth}{\@birth\par}{}%
+  \vline\par%
   \begin{tabular}{@{}r@{ -- }l@{}}%
     \ifdef{\@phone}{Tel & \@phone\tabularnewline}{}%
-    \ifdef{\@mobile}{Mob & \@mobile\tabularnewline}{}%
+    \ifdef{\@mobile}{\iflanguage{french}{Mob}{Cell} & \@mobile\tabularnewline}{}%
     \ifdef{\@fax}{Fax & \@fax\tabularnewline}{}%
     \ifdef{\@email}{Email & \@email\tabularnewline}{}%
     \ifdef{\@web}{Web & \@web\tabularnewline}{}%
-  \end{tabular}\newline%
+  \end{tabular}\par%
 }
 \rightheader{}
 \newrobustcmd\makeheader{%
