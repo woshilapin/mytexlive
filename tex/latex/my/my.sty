@@ -1,0 +1,295 @@
+\RequirePackage{xkeyval}
+\RequirePackage{suffix}
+\RequirePackage{ltxcmds}
+\RequirePackage{etoolbox}
+\RequirePackage{fltpoint}
+\RequirePackage{multido}
+\ifx\PSTFPloaded\endinput\else   \input pst-fp.tex\fi
+\newtoggle{my@english@bool}
+\newtoggle{my@french@bool}
+\newtoggle{my@german@bool}
+\newtoggle{my@portuguese@bool}
+\DeclareOptionX{english}{
+  \PassOptionsToPackage{english}{babel}
+  \toggletrue{my@english@bool}
+}
+\DeclareOptionX{USenglish}{
+  \PassOptionsToPackage{USenglish}{babel}
+  \toggletrue{my@english@bool}
+}
+\DeclareOptionX{american}{
+  \PassOptionsToPackage{american}{babel}
+  \toggletrue{my@english@bool}
+}
+\DeclareOptionX{UKenglish}{
+  \PassOptionsToPackage{UKenglish}{babel}
+  \toggletrue{my@english@bool}
+}
+\DeclareOptionX{british}{
+  \PassOptionsToPackage{british}{babel}
+  \toggletrue{my@english@bool}
+}
+\DeclareOptionX{canadian}{
+  \PassOptionsToPackage{canadian}{babel}
+  \toggletrue{my@english@bool}
+}
+\DeclareOptionX{australian}{
+  \PassOptionsToPackage{australian}{babel}
+  \toggletrue{my@english@bool}
+}
+\DeclareOptionX{newzealand}{
+  \PassOptionsToPackage{newzealand}{babel}
+  \toggletrue{my@english@bool}
+}
+\DeclareOptionX{french}{
+  \PassOptionsToPackage{french}{babel}
+  \toggletrue{my@french@bool}
+}
+\DeclareOptionX{francais}{
+  \PassOptionsToPackage{french}{babel}
+  \toggletrue{my@french@bool}
+}
+\DeclareOptionX{canadien}{
+  \PassOptionsToPackage{french}{babel}
+  \toggletrue{my@french@bool}
+}
+\DeclareOptionX{acadian}{
+  \PassOptionsToPackage{french}{babel}
+  \toggletrue{my@french@bool}
+}
+\DeclareOptionX{austrian}{
+  \PassOptionsToPackage{german}{babel}
+  \toggletrue{my@german@bool}
+}
+\DeclareOptionX{german}{
+  \PassOptionsToPackage{german}{babel}
+  \toggletrue{my@german@bool}
+}
+\DeclareOptionX{germanb}{
+  \PassOptionsToPackage{german}{babel}
+  \toggletrue{my@german@bool}
+}
+\DeclareOptionX{ngerman}{
+  \PassOptionsToPackage{ngerman}{babel}
+  \toggletrue{my@german@bool}
+}
+\DeclareOptionX{naustrian}{
+  \PassOptionsToPackage{ngerman}{babel}
+  \toggletrue{my@german@bool}
+}
+\DeclareOptionX{portuges}{
+  \PassOptionsToPackage{portuges}{babel}
+  \toggletrue{my@portuguese@bool}
+}
+\DeclareOptionX{portuguese}{
+  \PassOptionsToPackage{portuguese}{babel}
+  \toggletrue{my@portuguese@bool}
+}
+\DeclareOptionX{brazilian}{
+  \PassOptionsToPackage{brazilian}{babel}
+  \toggletrue{my@portuguese@bool}
+}
+\DeclareOptionX{brazil}{
+  \PassOptionsToPackage{brazil}{babel}
+  \toggletrue{my@portuguese@bool}
+}
+\ExecuteOptions{\CurrentOption}
+\DeclareOptionX*{
+  \ClassWarning{my}{Unknown option `\CurrentOption'}
+}
+\ProcessOptionsX*
+\RequirePackage[T1]{fontenc}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage{lmodern}
+\RequirePackage{babel}
+\RequirePackage{iflang}
+\RequirePackage{xspace}
+\RequirePackage{mfirstuc}
+\RequirePackage[autolanguage]{numprint}
+\RequirePackage{textcomp}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}
+\normalfont
+\DeclareFontShape{T1}{lmr}{bx}{sc}{ <-> ssub * cmr/bx/sc }{}
+\DeclareUnicodeCharacter{00A9}{\copyright}
+\DeclareUnicodeCharacter{00AE}{\textregistered}
+\DeclareUnicodeCharacter{2122}{\texttrademark}
+\DeclareFontEncoding{LGR}{}{}
+\DeclareFontSubstitution{LGR}{cmr}{m}{n}
+\DeclareErrorFont{LGR}{cmr}{m}{n}{10}
+\DeclareUnicodeCharacter{20AC}{%
+  {\fontencoding{LGR}\selectfont\char"18\relax}%
+}
+\DeclareUnicodeCharacter{00A5}{\textyen}
+\def\my@new@language@macro#1{
+  \expandafter\newrobustcmd\csname my#1\endcsname[1]{%
+    \begin{otherlanguage}{#1}%
+      \textit{##1}%
+    \end{otherlanguage}\relax%
+  }
+}
+\iftoggle{my@english@bool}{
+  \my@new@language@macro{english}
+  \my@new@language@macro{USenglish}
+  \my@new@language@macro{american}
+  \my@new@language@macro{UKenglish}
+  \my@new@language@macro{british}
+  \my@new@language@macro{canadian}
+  \my@new@language@macro{australian}
+  \my@new@language@macro{newzealand}
+}{}
+\iftoggle{my@french@bool}{
+  \my@new@language@macro{french}
+  \my@new@language@macro{francais}
+  \my@new@language@macro{canadien}
+  \my@new@language@macro{acadian}
+}{}
+\iftoggle{my@german@bool}{
+  \my@new@language@macro{austrian}
+  \my@new@language@macro{german}
+  \my@new@language@macro{germanb}
+  \my@new@language@macro{ngerman}
+  \my@new@language@macro{naustrian}
+}{}
+\iftoggle{my@portuguese@bool}{
+  \my@new@language@macro{portuges}
+  \my@new@language@macro{portuguese}
+  \my@new@language@macro{brazilian}
+  \my@new@language@macro{brazil}
+}{}
+\newrobustcmd{\myemph}[1]{\emph{#1}}
+\newrobustcmd{\mycopyright}{\copyright\xspace}
+\newrobustcmd{\myregistered}{\textregistered\xspace}
+\newrobustcmd{\mytrademark}{\texttrademark\xspace}
+\newrobustcmd{\myafortiori}{%
+  \IfLanguageName{french}{%
+    \textit{a fortiori}%
+  }{%
+    a fortiori%
+  }\xspace%
+}
+\newrobustcmd{\myapriori}{%
+  \IfLanguageName{french}{%
+    \textit{a priori}%
+  }{%
+    a priori%
+  }\xspace%
+}
+\newrobustcmd{\mycf}{%
+  \IfLanguageName{french}{%
+    \textit{c.f.}%
+  }{%
+    c.f.%
+  }\xspace%
+}
+\newrobustcmd{\myeg}{%
+  \IfLanguageName{french}{%
+    \textit{e.g.}%
+  }{%
+    e.g.%
+  }\xspace%
+}
+\newrobustcmd{\myie}{%
+  \IfLanguageName{french}{%
+    \textit{i.e.}%
+  }{%
+    i.e.%
+  }\xspace%
+}
+\newrobustcmd{\myetc}{%
+  \IfLanguageName{french}{%
+    \textit{etc.}%
+  }{%
+    etc.%
+  }\xspace%
+}
+\newrobustcmd{\myetal}{%
+  \IfLanguageName{french}{%
+    \textit{et al.}%
+  }{%
+    et al.%
+  }\xspace%
+}
+\newrobustcmd{\myvs}{%
+  \IfLanguageName{french}{%
+    \textit{vs.}%
+  }{%
+    vs.%
+  }\xspace%
+}
+\newrobustcmd{\mynum}[2][]{%
+  \ifstrempty{#1}{%
+    \numprint{#2}%
+  }{%
+    \numprint[#1]{#2}%
+  }%
+}
+\define@choicekey[my]{my}{scstyle}[\my@textsc@uservalue\my@textsc@numin]{up,low,first,normal}[low]{}
+\newrobustcmd{\mytextsmaller}[2][1]{%
+    \pstFPsub{\myfontsize}{\f@size}{#1}%
+    {\fontsize{\myfontsize}{\f@baselineskip}\selectfont #2}%
+}
+\newrobustcmd{\mytextlarger}[2][1]{%
+    \pstFPadd{\myfontsize}{\f@size}{#1}%
+    {\fontsize{\myfontsize}{\f@baselineskip}\selectfont#2}%
+}
+\let\oldtextsc\textsc
+\renewrobustcmd{\textsc}[2][scstyle=normal]{%
+  \setkeys[my]{my}{#1}%
+  \ifdefstring{\f@family}{lmss}{%
+    \ifcase\my@textsc@numin\relax%
+      {\oldtextsc{\MakeUppercase{#2}}}%
+    \or%
+      {\mytextsmaller[2]{\MakeUppercase{#2}}}%
+    \or%
+      {\mytextsmaller[2]{\MakeUppercase{\mytextlarger[2]#2}}}%
+    \or%
+      {\oldtextsc{#2}}%
+    \fi%
+  }{%
+    \ifcase\my@textsc@numin\relax%
+      {\MakeUppercase{#2}}%
+    \or%
+      {\oldtextsc{\MakeLowercase{#2}}}%
+    \or%
+      {\oldtextsc{\makefirstuc{\MakeLowercase{#2}}}}%
+    \or%
+      {\oldtextsc{#2}}%
+    \fi%
+  }%
+}
+\newrobustcmd{\myname}[2][]{%
+  \IfLanguageName{french}{%
+    \ifstrempty{#1}%
+      {%
+      }{%
+        \textsc[scstyle=low]{#1}\ %
+      }%
+      \textsc[scstyle=first]{#2}%
+  }{%
+    \ifstrempty{#1}%
+      {%
+      }{%
+        \MakeLowercase{#1}\ %
+      }%
+    \makefirstuc{#2}%
+  }%
+}
+\newtoggle{myquotechangelanguage}
+\newrobustcmd{\myquote}[1][default]{%
+  \ifstrequal{#1}{default}{}{%
+    \toggletrue{myquotechangelanguage}%
+    \begin{otherlanguage}{#1}%
+    \it%
+  }%
+  \begin{quote}%
+}
+\def\endmyquote{%
+  \end{quote}%
+  \iftoggle{myquotechangelanguage}{%
+    \end{otherlanguage}%
+    \togglefalse{myquotechangelanguage}%
+  }{}%
+}
+\newrobustcmd{\mynorm}[2][]{\left\| #2 \right\|_{#1}}
+\endinput
