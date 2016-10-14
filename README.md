@@ -12,6 +12,10 @@ LaTeX).
 git clone https://github.com/woshilapin/mytexlive.git ~/texmf
 ```
 
+If on Windows or want another folder to be used, you can take a look into the
+file `web2c/texmf.cnf` from your LaTeX installation and look or change the
+variable `TEXMFHOME`.
+
 Then you'll have to build the packages.
 
 ```
