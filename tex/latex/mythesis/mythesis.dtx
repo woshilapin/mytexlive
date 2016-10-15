@@ -29,7 +29,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{482}
+% \CheckSum{443}
 %
 %% \CharacterTable
 %%  {Upper-case  \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -169,11 +169,11 @@
 %    \begin{macrocode}
 \iftoggle{my@minitoc@bool}
 {
-	\PassOptionsToPackage{minitoc}{mytoc}
+  \PassOptionsToPackage{minitoc}{mytoc}
 }{}
 \iftoggle{my@smarttab@bool}
 {
-	\PassOptionsToPackage{smarttab}{myfloat}
+  \PassOptionsToPackage{smarttab}{myfloat}
 }{}
 %    \end{macrocode}
 %
@@ -220,45 +220,53 @@
 %   The \cs{subtitle} macro defines a subtitle for the title page. An optional 
 %argument allow to define another language for the subtitle.
 %    \begin{macrocode}
-\newcommand{\subtitle}[2][english]{\def\@subtitle{\begin{otherlanguage}{#1}#2\end{otherlanguage}}}%
+\newrobustcmd{\subtitle}[2][]{%
+  \newrobustcmd{\@subtitle}{%
+    \ifstrempty{#1}{%
+      #2%
+    }{%
+      \begin{otherlanguage}{#1}#2\end{otherlanguage}%
+    }%
+  }%
+}
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\logoleft}
 %   The \cs{logoleft} macro defines a logo for the left side of the title 
 %page.
 %    \begin{macrocode}
-\newcommand{\logoleft}[1]{\def\@logoleft{#1}}
+\newcommand{\logoleft}[1]{\newrobustcmd{\@logoleft}{#1}}
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\logoright}
 %   The \cs{logoright} macro defines a logo for the right side of the title 
 %page.
 %    \begin{macrocode}
-\newcommand{\logoright}[1]{\def\@logoright{#1}}
+\newcommand{\logoright}[1]{\newrobustcmd{\@logoright}{#1}}
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\university}
 %   The \cs{university} macro defines a university for the title page.
 %    \begin{macrocode}
-\newcommand{\university}[1]{\def\@university{#1}}
+\newcommand{\university}[1]{\newrobustcmd{\@university}{#1}}
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\laboratory}
 %   The \cs{laboratory} macro defines a laboratory for the title page.
 %    \begin{macrocode}
-\newcommand{\laboratory}[1]{\def\@laboratory{#1}}
+\newcommand{\laboratory}[1]{\newrobustcmd{\@laboratory}{#1}}
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\grade}
 %   The \cs{grade} macro defines the grade for which the document is written.
 %    \begin{macrocode}
-\newcommand{\grade}[1]{\def\@grade{#1}}
+\newcommand{\grade}[1]{\newrobustcmd{\@grade}{#1}}
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\jury}
 %   The \cs{jury} macro defines the jury who evaluate the document.
 %    \begin{macrocode}
-\newcommand{\jury}[1]{\def\@jury{#1}}
+\newcommand{\jury}[1]{\newrobustcmd{\@jury}{#1}}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -284,62 +292,43 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% At the end, define all default values for the fields of the title page.
-%    \begin{macrocode}
-\author{}
-\title{}
-\subtitle{}
-\university{}
-\laboratory{}
-\grade{}
-\date{}
-\jury{}
-\logoleft{}
-\logoright{}
-%    \end{macrocode}
-%
 % The title page is splitted into three parts, \cs{my@titlepage@top}, 
 %\cs{my@titlepage@bottom} and \cs{my@titlepage@body}. The \cs{my@titlepage@top} 
 %contains the optional logo (one on the left and one on the right).
 %    \begin{macrocode}
 \newcommand{\my@titlepage@top}{%
-  \ifx\@logoleft\@empty%
-  \else%
+  \ifdef{\@logoleft}{%
     \vbox{\includegraphics[width=3cm]{\@logoleft}}%
-  \fi%
+  }{}%
   \hspace{\stretch{1}}%
-  \ifx\@logoright\@empty%
-  \else%
+  \ifdef{\@logoright}{%
     \vbox{\includegraphics[width=3cm]{\@logoright}}%
-  \fi\par%
+  }{}\par%
 }
 %    \end{macrocode}
 %
 % The \cs{my@titlepage@bottom} contains the date of the defence and the jury.
 %    \begin{macrocode}
 \newcommand{\my@titlepage@bottom}{%
-  \ifx\@date\@empty%
-  \else%
+  \ifdef{\@date}{%
     {\centering\normalsize Thèse soutenue le \@date\par}%
-    \ifx\@grade\@empty%
-    \else%
+    \ifdef{\@grade}{%
       {\centering\small\it pour l'obtention du grade de\par}%
       {\centering\large\bfseries \@grade\par}%
-    \fi%
-  \fi%
-  \ifx\@jury\@empty%
-  \else%
-    \ifx\@date\@empty%
-    {\centering\normalsize\hspace{2cm}Jury constitué de\par}%
-    \else%
-    {\centering\small\it en présence de\par}%
-    \fi%
+    }{}%
+  }{}%
+  \ifdef{\@jury}{%
+    \ifdef{\@date}{%
+      {\centering\small\it en présence de\par}%
+    }{%
+      {\centering\normalsize\hspace{2cm}Jury constitué de\par}%
+    }%
     \vspace{1ex}%
     {\normalsize\centering\begin{mytabular}{>{\hsize=0.3\textwidth}R>{\hsize=0.425\textwidth}L>{\hsize=0.2\textwidth}R}%
       \@jury%
     \end{mytabular}\par}%
   \vspace{1cm}%
-  \fi%
+  }%
 }
 %    \end{macrocode}
 %
@@ -348,24 +337,20 @@
 %    \begin{macrocode}
 \newcommand{\my@titlepage@body}{%
   \normalfont%
-  \ifx\@university\@empty%
-  \else%
-  {\raggedright\normalsize\textcolor{black!70}{\@university}\par}%
-  \fi%
+  \ifdef{\@university}{%
+    {\raggedright\normalsize\textcolor{black!70}{\@university}\par}%
+  }{}%
   {\textcolor{myred}{\rule[0.5ex]{\textwidth}{1pt}}\par}%
-  \ifx\@author\@empty%
-  \else%
+  \ifdef{\@author}{%
     {\large\raggedleft \@author\par}%
-  \fi%
+  }{}%
   \vfill%
-  \ifx\@title\@empty%
-  \else%
+  \ifdef{\@title}{%
     {\LARGE\centering \@title\par}%
-  \fi%
-  \ifx\@subtitle\@empty%
-  \else%
+  }{}%
+  \ifdef{\@subtitle}{%
     {\vspace{0.5cm}\large\centering \@subtitle\par}%
-  \fi%
+  }{}%
 }
 %    \end{macrocode}
 %
