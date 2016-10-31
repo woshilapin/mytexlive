@@ -51,7 +51,7 @@
 	commentstyle=\color[rgb]{0,0.5,0}\ttfamily,%
 	showstringspaces=false,%
 	% Define a frame around each part of code
-	frameround=tttt,%
+	frame=tb,%
 	% Break each too long line with an Carriage Return character
 	prebreak=\textbackslash%
 }
@@ -60,6 +60,23 @@
 	\labelformat{mySource}{\mysource@lang@code~#1}
 }{}
 
+% Define missing languages
+% JSON
+\lstdefinelanguage{json}{%
+	morekeywords={true, false, null},%
+	morestring=[b]"%
+}
+% JavaScript
+\lstdefinelanguage{javascript}{%
+	morekeywords={typeof, new, delete, true, false, try, catch, finally, function, return, null, catch, switch, let, var, if, for, in, of, while, do, else, case, break, import, export, default, async, await, yield},%
+	morekeywords={Error, JSON, Object, Promise, Symbol},
+	morecomment=[s]{/*}{*/},%
+	morecomment=[l]//,%
+	morestring=[b]",%
+	morestring=[b]',%
+	morestring=[b]`%
+}
+
 %%%%%%%%%%%%%%%%%%
 %% New commands %%
 %%%%%%%%%%%%%%%%%%
@@ -67,7 +84,7 @@
 \newcommand{\mysourcefile}[4][]{%
 	\def\@Un{#1}\def\@Deux{#2}\def\@Trois{#3}\def\@Quatre{#4}%
 	\lstset{%
-		frame=single,%
+		frame=tb,%
 		breaklines=true%
 	}%
 	\textcolor{black}{\textnormal{%
@@ -97,7 +114,7 @@
 \lstnewenvironment{mySource}[4][]{%
 	\def\@Un{#1}%
 	\lstset{%
-		frame=single,%
+		frame=tb,%
 		breaklines=true%
 	}%
 	\ifx\@Un\@empty%
@@ -117,7 +134,7 @@
 \lstnewenvironment{mySource*}[1][]{%
 	\def\@Un{#1}%
 	\lstset{%
-		frame=single,%
+		frame=tb,%
 		breaklines=true%
 	}%
 	\ifx\@Un\@empty%
